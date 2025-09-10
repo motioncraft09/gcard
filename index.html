@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Guarantee Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .certificate-border {
+            border: 25px solid transparent;
+            padding: 15px;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%23f59e0b" stroke-width="4" stroke-dasharray="10,5" fill="none" /></svg>') 30 stretch;
+        }
+        .payment-method {
+            transition: all 0.3s ease;
+        }
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+        @media (max-width: 768px) {
+            .certificate-border {
+                border-width: 15px;
+            }
+        }
+        .fee-breakdown {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Main App Component
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [currentView, setCurrentView] = useState('form');
+            const [certificateData, setCertificateData] = useState(null);
+            const [paymentData, setPaymentData] = useState(null);
+
+            const navigation = [
+                { name: 'Create Guarantee', id: 'form' },
+                { name: 'Verify', id: 'verify' }
+            ];
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Navigation */}
+                    <nav className="bg-white shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16">
+                                <div className="flex items-center">
+                                    <div className="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" onClick={() => setCurrentView('form')}>
+                                        <span className="mr-1">🛡️</span> Universal Guarantee Card
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    {navigation.map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setCurrentView(item.id)}
+                                            className={`px-3 py-2 rounded-md text-sm font-medium ${currentView === item.id
+                                                ? 'bg-indigo-100 text-indigo-700'
+                                                : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100'
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
+                        {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
+                        {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} />}
+                        {currentView === 'verify' && <VerificationPage />}
+                    </main>
+                    
+                    {/* Footer */}
+                    <footer className="bg-white mt-12 py-6 border-t border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
+                            <p>© 2023 Universal Guarantee Card. All rights reserved.</p>
+                            <p className="mt-2">For support, email: motioncraft.portal@gmail.com</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Calculate fees based on budget
+        const calculateFees = (budget) => {
+            if (!budget || budget <= 0) return { fee: 0, total: 0 };
+            
+            let fee = 0;
+            if (budget <= 5000) {
+                fee = budget * 0.05; // 5% for small budgets
+            } else if (budget <= 20000) {
+                fee = budget * 0.03; // 3% for medium budgets
+            } else {
+                fee = Math.max(1000, budget * 0.02); // 2% for large budgets (min ৳1000)
+            }
+            
+            return {
+                fee: Math.round(fee),
+                total: Math.round(budget + fee)
+            };
+        };
+
+        // Guarantee Form Component
+        function GuaranteeForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                sellerName: '',
+                sellerEmail: '',
+                buyerName: '',
+                buyerEmail: '',
+                serviceDescription: '',
+                budget: '',
+                guaranteePeriod: '30',
+                terms: 'Full refund within the guarantee period if service quality is not met.'
+            });
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [fees, setFees] = useState({ fee: 0, total: 0 });
+
+            const handleChange = (e) => {
+                const newFormData = {
+                    ...formData,
+                    [e.target.name]: e.target.value
+                };
+                
+                setFormData(newFormData);
+                
+                // Recalculate fees when budget changes
+                if (e.target.name === 'budget') {
+                    const budgetValue = parseFloat(e.target.value) || 0;
+                    setFees(calculateFees(budgetValue));
+                }
+            };
+
+            useEffect(() => {
+                // Calculate initial fees
+                const budgetValue = parseFloat(formData.budget) || 0;
+                setFees(calculateFees(budgetValue));
+            }, []);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                // Simulate API call to save to Google Sheets
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    onSuccess({...formData, fees});
+                }, 1500);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Create Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-1">Fill out the form below to create a new guarantee certificate</p>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} className="px-6 py-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Seller Information</h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="sellerName"
+                                            id="sellerName"
+                                            required
+                                            value={formData.sellerName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="John's Repair Service"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="sellerEmail"
+                                            id="sellerEmail"
+                                            required
+                                            value={formData.sellerEmail}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Buyer Information</h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="buyerName"
+                                            id="buyerName"
+                                            required
+                                            value={formData.buyerName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Jane Smith"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="buyerEmail"
+                                            id="buyerEmail"
+                                            required
+                                            value={formData.buyerEmail}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="jane@example.com"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-6">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">Service Details</h3>
+                                <div className="mb-4">
+                                    <label htmlFor="serviceDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Service Description
+                                    </label>
+                                    <textarea
+                                        name="serviceDescription"
+                                        id="serviceDescription"
+                                        rows={3}
+                                        required
+                                        value={formData.serviceDescription}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Detailed description of the service provided..."
+                                    />
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="mb-4">
+                                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Service Budget (৳)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="budget"
+                                            id="budget"
+                                            min="0"
+                                            required
+                                            value={formData.budget}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="5000"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label htmlFor="guaranteePeriod" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Guarantee Period (days)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="guaranteePeriod"
+                                            id="guaranteePeriod"
+                                            min="1"
+                                            required
+                                            value={formData.guaranteePeriod}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-4">
+                                    <label htmlFor="terms" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Refund Terms & Conditions
+                                    </label>
+                                    <textarea
+                                        name="terms"
+                                        id="terms"
+                                        rows={3}
+                                        required
+                                        value={formData.terms}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Terms of the guarantee..."
+                                    />
+                                </div>
+                                
+                                {/* Fee Breakdown */}
+                                <div className="fee-breakdown p-4 rounded-lg border border-blue-200">
+                                    <h4 className="font-medium text-blue-800 mb-2">Fee Breakdown</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="text-sm text-gray-600">Service Budget:</div>
+                                        <div className="text-sm font-medium text-right">৳ {formData.budget ? parseInt(formData.budget).toLocaleString() : '0'}</div>
+                                        
+                                        <div className="text-sm text-gray-600">Guarantee Fee:</div>
+                                        <div className="text-sm font-medium text-right">৳ {fees.fee.toLocaleString()}</div>
+                                        
+                                        <div className="text-sm text-gray-600 border-t border-gray-200 pt-1">Total Amount:</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-1">৳ {fees.total.toLocaleString()}</div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        Fees: ≤৳5,000 (5%), ৳5,001-৳20,000 (3%), ≥৳20,001 (2%, min ৳1,000)
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8 flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting || !formData.budget || formData.budget <= 0}
+                                    className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                >
+                                    {isSubmitting ? 'Processing...' : `Continue to Payment - ৳ ${fees.total.toLocaleString()}`}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        // Payment Instruction Component
+        function PaymentInstruction({ data, onSuccess }) {
+            const [activeMethod, setActiveMethod] = useState('bkash');
+            const [txId, setTxId] = useState('');
+            const [senderNumber, setSenderNumber] = useState('');
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            
+            // Calculate fees based on budget
+            const fees = calculateFees(parseFloat(data.budget) || 0);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!txId || !senderNumber) return;
+                
+                setIsSubmitting(true);
+                
+                // Simulate API call to save to Google Sheets
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    onSuccess({ txId, senderNumber, method: activeMethod });
+                }, 1500);
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden mb-8">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Complete Your Payment</h2>
+                            <p className="text-gray-600 mt-1">Please send money via one of the following methods</p>
+                        </div>
+                        
+                        <div className="px-6 py-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'bkash' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('bkash')}
+                                >
+                                    <div className="text-4xl mb-2">📱</div>
+                                    <h3 className="font-semibold">bKash</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                                
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'nagad' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('nagad')}
+                                >
+                                    <div className="text-4xl mb-2">💳</div>
+                                    <h3 className="font-semibold">Nagad</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                                
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'rocket' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('rocket')}
+                                >
+                                    <div className="text-4xl mb-2">🚀</div>
+                                    <h3 className="font-semibold">Rocket</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                            </div>
+                            
+                            <div className="bg-yellow-50 p-4 rounded-lg mb-6">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">📌</div>
+                                    <div className="ml-3">
+                                        <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
+                                        <div className="mt-2 text-sm text-yellow-700">
+                                            <p>Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
+                                            <p className="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <form onSubmit={handleSubmit} className="bg-gray-50 p-6 rounded-lg">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label htmlFor="txId" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Transaction ID (TxID)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="txId"
+                                            required
+                                            value={txId}
+                                            onChange={(e) => setTxId(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Enter your transaction ID"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label htmlFor="senderNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Your Mobile Number
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="senderNumber"
+                                            required
+                                            value={senderNumber}
+                                            onChange={(e) => setSenderNumber(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Enter your mobile number"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-6 flex justify-end">
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    >
+                                        {isSubmitting ? 'Submitting...' : 'Submit Transaction Details'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    {/* Order Summary */}
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-xl font-bold text-gray-800">Order Summary</h2>
+                        </div>
+                        <div className="px-6 py-4">
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Service</span>
+                                <span className="font-medium">{data.serviceDescription.substring(0, 40)}...</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Seller</span>
+                                <span className="font-medium">{data.sellerName}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Buyer</span>
+                                <span className="font-medium">{data.buyerName}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Service Budget</span>
+                                <span className="font-medium">৳ {parseInt(data.budget || 0).toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Guarantee Fee</span>
+                                <span className="font-medium">৳ {fees.fee.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
+                                <span className="text-lg font-bold">Total</span>
+                                <span className="text-lg font-bold text-indigo-600">৳ {fees.total.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Success Screen Component
+        function SuccessScreen({ certificateData, paymentData }) {
+            const downloadReceipt = () => {
+                // Calculate fees
+                const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+                
+                // Create a simple receipt text
+                const receiptText = `
+                    Universal Guarantee Card - Payment Receipt
+                    ------------------------------------------
+                    Transaction ID: ${paymentData.txId}
+                    Payment Method: ${paymentData.method.toUpperCase()}
+                    Sender Number: ${paymentData.senderNumber}
+                    Date: ${new Date().toLocaleDateString()}
+                    
+                    Service: ${certificateData.serviceDescription}
+                    Seller: ${certificateData.sellerName}
+                    Buyer: ${certificateData.buyerName}
+                    Service Budget: ৳ ${parseInt(certificateData.budget || 0).toLocaleString()}
+                    Guarantee Fee: ৳ ${fees.fee.toLocaleString()}
+                    Total Amount: ৳ ${fees.total.toLocaleString()}
+                    Guarantee Period: ${certificateData.guaranteePeriod} days
+                    
+                    Status: Pending Verification
+                    Note: Your guarantee certificate will be emailed to you after payment verification.
+                `;
+                
+                // Create a blob and download link
+                const blob = new Blob([receiptText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `payment-receipt-${paymentData.txId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Calculate fees for display
+            const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+
+            return (
+                <div className="max-w-2xl mx-auto text-center">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-12">
+                            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                                <svg className="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 className="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                            <p className="mt-2 text-gray-600">
+                                Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                            </p>
+                            
+                            <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Transaction ID</p>
+                                        <p className="font-medium">{paymentData.txId}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Payment Method</p>
+                                        <p className="font-medium capitalize">{paymentData.method}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Sender Number</p>
+                                        <p className="font-medium">{paymentData.senderNumber}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Service Budget</p>
+                                        <p className="font-medium">৳ {parseInt(certificateData.budget || 0).toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Guarantee Fee</p>
+                                        <p className="font-medium">৳ {fees.fee.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Total Paid</p>
+                                        <p className="font-medium">৳ {fees.total.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Status</p>
+                                        <p className="font-medium text-yellow-600">Pending Verification</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8">
+                                <button
+                                    onClick={downloadReceipt}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Download Receipt
+                                </button>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Back to Home
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Verification Page Component
+        function VerificationPage() {
+            const [certificateId, setCertificateId] = useState('');
+            const [verificationResult, setVerificationResult] = useState(null);
+            const [isVerifying, setIsVerifying] = useState(false);
+
+            const handleVerify = () => {
+                if (!certificateId) return;
+                
+                setIsVerifying(true);
+                
+                // Simulate API call to Google Sheets
+                setTimeout(() => {
+                    setIsVerifying(false);
+                    
+                    // Mock verification result
+                    const results = [
+                        { status: 'active', message: 'This guarantee certificate is valid and active.', expiry: '2023-12-31', data: {
+                            sellerName: 'John\'s Repair Service', buyerName: 'Jane Smith', service: 'Laptop screen replacement',
+                            issueDate: '2023-10-15', expiryDate: '2023-12-31', paymentStatus: 'Verified',
+                            budget: '8000', fee: '240', total: '8240'
+                        }},
+                        { status: 'expired', message: 'This guarantee certificate has expired.', expiry: '2023-01-15', data: {
+                            sellerName: 'Quality HVAC', buyerName: 'Robert Johnson', service: 'Air conditioning installation',
+                            issueDate: '2022-12-15', expiryDate: '2023-01-15', paymentStatus: 'Verified',
+                            budget: '25000', fee: '1000', total: '26000'
+                        }},
+                        { status: 'pending', message: 'Payment verification pending. Certificate will be issued after payment verification.', data: {
+                            sellerName: 'Premium Plumbing', buyerName: 'Sarah Williams', service: 'Water heater installation',
+                            issueDate: 'Pending', expiryDate: 'Pending', paymentStatus: 'Pending Verification',
+                            budget: '3000', fee: '150', total: '3150'
+                        }},
+                        { status: 'invalid', message: 'Certificate ID not found. Please check the ID and try again.' }
+                    ];
+                    
+                    // Select result based on input for demo purposes
+                    let result;
+                    if (certificateId.includes('active')) result = results[0];
+                    else if (certificateId.includes('expire')) result = results[1];
+                    else if (certificateId.includes('pending')) result = results[2];
+                    else result = results[3];
+                    
+                    setVerificationResult(result);
+                }, 1500);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-1">Enter a certificate ID to verify a guarantee</p>
+                        </div>
+                        
+                        <div className="px-6 py-6">
+                            <div className="mb-6">
+                                <label htmlFor="certificateId" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Certificate ID
+                                </label>
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        id="certificateId"
+                                        value={certificateId}
+                                        onChange={(e) => setCertificateId(e.target.value)}
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Enter certificate ID (e.g. UGC-ABC123XYZ)"
+                                    />
+                                    <button
+                                        onClick={handleVerify}
+                                        disabled={isVerifying || !certificateId}
+                                        className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    >
+                                        {isVerifying ? 'Verifying...' : 'Verify'}
+                                    </button>
+                                </div>
+                                <p className="mt-2 text-sm text-gray-500">
+                                    For demo purposes, try: "active123", "expired456", or "pending789"
+                                </p>
+                            </div>
+                            
+                            {verificationResult && (
+                                <div className={`p-4 rounded-md ${verificationResult.status === 'active' ? 'bg-green-50 text-green-700' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-700' : verificationResult.status === 'pending' ? 'bg-blue-50 text-blue-700' : 'bg-red-50 text-red-700'}`}>
+                                    <h3 className="font-medium text-lg mb-2">
+                                        {verificationResult.status === 'active' ? 'Valid Certificate' : 
+                                         verificationResult.status === 'expired' ? 'Expired Certificate' : 
+                                         verificationResult.status === 'pending' ? 'Payment Pending' : 'Invalid Certificate'}
+                                    </h3>
+                                    <p>{verificationResult.message}</p>
+                                    
+                                    {verificationResult.data && (
+                                        <div className="mt-4 pt-4 border-t border-current border-opacity-25">
+                                            <h4 className="font-medium mb-2">Certificate Details:</h4>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>Seller:</div>
+                                                <div className="font-medium">{verificationResult.data.sellerName}</div>
+                                                
+                                                <div>Buyer:</div>
+                                                <div className="font-medium">{verificationResult.data.buyerName}</div>
+                                                
+                                                <div>Service:</div>
+                                                <div className="font-medium">{verificationResult.data.service}</div>
+                                                
+                                                <div>Service Budget:</div>
+                                                <div className="font-medium">৳ {parseInt(verificationResult.data.budget || 0).toLocaleString()}</div>
+                                                
+                                                <div>Guarantee Fee:</div>
+                                                <div className="font-medium">৳ {parseInt(verificationResult.data.fee || 0).toLocaleString()}</div>
+                                                
+                                                <div>Total Amount:</div>
+                                                <div className="font-medium">৳ {parseInt(verificationResult.data.total || 0).toLocaleString()}</div>
+                                                
+                                                <div>Issue Date:</div>
+                                                <div className="font-medium">{verificationResult.data.issueDate}</div>
+                                                
+                                                <div>Expiry Date:</div>
+                                                <div className="font-medium">{verificationResult.data.expiryDate}</div>
+                                                
+                                                <div>Payment Status:</div>
+                                                <div className="font-medium">{verificationResult.data.paymentStatus}</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {verificationResult.expiry && (
+                                        <p className="mt-2">Expiry Date: {verificationResult.expiry}</p>
+                                    )}
+                                </div>
+                            )}
+                            
+                            <div className="mt-8 bg-gray-50 p-4 rounded-md">
+                                <h3 className="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
+                                <ol className="list-decimal pl-5 text-gray-600 space-y-1">
+                                    <li>Enter the Certificate ID found on the guarantee certificate</li>
+                                    <li>Click the Verify button</li>
+                                    <li>The system will display the current status of the guarantee</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
