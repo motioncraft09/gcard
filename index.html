@@ -155,16 +155,34 @@
                 setFees(calculateFees(budgetValue));
             }, []);
 
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                setIsSubmitting(true);
-                
-                // Simulate API call to save to Google Sheets
-                setTimeout(() => {
-                    setIsSubmitting(false);
-                    onSuccess({...formData, fees});
-                }, 1500);
-            };
+           const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const payload = {
+        ...formData,
+        fee: fees.fee,
+        total: fees.total,
+        status: "Pending Verification"
+    };
+
+    try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzoqEQEpUIYYWcKGWmrCWwgYyJIpfoLKzrPGpl34ZRRnbzDn9Hrc_1vdqvekzNVQ3s2/exec", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: { "Content-Type": "application/json" }
+        });
+        const json = await res.json();
+        console.log("Response from Google Sheet:", json);
+        setIsSubmitting(false);
+        onSuccess(payload);
+    } catch(err) {
+        console.error(err);
+        setIsSubmitting(false);
+        alert("Something went wrong. Please try again.");
+    }
+};
+
 
             return (
                 <div className="max-w-3xl mx-auto">
