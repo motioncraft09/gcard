@@ -1,48 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Us - Motioncraft</title>
-<style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px; }
-    .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
-    h2 { text-align: center; color: #333; margin-bottom: 20px; }
-    input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-    button { width: 100%; padding: 14px; background: #4CAF50; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
-    button:hover { background: #45a049; }
-    .status { text-align: center; margin-top: 15px; font-weight: bold; font-size: 15px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Guarantee Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .certificate-border {
+            border: 25px solid transparent;
+            padding: 15px;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%23f59e0b" stroke-width="4" stroke-dasharray="10,5" fill="none" /></svg>') 30 stretch;
+        }
+        .payment-method {
+            transition: all 0.3s ease;
+        }
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .certificate-border {
+                border-width: 15px;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" onclick="showTab('form')">
+                        <span class="mr-1">🛡️</span> Universal Guarantee Card
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showTab('form')" class="px-3 py-2 rounded-md text-sm font-medium tab-button" data-tab="form">
+                        Create Guarantee
+                    </button>
+                    <button onclick="showTab('verify')" class="px-3 py-2 rounded-md text-sm font-medium tab-button" data-tab="verify">
+                        Verify
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<div class="container">
-    <h2>Contact Motioncraft</h2>
-    <form id="contactForm" action="https://formsubmit.co/motioncraft.portal@gmail.com" method="POST">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Your Email" required>
-        <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Form Tab -->
+        <div id="form-tab" class="tab-content active">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white card-shadow rounded-lg overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-800">Create Guarantee Certificate</h2>
+                        <p class="text-gray-600 mt-1">Fill out the form below to create a new guarantee certificate</p>
+                    </div>
+                    
+                    <form id="guarantee-form" class="px-6 py-6" onsubmit="return false;">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Seller Information</h3>
+                                <div class="mb-4">
+                                    <label for="sellerName" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Seller Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="sellerName"
+                                        id="sellerName"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="John's Repair Service"
+                                    />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="sellerEmail" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Seller Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        name="sellerEmail"
+                                        id="sellerEmail"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="john@example.com"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Buyer Information</h3>
+                                <div class="mb-4">
+                                    <label for="buyerName" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Buyer Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="buyerName"
+                                        id="buyerName"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Jane Smith"
+                                    />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="buyerEmail" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Buyer Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        name="buyerEmail"
+                                        id="buyerEmail"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="jane@example.com"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Service Details</h3>
+                            <div class="mb-4">
+                                <label for="serviceDescription" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Service Description
+                                </label>
+                                <textarea
+                                    name="serviceDescription"
+                                    id="serviceDescription"
+                                    rows="3"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="Detailed description of the service provided..."
+                                ></textarea>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="mb-4">
+                                    <label for="budget" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Service Budget (৳)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="budget"
+                                        id="budget"
+                                        min="0"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="5000"
+                                        onchange="calculateFees()"
+                                    />
+                                    <p class="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="guaranteePeriod" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Guarantee Period (days)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="guaranteePeriod"
+                                        id="guaranteePeriod"
+                                        min="1"
+                                        required
+                                        value="30"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="terms" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Refund Terms & Conditions
+                                </label>
+                                <textarea
+                                    name="terms"
+                                    id="terms"
+                                    rows="3"
+                                    required
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="Terms of the guarantee..."
+                                >Full refund within the guarantee period if service quality is not met.</textarea>
+                            </div>
+                            
+                            <!-- Fee Breakdown -->
+                            <div class="p-4 rounded-lg border border-blue-200 bg-blue-50">
+                                <h4 class="font-medium text-blue-800 mb-2">Fee Breakdown</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="text-sm text-gray-600">Service Budget:</div>
+                                    <div class="text-sm font-medium text-right">৳ <span id="budget-display">0</span></div>
+                                    
+                                    <div class="text-sm text-gray-600">Guarantee Fee:</div>
+                                    <div class="text-sm font-medium text-right">৳ <span id="fee-display">0</span></div>
+                                    
+                                    <div class="text-sm text-gray-600 border-t border-gray-200 pt-1">Total Amount:</div>
+                                    <div class="text-sm font-bold text-right border-t border-gray-200 pt-1">৳ <span id="total-display">0</span></div>
+                                </div>
+                                <p class="text-xs text-gray-50 mt-2">
+                                    Fees: ≤৳5,000 (5%), ৳5,001-৳20,000 (3%), ≥৳20,001 (2%, min ৳1,000)
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 flex justify-end">
+                            <button
+                                type="button"
+                                onclick="submitForm()"
+                                id="submit-button"
+                                class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Continue to Payment - ৳ <span id="total-button">0</span>
+                            </button>
+                        </div>
+                        
+                        <div id="form-error" class="mt-4 p-3 bg-red-50 text-red-700 rounded-md hidden">
+                            Error message will appear here
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Instruction Tab -->
+        <div id="payment-tab" class="tab-content">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white card-shadow rounded-lg overflow-hidden mb-8">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-800">Complete Your Payment</h2>
+                        <p class="text-gray-600 mt-1">Please send money via one of the following methods</p>
+                    </div>
+                    
+                    <div class="px-6 py-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            <div class="payment-method p-4 border-2 rounded-lg cursor-pointer text-center border-indigo-500 bg-indigo-50" onclick="setPaymentMethod('bkash')">
+                                <div class="text-4xl mb-2">📱</div>
+                                <h3 class="font-semibold">bKash</h3>
+                                <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                <p class="font-mono text-lg font-bold">01322149482</p>
+                            </div>
+                            
+                            <div class="payment-method p-4 border-2 rounded-lg cursor-pointer text-center border-gray-200" onclick="setPaymentMethod('nagad')">
+                                <div class="text-4xl mb-2">💳</div>
+                                <h3 class="font-semibold">Nagad</h3>
+                                <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                <p class="font-mono text-lg font-bold">01322149482</p>
+                            </div>
+                            
+                            <div class="payment-method p-4 border-2 rounded-lg cursor-pointer text-center border-gray-200" onclick="setPaymentMethod('rocket')">
+                                <div class="text-4xl mb-2">🚀</div>
+                                <h3 class="font-semibold">Rocket</h3>
+                                <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                <p class="font-mono text-lg font-bold">01322149482</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">📌</div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-yellow-800">Important Note</h3>
+                                    <div class="mt-2 text-sm text-yellow-700">
+                                        <p>Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
+                                        <p class="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form id="payment-form" class="bg-gray-50 p-6 rounded-lg" onsubmit="return false;">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="txId" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Transaction ID (TxID)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="txId"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Enter your transaction ID"
+                                    />
+                                </div>
+                                
+                                <div>
+                                    <label for="senderNumber" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Your Mobile Number
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="senderNumber"
+                                        required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Enter your mobile number"
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 flex justify-end">
+                                <button
+                                    type="button"
+                                    onclick="submitPayment()"
+                                    class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Submit Transaction Details
+                                </button>
+                            </div>
+                            
+                            <div id="payment-error" class="mt-4 p-3 bg-red-50 text-red-700 rounded-md hidden">
+                                Error message will appear here
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="bg-white card-shadow rounded-lg overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800">Order Summary</h2>
+                    </div>
+                    <div class="px-6 py-4">
+                        <div class="flex justify-between py-2">
+                            <span class="text-gray-600">Service</span>
+                            <span class="font-medium" id="summary-service">Service description will appear here</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-gray-600">Seller</span>
+                            <span class="font-medium" id="summary-seller">Seller name will appear here</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-gray-600">Buyer</span>
+                            <span class="font-medium" id="summary-buyer">Buyer name will appear here</span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-gray-600">Service Budget</span>
+                            <span class="font-medium">৳ <span id="summary-budget">0</span></span>
+                        </div>
+                        <div class="flex justify-between py-2">
+                            <span class="text-gray-600">Guarantee Fee</span>
+                            <span class="font-medium">৳ <span id="summary-fee">0</span></span>
+                        </div>
+                        <div class="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
+                            <span class="text-lg font-bold">Total</span>
+                            <span class="text-lg font-bold text-indigo-600">৳ <span id="summary-total">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Tab -->
+        <div id="success-tab" class="tab-content">
+            <div class="max-w-2xl mx-auto text-center">
+                <div class="bg-white card-shadow rounded-lg overflow-hidden">
+                    <div class="px-6 py-12">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                            <svg class="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                        <p class="mt-2 text-gray-600">
+                            Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                        </p>
+                        
+                        <div class="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-sm text-gray-600">Transaction ID</p>
+                                    <p class="font-medium" id="success-txid">TX123456</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Payment Method</p>
+                                    <p class="font-medium capitalize" id="success-method">bKash</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Sender Number</p>
+                                    <p class="font-medium" id="success-number">0123456789</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Service Budget</p>
+                                    <p class="font-medium">৳ <span id="success-budget">0</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Guarantee Fee</p>
+                                    <p class="font-medium">৳ <span id="success-fee">0</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Total Paid</p>
+                                    <p class="font-medium">৳ <span id="success-total">0</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Status</p>
+                                    <p class="font-medium text-yellow-600">Pending Verification</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button
+                                onclick="downloadReceipt()"
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Download Receipt
+                            </button>
+                            <button
+                                onclick="showTab('form')"
+                                class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Back to Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Tab -->
+        <div id="verify-tab" class="tab-content">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white card-shadow rounded-lg overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
+                        <p class="text-gray-600 mt-1">Enter a certificate ID to verify a guarantee</p>
+                    </div>
+                    
+                    <div class="px-6 py-6">
+                        <div class="mb-6">
+                            <label for="certificateId" class="block text-sm font-medium text-gray-700 mb-1">
+                                Certificate ID
+                            </label>
+                            <div class="flex">
+                                <input
+                                    type="text"
+                                    id="certificateId"
+                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="Enter certificate ID (e.g. UGC-ABC123XYZ)"
+                                />
+                                <button
+                                    onclick="verifyCertificate()"
+                                    class="px-4 py-2 bg-indigo-600 text-white font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Verify
+                                </button>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">
+                                For demo purposes, try: "active123", "expired456", or "pending789"
+                            </p>
+                        </div>
+                        
+                        <div id="verification-result" class="hidden p-4 rounded-md">
+                            <h3 class="font-medium text-lg mb-2">Verification Result</h3>
+                            <p id="verification-message"></p>
+                            
+                            <div id="verification-details" class="mt-4 pt-4 border-t border-current border-opacity-25 hidden">
+                                <h4 class="font-medium mb-2">Certificate Details:</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>Seller:</div>
+                                    <div class="font-medium" id="verify-seller"></div>
+                                    
+                                    <div>Buyer:</div>
+                                    <div class="font-medium" id="verify-buyer"></div>
+                                    
+                                    <div>Service:</div>
+                                    <div class="font-medium" id="verify-service"></div>
+                                    
+                                    <div>Service Budget:</div>
+                                    <div class="font-medium">৳ <span id="verify-budget"></span></div>
+                                    
+                                    <div>Guarantee Fee:</div>
+                                    <div class="font-medium">৳ <span id="verify-fee"></span></div>
+                                    
+                                    <div>Total Amount:</div>
+                                    <div class="font-medium">৳ <span id="verify-total"></span></div>
+                                    
+                                    <div>Guarantee Period:</div>
+                                    <div class="font-medium"><span id="verify-period"></span> days</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 bg-gray-50 p-4 rounded-md">
+                            <h3 class="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
+                            <ol class="list-decimal pl-5 text-gray-600 space-y-1">
+                                <li>Enter the Certificate ID found on the guarantee certificate</li>
+                                <li>Click the Verify button</li>
+                                <li>The system will display the current status of the guarantee</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PHP Email Script -->
+    <script>
+        // Calculate fees based on budget
+        function calculateFees() {
+            const budgetInput = document.getElementById('budget');
+            const budget = parseFloat(budgetInput.value) || 0;
+            
+            let fee = 0;
+            if (budget <= 5000) {
+                fee = budget * 0.05; // 5% for small budgets
+            } else if (budget <= 20000) {
+                fee = budget * 0.03; // 3% for medium budgets
+            } else {
+                fee = Math.max(1000, budget * 0.02); // 2% for large budgets (min ৳1000)
+            }
+            
+            const total = budget + fee;
+            
+            // Update displays
+            document.getElementById('budget-display').textContent = budget.toLocaleString();
+            document.getElementById('fee-display').textContent = Math.round(fee).toLocaleString();
+            document.getElementById('total-display').textContent = Math.round(total).toLocaleString();
+            document.getElementById('total-button').textContent = Math.round(total).toLocaleString();
+            
+            // Enable/disable button based on budget
+            const submitButton = document.getElementById('submit-button');
+            if (budget > 0) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50');
+            } else {
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50');
+            }
+        }
         
-        <!-- Optional: Redirect after submit -->
-        <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
-        <!-- Optional: Disable captcha -->
-        <input type="hidden" name="_captcha" value="false">
+        // Show/hide tabs
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Update button styles
+            document.querySelectorAll('.tab-button').forEach(button => {
+                if (button.getAttribute('data-tab') === tabName) {
+                    button.classList.add('bg-indigo-100', 'text-indigo-700');
+                } else {
+                    button.classList.remove('bg-indigo-100', 'text-indigo-700');
+                }
+            });
+        }
         
-        <button type="submit">Send Message</button>
-    </form>
-    <div class="status" id="status"></div>
-</div>
-
-<script>
-    // Optional: Show status message
-    const form = document.getElementById('contactForm');
-    const statusDiv = document.getElementById('status');
-
-    form.addEventListener('submit', function(event){
-        statusDiv.style.color = 'green';
-        statusDiv.innerText = 'Sending your message...';
-    });
-</script>
-
+        // Set payment method
+        function setPaymentMethod(method) {
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('border-indigo-500', 'bg-indigo-50');
+                el.classList.add('border-gray-200');
+            });
+            
+            const selected = document.querySelector(`.payment-method:nth-child(${method === 'bkash' ? 1 : method === 'nagad' ? 2 : 3})`);
+            selected.classList.add('border-indigo-500', 'bg-indigo-50');
+            selected.classList.remove('border-gray-200');
+            
+            window.paymentMethod = method;
+        }
+        
+        // Submit form
+        function submitForm() {
+            const form = document.getElementById('guarantee-form');
+            const formData = new FormData(form);
+            
+            // Basic validation
+            let isValid = true;
+            form.querySelectorAll('input[required], textarea[required]').forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-red-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+            
+            const budget = parseFloat(formData.get('budget')) || 0;
+            if (budget <= 0) {
+                isValid = false;
+                document.getElementById('budget').classList.add('border-red-500');
+            }
+            
+            if (!isValid) {
+                document.getElementById('form-error').textContent = 'Please fill in all required fields';
+                document.getElementById('form-error').classList.remove('hidden');
+                return;
+            }
+            
+            // Hide error
+            document.getElementById('form-error').classList.add('hidden');
+            
+            // Store form data
+            window.formData = {
+                sellerName: formData.get('sellerName'),
+                sellerEmail: formData.get('sellerEmail'),
+                buyerName: formData.get('buyerName'),
+                buyerEmail: formData.get('buyerEmail'),
+                serviceDescription: formData.get('serviceDescription'),
+                budget: budget,
+                guaranteePeriod: formData.get('guaranteePeriod'),
+                terms: formData.get('terms'),
+                fee: parseFloat(document.getElementById('fee-display').textContent.replace(/,/g, '')),
+                total: parseFloat(document.getElementById('total-display').textContent.replace(/,/g, ''))
+            };
+            
+            // Update order summary
+            document.getElementById('summary-service').textContent = 
+                window.formData.serviceDescription.length > 40 
+                ? window.formData.serviceDescription.substring(0, 40) + '...' 
+                : window.formData.serviceDescription;
+            document.getElementById('summary-seller').textContent = window.formData.sellerName;
+            document.getElementById('summary-buyer').textContent = window.formData.buyerName;
+            document.getElementById('summary-budget').textContent = window.formData.budget.toLocaleString();
+            document.getElementById('summary-fee').textContent = window.formData.fee.toLocaleString();
+            document.getElementById('summary-total').textContent = window.formData.total.toLocaleString();
+            
+            // Show payment tab
+            showTab('payment');
+            setPaymentMethod('bkash'); // Set default payment method
+        }
+        
+        // Submit payment
+        function submitPayment() {
+            const txId = document.getElementById('txId').value;
+            const senderNumber = document.getElementById('senderNumber').value;
+            
+            if (!txId || !senderNumber) {
+                document.getElementById('payment-error').textContent = 'Please fill in all payment details';
+                document.getElementById('payment-error').classList.remove('hidden');
+                return;
+            }
+            
+            // Hide error
+            document.getElementById('payment-error').classList.add('hidden');
+            
+            // Send data to server
+            sendDataToServer({
+                ...window.formData,
+                txId: txId,
+                senderNumber: senderNumber,
+                paymentMethod: window.paymentMethod || 'bKash',
+                certificateId: 'UGC-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                type: 'guarantee_request'
+            });
+            
+            // Update success page
+            document.getElementById('success-txid').textContent = txId;
+            document.getElementById('success-method').textContent = window.paymentMethod || 'bKash';
+            document.getElementById('success-number').textContent = senderNumber;
+            document.getElementById('success-budget').textContent = window.formData.budget.toLocaleString();
+            document.getElementById('success-fee').textContent = window.formData.fee.toLocaleString();
+            document.getElementById('success-total').textContent = window.formData.total.toLocaleString();
+            
+            // Show success tab
+            showTab('success');
+        }
+        
+        // Send data to server
+        function sendDataToServer(data) {
+            // Create a simple PHP script to handle email sending
+            // This would be saved as send_email.php on your server
+            const phpScriptUrl = 'https://yourwebsite.com/send_email.php'; // Replace with your actual PHP script URL
+            
+            // Create a form and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = phpScriptUrl;
+            form.style.display = 'none';
+            
+            // Add data as hidden fields
+            for (const key in data) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = data[key];
+                form.appendChild(input);
+            }
+            
+            // Add subject field
+            const subjectInput = document.createElement('input');
+            subjectInput.type = 'hidden';
+            subjectInput.name = 'subject';
+            subjectInput.value = 'New Guarantee Request - ' + data.certificateId;
+            form.appendChild(subjectInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        // Verify certificate
+        function verifyCertificate() {
+            const certificateId = document.getElementById('certificateId').value;
+            
+            if (!certificateId) {
+                alert('Please enter a certificate ID');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('verification-result');
+            const messageDiv = document.getElementById('verification-message');
+            const detailsDiv = document.getElementById('verification-details');
+            
+            // Mock verification result
+            let result;
+            if (certificateId.includes('active')) {
+                result = {
+                    status: 'Active',
+                    message: 'This guarantee certificate is valid and active.',
+                    data: {
+                        sellerName: 'John\'s Repair Service',
+                        buyerName: 'Jane Smith',
+                        service: 'Laptop screen replacement',
+                        budget: '8000',
+                        fee: '240',
+                        total: '8240',
+                        period: '90'
+                    }
+                };
+            } else if (certificateId.includes('expire')) {
+                result = {
+                    status: 'Expired',
+                    message: 'This guarantee certificate has expired.',
+                    data: {
+                        sellerName: 'Quality HVAC',
+                        buyerName: 'Robert Johnson',
+                        service: 'Air conditioning installation',
+                        budget: '25000',
+                        fee: '1000',
+                        total: '26000',
+                        period: '30'
+                    }
+                };
+            } else if (certificateId.includes('pending')) {
+                result = {
+                    status: 'Pending',
+                    message: 'Payment verification pending. Certificate will be issued after payment verification.',
+                    data: {
+                        sellerName: 'Premium Plumbing',
+                        buyerName: 'Sarah Williams',
+                        service: 'Water heater installation',
+                        budget: '3000',
+                        fee: '150',
+                        total: '3150',
+                        period: '60'
+                    }
+                };
+            } else {
+                result = {
+                    status: 'Invalid',
+                    message: 'Certificate ID not found. Please check the ID and try again.',
+                    data: null
+                };
+            }
+            
+            // Show result
+            resultDiv.classList.remove('hidden');
+            messageDiv.textContent = result.message;
+            
+            // Set appropriate color based on status
+            if (result.status === 'Active') {
+                resultDiv.className = 'p-4 rounded-md bg-green-50 text-green-700';
+            } else if (result.status === 'Expired') {
+                resultDiv.className = 'p-4 rounded-md bg-yellow-50 text-yellow-700';
+            } else if (result.status === 'Pending') {
+                resultDiv.className = 'p-4 rounded-md bg-blue-50 text-blue-700';
+            } else {
+                resultDiv.className = 'p-4 rounded-md bg-red-50 text-red-700';
+            }
+            
+            // Show details if available
+            if (result.data) {
+                detailsDiv.classList.remove('hidden');
+                document.getElementById('verify-seller').textContent = result.data.sellerName;
+                document.getElementById('verify-buyer').textContent = result.data.buyerName;
+                document.getElementById('verify-service').textContent = result.data.service;
+                document.getElementById('verify-budget').textContent = result.data.budget;
+                document.getElementById('verify-fee').textContent = result.data.fee;
+                document.getElementById('verify-total').textContent = result.data.total;
+                document.getElementById('verify-period').textContent = result.data.period;
+            } else {
+                detailsDiv.classList.add('hidden');
+            }
+        }
+        
+        // Download receipt
+        function downloadReceipt() {
+            const receiptText = `
+                Universal Guarantee Card - Payment Receipt
+                ------------------------------------------
+                Transaction ID: ${document.getElementById('success-txid').textContent}
+                Payment Method: ${document.getElementById('success-method').textContent}
+                Sender Number: ${document.getElementById('success-number').textContent}
+                Date: ${new Date().toLocaleDateString()}
+                
+                Service: ${window.formData.serviceDescription}
+                Seller: ${window.formData.sellerName}
+                Buyer: ${window.formData.buyerName}
+                Service Budget: ৳ ${window.formData.budget.toLocaleString()}
+                Guarantee Fee: ৳ ${window.formData.fee.toLocaleString()}
+                Total Amount: ৳ ${window.formData.total.toLocaleString()}
+                Guarantee Period: ${window.formData.guaranteePeriod} days
+                
+                Status: Pending Verification
+                Note: Your guarantee certificate will be emailed to you after payment verification.
+            `;
+            
+            const blob = new Blob([receiptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `payment-receipt-${document.getElementById('success-txid').textContent}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateFees(); // Initialize fee calculation
+        });
+    </script>
 </body>
 </html>
