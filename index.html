@@ -1,71 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Universal Guarantee Request - Motioncraft</title>
+<title>Motioncraft Guarantee Card</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<!-- Tailwind CDN for fast styling -->
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px; }
-    .container { max-width: 700px; margin: auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
-    h2 { text-align: center; color: #333; margin-bottom: 20px; }
-    input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
-    button { width: 100%; padding: 14px; background: #4CAF50; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
-    button:hover { background: #45a049; }
-    .status { text-align: center; margin-top: 15px; font-weight: bold; font-size: 15px; }
+  body { font-family: 'Roboto', sans-serif; background: #f5f5f5; }
+  .hero { background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white; padding: 80px 20px; text-align: center; }
+  .section { padding: 60px 20px; }
+  .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  .animate-fade { animation: fadeIn 1.2s ease forwards; opacity: 0; }
+  @keyframes fadeIn { to { opacity: 1; } }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Universal Guarantee Request</h2>
-    <form id="guaranteeForm" action="https://formsubmit.co/motioncraft.portal@gmail.com" method="POST">
-        <!-- Hidden: disable captcha -->
-        <input type="hidden" name="_captcha" value="false">
-        <!-- Optional: redirect to thank you page -->
-        <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
+<!-- Hero Section -->
+<section class="hero animate-fade">
+  <h1 class="text-4xl font-bold mb-4">মোশনক্রাফট গ্যারান্টি কার্ড</h1>
+  <p class="mb-6">আপনার সার্ভিস সেল এবং ভেরিফিকেশন সব এক জায়গায়।</p>
+  <div class="space-x-4">
+    <button onclick="showSection('register')" class="px-6 py-3 bg-green-500 rounded-lg text-white font-semibold hover:bg-green-600">Register Card</button>
+    <button onclick="showSection('verify')" class="px-6 py-3 bg-blue-500 rounded-lg text-white font-semibold hover:bg-blue-600">Verify Card</button>
+  </div>
+</section>
 
-        <input type="text" name="subject" placeholder="Subject" value="New Guarantee Request" required>
-        
-        <h3>Seller Information</h3>
-        <input type="text" name="sellerName" placeholder="Seller Name" required>
-        <input type="email" name="sellerEmail" placeholder="Seller Email" required>
-        
-        <h3>Buyer Information</h3>
-        <input type="text" name="buyerName" placeholder="Buyer Name" required>
-        <input type="email" name="buyerEmail" placeholder="Buyer Email" required>
-        
-        <h3>Service Details</h3>
-        <textarea name="serviceDescription" rows="4" placeholder="Service Description" required></textarea>
-        <input type="number" name="budget" placeholder="Budget (৳)" required>
-        <input type="number" name="guaranteePeriod" placeholder="Guarantee Period (days)" required>
-        <textarea name="terms" rows="2" placeholder="Terms" required></textarea>
-        
-        <h3>Financial Details</h3>
-        <input type="number" name="fee" placeholder="Service Fee (৳)" required>
-        <input type="number" name="total" placeholder="Total Amount (৳)" required>
-        
-        <h3>Payment Information</h3>
-        <input type="text" name="txId" placeholder="Transaction ID" required>
-        <input type="text" name="senderNumber" placeholder="Sender Number" required>
-        <input type="text" name="paymentMethod" placeholder="Payment Method" required>
-        
-        <input type="text" name="certificateId" placeholder="Certificate ID" required>
-        <input type="text" name="type" placeholder="Request Type" required>
-        
-        <button type="submit">Submit Request</button>
+<!-- Register Card Section -->
+<section id="register" class="section hidden animate-fade">
+  <div class="max-w-2xl mx-auto card">
+    <h2 class="text-2xl font-bold mb-4">Register Guarantee Card</h2>
+    <form id="registerForm">
+      <div class="mb-4">
+        <label>Seller Name</label>
+        <input type="text" name="sellerName" required class="w-full p-2 border rounded"/>
+      </div>
+      <div class="mb-4">
+        <label>Seller Email</label>
+        <input type="email" name="sellerEmail" required class="w-full p-2 border rounded"/>
+      </div>
+      <div class="mb-4">
+        <label>Buyer Name</label>
+        <input type="text" name="buyerName" required class="w-full p-2 border rounded"/>
+      </div>
+      <div class="mb-4">
+        <label>Buyer Email</label>
+        <input type="email" name="buyerEmail" required class="w-full p-2 border rounded"/>
+      </div>
+      <div class="mb-4">
+        <label>Service Description</label>
+        <textarea name="serviceDescription" required class="w-full p-2 border rounded"></textarea>
+      </div>
+      <div class="mb-4">
+        <label>Budget (৳)</label>
+        <input type="number" name="budget" id="budget" required class="w-full p-2 border rounded" oninput="calculateFee()"/>
+      </div>
+      <div class="mb-4">
+        <label>Service Fee (2%)</label>
+        <input type="text" id="fee" readonly class="w-full p-2 border rounded bg-gray-100"/>
+      </div>
+      <div class="mb-4">
+        <label>Total Amount</label>
+        <input type="text" id="total" readonly class="w-full p-2 border rounded bg-gray-100"/>
+      </div>
+      <div class="mb-4">
+        <label>Payment Method</label>
+        <select name="paymentMethod" required class="w-full p-2 border rounded">
+          <option value="">Select</option>
+          <option>bKash</option>
+          <option>Nagad</option>
+          <option>Rocket</option>
+        </select>
+      </div>
+      <button type="submit" class="px-6 py-3 bg-green-500 text-white rounded font-semibold hover:bg-green-600">Submit</button>
     </form>
-    <div class="status" id="status"></div>
-</div>
+  </div>
+</section>
+
+<!-- Verify Card Section -->
+<section id="verify" class="section hidden animate-fade">
+  <div class="max-w-xl mx-auto card">
+    <h2 class="text-2xl font-bold mb-4">Verify Guarantee Card</h2>
+    <form id="verifyForm">
+      <div class="mb-4">
+        <label>Certificate ID</label>
+        <input type="text" name="certificateId" required class="w-full p-2 border rounded"/>
+      </div>
+      <div class="mb-4">
+        <label>Email</label>
+        <input type="email" name="email" required class="w-full p-2 border rounded"/>
+      </div>
+      <button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600">Verify</button>
+    </form>
+    <div id="verifyResult" class="mt-4 p-4 bg-gray-100 rounded hidden"></div>
+  </div>
+</section>
 
 <script>
-    // Optional: show status when user clicks submit
-    const form = document.getElementById('guaranteeForm');
-    const statusDiv = document.getElementById('status');
+function showSection(id){
+  document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
 
-    form.addEventListener('submit', function(){
-        statusDiv.style.color = 'green';
-        statusDiv.innerText = 'Sending your request...';
-    });
+// Fee calculation
+function calculateFee(){
+  const budget = parseFloat(document.getElementById('budget').value) || 0;
+  const fee = budget * 0.02;
+  const total = budget + fee;
+  document.getElementById('fee').value = fee.toFixed(2);
+  document.getElementById('total').value = total.toFixed(2);
+}
+
+// Dummy submit handlers
+document.getElementById('registerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  alert('Card Registered Successfully! (Demo)');
+  this.reset();
+});
+
+document.getElementById('verifyForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const resultDiv = document.getElementById('verifyResult');
+  resultDiv.innerHTML = `
+    <p><strong>Certificate ID:</strong> ABC123</p>
+    <p><strong>Status:</strong> Paid</p>
+    <p><strong>Buyer:</strong> John Doe</p>
+    <p><strong>Expiry Date:</strong> 2025-12-31</p>
+  `;
+  resultDiv.classList.remove('hidden');
+});
 </script>
 
 </body>
