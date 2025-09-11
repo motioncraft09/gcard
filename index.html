@@ -1,338 +1,57 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Universal Guarantee Card — Create Guarantee</title>
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- EmailJS SDK -->
- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-  <style>
-    /* small custom */
-    .card-shadow { box-shadow: 0 10px 25px rgba(2,6,23,0.08); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Form</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px; }
+    .container { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
+    h2 { text-align: center; color: #333; }
+    input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; }
+    button { width: 100%; padding: 12px; background: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background: #45a049; }
+    .status { text-align: center; margin-top: 15px; font-weight: bold; }
+</style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
+<div class="container">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+        <input type="text" name="user_name" placeholder="Your Name" required>
+        <input type="email" name="user_email" placeholder="Your Email" required>
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+        <div class="status" id="status"></div>
+    </form>
+</div>
 
-  <div class="max-w-4xl mx-auto py-10 px-4">
-    <header class="mb-8 text-center">
-      <div class="inline-flex items-center gap-3">
-        <div class="text-3xl">🛡️</div>
-        <h1 class="text-2xl font-bold">Universal Guarantee Card</h1>
-      </div>
-      <p class="text-gray-600 mt-2">Simple digital guarantee — Send payment details, receive certificate after manual verification.</p>
-    </header>
-
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Form Card -->
-      <section class="bg-white rounded-xl p-6 card-shadow">
-        <h2 class="text-lg font-semibold mb-3">Create Guarantee Certificate</h2>
-        <p class="text-sm text-gray-500 mb-4">Fill seller & buyer details and service budget. Fee = 2% of Budget (changeable).</p>
-
-        <form id="guaranteeForm" class="space-y-4">
-          <!-- Seller -->
-          <div>
-            <label class="text-sm font-medium">Seller Name</label>
-            <input name="sellerName" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="e.g. John's Repair Service" />
-          </div>
-          <div>
-            <label class="text-sm font-medium">Seller Email</label>
-            <input name="sellerEmail" type="email" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="seller@example.com" />
-          </div>
-
-          <!-- Buyer -->
-          <div>
-            <label class="text-sm font-medium">Buyer Name</label>
-            <input name="buyerName" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="e.g. Jane Smith" />
-          </div>
-          <div>
-            <label class="text-sm font-medium">Buyer Email</label>
-            <input name="buyerEmail" type="email" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="buyer@example.com" />
-          </div>
-
-          <!-- Service Details -->
-          <div>
-            <label class="text-sm font-medium">Service / Product Description</label>
-            <textarea name="serviceDescription" rows="3" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="Describe service..."></textarea>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-sm font-medium">Service Budget (৳)</label>
-              <input id="budget" name="budget" type="number" min="0" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="e.g. 8000" />
-            </div>
-            <div>
-              <label class="text-sm font-medium">Guarantee Period (days)</label>
-              <input name="guaranteePeriod" type="number" min="1" value="30" required class="mt-1 w-full px-3 py-2 border rounded-md" />
-            </div>
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Refund Terms & Conditions</label>
-            <textarea name="terms" rows="2" class="mt-1 w-full px-3 py-2 border rounded-md">Full refund within the guarantee period if service quality is not met.</textarea>
-          </div>
-
-          <!-- Fee display -->
-          <div class="bg-blue-50 p-3 rounded-md border">
-            <div class="flex justify-between text-sm">
-              <div>Budget</div>
-              <div id="displayBudget">৳ 0</div>
-            </div>
-            <div class="flex justify-between text-sm mt-1">
-              <div>Guarantee Fee (2%)</div>
-              <div id="displayFee">৳ 0</div>
-            </div>
-            <div class="flex justify-between text-sm font-semibold mt-2">
-              <div>Total Amount</div>
-              <div id="displayTotal">৳ 0</div>
-            </div>
-            <p class="text-xs text-gray-500 mt-2">Fee percentage: <strong id="feePercent">2%</strong> — change in the script if needed.</p>
-          </div>
-
-          <div class="pt-2">
-            <button id="toPayment" type="button" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">Continue to Payment</button>
-          </div>
-        </form>
-      </section>
-
-      <!-- Payment & Submit Card -->
-      <section class="bg-white rounded-xl p-6 card-shadow">
-        <h2 class="text-lg font-semibold mb-3">Payment & Submit</h2>
-
-        <div id="paymentStep" class="space-y-3">
-          <p class="text-sm text-gray-600">Send money using one of these (Send Money option):</p>
-
-          <div class="grid grid-cols-3 gap-3">
-            <div class="p-3 border rounded-md text-center">
-              <div class="text-2xl">📱</div>
-              <div class="font-medium mt-1">bKash</div>
-              <div class="font-mono mt-1">01322149482</div>
-            </div>
-            <div class="p-3 border rounded-md text-center">
-              <div class="text-2xl">💳</div>
-              <div class="font-medium mt-1">Nagad</div>
-              <div class="font-mono mt-1">01322149482</div>
-            </div>
-            <div class="p-3 border rounded-md text-center">
-              <div class="text-2xl">🚀</div>
-              <div class="font-medium mt-1">Rocket</div>
-              <div class="font-mono mt-1">01322149482</div>
-            </div>
-          </div>
-
-          <form id="paymentForm" class="space-y-3 mt-4">
-            <div>
-              <label class="text-sm font-medium">Payment Method</label>
-              <select id="paymentMethod" class="mt-1 w-full px-3 py-2 border rounded-md">
-                <option value="bkash">bKash</option>
-                <option value="nagad">Nagad</option>
-                <option value="rocket">Rocket</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="text-sm font-medium">Transaction ID (TxID)</label>
-              <input id="txId" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="Enter transaction ID after sending money" />
-            </div>
-
-            <div>
-              <label class="text-sm font-medium">Sender Mobile Number</label>
-              <input id="senderNumber" required class="mt-1 w-full px-3 py-2 border rounded-md" placeholder="e.g. 017XXXXXXXX" />
-            </div>
-
-            <div>
-              <button id="submitAll" type="button" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Submit Transaction Details</button>
-            </div>
-
-            <div id="statusMessage" class="hidden p-3 rounded-md text-sm"></div>
-          </form>
-        </div>
-
-        <div class="mt-6">
-          <h3 class="text-sm font-medium">What happens next?</h3>
-          <ul class="list-disc pl-5 text-sm text-gray-600 mt-2">
-            <li>We will manually verify your payment using the TxID you provided.</li>
-            <li>After verification we will generate the Guarantee Certificate and email it to the buyer & seller.</li>
-          </ul>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="mt-8 text-center text-gray-500 text-sm">
-      © <span id="year"></span> Universal Guarantee Card — support: motioncraft.portal@gmail.com
-    </footer>
-  </div>
-
-  <script>
-    // ---------- CONFIG ----------
-    // Replace these with your EmailJS credentials
-    const EMAILJS_SERVICE_ID = "service_egyb74j";   // e.g. service_xxx
-    const EMAILJS_TEMPLATE_ID = "template_z8uubfd"; // e.g. template_xxx
-    const EMAILJS_USER_ID = "1Cyez6oO6a8WLq9KT";     // e.g. user_xxx
-
-    // Fee percent (only-percentage model) — change here if you want different %
-    const FEE_PERCENT = 2; // 2%
-
+<script>
     // Initialize EmailJS
-    (function() {
-      if (emailjs && typeof emailjs.init === 'function') {
-        emailjs.init(EMAILJS_USER_ID);
-      }
-    })();
+    emailjs.init('1Cyez6oO6a8WLq9KT'); // Replace with your EmailJS Public Key
 
-    // UI elements
-    document.getElementById('year').innerText = new Date().getFullYear();
-    document.getElementById('feePercent').innerText = FEE_PERCENT + "%";
+    const form = document.getElementById('contactForm');
+    const statusDiv = document.getElementById('status');
 
-    const form = document.getElementById('guaranteeForm');
-    const budgetInput = document.getElementById('budget');
-    const displayBudget = document.getElementById('displayBudget');
-    const displayFee = document.getElementById('displayFee');
-    const displayTotal = document.getElementById('displayTotal');
-    const toPaymentBtn = document.getElementById('toPayment');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    function calculateAndDisplay() {
-      const budget = parseFloat(budgetInput.value) || 0;
-      const fee = Math.round((budget * FEE_PERCENT) / 100);
-      const total = Math.round(budget + fee);
-      displayBudget.innerText = "৳ " + budget.toLocaleString();
-      displayFee.innerText = "৳ " + fee.toLocaleString();
-      displayTotal.innerText = "৳ " + total.toLocaleString();
-      return { budget, fee, total };
-    }
+        statusDiv.style.color = 'black';
+        statusDiv.innerText = 'Sending...';
 
-    budgetInput.addEventListener('input', calculateAndDisplay);
-    // initial display
-    calculateAndDisplay();
-
-    // When user clicks Continue to Payment, validate form then scroll to payment
-    toPaymentBtn.addEventListener('click', function() {
-      // simple validation
-      const sellerName = form.sellerName.value.trim();
-      const sellerEmail = form.sellerEmail.value.trim();
-      const buyerName = form.buyerName.value.trim();
-      const buyerEmail = form.buyerEmail.value.trim();
-      const budget = parseFloat(form.budget.value) || 0;
-      const serviceDesc = form.serviceDescription.value.trim();
-
-      if (!sellerName || !sellerEmail || !buyerName || !buyerEmail || !serviceDesc || budget <= 0) {
-        alert("সবগুলো ফিল্ড সঠিকভাবে পূরণ করুন এবং budget > 0 দিন।");
-        return;
-      }
-
-      // scroll to payment section
-      document.getElementById('paymentMethod').scrollIntoView({behavior: 'smooth'});
-    });
-
-    // Submit all (send Email via EmailJS)
-    document.getElementById('submitAll').addEventListener('click', function() {
-      // collect everything
-      const sellerName = form.sellerName.value.trim();
-      const sellerEmail = form.sellerEmail.value.trim();
-      const buyerName = form.buyerName.value.trim();
-      const buyerEmail = form.buyerEmail.value.trim();
-      const serviceDescription = form.serviceDescription.value.trim();
-      const guaranteePeriod = form.guaranteePeriod.value.trim();
-      const terms = form.terms.value.trim();
-      const budget = parseFloat(form.budget.value) || 0;
-      const paymentMethod = document.getElementById('paymentMethod').value;
-      const txId = document.getElementById('txId').value.trim();
-      const senderNumber = document.getElementById('senderNumber').value.trim();
-
-      if (!sellerName || !sellerEmail || !buyerName || !buyerEmail || !serviceDescription || budget <= 0 || !txId || !senderNumber) {
-        alert("সবগুলো প্রয়োজনীয় ফিল্ড ঠিকভাবে পূরণ করুন।");
-        return;
-      }
-
-      const fee = Math.round((budget * FEE_PERCENT) / 100);
-      const total = Math.round(budget + fee);
-
-      // prepare EmailJS template params
-      const templateParams = {
-        seller_name: sellerName,
-        seller_email: sellerEmail,
-        buyer_name: buyerName,
-        buyer_email: buyerEmail,
-        service_description: serviceDescription,
-        budget: "৳ " + budget.toLocaleString(),
-        guarantee_period: guaranteePeriod,
-        terms: terms,
-        fee: "৳ " + fee.toLocaleString(),
-        total: "৳ " + total.toLocaleString(),
-        payment_method: paymentMethod,
-        tx_id: txId,
-        sender_number: senderNumber,
-        submitted_at: new Date().toLocaleString()
-      };
-
-      // UI: disable button and show status
-      const statusEl = document.getElementById('statusMessage');
-      statusEl.classList.remove('hidden');
-      statusEl.classList.remove('bg-green-50','bg-red-50','bg-yellow-50');
-      statusEl.classList.add('bg-yellow-50','text-yellow-800');
-      statusEl.innerText = "Submitting... please wait.";
-
-      // send email via EmailJS
-      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_USER_ID || EMAILJS_USER_ID.includes("YOUR")) {
-        statusEl.classList.remove('bg-yellow-50','text-yellow-800');
-        statusEl.classList.add('bg-red-50','text-red-700');
-        statusEl.innerText = "EmailJS credentials not set. Replace EMAILJS_SERVICE_ID, TEMPLATE_ID, USER_ID in the script.";
-        return;
-      }
-
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        emailjs.sendForm('service_egyb74j', 'template_z8uubfd', this)
         .then(function(response) {
-          statusEl.classList.remove('bg-yellow-50','text-yellow-800');
-          statusEl.classList.add('bg-green-50','text-green-700');
-          statusEl.innerText = "Submitted! Payment is pending verification. We will email certificate after manual verification.";
-
-          // Optionally: clear form or disable to avoid duplicate
-          // form.reset();
-
-          // Offer download receipt file
-          const receiptText = `
-Universal Guarantee Card - Payment Receipt
------------------------------------------
-Transaction ID: ${txId}
-Payment Method: ${paymentMethod}
-Sender Number: ${senderNumber}
-Date: ${new Date().toLocaleString()}
-
-Service: ${serviceDescription}
-Seller: ${sellerName}
-Buyer: ${buyerName}
-Service Budget: ৳ ${budget.toLocaleString()}
-Guarantee Fee: ৳ ${fee.toLocaleString()}
-Total Amount: ৳ ${total.toLocaleString()}
-Guarantee Period: ${guaranteePeriod} days
-
-Status: Pending Verification
-Note: Your guarantee certificate will be emailed after payment verification.
-          `.trim();
-
-          const blob = new Blob([receiptText], { type: 'text/plain' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `payment-receipt-${txId}.txt`;
-          a.innerText = "Download Receipt";
-          a.className = "inline-block mt-3 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700";
-          // attach link after status
-          statusEl.appendChild(document.createElement('br'));
-          statusEl.appendChild(a);
-
+            console.log('SUCCESS!', response.status, response.text);
+            statusDiv.style.color = 'green';
+            statusDiv.innerText = 'Message sent successfully!';
+            form.reset();
         }, function(error) {
-          statusEl.classList.remove('bg-yellow-50','text-yellow-800');
-          statusEl.classList.add('bg-red-50','text-red-700');
-          statusEl.innerText = "Failed to send email. Try again later. Error: " + (error && error.text ? error.text : JSON.stringify(error));
-          console.error("EmailJS error:", error);
+            console.log('FAILED...', error);
+            statusDiv.style.color = 'red';
+            statusDiv.innerText = 'Failed to send message. Try again later.';
         });
     });
-  </script>
+</script>
 </body>
 </html>
