@@ -33,58 +33,74 @@
         .fee-breakdown {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
-            color: white;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
+        .certificate-card {
+            transition: all 0.3s ease;
         }
-        .toast.success {
-            background-color: #10B981;
-        }
-        .toast.error {
-            background-color: #EF4444;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
+        .certificate-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <div id="root"></div>
-    <div id="toast" class="toast"></div>
 
     <!-- Hidden iframe for form submission without navigation -->
     <iframe name="hiddenFrame" style="display: none;"></iframe>
 
     <script type="text/babel">
-        // Toast notification function
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
         // Main App Component
         const { useState, useEffect } = React;
+
+        // Generate a unique certificate ID
+        const generateCertificateId = () => {
+            const prefix = 'UGC';
+            const timestamp = Date.now().toString(36);
+            const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `${prefix}-${timestamp}-${randomStr}`;
+        };
+
+        // Store certificate data in localStorage
+        const storeCertificateData = (certificateData) => {
+            try {
+                const existingData = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                const newData = [...existingData, certificateData];
+                localStorage.setItem('ugcCertificates', JSON.stringify(newData));
+                return true;
+            } catch (error) {
+                console.error('Error storing certificate data:', error);
+                return false;
+            }
+        };
+
+        // Get certificate data from localStorage
+        const getCertificateData = (certificateId) => {
+            try {
+                const certificates = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                return certificates.find(cert => cert.certificateId === certificateId) || null;
+            } catch (error) {
+                console.error('Error retrieving certificate data:', error);
+                return null;
+            }
+        };
+
+        // Get all certificates (for admin view)
+        // Note: This function remains for potential future use with a separate admin site
+        const getAllCertificates = () => {
+            try {
+                return JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+            } catch (error) {
+                console.error('Error retrieving certificates:', error);
+                return [];
+            }
+        };
 
         function App() {
             const [currentView, setCurrentView] = useState('form');
             const [certificateData, setCertificateData] = useState(null);
             const [paymentData, setPaymentData] = useState(null);
 
+            // Removed Admin from navigation
             const navigation = [
                 { name: 'Create Guarantee', id: 'form' },
                 { name: 'Verify', id: 'verify' }
@@ -197,37 +213,26 @@
                 e.preventDefault();
                 setIsSubmitting(true);
                 
+                // Generate certificate ID
+                const certificateId = generateCertificateId();
+                
+                // Create complete certificate data
+                const completeData = {
+                    ...formData,
+                    fees,
+                    certificateId,
+                    status: 'pending_payment',
+                    createdAt: new Date().toISOString()
+                };
+                
                 // Submit to FormSubmit.co
                 const form = e.target;
                 form.submit();
                 
-                // Also send to backup email
-                try {
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    
-                    // Send to backup email (motioncraft.portal@gmail.com)
-                    const backupFormData = new FormData();
-                    backupFormData.append('_cc', 'motioncraft.portal@gmail.com');
-                    backupFormData.append('_subject', 'BACKUP: New Guarantee Certificate Request');
-                    Object.keys(data).forEach(key => {
-                        backupFormData.append(key, data[key]);
-                    });
-                    
-                    fetch('https://formsubmit.co/niloykhan.get@gmail.com', {
-                        method: 'POST',
-                        body: backupFormData,
-                        mode: 'no-cors'
-                    });
-                } catch (error) {
-                    console.error('Backup email submission failed:', error);
-                }
-                
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
-                    onSuccess({...formData, fees});
-                    showToast('Form submitted successfully!', 'success');
+                    onSuccess(completeData);
                 }, 1500);
             };
 
@@ -250,8 +255,6 @@
                             <input type="hidden" name="_subject" value="New Guarantee Certificate Request" />
                             <input type="hidden" name="_template" value="table" />
                             <input type="hidden" name="_autoresponse" value="Thank you for creating a guarantee certificate with us! We will process your request shortly." />
-                            <input type="hidden" name="_cc" value="motioncraft.portal@gmail.com" />
-                            <input type="text" name="_honey" style={{display: 'none'}} />
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -447,37 +450,29 @@
                 
                 setIsSubmitting(true);
                 
+                // Update certificate data with payment info
+                const updatedData = {
+                    ...data,
+                    payment: {
+                        txId,
+                        senderNumber,
+                        method: activeMethod,
+                        paidAt: new Date().toISOString()
+                    },
+                    status: 'pending_verification'
+                };
+                
+                // Store in localStorage
+                storeCertificateData(updatedData);
+                
                 // Submit to FormSubmit.co
                 const form = e.target;
                 form.submit();
-                
-                // Also send to backup email
-                try {
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    
-                    // Send to backup email (motioncraft.portal@gmail.com)
-                    const backupFormData = new FormData();
-                    backupFormData.append('_cc', 'motioncraft.portal@gmail.com');
-                    backupFormData.append('_subject', 'BACKUP: Payment Details for Guarantee Certificate');
-                    Object.keys(data).forEach(key => {
-                        backupFormData.append(key, data[key]);
-                    });
-                    
-                    fetch('https://formsubmit.co/niloykhan.get@gmail.com', {
-                        method: 'POST',
-                        body: backupFormData,
-                        mode: 'no-cors'
-                    });
-                } catch (error) {
-                    console.error('Backup email submission failed:', error);
-                }
                 
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
                     onSuccess({ txId, senderNumber, method: activeMethod });
-                    showToast('Payment details submitted successfully!', 'success');
                 }, 1500);
             };
 
@@ -546,10 +541,9 @@
                                 <input type="hidden" name="_subject" value="Payment Details for Guarantee Certificate" />
                                 <input type="hidden" name="_template" value="table" />
                                 <input type="hidden" name="_autoresponse" value="Thank you for your payment! We will verify it and send your guarantee certificate shortly." />
-                                <input type="hidden" name="_cc" value="motioncraft.portal@gmail.com" />
-                                <input type="text" name="_honey" style={{display: 'none'}} />
                                 
                                 {/* Include certificate data as hidden fields */}
+                                <input type="hidden" name="certificateId" value={data.certificateId} />
                                 <input type="hidden" name="sellerName" value={data.sellerName} />
                                 <input type="hidden" name="sellerEmail" value={data.sellerEmail} />
                                 <input type="hidden" name="buyerName" value={data.buyerName} />
@@ -629,4 +623,276 @@
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Service Budget</span>
-                                <span className="font
+                                <span className="font-medium">৳ {parseInt(data.budget || 0).toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Guarantee Fee</span>
+                                <span className="font-medium">৳ {fees.fee.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
+                                <span className="text-lg font-bold">Total</span>
+                                <span className="text-lg font-bold text-indigo-600">৳ {fees.total.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Success Screen Component
+        function SuccessScreen({ certificateData, paymentData }) {
+            const downloadReceipt = () => {
+                // Calculate fees
+                const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+                
+                // Create a simple receipt text
+                const receiptText = `
+                    Universal Guarantee Card - Payment Receipt
+                    ------------------------------------------
+                    Certificate ID: ${certificateData.certificateId}
+                    Transaction ID: ${paymentData.txId}
+                    Payment Method: ${paymentData.method.toUpperCase()}
+                    Sender Number: ${paymentData.senderNumber}
+                    Date: ${new Date().toLocaleDateString()}
+                    
+                    Service: ${certificateData.serviceDescription}
+                    Seller: ${certificateData.sellerName}
+                    Buyer: ${certificateData.buyerName}
+                    Service Budget: ৳ ${parseInt(certificateData.budget || 0).toLocaleString()}
+                    Guarantee Fee: ৳ ${fees.fee.toLocaleString()}
+                    Total Amount: ৳ ${fees.total.toLocaleString()}
+                    Guarantee Period: ${certificateData.guaranteePeriod} days
+                    
+                    Status: Pending Verification
+                    Note: Your guarantee certificate will be emailed to you after payment verification.
+                `;
+                
+                // Create a blob and download link
+                const blob = new Blob([receiptText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `payment-receipt-${paymentData.txId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Calculate fees for display
+            const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+
+            return (
+                <div className="max-w-2xl mx-auto text-center">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-12">
+                            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                                <svg className="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 className="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                            <p className="mt-2 text-gray-600">
+                                Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                            </p>
+                            
+                            <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Certificate ID</p>
+                                        <p className="font-medium">{certificateData.certificateId}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Transaction ID</p>
+                                        <p className="font-medium">{paymentData.txId}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Payment Method</p>
+                                        <p className="font-medium capitalize">{paymentData.method}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Sender Number</p>
+                                        <p className="font-medium">{paymentData.senderNumber}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Service Budget</p>
+                                        <p className="font-medium">৳ {parseInt(certificateData.budget || 0).toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Guarantee Fee</p>
+                                        <p className="font-medium">৳ {fees.fee.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Total Paid</p>
+                                        <p className="font-medium">৳ {fees.total.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Status</p>
+                                        <p className="font-medium text-yellow-600">Pending Verification</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8">
+                                <button
+                                    onClick={downloadReceipt}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Download Receipt
+                                </button>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Back to Home
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Verification Page Component
+        function VerificationPage() {
+            const [certificateId, setCertificateId] = useState('');
+            const [verificationResult, setVerificationResult] = useState(null);
+            const [isVerifying, setIsVerifying] = useState(false);
+
+            const handleVerify = () => {
+                if (!certificateId) return;
+                
+                setIsVerifying(true);
+                
+                // Check localStorage for certificate data
+                setTimeout(() => {
+                    setIsVerifying(false);
+                    
+                    const certificateData = getCertificateData(certificateId);
+                    
+                    if (certificateData) {
+                        // Calculate expiry date
+                        const createdAt = new Date(certificateData.createdAt);
+                        const expiryDate = new Date(createdAt);
+                        expiryDate.setDate(expiryDate.getDate() + parseInt(certificateData.guaranteePeriod));
+                        
+                        const now = new Date();
+                        const isExpired = now > expiryDate;
+                        
+                        setVerificationResult({
+                            status: isExpired ? 'expired' : 'active',
+                            message: isExpired 
+                                ? 'This guarantee certificate has expired.' 
+                                : 'This guarantee certificate is valid and active.',
+                            expiry: expiryDate.toLocaleDateString(),
+                            data: certificateData
+                        });
+                    } else {
+                        setVerificationResult({
+                            status: 'invalid',
+                            message: 'Certificate ID not found. Please check the ID and try again.'
+                        });
+                    }
+                }, 1000);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-1">Enter a certificate ID to verify a guarantee</p>
+                        </div>
+                        
+                        <div className="px-6 py-6">
+                            <div className="mb-6">
+                                <label htmlFor="certificateId" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Certificate ID
+                                </label>
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        id="certificateId"
+                                        value={certificateId}
+                                        onChange={(e) => setCertificateId(e.target.value)}
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Enter certificate ID (e.g. UGC-ABC123XYZ)"
+                                    />
+                                    <button
+                                        onClick={handleVerify}
+                                        disabled={isVerifying || !certificateId}
+                                        className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    >
+                                        {isVerifying ? 'Verifying...' : 'Verify'}
+                                    </button>
+                                </div>
+                                <p className="mt-2 text-sm text-gray-500">
+                                    Enter a valid certificate ID to verify its status
+                                </p>
+                            </div>
+                            
+                            {verificationResult && (
+                                <div className={`p-4 rounded-md ${verificationResult.status === 'active' ? 'bg-green-50 text-green-700' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700'}`}>
+                                    <h3 className="font-medium text-lg mb-2">
+                                        {verificationResult.status === 'active' ? 'Valid Certificate' : 
+                                         verificationResult.status === 'expired' ? 'Expired Certificate' : 
+                                         'Invalid Certificate'}
+                                    </h3>
+                                    <p>{verificationResult.message}</p>
+                                    
+                                    {verificationResult.data && (
+                                        <div className="mt-4 pt-4 border-t border-current border-opacity-25">
+                                            <h4 className="font-medium mb-2">Certificate Details:</h4>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>Seller:</div>
+                                                <div className="font-medium">{verificationResult.data.sellerName}</div>
+                                                
+                                                <div>Buyer:</div>
+                                                <div className="font-medium">{verificationResult.data.buyerName}</div>
+                                                
+                                                <div>Service:</div>
+                                                <div className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</div>
+                                                
+                                                <div>Service Budget:</div>
+                                                <div className="font-medium">৳ {parseInt(verificationResult.data.budget || 0).toLocaleString()}</div>
+                                                
+                                                <div>Guarantee Fee:</div>
+                                                <div className="font-medium">৳ {verificationResult.data.fees.fee.toLocaleString()}</div>
+                                                
+                                                <div>Total Amount:</div>
+                                                <div className="font-medium">৳ {verificationResult.data.fees.total.toLocaleString()}</div>
+                                                
+                                                <div>Issue Date:</div>
+                                                <div className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</div>
+                                                
+                                                <div>Expiry Date:</div>
+                                                <div className="font-medium">{verificationResult.expiry}</div>
+                                                
+                                                <div>Payment Status:</div>
+                                                <div className="font-medium capitalize">{verificationResult.data.status.replace('_', ' ')}</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            
+                            <div className="mt-8 bg-gray-50 p-4 rounded-md">
+                                <h3 className="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
+                                <ol className="list-decimal pl-5 text-gray-600 space-y-1">
+                                    <li>Enter the Certificate ID found on the guarantee certificate</li>
+                                    <li>Click the Verify button</li>
+                                    <li>The system will display the current status of the guarantee</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
