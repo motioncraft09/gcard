@@ -3,55 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Form</title>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<title>Contact Us - Motioncraft</title>
 <style>
     body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px; }
-    .container { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);}
-    h2 { text-align: center; color: #333; }
-    input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; }
-    button { width: 100%; padding: 12px; background: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
+    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; }
+    button { width: 100%; padding: 14px; background: #4CAF50; color: #fff; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
     button:hover { background: #45a049; }
-    .status { text-align: center; margin-top: 15px; font-weight: bold; }
+    .status { text-align: center; margin-top: 15px; font-weight: bold; font-size: 15px; }
 </style>
 </head>
 <body>
+
 <div class="container">
-    <h2>Contact Us</h2>
-    <form id="contactForm">
-        <input type="text" name="user_name" placeholder="Your Name" required>
-        <input type="email" name="user_email" placeholder="Your Email" required>
-        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <h2>Contact Motioncraft</h2>
+    <form id="contactForm" action="https://formsubmit.co/motioncraft.portal@gmail.com" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email" required>
+        <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+        
+        <!-- Optional: Redirect after submit -->
+        <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
+        <!-- Optional: Disable captcha -->
+        <input type="hidden" name="_captcha" value="false">
+        
         <button type="submit">Send Message</button>
-        <div class="status" id="status"></div>
     </form>
+    <div class="status" id="status"></div>
 </div>
 
 <script>
-    // Initialize EmailJS
-    emailjs.init('1Cyez6oO6a8WLq9KT'); // Replace with your EmailJS Public Key
-
+    // Optional: Show status message
     const form = document.getElementById('contactForm');
     const statusDiv = document.getElementById('status');
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        statusDiv.style.color = 'black';
-        statusDiv.innerText = 'Sending...';
-
-        emailjs.sendForm('service_egyb74j', 'template_z8uubfd', this)
-        .then(function(response) {
-            console.log('SUCCESS!', response.status, response.text);
-            statusDiv.style.color = 'green';
-            statusDiv.innerText = 'Message sent successfully!';
-            form.reset();
-        }, function(error) {
-            console.log('FAILED...', error);
-            statusDiv.style.color = 'red';
-            statusDiv.innerText = 'Failed to send message. Try again later.';
-        });
+    form.addEventListener('submit', function(event){
+        statusDiv.style.color = 'green';
+        statusDiv.innerText = 'Sending your message...';
     });
 </script>
+
 </body>
 </html>
