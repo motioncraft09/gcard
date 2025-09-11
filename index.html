@@ -3,134 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Motioncraft Guarantee Card</title>
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<!-- Tailwind CDN for fast styling -->
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Service Guarantee Card</title>
 <style>
-  body { font-family: 'Roboto', sans-serif; background: #f5f5f5; }
-  .hero { background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white; padding: 80px 20px; text-align: center; }
-  .section { padding: 60px 20px; }
-  .card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-  .animate-fade { animation: fadeIn 1.2s ease forwards; opacity: 0; }
-  @keyframes fadeIn { to { opacity: 1; } }
+body{
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: #333;
+    margin:0;
+    padding:0;
+    overflow-x: hidden;
+}
+.container{
+    max-width: 700px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease-in-out;
+}
+h1,h2{text-align:center;}
+input, textarea, select, button{
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+input:focus, textarea:focus, select:focus{
+    border-color:#0072ff;
+    box-shadow: 0 0 8px rgba(0,114,255,0.3);
+    outline:none;
+}
+button{
+    background: #0072ff;
+    color: #fff;
+    font-weight: bold;
+    border:none;
+    cursor: pointer;
+}
+button:hover{
+    background: #005bb5;
+}
+#result{
+    background: #f1f1f1;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+    display:none;
+}
+@keyframes fadeIn{
+    0%{opacity:0; transform: translateY(-20px);}
+    100%{opacity:1; transform: translateY(0);}
+}
 </style>
 </head>
 <body>
 
-<!-- Hero Section -->
-<section class="hero animate-fade">
-  <h1 class="text-4xl font-bold mb-4">মোশনক্রাফট গ্যারান্টি কার্ড</h1>
-  <p class="mb-6">আপনার সার্ভিস সেল এবং ভেরিফিকেশন সব এক জায়গায়।</p>
-  <div class="space-x-4">
-    <button onclick="showSection('register')" class="px-6 py-3 bg-green-500 rounded-lg text-white font-semibold hover:bg-green-600">Register Card</button>
-    <button onclick="showSection('verify')" class="px-6 py-3 bg-blue-500 rounded-lg text-white font-semibold hover:bg-blue-600">Verify Card</button>
-  </div>
-</section>
+<div class="container" id="registrationDiv">
+    <h1>গ্যারান্টি কার্ড রেজিস্ট্রেশন</h1>
+    <form id="guaranteeForm">
+        <h2>Seller Information</h2>
+        <input type="text" name="sellerName" placeholder="Seller Name" required>
+        <input type="email" name="sellerEmail" placeholder="Seller Email" required>
 
-<!-- Register Card Section -->
-<section id="register" class="section hidden animate-fade">
-  <div class="max-w-2xl mx-auto card">
-    <h2 class="text-2xl font-bold mb-4">Register Guarantee Card</h2>
-    <form id="registerForm">
-      <div class="mb-4">
-        <label>Seller Name</label>
-        <input type="text" name="sellerName" required class="w-full p-2 border rounded"/>
-      </div>
-      <div class="mb-4">
-        <label>Seller Email</label>
-        <input type="email" name="sellerEmail" required class="w-full p-2 border rounded"/>
-      </div>
-      <div class="mb-4">
-        <label>Buyer Name</label>
-        <input type="text" name="buyerName" required class="w-full p-2 border rounded"/>
-      </div>
-      <div class="mb-4">
-        <label>Buyer Email</label>
-        <input type="email" name="buyerEmail" required class="w-full p-2 border rounded"/>
-      </div>
-      <div class="mb-4">
-        <label>Service Description</label>
-        <textarea name="serviceDescription" required class="w-full p-2 border rounded"></textarea>
-      </div>
-      <div class="mb-4">
-        <label>Budget (৳)</label>
-        <input type="number" name="budget" id="budget" required class="w-full p-2 border rounded" oninput="calculateFee()"/>
-      </div>
-      <div class="mb-4">
-        <label>Service Fee (2%)</label>
-        <input type="text" id="fee" readonly class="w-full p-2 border rounded bg-gray-100"/>
-      </div>
-      <div class="mb-4">
-        <label>Total Amount</label>
-        <input type="text" id="total" readonly class="w-full p-2 border rounded bg-gray-100"/>
-      </div>
-      <div class="mb-4">
-        <label>Payment Method</label>
-        <select name="paymentMethod" required class="w-full p-2 border rounded">
-          <option value="">Select</option>
-          <option>bKash</option>
-          <option>Nagad</option>
-          <option>Rocket</option>
+        <h2>Buyer Information</h2>
+        <input type="text" name="buyerName" placeholder="Buyer Name" required>
+        <input type="email" name="buyerEmail" placeholder="Buyer Email" required>
+
+        <h2>Service Details</h2>
+        <textarea name="serviceDescription" placeholder="Service Description" required></textarea>
+        <input type="number" name="budget" placeholder="Budget (৳)" id="budget" required>
+        <input type="number" name="guaranteePeriod" placeholder="Guarantee Period (days)" required>
+        <textarea name="terms" placeholder="Terms" required></textarea>
+
+        <h2>Payment Details</h2>
+        <input type="text" name="txId" placeholder="Transaction ID" required>
+        <input type="text" name="senderNumber" placeholder="Sender Number" required>
+        <select name="paymentMethod" required>
+            <option value="bKash">bKash</option>
+            <option value="Nagad">Nagad</option>
+            <option value="Rocket">Rocket</option>
         </select>
-      </div>
-      <button type="submit" class="px-6 py-3 bg-green-500 text-white rounded font-semibold hover:bg-green-600">Submit</button>
-    </form>
-  </div>
-</section>
 
-<!-- Verify Card Section -->
-<section id="verify" class="section hidden animate-fade">
-  <div class="max-w-xl mx-auto card">
-    <h2 class="text-2xl font-bold mb-4">Verify Guarantee Card</h2>
-    <form id="verifyForm">
-      <div class="mb-4">
-        <label>Certificate ID</label>
-        <input type="text" name="certificateId" required class="w-full p-2 border rounded"/>
-      </div>
-      <div class="mb-4">
-        <label>Email</label>
-        <input type="email" name="email" required class="w-full p-2 border rounded"/>
-      </div>
-      <button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded font-semibold hover:bg-blue-600">Verify</button>
+        <input type="hidden" name="fee" id="fee">
+        <input type="hidden" name="total" id="total">
+        <input type="hidden" name="certificateId" id="certificateId">
+        <input type="hidden" name="type" value="Guarantee Card">
+
+        <button type="submit">Register Guarantee Card</button>
     </form>
-    <div id="verifyResult" class="mt-4 p-4 bg-gray-100 rounded hidden"></div>
-  </div>
-</section>
+</div>
+
+<div class="container" id="verifyDiv">
+    <h1>গ্যারান্টি কার্ড ভেরিফাই</h1>
+    <form id="verifyForm">
+        <input type="text" id="searchCertificate" placeholder="Certificate ID" required>
+        <button type="submit">Verify</button>
+    </form>
+    <div id="result"></div>
+</div>
 
 <script>
-function showSection(id){
-  document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-}
+// Auto calculate 2% fee & generate certificate
+const form = document.getElementById('guaranteeForm');
+const budgetInput = document.getElementById('budget');
+const feeInput = document.getElementById('fee');
+const totalInput = document.getElementById('total');
+const certificateInput = document.getElementById('certificateId');
 
-// Fee calculation
 function calculateFee(){
-  const budget = parseFloat(document.getElementById('budget').value) || 0;
-  const fee = budget * 0.02;
-  const total = budget + fee;
-  document.getElementById('fee').value = fee.toFixed(2);
-  document.getElementById('total').value = total.toFixed(2);
+    const budget = parseFloat(budgetInput.value) || 0;
+    const fee = budget*0.02;
+    const total = budget+fee;
+    feeInput.value = fee.toFixed(2);
+    totalInput.value = total.toFixed(2);
 }
 
-// Dummy submit handlers
-document.getElementById('registerForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  alert('Card Registered Successfully! (Demo)');
-  this.reset();
+function generateCertificate(){
+    const id = 'GC-'+Math.floor(Math.random()*1000000);
+    certificateInput.value = id;
+}
+
+budgetInput.addEventListener('input', calculateFee);
+form.addEventListener('submit', (e)=>{
+    generateCertificate();
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    fetch('submit.php',{method:'POST',body:formData})
+    .then(res=>res.text())
+    .then(data=>{
+        alert('Registration successful! Certificate ID: '+certificateInput.value);
+        form.reset();
+    }).catch(err=>{
+        alert('Error submitting form.');
+    });
 });
 
-document.getElementById('verifyForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const resultDiv = document.getElementById('verifyResult');
-  resultDiv.innerHTML = `
-    <p><strong>Certificate ID:</strong> ABC123</p>
-    <p><strong>Status:</strong> Paid</p>
-    <p><strong>Buyer:</strong> John Doe</p>
-    <p><strong>Expiry Date:</strong> 2025-12-31</p>
-  `;
-  resultDiv.classList.remove('hidden');
+// Verify system (JSON)
+const verifyForm = document.getElementById('verifyForm');
+const resultDiv = document.getElementById('result');
+
+verifyForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const id = document.getElementById('searchCertificate').value;
+    const res = await fetch('data.json');
+    const data = await res.json();
+
+    const card = data.find(c => c.certificateId === id && c.status==='Paid');
+    if(card){
+        resultDiv.style.display='block';
+        resultDiv.innerHTML = `
+        <h2>Card Verified ✅</h2>
+        <p><strong>Certificate ID:</strong> ${card.certificateId}</p>
+        <p><strong>Seller:</strong> ${card.sellerName}</p>
+        <p><strong>Buyer:</strong> ${card.buyerName}</p>
+        <p><strong>Service:</strong> ${card.serviceDescription}</p>
+        <p><strong>Total:</strong> ৳ ${card.total}</p>
+        <p><strong>Verification Code:</strong> ${card.verificationCode}</p>
+        <p><strong>Expiry Date:</strong> ${card.expiryDate}</p>
+        `;
+    }else{
+        resultDiv.style.display='block';
+        resultDiv.innerHTML='<p>Card not found or not paid yet ❌</p>';
+    }
 });
 </script>
 
