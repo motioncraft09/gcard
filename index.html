@@ -124,7 +124,7 @@
         
         .loading-dots {
             display: flex;
-            justify-content: center;
+            justify-center: center;
             margin-top: 10px;
         }
         
@@ -181,6 +181,22 @@
         .nav-active {
             background-color: rgb(224 231 255);
             color: rgb(79 70 229);
+        }
+        
+        .payment-method {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .payment-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-active {
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.2), inset 0 0 5px rgba(79, 70, 229, 0.1);
+            background-color: rgb(238 242 255);
         }
     </style>
 </head>
@@ -382,13 +398,13 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Seller Name
                                         </label>
-                                        <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="John's Repair Service">
+                                        <input type="text" id="seller-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="John's Repair Service">
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Seller Email
                                         </label>
-                                        <input type="email" class="w-full px-4 py-2 input-field rounded-md" placeholder="john@example.com">
+                                        <input type="email" id="seller-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="john@example.com">
                                     </div>
                                 </div>
                                 
@@ -398,13 +414,13 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Buyer Name
                                         </label>
-                                        <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Jane Smith">
+                                        <input type="text" id="buyer-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="Jane Smith">
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Buyer Email
                                         </label>
-                                        <input type="email" class="w-full px-4 py-2 input-field rounded-md" placeholder="jane@example.com">
+                                        <input type="email" id="buyer-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="jane@example.com">
                                     </div>
                                 </div>
                             </div>
@@ -415,7 +431,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">
                                         Service Description
                                     </label>
-                                    <textarea rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Detailed description of the service provided..."></textarea>
+                                    <textarea id="service-description" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Detailed description of the service provided..."></textarea>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -423,7 +439,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Service Budget ($)
                                         </label>
-                                        <input type="number" class="w-full px-4 py-2 input-field rounded-md" placeholder="100.00">
+                                        <input type="number" id="service-budget" min="0" step="0.01" class="w-full px-4 py-2 input-field rounded-md" placeholder="100.00">
                                         <p class="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
                                         <p class="text-xs text-indigo-600 mt-1">* Exchange rate: $1 = 125৳</p>
                                     </div>
@@ -432,7 +448,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Guarantee Period (days)
                                         </label>
-                                        <input type="number" class="w-full px-4 py-2 input-field rounded-md" value="30">
+                                        <input type="number" id="guarantee-period" class="w-full px-4 py-2 input-field rounded-md" value="30">
                                     </div>
                                 </div>
                                 
@@ -440,20 +456,20 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">
                                         Refund Terms & Conditions
                                     </label>
-                                    <textarea rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Terms of the guarantee...">Full refund within the guarantee period if service quality is not met.</textarea>
+                                    <textarea id="refund-terms" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Terms of the guarantee...">Full refund within the guarantee period if service quality is not met.</textarea>
                                 </div>
                                 
                                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
                                     <h4 class="font-medium text-indigo-700 mb-2">Fee Breakdown</h4>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div class="text-sm text-gray-600">Service Budget:</div>
-                                        <div class="text-sm font-medium text-right">$ 0.00</div>
+                                        <div id="fee-budget" class="text-sm font-medium text-right">$ 0.00</div>
                                         
                                         <div class="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div class="text-sm font-medium text-right">$ 0.00</div>
+                                        <div id="fee-amount" class="text-sm font-medium text-right">$ 0.00</div>
                                         
                                         <div class="text-sm text-gray-600 border-t border-gray-300 pt-1">Total Amount:</div>
-                                        <div class="text-sm font-bold text-right border-t border-gray-300 pt-1">$ 0.00</div>
+                                        <div id="fee-total" class="text-sm font-bold text-right border-t border-gray-300 pt-1">$ 0.00</div>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-2">
                                         Fees: ≤$40 (5%), $40.01-$160 (3%), ≥$160.01 (2%, min $8)
@@ -462,9 +478,136 @@
                             </div>
                             
                             <div class="mt-8 flex justify-end">
-                                <button class="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg transition-all duration-300">
-                                    Continue to Payment - $ 0.00
+                                <button id="continue-to-payment" class="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg transition-all duration-300">
+                                    Continue to Payment - $ <span id="payment-total">0.00</span>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Payment Section -->
+            <section id="payment-section" class="page-section">
+                <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Complete Your Payment</h2>
+                            <p class="text-indigo-100 mt-1">Please send money via one of the following methods</p>
+                        </div>
+                        
+                        <div class="px-6 py-6">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                                <div id="payment-bkash" class="payment-method p-4 border-2 rounded-lg text-center payment-active">
+                                    <div class="text-4xl mb-2">📱</div>
+                                    <h3 class="font-semibold text-gray-900">bKash</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
+                                </div>
+                                
+                                <div id="payment-nagad" class="payment-method p-4 border-2 rounded-lg text-center">
+                                    <div class="text-4xl mb-2">💳</div>
+                                    <h3 class="font-semibold text-gray-900">Nagad</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
+                                </div>
+                                
+                                <div id="payment-rocket" class="payment-method p-4 border-2 rounded-lg text-center">
+                                    <div class="text-4xl mb-2">🚀</div>
+                                    <h3 class="font-semibold text-gray-900">Rocket</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
+                                </div>
+                                
+                                <div id="payment-paypal" class="payment-method p-4 border-2 rounded-lg text-center">
+                                    <div class="text-4xl mb-2">🌎</div>
+                                    <h3 class="font-semibold text-gray-900">PayPal</h3>
+                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p class="font-mono text-sm font-bold text-indigo-600">payments@onexx.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-yellow-50 p-4 rounded-lg mb-6 border border-yellow-200">
+                                <div class="flex">
+                                    <div class="flex-shrink-0 text-yellow-500 text-xl">📌</div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-yellow-800">Important Note</h3>
+                                        <div class="mt-2 text-sm text-yellow-700">
+                                            <p>For bKash, Nagad, and Rocket: Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
+                                            <p class="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                            <p class="mt-1">For PayPal: Enter your PayPal email address used for payment.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                                <div id="payment-bkash-form" class="payment-form">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                                Transaction ID (TxID)
+                                            </label>
+                                            <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID">
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                                Your Mobile Number
+                                            </label>
+                                            <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="payment-paypal-form" class="payment-form hidden">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                                            Your PayPal Email
+                                        </label>
+                                        <input type="email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email">
+                                        <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <button id="submit-payment" class="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg transition-all duration-300">
+                                        Submit Payment Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden mt-8">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-xl font-bold text-white">Order Summary</h2>
+                        </div>
+                        <div class="px-6 py-4">
+                            <div class="flex justify-between py-2">
+                                <span class="text-gray-600">Service</span>
+                                <span id="summary-service" class="font-medium text-gray-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-gray-600">Seller</span>
+                                <span id="summary-seller" class="font-medium text-gray-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-gray-600">Buyer</span>
+                                <span id="summary-buyer" class="font-medium text-gray-900">-</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-gray-600">Service Budget</span>
+                                <span id="summary-budget" class="font-medium text-gray-900">$ 0.00</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span class="text-gray-600">Guarantee Fee</span>
+                                <span id="summary-fee" class="font-medium text-gray-900">$ 0.00</span>
+                            </div>
+                            <div class="flex justify-between py-2 border-t border-gray-300 mt-2 pt-3">
+                                <span class="text-lg font-bold text-gray-900">Total</span>
+                                <span id="summary-total" class="text-lg font-bold text-indigo-600">$ 0.00</span>
                             </div>
                         </div>
                     </div>
@@ -508,6 +651,72 @@
                     </div>
                 </div>
             </section>
+            
+            <!-- Success Section -->
+            <section id="success-section" class="page-section">
+                <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="px-6 py-12">
+                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
+                                <svg class="h-8 w-8 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                            <p class="mt-2 text-gray-600">
+                                Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                            </p>
+                            
+                            <div class="mt-8 bg-gray-50 p-6 rounded-lg text-left border border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Certificate ID</p>
+                                        <p class="font-medium text-gray-900">OXX-123456-ABC789</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Transaction ID</p>
+                                        <p class="font-medium text-gray-900">TX123456789</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Payment Method</p>
+                                        <p class="font-medium text-gray-900">bKash</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Sender Number</p>
+                                        <p class="font-medium text-gray-900">01XXXXXXXXX</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Service Budget</p>
+                                        <p class="font-medium text-gray-900">$ 100.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Guarantee Fee</p>
+                                        <p class="font-medium text-gray-900">$ 5.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Total Paid</p>
+                                        <p class="font-medium text-gray-900">$ 105.00</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Status</p>
+                                        <p class="font-medium text-yellow-600">Pending Verification</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <button class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 mr-3">
+                                    Download Receipt
+                                </button>
+                                <button id="success-home-btn" class="bg-white text-gray-700 font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 border border-gray-300">
+                                    Back to Home
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
         
         <!-- Footer -->
@@ -538,6 +747,12 @@
             
             // Set up navigation
             setupNavigation();
+            
+            // Set up form functionality
+            setupFormFunctionality();
+            
+            // Set up payment functionality
+            setupPaymentFunctionality();
         });
         
         function setupNavigation() {
@@ -548,11 +763,14 @@
             const logo = document.getElementById('logo');
             const homeCreateBtn = document.getElementById('home-create-btn');
             const ctaCreateBtn = document.getElementById('cta-create-btn');
+            const successHomeBtn = document.getElementById('success-home-btn');
             
             // Get all page sections
             const homeSection = document.getElementById('home-section');
             const createSection = document.getElementById('create-section');
             const verifySection = document.getElementById('verify-section');
+            const paymentSection = document.getElementById('payment-section');
+            const successSection = document.getElementById('success-section');
             
             // Function to change active section
             function changeActiveSection(section) {
@@ -560,6 +778,8 @@
                 homeSection.classList.remove('active-section');
                 createSection.classList.remove('active-section');
                 verifySection.classList.remove('active-section');
+                paymentSection.classList.remove('active-section');
+                successSection.classList.remove('active-section');
                 
                 // Remove active class from all nav buttons
                 navHome.classList.remove('nav-active');
@@ -608,6 +828,117 @@
             // CTA create button
             ctaCreateBtn.addEventListener('click', function() {
                 changeActiveSection(createSection);
+            });
+            
+            // Success page home button
+            successHomeBtn.addEventListener('click', function() {
+                changeActiveSection(homeSection);
+            });
+        }
+        
+        function setupFormFunctionality() {
+            const budgetInput = document.getElementById('service-budget');
+            const feeBudget = document.getElementById('fee-budget');
+            const feeAmount = document.getElementById('fee-amount');
+            const feeTotal = document.getElementById('fee-total');
+            const paymentTotal = document.getElementById('payment-total');
+            const continueButton = document.getElementById('continue-to-payment');
+            
+            // Function to calculate fees
+            function calculateFees(budget) {
+                if (!budget || budget <= 0) return { fee: 0, total: 0 };
+                
+                let fee = 0;
+                if (budget <= 40) {
+                    fee = budget * 0.05; // 5% for small budgets
+                } else if (budget <= 160) {
+                    fee = budget * 0.03; // 3% for medium budgets
+                } else {
+                    fee = Math.max(8, budget * 0.02); // 2% for large budgets (min $8)
+                }
+                
+                return {
+                    fee: parseFloat(fee.toFixed(2)),
+                    total: parseFloat((budget + fee).toFixed(2))
+                };
+            }
+            
+            // Update fee breakdown when budget changes
+            budgetInput.addEventListener('input', function() {
+                const budget = parseFloat(this.value) || 0;
+                const fees = calculateFees(budget);
+                
+                feeBudget.textContent = '$ ' + budget.toFixed(2);
+                feeAmount.textContent = '$ ' + fees.fee.toFixed(2);
+                feeTotal.textContent = '$ ' + fees.total.toFixed(2);
+                paymentTotal.textContent = fees.total.toFixed(2);
+            });
+            
+            // Continue to payment button
+            continueButton.addEventListener('click', function() {
+                const budget = parseFloat(budgetInput.value) || 0;
+                
+                if (budget <= 0) {
+                    alert('Please enter a valid service budget');
+                    return;
+                }
+                
+                // Update order summary
+                document.getElementById('summary-service').textContent = document.getElementById('service-description').value || '-';
+                document.getElementById('summary-seller').textContent = document.getElementById('seller-name').value || '-';
+                document.getElementById('summary-buyer').textContent = document.getElementById('buyer-name').value || '-';
+                
+                const fees = calculateFees(budget);
+                document.getElementById('summary-budget').textContent = '$ ' + budget.toFixed(2);
+                document.getElementById('summary-fee').textContent = '$ ' + fees.fee.toFixed(2);
+                document.getElementById('summary-total').textContent = '$ ' + fees.total.toFixed(2);
+                
+                // Switch to payment section
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active-section');
+                });
+                document.getElementById('payment-section').classList.add('active-section');
+                
+                // Update nav active state
+                document.querySelectorAll('nav button').forEach(button => {
+                    button.classList.remove('nav-active');
+                });
+            });
+        }
+        
+        function setupPaymentFunctionality() {
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const paymentForms = document.querySelectorAll('.payment-form');
+            const submitPaymentBtn = document.getElementById('submit-payment');
+            
+            // Payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove active class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('payment-active'));
+                    
+                    // Add active class to clicked method
+                    this.classList.add('payment-active');
+                    
+                    // Show appropriate form
+                    const methodId = this.id;
+                    if (methodId === 'payment-paypal') {
+                        document.getElementById('payment-bkash-form').classList.add('hidden');
+                        document.getElementById('payment-paypal-form').classList.remove('hidden');
+                    } else {
+                        document.getElementById('payment-bkash-form').classList.remove('hidden');
+                        document.getElementById('payment-paypal-form').classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Submit payment button
+            submitPaymentBtn.addEventListener('click', function() {
+                // Switch to success section
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active-section');
+                });
+                document.getElementById('success-section').classList.add('active-section');
             });
         }
     </script>
