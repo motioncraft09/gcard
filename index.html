@@ -124,7 +124,7 @@
         
         .loading-dots {
             display: flex;
-            justify-center: center;
+            justify-content: center;
             margin-top: 10px;
         }
         
@@ -548,14 +548,14 @@
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                                 Transaction ID (TxID)
                                             </label>
-                                            <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID">
+                                            <input type="text" id="transaction-id" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID">
                                         </div>
                                         
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                                 Your Mobile Number
                                             </label>
-                                            <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number">
+                                            <input type="text" id="mobile-number" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number">
                                         </div>
                                     </div>
                                 </div>
@@ -565,7 +565,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Your PayPal Email
                                         </label>
-                                        <input type="email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email">
+                                        <input type="email" id="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email">
                                         <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</p>
                                     </div>
                                 </div>
@@ -672,31 +672,31 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <p class="text-sm text-gray-600">Certificate ID</p>
-                                        <p class="font-medium text-gray-900">OXX-123456-ABC789</p>
+                                        <p class="font-medium text-gray-900" id="success-certificate-id">OXX-123456-ABC789</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Transaction ID</p>
-                                        <p class="font-medium text-gray-900">TX123456789</p>
+                                        <p class="font-medium text-gray-900" id="success-transaction-id">TX123456789</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Payment Method</p>
-                                        <p class="font-medium text-gray-900">bKash</p>
+                                        <p class="font-medium text-gray-900" id="success-payment-method">bKash</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Sender Number</p>
-                                        <p class="font-medium text-gray-900">01XXXXXXXXX</p>
+                                        <p class="font-medium text-gray-900" id="success-sender-number">01XXXXXXXXX</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Service Budget</p>
-                                        <p class="font-medium text-gray-900">$ 100.00</p>
+                                        <p class="font-medium text-gray-900" id="success-service-budget">$ 100.00</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Guarantee Fee</p>
-                                        <p class="font-medium text-gray-900">$ 5.00</p>
+                                        <p class="font-medium text-gray-900" id="success-guarantee-fee">$ 5.00</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Total Paid</p>
-                                        <p class="font-medium text-gray-900">$ 105.00</p>
+                                        <p class="font-medium text-gray-900" id="success-total-paid">$ 105.00</p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Status</p>
@@ -706,7 +706,7 @@
                             </div>
                             
                             <div class="mt-8">
-                                <button class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 mr-3">
+                                <button id="download-receipt" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 mr-3">
                                     Download Receipt
                                 </button>
                                 <button id="success-home-btn" class="bg-white text-gray-700 font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 border border-gray-300">
@@ -753,6 +753,9 @@
             
             // Set up payment functionality
             setupPaymentFunctionality();
+            
+            // Set up receipt download functionality
+            setupReceiptDownload();
         });
         
         function setupNavigation() {
@@ -934,11 +937,88 @@
             
             // Submit payment button
             submitPaymentBtn.addEventListener('click', function() {
+                // Get payment details
+                const paymentMethod = document.querySelector('.payment-active h3').textContent;
+                let transactionId = '';
+                let senderInfo = '';
+                
+                if (paymentMethod === 'PayPal') {
+                    transactionId = document.getElementById('paypal-email').value;
+                    senderInfo = document.getElementById('paypal-email').value;
+                } else {
+                    transactionId = document.getElementById('transaction-id').value;
+                    senderInfo = document.getElementById('mobile-number').value;
+                }
+                
+                // Update success section with transaction details
+                document.getElementById('success-payment-method').textContent = paymentMethod;
+                document.getElementById('success-transaction-id').textContent = transactionId || 'TX' + Math.floor(100000 + Math.random() * 900000);
+                document.getElementById('success-sender-number').textContent = senderInfo;
+                document.getElementById('success-service-budget').textContent = document.getElementById('summary-budget').textContent;
+                document.getElementById('success-guarantee-fee').textContent = document.getElementById('summary-fee').textContent;
+                document.getElementById('success-total-paid').textContent = document.getElementById('summary-total').textContent;
+                
+                // Generate certificate ID
+                const certificateId = 'OXX-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase();
+                document.getElementById('success-certificate-id').textContent = certificateId;
+                
                 // Switch to success section
                 document.querySelectorAll('.page-section').forEach(section => {
                     section.classList.remove('active-section');
                 });
                 document.getElementById('success-section').classList.add('active-section');
+            });
+        }
+        
+        function setupReceiptDownload() {
+            const downloadReceiptBtn = document.getElementById('download-receipt');
+            
+            downloadReceiptBtn.addEventListener('click', function() {
+                // Get all transaction details
+                const certificateId = document.getElementById('success-certificate-id').textContent;
+                const transactionId = document.getElementById('success-transaction-id').textContent;
+                const paymentMethod = document.getElementById('success-payment-method').textContent;
+                const senderNumber = document.getElementById('success-sender-number').textContent;
+                const serviceBudget = document.getElementById('success-service-budget').textContent;
+                const guaranteeFee = document.getElementById('success-guarantee-fee').textContent;
+                const totalPaid = document.getElementById('success-total-paid').textContent;
+                const serviceDescription = document.getElementById('service-description').value || 'Service guarantee';
+                const sellerName = document.getElementById('seller-name').value || 'Unknown Seller';
+                const buyerName = document.getElementById('buyer-name').value || 'Unknown Buyer';
+                const guaranteePeriod = document.getElementById('guarantee-period').value || '30';
+                
+                // Create receipt content
+                const receiptContent = `
+OneXX - Payment Receipt
+------------------------------------------
+Certificate ID: ${certificateId}
+Transaction ID: ${transactionId}
+Payment Method: ${paymentMethod}
+Sender: ${senderNumber}
+Date: ${new Date().toLocaleDateString()}
+
+Service: ${serviceDescription}
+Seller: ${sellerName}
+Buyer: ${buyerName}
+Service Budget: ${serviceBudget}
+Guarantee Fee: ${guaranteeFee}
+Total Amount: ${totalPaid}
+Guarantee Period: ${guaranteePeriod} days
+
+Status: Pending Verification
+Note: Your guarantee certificate will be emailed to you after payment verification.
+                `;
+                
+                // Create download link
+                const blob = new Blob([receiptContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `onexx-receipt-${certificateId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             });
         }
     </script>
