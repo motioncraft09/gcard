@@ -3,58 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Guarantee Card</title>
+    <title>OneXX - Secure Service Guarantees</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --light-bg: #f9fafb;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-light: #e5e7eb;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .card-white {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-light);
+        }
+        
         .card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
         }
-        .certificate-border {
-            border: 25px solid transparent;
-            padding: 15px;
-            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%23f59e0b" stroke-width="4" stroke-dasharray="10,5" fill="none" /></svg>') 30 stretch;
+        
+        .neon-border {
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 10px rgba(79, 70, 229, 0.2), inset 0 0 5px rgba(79, 70, 229, 0.1);
         }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            0% { transform: translateX(-100px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            0% { transform: translateX(100px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        
         .payment-method {
             transition: all 0.3s ease;
         }
+        
         .payment-method:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
         }
-        @media (max-width: 768px) {
-            .certificate-border {
-                border-width: 15px;
-            }
-        }
+        
         .fee-breakdown {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
         }
+        
         .certificate-card {
             transition: all 0.3s ease;
         }
+        
         .certificate-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+        
+        .glow {
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+        
+        .input-field {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        .cyber-border {
+            position: relative;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.1);
+        }
+        
+        .text-highlight {
+            color: var(--primary);
+        }
+        
+        .bg-dots {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        /* Loading Animation */
+        .loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+        
+        .hexagon-loader {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+        
+        .hexagon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            opacity: 0;
+            animation: hexPulse 2s infinite;
+        }
+        
+        .hexagon:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        .hexagon:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+        
+        @keyframes hexPulse {
+            0% {
+                transform: scale(0.8) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+        
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 50%;
+            margin: 0 5px;
+            animation: dotPulse 1.5s infinite;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dotPulse {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="min-h-screen bg-dots">
+    <!-- Loading Animation -->
+    <div class="loading-container" id="loading">
+        <div class="loading-content">
+            <div class="hexagon-loader">
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+            </div>
+            <div class="loading-text">ONEX<span class="text-secondary">X</span></div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="root"></div>
 
     <!-- Hidden iframe for form submission without navigation -->
     <iframe name="hiddenFrame" style="display: none;"></iframe>
 
     <script type="text/babel">
+        // Show loading animation initially
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading animation when React app is fully loaded
+            setTimeout(function() {
+                const loadingElement = document.getElementById('loading');
+                if (loadingElement) {
+                    loadingElement.style.opacity = '0';
+                    setTimeout(function() {
+                        loadingElement.style.display = 'none';
+                    }, 500);
+                }
+            }, 2000); // Simulate loading for 2 seconds
+        });
+
         // Main App Component
         const { useState, useEffect } = React;
 
         // Generate a unique certificate ID
         const generateCertificateId = () => {
-            const prefix = 'UGC';
+            const prefix = 'OXX';
             const timestamp = Date.now().toString(36);
             const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
             return `${prefix}-${timestamp}-${randomStr}`;
@@ -84,37 +330,26 @@
             }
         };
 
-        // Get all certificates (for admin view)
-        // Note: This function remains for potential future use with a separate admin site
-        const getAllCertificates = () => {
-            try {
-                return JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
-            } catch (error) {
-                console.error('Error retrieving certificates:', error);
-                return [];
-            }
-        };
-
         function App() {
-            const [currentView, setCurrentView] = useState('form');
+            const [currentView, setCurrentView] = useState('home');
             const [certificateData, setCertificateData] = useState(null);
             const [paymentData, setPaymentData] = useState(null);
 
-            // Removed Admin from navigation
             const navigation = [
+                { name: 'Home', id: 'home' },
                 { name: 'Create Guarantee', id: 'form' },
                 { name: 'Verify', id: 'verify' }
             ];
 
             return (
-                <div className="min-h-screen bg-gray-50">
+                <div className="min-h-screen">
                     {/* Navigation */}
-                    <nav className="bg-white shadow-sm">
+                    <nav className="bg-white shadow-sm fixed w-full z-50">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex justify-between h-16">
                                 <div className="flex items-center">
-                                    <div className="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" onClick={() => setCurrentView('form')}>
-                                        <span className="mr-1">🛡️</span> Universal Guarantee Card
+                                    <div className="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" onClick={() => setCurrentView('home')}>
+                                        <span className="mr-2"><i className="fas fa-shield-alt"></i></span> OneXX
                                     </div>
                                 </div>
                                 <div className="flex items-center space-x-4">
@@ -125,7 +360,7 @@
                                             className={`px-3 py-2 rounded-md text-sm font-medium ${currentView === item.id
                                                 ? 'bg-indigo-100 text-indigo-700'
                                                 : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100'
-                                                }`}
+                                                } transition-all duration-300`}
                                         >
                                             {item.name}
                                         </button>
@@ -136,7 +371,8 @@
                     </nav>
 
                     {/* Main Content */}
-                    <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <main className="pt-16">
+                        {currentView === 'home' && <HomePage onGetStarted={() => setCurrentView('form')} />}
                         {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
                         {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
                         {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} />}
@@ -146,10 +382,161 @@
                     {/* Footer */}
                     <footer className="bg-white mt-12 py-6 border-t border-gray-200">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
-                            <p>© 2023 Universal Guarantee Card. All rights reserved.</p>
-                            <p className="mt-2">For support, email: motioncraft.portal@gmail.com</p>
+                            <p>© 2023 OneXX. All rights reserved.</p>
+                            <p className="mt-2">For support, email: support@onexx.com</p>
+                            <div className="flex justify-center mt-4 space-x-4">
+                                <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors"><i className="fab fa-twitter"></i></a>
+                                <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors"><i className="fab fa-facebook"></i></a>
+                                <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors"><i className="fab fa-linkedin"></i></a>
+                                <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors"><i className="fab fa-instagram"></i></a>
+                            </div>
                         </div>
                     </footer>
+                </div>
+            );
+        }
+
+        // HomePage Component
+        function HomePage({ onGetStarted }) {
+            return (
+                <div className="relative overflow-hidden">
+                    {/* Hero Section */}
+                    <section className="relative z-10 min-h-screen flex items-center">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                                <div className="slide-in-left">
+                                    <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                                        Secure Your Services with <span className="text-highlight">OneXX</span>
+                                    </h1>
+                                    <p className="text-xl text-gray-600 mb-8">
+                                        The future of service protection. Get peace of mind with our blockchain-inspired guarantee system that protects both buyers and sellers.
+                                    </p>
+                                    <div className="flex flex-wrap gap-4">
+                                        <button 
+                                            onClick={onGetStarted}
+                                            className="gradient-bg text-white font-bold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 pulse"
+                                        >
+                                            Create Guarantee
+                                        </button>
+                                        <button className="bg-white text-indigo-600 font-bold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300 border border-indigo-200">
+                                            Learn More
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="slide-in-right">
+                                    <div className="card-white card-shadow p-8 rounded-2xl float cyber-border">
+                                        <div className="bg-indigo-50 rounded-xl p-6">
+                                            <div className="text-center mb-6">
+                                                <div className="w-24 h-24 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <i className="fas fa-shield-alt text-4xl text-white"></i>
+                                                </div>
+                                                <h3 className="text-2xl font-bold text-gray-900">Sample Certificate</h3>
+                                                <p className="text-gray-600">OXX-123456-ABC789</p>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                                <div>
+                                                    <p className="text-gray-500 text-sm">Seller</p>
+                                                    <p className="text-gray-900">John's Service</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-500 text-sm">Buyer</p>
+                                                    <p className="text-gray-900">Jane Client</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-500 text-sm">Value</p>
+                                                    <p className="text-gray-900">$1,500</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-gray-500 text-sm">Status</p>
+                                                    <p className="text-green-600">Active</p>
+                                                </div>
+                                            </div>
+                                            <div className="bg-gray-100 rounded-lg p-4 text-center">
+                                                <div className="w-32 h-32 mx-auto bg-white rounded border border-gray-300 flex items-center justify-center">
+                                                    <i className="fas fa-qrcode text-4xl text-gray-400"></i>
+                                                </div>
+                                                <p className="text-gray-500 mt-2">Scan to verify</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    {/* Features Section */}
+                    <section className="relative z-10 py-20">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="text-center mb-16">
+                                <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+                                <p className="text-xl text-gray-600 max-w-3xl mx-auto">Our process is designed to be simple, secure, and efficient for both buyers and sellers.</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="card-white p-6 rounded-2xl card-shadow hover:neon-border transition-all duration-300">
+                                    <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mb-6">
+                                        <span className="text-2xl text-white">1</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Create Agreement</h3>
+                                    <p className="text-gray-600">Seller creates a guarantee agreement with service details and terms.</p>
+                                </div>
+                                
+                                <div className="card-white p-6 rounded-2xl card-shadow hover:neon-border transition-all duration-300">
+                                    <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mb-6">
+                                        <span className="text-2xl text-white">2</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Secure Payment</h3>
+                                    <p className="text-gray-600">Buyer makes payment through our secure escrow system with low fees.</p>
+                                </div>
+                                
+                                <div className="card-white p-6 rounded-2xl card-shadow hover:neon-border transition-all duration-300">
+                                    <div className="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mb-6">
+                                        <span className="text-2xl text-white">3</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3">Get Protection</h3>
+                                    <p className="text-gray-600">Both parties are protected by our guarantee for the service period.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    {/* Stats Section */}
+                    <section className="relative z-10 py-20 bg-indigo-50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                <div className="text-center">
+                                    <div className="text-4xl font-bold text-indigo-600 mb-2">5,000+</div>
+                                    <div className="text-gray-600">Guarantees Issued</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-4xl font-bold text-indigo-600 mb-2">$760K+</div>
+                                    <div className="text-gray-600">Value Protected</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-4xl font-bold text-indigo-600 mb-2">99.7%</div>
+                                    <div className="text-gray-600">Satisfaction Rate</div>
+                                </div>
+                                <div className="text-center">
+                                    <div className="text-4xl font-bold text-indigo-600 mb-2">24/7</div>
+                                    <div className="text-gray-600">Support</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    {/* CTA Section */}
+                    <section className="relative z-10 py-20">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h2 className="text-4xl font-bold text-gray-900 mb-6">Ready to Secure Your Service?</h2>
+                            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Join thousands of satisfied customers who trust OneXX for their service protection needs.</p>
+                            <button 
+                                onClick={onGetStarted}
+                                className="gradient-bg text-white font-bold py-4 px-12 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 text-xl"
+                            >
+                                Get Started Now
+                            </button>
+                        </div>
+                    </section>
                 </div>
             );
         }
@@ -159,17 +546,17 @@
             if (!budget || budget <= 0) return { fee: 0, total: 0 };
             
             let fee = 0;
-            if (budget <= 5000) {
+            if (budget <= 40) { // $40 equivalent to 5000 BDT
                 fee = budget * 0.05; // 5% for small budgets
-            } else if (budget <= 20000) {
+            } else if (budget <= 160) { // $160 equivalent to 20000 BDT
                 fee = budget * 0.03; // 3% for medium budgets
             } else {
-                fee = Math.max(1000, budget * 0.02); // 2% for large budgets (min ৳1000)
+                fee = Math.max(8, budget * 0.02); // 2% for large budgets (min $8)
             }
             
             return {
-                fee: Math.round(fee),
-                total: Math.round(budget + fee)
+                fee: parseFloat(fee.toFixed(2)),
+                total: parseFloat((budget + fee).toFixed(2))
             };
         };
 
@@ -237,11 +624,11 @@
             };
 
             return (
-                <div className="max-w-3xl mx-auto">
-                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-2xl font-bold text-gray-800">Create Guarantee Certificate</h2>
-                            <p className="text-gray-600 mt-1">Fill out the form below to create a new guarantee certificate</p>
+                <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="card-white card-shadow rounded-2xl overflow-hidden fade-in">
+                        <div className="gradient-bg px-6 py-4">
+                            <h2 className="text-2xl font-bold text-white">Create Guarantee Certificate</h2>
+                            <p className="text-indigo-100 mt-1">Fill out the form below to create a new guarantee certificate</p>
                         </div>
                         
                         <form 
@@ -270,7 +657,7 @@
                                             required
                                             value={formData.sellerName}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                             placeholder="John's Repair Service"
                                         />
                                     </div>
@@ -285,7 +672,7 @@
                                             required
                                             value={formData.sellerEmail}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                             placeholder="john@example.com"
                                         />
                                     </div>
@@ -304,7 +691,7 @@
                                             required
                                             value={formData.buyerName}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                             placeholder="Jane Smith"
                                         />
                                     </div>
@@ -319,7 +706,7 @@
                                             required
                                             value={formData.buyerEmail}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                             placeholder="jane@example.com"
                                         />
                                     </div>
@@ -339,7 +726,7 @@
                                         required
                                         value={formData.serviceDescription}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                         placeholder="Detailed description of the service provided..."
                                     />
                                 </div>
@@ -347,20 +734,22 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="mb-4">
                                         <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Service Budget (৳)
+                                            Service Budget ($)
                                         </label>
                                         <input
                                             type="number"
                                             name="budget"
                                             id="budget"
                                             min="0"
+                                            step="0.01"
                                             required
                                             value={formData.budget}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                            placeholder="5000"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
+                                            placeholder="100.00"
                                         />
                                         <p className="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
+                                        <p className="text-xs text-indigo-600 mt-1">* Exchange rate: $1 = 125৳</p>
                                     </div>
                                     
                                     <div className="mb-4">
@@ -375,7 +764,7 @@
                                             required
                                             value={formData.guaranteePeriod}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                         />
                                     </div>
                                 </div>
@@ -391,7 +780,7 @@
                                         required
                                         value={formData.terms}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
                                         placeholder="Terms of the guarantee..."
                                     />
                                 </div>
@@ -401,20 +790,20 @@
                                 <input type="hidden" name="totalAmount" value={fees.total} />
                                 
                                 {/* Fee Breakdown */}
-                                <div className="fee-breakdown p-4 rounded-lg border border-blue-200">
-                                    <h4 className="font-medium text-blue-800 mb-2">Fee Breakdown</h4>
+                                <div className="fee-breakdown p-4 rounded-lg border border-indigo-200">
+                                    <h4 className="font-medium text-indigo-700 mb-2">Fee Breakdown</h4>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="text-sm text-gray-600">Service Budget:</div>
-                                        <div className="text-sm font-medium text-right">৳ {formData.budget ? parseInt(formData.budget).toLocaleString() : '0'}</div>
+                                        <div className="text-sm font-medium text-right">$ {formData.budget ? parseFloat(formData.budget).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</div>
                                         
                                         <div className="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div className="text-sm font-medium text-right">৳ {fees.fee.toLocaleString()}</div>
+                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                         
-                                        <div className="text-sm text-gray-600 border-t border-gray-200 pt-1">Total Amount:</div>
-                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-1">৳ {fees.total.toLocaleString()}</div>
+                                        <div className="text-sm text-gray-600 border-t border-gray-300 pt-1">Total Amount:</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-300 pt-1">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-2">
-                                        Fees: ≤৳5,000 (5%), ৳5,001-৳20,000 (3%), ≥৳20,001 (2%, min ৳1,000)
+                                        Fees: ≤$40 (5%), $40.01-$160 (3%), ≥$160.01 (2%, min $8)
                                     </p>
                                 </div>
                             </div>
@@ -423,9 +812,9 @@
                                 <button
                                     type="submit"
                                     disabled={isSubmitting || !formData.budget || formData.budget <= 0}
-                                    className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    className="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300"
                                 >
-                                    {isSubmitting ? 'Processing...' : `Continue to Payment - ৳ ${fees.total.toLocaleString()}`}
+                                    {isSubmitting ? 'Processing...' : `Continue to Payment - $ ${fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
                                 </button>
                             </div>
                         </form>
@@ -439,6 +828,7 @@
             const [activeMethod, setActiveMethod] = useState('bkash');
             const [txId, setTxId] = useState('');
             const [senderNumber, setSenderNumber] = useState('');
+            const [senderEmail, setSenderEmail] = useState('');
             const [isSubmitting, setIsSubmitting] = useState(false);
             
             // Calculate fees based on budget
@@ -446,14 +836,23 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                if (!txId || !senderNumber) return;
+                
+                if (activeMethod === 'paypal') {
+                    if (!senderEmail) return;
+                } else {
+                    if (!txId || !senderNumber) return;
+                }
                 
                 setIsSubmitting(true);
                 
                 // Update certificate data with payment info
                 const updatedData = {
                     ...data,
-                    payment: {
+                    payment: activeMethod === 'paypal' ? {
+                        senderEmail,
+                        method: activeMethod,
+                        paidAt: new Date().toISOString()
+                    } : {
                         txId,
                         senderNumber,
                         method: activeMethod,
@@ -472,59 +871,72 @@
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
-                    onSuccess({ txId, senderNumber, method: activeMethod });
+                    onSuccess(activeMethod === 'paypal' ? 
+                        { senderEmail, method: activeMethod } : 
+                        { txId, senderNumber, method: activeMethod });
                 }, 1500);
             };
 
             return (
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-white card-shadow rounded-lg overflow-hidden mb-8">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-2xl font-bold text-gray-800">Complete Your Payment</h2>
-                            <p className="text-gray-600 mt-1">Please send money via one of the following methods</p>
+                <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    <div className="card-white card-shadow rounded-2xl overflow-hidden mb-8 fade-in">
+                        <div className="gradient-bg px-6 py-4">
+                            <h2 className="text-2xl font-bold text-white">Complete Your Payment</h2>
+                            <p className="text-indigo-100 mt-1">Please send money via one of the following methods</p>
                         </div>
                         
                         <div className="px-6 py-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                                 <div 
-                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'bkash' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'bkash' ? 'neon-border bg-indigo-50' : 'bg-white border-gray-200'}`}
                                     onClick={() => setActiveMethod('bkash')}
                                 >
                                     <div className="text-4xl mb-2">📱</div>
-                                    <h3 className="font-semibold">bKash</h3>
+                                    <h3 className="font-semibold text-gray-900">bKash</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                    <p className="font-mono text-lg font-bold text-indigo-600">01322149482</p>
                                 </div>
                                 
                                 <div 
-                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'nagad' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'nagad' ? 'neon-border bg-indigo-50' : 'bg-white border-gray-200'}`}
                                     onClick={() => setActiveMethod('nagad')}
                                 >
                                     <div className="text-4xl mb-2">💳</div>
-                                    <h3 className="font-semibold">Nagad</h3>
+                                    <h3 className="font-semibold text-gray-900">Nagad</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                    <p className="font-mono text-lg font-bold text-indigo-600">01322149482</p>
                                 </div>
                                 
                                 <div 
-                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'rocket' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'rocket' ? 'neon-border bg-indigo-50' : 'bg-white border-gray-200'}`}
                                     onClick={() => setActiveMethod('rocket')}
                                 >
                                     <div className="text-4xl mb-2">🚀</div>
-                                    <h3 className="font-semibold">Rocket</h3>
+                                    <h3 className="font-semibold text-gray-900">Rocket</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                    <p className="font-mono text-lg font-bold text-indigo-600">01322149482</p>
+                                </div>
+                                
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'paypal' ? 'neon-border bg-indigo-50' : 'bg-white border-gray-200'}`}
+                                    onClick={() => setActiveMethod('paypal')}
+                                >
+                                    <div className="text-4xl mb-2">🌎</div>
+                                    <h3 className="font-semibold text-gray-900">PayPal</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-sm font-bold text-indigo-600">payments@onexx.com</p>
                                 </div>
                             </div>
                             
-                            <div className="bg-yellow-50 p-4 rounded-lg mb-6">
+                            <div className="bg-yellow-50 p-4 rounded-lg mb-6 border border-yellow-200">
                                 <div className="flex">
-                                    <div className="flex-shrink-0">📌</div>
+                                    <div className="flex-shrink-0 text-yellow-500 text-xl">📌</div>
                                     <div className="ml-3">
                                         <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
                                         <div className="mt-2 text-sm text-yellow-700">
-                                            <p>Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
+                                            <p>For bKash, Nagad, and Rocket: Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
                                             <p className="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                            <p className="mt-1">For PayPal: Enter your PayPal email address used for payment.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -535,7 +947,7 @@
                                 action="https://formsubmit.co/niloykhan.get@gmail.com" 
                                 method="POST"
                                 target="hiddenFrame"
-                                className="bg-gray-50 p-6 rounded-lg"
+                                className="bg-gray-50 p-6 rounded-lg border border-gray-200"
                             >
                                 {/* FormSubmit.co configuration */}
                                 <input type="hidden" name="_subject" value="Payment Details for Guarantee Certificate" />
@@ -556,47 +968,66 @@
                                 <input type="hidden" name="guaranteeFee" value={fees.fee} />
                                 <input type="hidden" name="totalAmount" value={fees.total} />
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {activeMethod === 'paypal' ? (
                                     <div>
-                                        <label htmlFor="txId" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Transaction ID (TxID)
+                                        <label htmlFor="senderEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Your PayPal Email
                                         </label>
                                         <input
-                                            type="text"
-                                            id="txId"
-                                            name="transactionId"
+                                            type="email"
+                                            id="senderEmail"
+                                            name="senderEmail"
                                             required
-                                            value={txId}
-                                            onChange={(e) => setTxId(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                            placeholder="Enter your transaction ID"
+                                            value={senderEmail}
+                                            onChange={(e) => setSenderEmail(e.target.value)}
+                                            className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
+                                            placeholder="Enter your PayPal email"
                                         />
+                                        <p className="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</p>
                                     </div>
-                                    
-                                    <div>
-                                        <label htmlFor="senderNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Your Mobile Number
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="senderNumber"
-                                            name="senderNumber"
-                                            required
-                                            value={senderNumber}
-                                            onChange={(e) => setSenderNumber(e.target.value)}
-                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                                            placeholder="Enter your mobile number"
-                                        />
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label htmlFor="txId" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Transaction ID (TxID)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="txId"
+                                                name="transactionId"
+                                                required
+                                                value={txId}
+                                                onChange={(e) => setTxId(e.target.value)}
+                                                className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
+                                                placeholder="Enter your transaction ID"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label htmlFor="senderNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                                                Your Mobile Number
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="senderNumber"
+                                                name="senderNumber"
+                                                required
+                                                value={senderNumber}
+                                                onChange={(e) => setSenderNumber(e.target.value)}
+                                                className="w-full px-4 py-2 input-field rounded-md focus:ring-2 focus:ring-indigo-500"
+                                                placeholder="Enter your mobile number"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                                 
                                 <div className="mt-6 flex justify-end">
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                        className="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300"
                                     >
-                                        {isSubmitting ? 'Submitting...' : 'Submit Transaction Details'}
+                                        {isSubmitting ? 'Submitting...' : 'Submit Payment Details'}
                                     </button>
                                 </div>
                             </form>
@@ -604,34 +1035,34 @@
                     </div>
                     
                     {/* Order Summary */}
-                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-xl font-bold text-gray-800">Order Summary</h2>
+                    <div className="card-white card-shadow rounded-2xl overflow-hidden fade-in">
+                        <div className="gradient-bg px-6 py-4">
+                            <h2 className="text-xl font-bold text-white">Order Summary</h2>
                         </div>
                         <div className="px-6 py-4">
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Service</span>
-                                <span className="font-medium">{data.serviceDescription.substring(0, 40)}...</span>
+                                <span className="font-medium text-gray-900">{data.serviceDescription.substring(0, 40)}...</span>
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Seller</span>
-                                <span className="font-medium">{data.sellerName}</span>
+                                <span className="font-medium text-gray-900">{data.sellerName}</span>
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Buyer</span>
-                                <span className="font-medium">{data.buyerName}</span>
+                                <span className="font-medium text-gray-900">{data.buyerName}</span>
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Service Budget</span>
-                                <span className="font-medium">৳ {parseInt(data.budget || 0).toLocaleString()}</span>
+                                <span className="font-medium text-gray-900">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-gray-600">Guarantee Fee</span>
-                                <span className="font-medium">৳ {fees.fee.toLocaleString()}</span>
+                                <span className="font-medium text-gray-900">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
-                            <div className="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
-                                <span className="text-lg font-bold">Total</span>
-                                <span className="text-lg font-bold text-indigo-600">৳ {fees.total.toLocaleString()}</span>
+                            <div className="flex justify-between py-2 border-t border-gray-300 mt-2 pt-3">
+                                <span className="text-lg font-bold text-gray-900">Total</span>
+                                <span className="text-lg font-bold text-indigo-600">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                         </div>
                     </div>
@@ -647,20 +1078,20 @@
                 
                 // Create a simple receipt text
                 const receiptText = `
-                    Universal Guarantee Card - Payment Receipt
+                    OneXX - Payment Receipt
                     ------------------------------------------
                     Certificate ID: ${certificateData.certificateId}
-                    Transaction ID: ${paymentData.txId}
+                    ${paymentData.method !== 'paypal' ? `Transaction ID: ${paymentData.txId}` : `Sender Email: ${paymentData.senderEmail}`}
                     Payment Method: ${paymentData.method.toUpperCase()}
-                    Sender Number: ${paymentData.senderNumber}
+                    ${paymentData.method !== 'paypal' ? `Sender Number: ${paymentData.senderNumber}` : ''}
                     Date: ${new Date().toLocaleDateString()}
                     
                     Service: ${certificateData.serviceDescription}
                     Seller: ${certificateData.sellerName}
                     Buyer: ${certificateData.buyerName}
-                    Service Budget: ৳ ${parseInt(certificateData.budget || 0).toLocaleString()}
-                    Guarantee Fee: ৳ ${fees.fee.toLocaleString()}
-                    Total Amount: ৳ ${fees.total.toLocaleString()}
+                    Service Budget: $ ${parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Guarantee Fee: $ ${fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Total Amount: $ ${fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     Guarantee Period: ${certificateData.guaranteePeriod} days
                     
                     Status: Pending Verification
@@ -672,7 +1103,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `payment-receipt-${paymentData.txId}.txt`;
+                a.download = `payment-receipt-${paymentData.method}.txt`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -683,11 +1114,11 @@
             const fees = calculateFees(parseFloat(certificateData.budget) || 0);
 
             return (
-                <div className="max-w-2xl mx-auto text-center">
-                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                <div className="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center fade-in">
+                    <div className="card-white card-shadow rounded-2xl overflow-hidden">
                         <div className="px-6 py-12">
-                            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                                <svg className="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
+                                <svg className="h-8 w-8 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
@@ -696,36 +1127,45 @@
                                 Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
                             </p>
                             
-                            <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                            <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left border border-gray-200">
                                 <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <p className="text-sm text-gray-600">Certificate ID</p>
-                                        <p className="font-medium">{certificateData.certificateId}</p>
+                                        <p className="font-medium text-gray-900">{certificateData.certificateId}</p>
                                     </div>
-                                    <div>
-                                        <p className="text-sm text-gray-600">Transaction ID</p>
-                                        <p className="font-medium">{paymentData.txId}</p>
-                                    </div>
+                                    {paymentData.method !== 'paypal' && (
+                                        <div>
+                                            <p className="text-sm text-gray-600">Transaction ID</p>
+                                            <p className="font-medium text-gray-900">{paymentData.txId}</p>
+                                        </div>
+                                    )}
                                     <div>
                                         <p className="text-sm text-gray-600">Payment Method</p>
-                                        <p className="font-medium capitalize">{paymentData.method}</p>
+                                        <p className="font-medium text-gray-900 capitalize">{paymentData.method}</p>
                                     </div>
-                                    <div>
-                                        <p className="text-sm text-gray-600">Sender Number</p>
-                                        <p className="font-medium">{paymentData.senderNumber}</p>
-                                    </div>
+                                    {paymentData.method !== 'paypal' ? (
+                                        <div>
+                                            <p className="text-sm text-gray-600">Sender Number</p>
+                                        <p className="font-medium text-gray-900">{paymentData.senderNumber}</p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p className="text-sm text-gray-600">Sender Email</p>
+                                            <p className="font-medium text-gray-900">{paymentData.senderEmail}</p>
+                                        </div>
+                                    )}
                                     <div>
                                         <p className="text-sm text-gray-600">Service Budget</p>
-                                        <p className="font-medium">৳ {parseInt(certificateData.budget || 0).toLocaleString()}</p>
+                                        <p className="font-medium text-gray-900">$ {parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-600">Guarantee Fee</p>
-                                        <p className="font-medium">৳ {fees.fee.toLocaleString()}</p>
+                                        <p className="font-medium text-gray-900">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-600">Total Paid</p>
-                                        <p className="font-medium">৳ {fees.total.toLocaleString()}</p>
+                                        <p className="font-medium text-gray-900">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-600">Status</p>
@@ -737,13 +1177,13 @@
                             <div className="mt-8">
                                 <button
                                     onClick={downloadReceipt}
-                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    className="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 mr-3"
                                 >
                                     Download Receipt
                                 </button>
                                 <button
                                     onClick={() => window.location.reload()}
-                                    className="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    className="bg-white text-gray-700 font-medium py-2 px-6 rounded-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 border border-gray-300 transition-all duration-300"
                                 >
                                     Back to Home
                                 </button>
@@ -798,11 +1238,11 @@
             };
 
             return (
-                <div className="max-w-3xl mx-auto">
-                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-2xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
-                            <p className="text-gray-600 mt-1">Enter a certificate ID to verify a guarantee</p>
+                <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 fade-in">
+                    <div className="card-white card-shadow rounded-2xl overflow-hidden">
+                        <div className="gradient-bg px-6 py-4">
+                            <h2 className="text-2xl font-bold text-white">Verify Guarantee Certificate</h2>
+                            <p className="text-indigo-100 mt-1">Enter a certificate ID to verify a guarantee</p>
                         </div>
                         
                         <div className="px-6 py-6">
@@ -816,13 +1256,13 @@
                                         id="certificateId"
                                         value={certificateId}
                                         onChange={(e) => setCertificateId(e.target.value)}
-                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
-                                        placeholder="Enter certificate ID (e.g. UGC-ABC123XYZ)"
+                                        className="flex-1 px-4 py-2 input-field rounded-l-md focus:ring-2 focus:ring-indigo-500"
+                                        placeholder="Enter certificate ID (e.g. OXX-ABC123XYZ)"
                                     />
                                     <button
                                         onClick={handleVerify}
                                         disabled={isVerifying || !certificateId}
-                                        className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                        className="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-all duration-300"
                                     >
                                         {isVerifying ? 'Verifying...' : 'Verify'}
                                     </button>
@@ -833,7 +1273,7 @@
                             </div>
                             
                             {verificationResult && (
-                                <div className={`p-4 rounded-md ${verificationResult.status === 'active' ? 'bg-green-50 text-green-700' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700'}`}>
+                                <div className={`p-4 rounded-md ${verificationResult.status === 'active' ? 'bg-green-50 text-green-800 border border-green-200' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
                                     <h3 className="font-medium text-lg mb-2">
                                         {verificationResult.status === 'active' ? 'Valid Certificate' : 
                                          verificationResult.status === 'expired' ? 'Expired Certificate' : 
@@ -845,39 +1285,39 @@
                                         <div className="mt-4 pt-4 border-t border-current border-opacity-25">
                                             <h4 className="font-medium mb-2">Certificate Details:</h4>
                                             <div className="grid grid-cols-2 gap-2">
-                                                <div>Seller:</div>
-                                                <div className="font-medium">{verificationResult.data.sellerName}</div>
+                                                <div className="text-gray-600">Seller:</div>
+                                                <div className="font-medium text-gray-900">{verificationResult.data.sellerName}</div>
                                                 
-                                                <div>Buyer:</div>
-                                                <div className="font-medium">{verificationResult.data.buyerName}</div>
+                                                <div className="text-gray-600">Buyer:</div>
+                                                <div className="font-medium text-gray-900">{verificationResult.data.buyerName}</div>
                                                 
-                                                <div>Service:</div>
-                                                <div className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</div>
+                                                <div className="text-gray-600">Service:</div>
+                                                <div className="font-medium text-gray-900">{verificationResult.data.serviceDescription.substring(0, 50)}...</div>
                                                 
-                                                <div>Service Budget:</div>
-                                                <div className="font-medium">৳ {parseInt(verificationResult.data.budget || 0).toLocaleString()}</div>
+                                                <div className="text-gray-600">Service Budget:</div>
+                                                <div className="font-medium text-gray-900">$ {parseFloat(verificationResult.data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                                 
-                                                <div>Guarantee Fee:</div>
-                                                <div className="font-medium">৳ {verificationResult.data.fees.fee.toLocaleString()}</div>
+                                                <div className="text-gray-600">Guarantee Fee:</div>
+                                                <div className="font-medium text-gray-900">$ {verificationResult.data.fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                                 
-                                                <div>Total Amount:</div>
-                                                <div className="font-medium">৳ {verificationResult.data.fees.total.toLocaleString()}</div>
+                                                <div className="text-gray-600">Total Amount:</div>
+                                                <div className="font-medium text-gray-900">$ {verificationResult.data.fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                                 
-                                                <div>Issue Date:</div>
-                                                <div className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</div>
+                                                <div className="text-gray-600">Issue Date:</div>
+                                                <div className="font-medium text-gray-900">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</div>
                                                 
-                                                <div>Expiry Date:</div>
-                                                <div className="font-medium">{verificationResult.expiry}</div>
+                                                <div className="text-gray-600">Expiry Date:</div>
+                                                <div className="font-medium text-gray-900">{verificationResult.expiry}</div>
                                                 
-                                                <div>Payment Status:</div>
-                                                <div className="font-medium capitalize">{verificationResult.data.status.replace('_', ' ')}</div>
+                                                <div className="text-gray-600">Payment Status:</div>
+                                                <div className="font-medium text-gray-900 capitalize">{verificationResult.data.status.replace('_', ' ')}</div>
                                             </div>
                                         </div>
                                     )}
                                 </div>
                             )}
                             
-                            <div className="mt-8 bg-gray-50 p-4 rounded-md">
+                            <div className="mt-8 bg-gray-50 p-4 rounded-md border border-gray-200">
                                 <h3 className="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
                                 <ol className="list-decimal pl-5 text-gray-600 space-y-1">
                                     <li>Enter the Certificate ID found on the guarantee certificate</li>
