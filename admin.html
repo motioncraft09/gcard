@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneXX Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
         
         :root {
             --primary: #4f46e5;
@@ -23,400 +19,82 @@
             --text-dark: #1f2937;
             --text-light: #6b7280;
             --border-light: #e5e7eb;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
         }
         
         body {
+            font-family: 'Exo 2', sans-serif;
             background: var(--light-bg);
             color: var(--text-dark);
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
         
-        .container {
-            display: flex;
-            min-height: 100vh;
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
         
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            background: var(--primary);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo {
-            padding: 0 20px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-        }
-        
-        .logo h1 {
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-        }
-        
-        .menu-item {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .menu-item i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        /* Main Content Styles */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        .header h2 {
-            font-size: 24px;
-            color: var(--text-dark);
-        }
-        
-        .card {
+        .card-white {
             background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        .card-header h3 {
-            font-size: 18px;
-            color: var(--text-dark);
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-success:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid var(--border-light);
-            border-radius: 8px;
-            font-size: 16px;
+        }
+        
+        .input-field {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: var(--text-dark);
             transition: all 0.3s;
         }
         
-        .form-control:focus {
+        .input-field:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
         }
         
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
+        .nav-active {
+            background-color: rgb(224 231 255);
+            color: rgb(79 70 229);
         }
         
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-right: 15px;
-        }
-        
-        .stat-icon.blue {
-            background: rgba(79, 70, 229, 0.1);
-            color: var(--primary);
-        }
-        
-        .stat-icon.green {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-        
-        .stat-icon.orange {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-        
-        .stat-info h4 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-        
-        .stat-info p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        table th, table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        table th {
-            background: var(--light-bg);
-            font-weight: 600;
-        }
-        
-        .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .status-active {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-        
-        .status-pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-        
-        .payment-method {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .payment-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            margin-right: 15px;
-        }
-        
-        .payment-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .payment-info h4 {
-            margin-bottom: 5px;
-        }
-        
-        .payment-info p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        
-        .certificate-preview {
-            background: var(--light-bg);
-            border-radius: 12px;
-            padding: 30px;
-            margin-top: 20px;
-            border: 1px solid var(--border-light);
-        }
-        
-        .certificate-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .certificate-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .certificate-footer {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-light);
-        }
-        
-        .section {
-            display: none;
-        }
-        
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            width: 500px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        .modal-header h3 {
-            font-size: 20px;
-            color: var(--text-dark);
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-light);
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
         
-        .color-picker {
-            height: 40px;
-            width: 100%;
+        .page-section {
+            display: none;
         }
         
-        .action-buttons {
-            display: flex;
-            gap: 10px;
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .status-active {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: #f59e0b;
+            color: white;
+        }
+        
+        .status-completed {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .status-disputed {
+            background-color: #ef4444;
+            color: white;
         }
         
         .toast {
@@ -445,314 +123,382 @@
         .toast.error {
             background: var(--danger);
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                padding: 10px;
-            }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .certificate-body {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1><i class="fas fa-shield-alt"></i> OneXX Admin</h1>
-            </div>
-            <div class="menu-item active" data-section="dashboard">
-                <i class="fas fa-home"></i> Dashboard
-            </div>
-            <div class="menu-item" data-section="guarantees">
-                <i class="fas fa-file-contract"></i> Guarantees
-            </div>
-            <div class="menu-item" data-section="payments">
-                <i class="fas fa-credit-card"></i> Payment Methods
-            </div>
-            <div class="menu-item" data-section="certificate">
-                <i class="fas fa-certificate"></i> Certificate Design
+<body class="min-h-screen bg-gray-50">
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Operation completed successfully</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center text-indigo-600 font-bold text-xl">
+                        <span class="mr-2"><i class="fas fa-shield-alt"></i></span> OneXX Admin
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="nav-dashboard" class="px-3 py-2 rounded-md text-sm font-medium nav-active">
+                        Dashboard
+                    </button>
+                    <button id="nav-guarantees" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        Guarantees
+                    </button>
+                    <button id="nav-payments" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        Payment Methods
+                    </button>
+                    <button id="nav-certificate" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        Certificate Design
+                    </button>
+                </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Dashboard Section -->
-            <div class="section active" id="dashboard">
-                <div class="header">
-                    <h2>Dashboard</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="refresh-data"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="page-section active-section p-6">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+                
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="card-white p-6">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-indigo-100 p-3 mr-4">
+                                <i class="fas fa-file-contract text-indigo-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Guarantees</p>
+                                <h3 class="text-2xl font-bold" id="total-guarantees">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-white p-6">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-green-100 p-3 mr-4">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Active Guarantees</p>
+                                <h3 class="text-2xl font-bold" id="active-guarantees">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-white p-6">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-blue-100 p-3 mr-4">
+                                <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Value</p>
+                                <h3 class="text-2xl font-bold" id="total-value">$0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-white p-6">
+                        <div class="flex items-center">
+                            <div class="rounded-full bg-amber-100 p-3 mr-4">
+                                <i class="fas fa-hand-holding-usd text-amber-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Fees</p>
+                                <h3 class="text-2xl font-bold" id="total-fees">$0</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4 id="total-guarantees">0</h4>
-                            <p>Total Guarantees</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4 id="active-guarantees">0</h4>
-                            <p>Active Guarantees</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4 id="total-value">$0</h4>
-                            <p>Total Value</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Recent Guarantees</h3>
+                
+                <!-- Recent Guarantees -->
+                <div class="card-white p-6 mb-8">
+                    <div class="card-header flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Recent Guarantees</h3>
                         <button class="btn btn-primary" id="view-all-guarantees">View All</button>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Seller</th>
-                                <th>Buyer</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recent-guarantees">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Guarantees Section -->
-            <div class="section" id="guarantees">
-                <div class="header">
-                    <h2>Manage Guarantees</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="add-guarantee"><i class="fas fa-plus"></i> Add New</button>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="recent-guarantees">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>All Guarantees</h3>
+                
+                <!-- Recent Payments -->
+                <div class="card-white p-6">
+                    <div class="card-header flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Recent Payments</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="recent-payments">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Guarantees Section -->
+        <section id="guarantees-section" class="page-section p-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Manage Guarantees</h2>
+                    <div class="actions">
+                        <button class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700" id="add-guarantee"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+                
+                <div class="card-white p-6">
+                    <div class="card-header flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">All Guarantees</h3>
                         <div>
-                            <input type="text" id="search-guarantees" class="form-control" placeholder="Search guarantees..." style="width: 300px; display: inline-block;">
+                            <input type="text" id="search-guarantees" class="input-field rounded-md px-4 py-2" placeholder="Search guarantees..." style="width: 300px; display: inline-block;">
                         </div>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Seller</th>
-                                <th>Buyer</th>
-                                <th>Service</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="all-guarantees">
-                            <!-- Will be populated by JavaScript -->
-                        </tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="all-guarantees">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
-            <!-- Payment Methods Section -->
-            <div class="section" id="payments">
-                <div class="header">
-                    <h2>Payment Methods</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="add-payment-method"><i class="fas fa-plus"></i> Add New</button>
+        </section>
+        
+        <!-- Payment Methods Section -->
+        <section id="payments-section" class="page-section p-6">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Payment Methods</h2>
+                
+                <div class="card-white p-6 mb-6">
+                    <div class="card-header mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Available Payment Methods</h3>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Available Payment Methods</h3>
-                    </div>
+                    
                     <div id="payment-methods-container">
                         <!-- Will be populated by JavaScript -->
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Add/Edit Payment Method</h3>
+                <div class="card-white p-6">
+                    <div class="card-header mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Add/Edit Payment Method</h3>
                     </div>
                     <form id="payment-form">
                         <input type="hidden" id="payment-id">
-                        <div class="form-group">
-                            <label for="payment-name">Payment Method Name</label>
-                            <input type="text" id="payment-name" class="form-control" placeholder="e.g., bKash, PayPal">
+                        <div class="form-group mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Payment Method Name
+                            </label>
+                            <input type="text" id="payment-name" class="form-control w-full rounded-md" placeholder="e.g., bKash, PayPal">
                         </div>
-                        <div class="form-group">
-                            <label for="payment-details">Payment Details</label>
-                            <input type="text" id="payment-details" class="form-control" placeholder="Account number, email, etc.">
+                        <div class="form-group mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Payment Details
+                            </label>
+                            <input type="text" id="payment-details" class="form-control w-full rounded-md" placeholder="Account number, email, etc.">
                         </div>
-                        <div class="form-group">
-                            <label for="payment-type">Payment Type</label>
-                            <select id="payment-type" class="form-control">
+                        <div class="form-group mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Payment Type
+                            </label>
+                            <select id="payment-type" class="form-control w-full rounded-md">
                                 <option value="mobile">Mobile Banking</option>
                                 <option value="bank">Bank Transfer</option>
                                 <option value="digital">Digital Wallet</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="payment-instructions">Special Instructions</label>
-                            <textarea id="payment-instructions" class="form-control" placeholder="Any special instructions for users"></textarea>
+                        <div class="form-group mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Special Instructions
+                            </label>
+                            <textarea id="payment-instructions" class="form-control w-full rounded-md" placeholder="Any special instructions for users"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success">Save Payment Method</button>
+                        <button type="submit" class="bg-green-600 text-white font-medium py-2 px-6 rounded-md hover:bg-green-700">Save Payment Method</button>
                     </form>
                 </div>
             </div>
-
-            <!-- Certificate Design Section -->
-            <div class="section" id="certificate">
-                <div class="header">
-                    <h2>Certificate Design</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="download-template"><i class="fas fa-download"></i> Download Template</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Customize Certificate</h3>
-                    </div>
-                    <form id="certificate-form">
-                        <div class="form-group">
-                            <label for="certificate-title">Certificate Title</label>
-                            <input type="text" id="certificate-title" class="form-control">
+        </section>
+        
+        <!-- Certificate Design Section -->
+        <section id="certificate-section" class="page-section p-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Certificate Design</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card-white p-6">
+                        <div class="card-header mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Customize Certificate</h3>
                         </div>
-                        <div class="form-group">
-                            <label for="certificate-header">Header Text</label>
-                            <input type="text" id="certificate-header" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="certificate-terms">Terms & Conditions</label>
-                            <textarea id="certificate-terms" class="form-control"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="certificate-footer">Footer Text</label>
-                            <input type="text" id="certificate-footer" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="certificate-color">Primary Color</label>
-                            <input type="color" id="certificate-color" class="color-picker">
-                        </div>
-                        <button type="submit" class="btn btn-success">Save Certificate Design</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Certificate Preview</h3>
-                    </div>
-                    <div class="certificate-preview">
-                        <div class="certificate-header">
-                            <h3 id="preview-title">Service Guarantee Certificate</h3>
-                            <p>OXX-123456-ABC789</p>
-                        </div>
-                        <div class="certificate-body">
-                            <div>
-                                <p><strong>Seller:</strong> John's Service</p>
-                                <p><strong>Buyer:</strong> Jane Client</p>
-                                <p><strong>Service:</strong> Laptop Repair</p>
+                        <form id="certificate-form">
+                            <div class="form-group mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Certificate Title
+                                </label>
+                                <input type="text" id="certificate-title" class="form-control w-full rounded-md" value="Service Guarantee Certificate">
                             </div>
-                            <div>
-                                <p><strong>Value:</strong> $1,500</p>
-                                <p><strong>Status:</strong> Active</p>
-                                <p><strong>Valid Until:</strong> Dec 15, 2023</p>
+                            <div class="form-group mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Header Text
+                                </label>
+                                <input type="text" id="certificate-header" class="form-control w-full rounded-md" value="This certifies that the following service is guaranteed by OneXX">
                             </div>
+                            <div class="form-group mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Terms & Conditions
+                                </label>
+                                <textarea id="certificate-terms" class="form-control w-full rounded-md">Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.</textarea>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Footer Text
+                                </label>
+                                <input type="text" id="certificate-footer" class="form-control w-full rounded-md" value="For verification, visit onexx.com/verify or scan the QR code">
+                            </div>
+                            <div class="form-group mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Primary Color
+                                </label>
+                                <input type="color" id="certificate-color" class="w-full h-10 rounded-md" value="#4f46e5">
+                            </div>
+                            <button type="submit" class="bg-green-600 text-white font-medium py-2 px-6 rounded-md hover:bg-green-700">Save Certificate Design</button>
+                        </form>
+                    </div>
+                    
+                    <div class="card-white p-6">
+                        <div class="card-header mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Certificate Preview</h3>
                         </div>
-                        <div class="certificate-footer">
-                            <p id="preview-footer">For verification, visit onexx.com/verify or scan the QR code</p>
-                            <div style="margin-top: 15px;">
-                                <div style="width: 120px; height: 120px; background: #f0f0f0; display: inline-block; border: 1px solid #ddd;"></div>
+                        <div class="bg-indigo-50 rounded-xl p-6">
+                            <div class="text-center mb-6">
+                                <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-shield-alt text-4xl text-white"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-900" id="preview-title">Service Guarantee Certificate</h3>
+                                <p class="text-gray-600">OXX-123456-ABC789</p>
+                            </div>
+                            
+                            <p class="text-center text-gray-700 mb-6" id="preview-header">This certifies that the following service is guaranteed by OneXX</p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <p class="text-gray-500 text-sm">Seller</p>
+                                    <p class="text-gray-900">John's Service</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Buyer</p>
+                                    <p class="text-gray-900">Jane Client</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Value</p>
+                                    <p class="text-gray-900">$1,500</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-500 text-sm">Status</p>
+                                    <p class="text-green-600">Active</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                                <p class="text-sm text-gray-700" id="preview-terms">Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.</p>
+                            </div>
+                            
+                            <div class="bg-gray-100 rounded-lg p-4 text-center">
+                                <div class="w-32 h-32 mx-auto bg-white rounded border border-gray-300 flex items-center justify-center">
+                                    <i class="fas fa-qrcode text-4xl text-gray-400"></i>
+                                </div>
+                                <p class="text-gray-500 mt-2 text-sm" id="preview-footer">For verification, visit onexx.com/verify or scan the QR code</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- Edit Guarantee Modal -->
-    <div class="modal" id="edit-guarantee-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Guarantee</h3>
-                <button class="close-modal">&times;</button>
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="edit-guarantee-modal">
+        <div class="bg-white rounded-lg w-full max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Edit Guarantee</h3>
+                <button class="text-gray-400 hover:text-gray-500" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form id="edit-guarantee-form">
                 <input type="hidden" id="edit-guarantee-id">
-                <div class="form-group">
-                    <label for="edit-guarantee-seller">Seller</label>
-                    <input type="text" id="edit-guarantee-seller" class="form-control">
+                <div class="form-group mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Seller</label>
+                    <input type="text" id="edit-guarantee-seller" class="form-control w-full rounded-md">
                 </div>
-                <div class="form-group">
-                    <label for="edit-guarantee-buyer">Buyer</label>
-                    <input type="text" id="edit-guarantee-buyer" class="form-control">
+                <div class="form-group mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Buyer</label>
+                    <input type="text" id="edit-guarantee-buyer" class="form-control w-full rounded-md">
                 </div>
-                <div class="form-group">
-                    <label for="edit-guarantee-service">Service</label>
-                    <input type="text" id="edit-guarantee-service" class="form-control">
+                <div class="form-group mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Service</label>
+                    <input type="text" id="edit-guarantee-service" class="form-control w-full rounded-md">
                 </div>
-                <div class="form-group">
-                    <label for="edit-guarantee-amount">Amount</label>
-                    <input type="text" id="edit-guarantee-amount" class="form-control">
+                <div class="form-group mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                    <input type="text" id="edit-guarantee-amount" class="form-control w-full rounded-md">
                 </div>
-                <div class="form-group">
-                    <label for="edit-guarantee-status">Status</label>
-                    <select id="edit-guarantee-status" class="form-control">
+                <div class="form-group mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select id="edit-guarantee-status" class="form-control w-full rounded-md">
                         <option value="active">Active</option>
                         <option value="pending">Pending</option>
                         <option value="completed">Completed</option>
+                        <option value="disputed">Disputed</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-success">Save Changes</button>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-600 text-white font-medium py-2 px-6 rounded-md hover:bg-green-700">Save Changes</button>
+                </div>
             </form>
         </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Operation completed successfully</span>
     </div>
 
     <script>
@@ -760,7 +506,8 @@
         const STORAGE_KEYS = {
             GUARANTEES: 'onexx_guarantees',
             PAYMENT_METHODS: 'onexx_payment_methods',
-            CERTIFICATE_DESIGN: 'onexx_certificate_design'
+            CERTIFICATE_DESIGN: 'onexx_certificate_design',
+            TRANSACTIONS: 'onexx_transactions'
         };
 
         // Default data
@@ -843,7 +590,23 @@
                 terms: 'Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.',
                 footer: 'For verification, visit onexx.com/verify or scan the QR code',
                 color: '#4f46e5'
-            }
+            },
+            transactions: [
+                {
+                    id: 'TX123456789',
+                    method: 'bKash',
+                    amount: 154.5,
+                    status: 'completed',
+                    date: '2023-10-15'
+                },
+                {
+                    id: 'TX987654321',
+                    method: 'Nagad',
+                    amount: 309,
+                    status: 'completed',
+                    date: '2023-10-10'
+                }
+            ]
         };
 
         // Initialize application
@@ -854,6 +617,7 @@
             loadGuaranteesData();
             loadPaymentMethods();
             loadCertificateDesign();
+            loadTransactions();
         });
 
         // Initialize data in localStorage
@@ -868,6 +632,10 @@
             
             if (!localStorage.getItem(STORAGE_KEYS.CERTIFICATE_DESIGN)) {
                 localStorage.setItem(STORAGE_KEYS.CERTIFICATE_DESIGN, JSON.stringify(DEFAULT_DATA.certificateDesign));
+            }
+            
+            if (!localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) {
+                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(DEFAULT_DATA.transactions));
             }
         }
 
@@ -904,22 +672,55 @@
         // Setup event listeners
         function setupEventListeners() {
             // Handle menu item clicks
-            const menuItems = document.querySelectorAll('.menu-item');
-            const sections = document.querySelectorAll('.section');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const navGuarantees = document.getElementById('nav-guarantees');
+            const navPayments = document.getElementById('nav-payments');
+            const navCertificate = document.getElementById('nav-certificate');
             
-            menuItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Remove active class from all menu items and sections
-                    menuItems.forEach(mi => mi.classList.remove('active'));
-                    sections.forEach(s => s.classList.remove('active'));
-                    
-                    // Add active class to clicked menu item
-                    this.classList.add('active');
-                    
-                    // Show corresponding section
-                    const sectionId = this.getAttribute('data-section');
-                    document.getElementById(sectionId).classList.add('active');
-                });
+            const dashboardSection = document.getElementById('dashboard-section');
+            const guaranteesSection = document.getElementById('guarantees-section');
+            const paymentsSection = document.getElementById('payments-section');
+            const certificateSection = document.getElementById('certificate-section');
+            
+            // Function to change active section
+            function changeActiveSection(section) {
+                // Hide all sections
+                dashboardSection.classList.remove('active-section');
+                guaranteesSection.classList.remove('active-section');
+                paymentsSection.classList.remove('active-section');
+                certificateSection.classList.remove('active-section');
+                
+                // Remove active class from all nav buttons
+                navDashboard.classList.remove('nav-active');
+                navGuarantees.classList.remove('nav-active');
+                navPayments.classList.remove('nav-active');
+                navCertificate.classList.remove('nav-active');
+                
+                // Show the selected section
+                section.classList.add('active-section');
+            }
+            
+            // Add event listeners to navigation buttons
+            navDashboard.addEventListener('click', function() {
+                changeActiveSection(dashboardSection);
+                navDashboard.classList.add('nav-active');
+                loadDashboardData();
+            });
+            
+            navGuarantees.addEventListener('click', function() {
+                changeActiveSection(guaranteesSection);
+                navGuarantees.classList.add('nav-active');
+                loadGuaranteesData();
+            });
+            
+            navPayments.addEventListener('click', function() {
+                changeActiveSection(paymentsSection);
+                navPayments.classList.add('nav-active');
+            });
+            
+            navCertificate.addEventListener('click', function() {
+                changeActiveSection(certificateSection);
+                navCertificate.classList.add('nav-active');
             });
             
             // Handle edit guarantee buttons (delegation)
@@ -967,14 +768,14 @@
             });
             
             // Close modal when clicking close button
-            document.querySelector('.close-modal').addEventListener('click', function() {
-                document.getElementById('edit-guarantee-modal').classList.remove('active');
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('edit-guarantee-modal').classList.add('hidden');
             });
             
             // Close modal when clicking outside
             window.addEventListener('click', function(e) {
                 if (e.target === document.getElementById('edit-guarantee-modal')) {
-                    document.getElementById('edit-guarantee-modal').classList.remove('active');
+                    document.getElementById('edit-guarantee-modal').classList.add('hidden');
                 }
             });
             
@@ -988,31 +789,12 @@
                 // Reset the form
                 document.getElementById('payment-form').reset();
                 document.getElementById('payment-id').value = '';
-                
-                // Scroll to the form
-                document.getElementById('payment-form').scrollIntoView({ behavior: 'smooth' });
             });
             
             // View all guarantees button
             document.getElementById('view-all-guarantees').addEventListener('click', function() {
-                // Switch to guarantees section
-                menuItems.forEach(mi => mi.classList.remove('active'));
-                sections.forEach(s => s.classList.remove('active'));
-                
-                document.querySelector('.menu-item[data-section="guarantees"]').classList.add('active');
-                document.getElementById('guarantees').classList.add('active');
-            });
-            
-            // Refresh data button
-            document.getElementById('refresh-data').addEventListener('click', function() {
-                loadDashboardData();
-                loadGuaranteesData();
-                showToast('Data refreshed successfully');
-            });
-            
-            // Download template button
-            document.getElementById('download-template').addEventListener('click', function() {
-                showToast('Certificate template downloaded');
+                changeActiveSection(guaranteesSection);
+                navGuarantees.classList.add('nav-active');
             });
         }
 
@@ -1021,11 +803,13 @@
             const guarantees = getData(STORAGE_KEYS.GUARANTEES);
             const activeGuarantees = guarantees.filter(g => g.status === 'active').length;
             const totalValue = guarantees.reduce((sum, g) => sum + g.amount, 0);
+            const totalFees = totalValue * 0.03; // Assuming 3% fee
             
             // Update stats
             document.getElementById('total-guarantees').textContent = guarantees.length;
             document.getElementById('active-guarantees').textContent = activeGuarantees;
             document.getElementById('total-value').textContent = `$${totalValue.toLocaleString()}`;
+            document.getElementById('total-fees').textContent = `$${totalFees.toLocaleString()}`;
             
             // Update recent guarantees table
             const recentGuaranteesTable = document.getElementById('recent-guarantees');
@@ -1038,15 +822,40 @@
                 const row = document.createElement('tr');
                 
                 row.innerHTML = `
-                    <td>${guarantee.certificateId}</td>
-                    <td>${guarantee.seller}</td>
-                    <td>${guarantee.buyer}</td>
-                    <td>$${guarantee.amount.toLocaleString()}</td>
-                    <td><span class="status-badge status-${guarantee.status}">${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}</span></td>
-                    <td>${guarantee.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${guarantee.certificateId}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.seller}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.buyer}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${guarantee.amount.toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-${guarantee.status}">
+                            ${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.date}</td>
                 `;
                 
                 recentGuaranteesTable.appendChild(row);
+            });
+        }
+
+        // Load transactions
+        function loadTransactions() {
+            const transactions = getData(STORAGE_KEYS.TRANSACTIONS);
+            const recentPaymentsTable = document.getElementById('recent-payments');
+            recentPaymentsTable.innerHTML = '';
+            
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${transaction.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.method}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${transaction.amount.toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.status}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.date}</td>
+                `;
+                
+                recentPaymentsTable.appendChild(row);
             });
         }
 
@@ -1061,17 +870,19 @@
                 row.setAttribute('data-id', guarantee.id);
                 
                 row.innerHTML = `
-                    <td>${guarantee.certificateId}</td>
-                    <td>${guarantee.seller}</td>
-                    <td>${guarantee.buyer}</td>
-                    <td>${guarantee.service}</td>
-                    <td>$${guarantee.amount.toLocaleString()}</td>
-                    <td><span class="status-badge status-${guarantee.status}">${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary btn-sm edit-guarantee">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-guarantee">Delete</button>
-                        </div>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${guarantee.certificateId}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.seller}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.buyer}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.service}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${guarantee.amount.toLocaleString()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-${guarantee.status}">
+                            ${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-indigo-600 hover:text-indigo-900 edit-guarantee mr-3">Edit</button>
+                        <button class="text-red-600 hover:text-red-900 delete-guarantee">Delete</button>
                     </td>
                 `;
                 
@@ -1087,7 +898,7 @@
             
             paymentMethods.forEach(method => {
                 const paymentMethod = document.createElement('div');
-                paymentMethod.className = 'payment-method';
+                paymentMethod.className = 'payment-method mb-4 p-4 border border-gray-200 rounded-lg';
                 paymentMethod.setAttribute('data-id', method.id);
                 
                 // Set icon based on type
@@ -1107,16 +918,18 @@
                 }
                 
                 paymentMethod.innerHTML = `
-                    <div class="payment-icon" style="background: ${bgColor}; color: ${color};">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                    <div class="payment-info">
-                        <h4>${method.name}</h4>
-                        <p>${method.details}</p>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary btn-sm edit-payment">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-payment">Delete</button>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background: ${bgColor}; color: ${color};">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium text-gray-900">${method.name}</h4>
+                            <p class="text-sm text-gray-600">${method.details}</p>
+                        </div>
+                        <div>
+                            <button class="text-indigo-600 hover:text-indigo-900 edit-payment mr-3">Edit</button>
+                            <button class="text-red-600 hover:text-red-900 delete-payment">Delete</button>
+                        </div>
                     </div>
                 `;
                 
@@ -1137,10 +950,12 @@
             
             // Update preview
             document.getElementById('preview-title').textContent = design.title;
+            document.getElementById('preview-header').textContent = design.header;
+            document.getElementById('preview-terms').textContent = design.terms;
             document.getElementById('preview-footer').textContent = design.footer;
             
             // Update certificate color in preview
-            document.querySelector('.certificate-preview .certificate-header h3').style.color = design.color;
+            document.querySelector('.bg-indigo-600').style.backgroundColor = design.color;
         }
 
         // Edit guarantee
@@ -1162,7 +977,7 @@
             document.getElementById('edit-guarantee-status').value = guarantee.status;
             
             // Show the modal
-            document.getElementById('edit-guarantee-modal').classList.add('active');
+            document.getElementById('edit-guarantee-modal').classList.remove('hidden');
         }
 
         // Save guarantee changes
@@ -1205,7 +1020,7 @@
             loadGuaranteesData();
             
             // Close the modal
-            document.getElementById('edit-guarantee-modal').classList.remove('active');
+            document.getElementById('edit-guarantee-modal').classList.add('hidden');
             
             showToast('Guarantee updated successfully');
         }
@@ -1279,9 +1094,6 @@
             document.getElementById('payment-details').value = method.details;
             document.getElementById('payment-type').value = method.type;
             document.getElementById('payment-instructions').value = method.instructions;
-            
-            // Scroll to the form
-            document.getElementById('payment-form').scrollIntoView({ behavior: 'smooth' });
         }
 
         // Save payment method
@@ -1387,8 +1199,10 @@
             
             // Update preview
             document.getElementById('preview-title').textContent = title;
+            document.getElementById('preview-header').textContent = header;
+            document.getElementById('preview-terms').textContent = terms;
             document.getElementById('preview-footer').textContent = footer;
-            document.querySelector('.certificate-preview .certificate-header h3').style.color = color;
+            document.querySelector('.bg-indigo-600').style.backgroundColor = color;
             
             showToast('Certificate design saved successfully');
         }
