@@ -19,6 +19,7 @@
             --text-dark: #1f2937;
             --text-light: #6b7280;
             --border-light: #e5e7eb;
+            --error: #ef4444;
         }
         
         body {
@@ -53,6 +54,18 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        .input-error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
         }
         
         /* Loading Animation */
@@ -396,15 +409,17 @@
                                     <h3 class="text-lg font-medium text-gray-900 mb-4">Seller Information</h3>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Seller Name
+                                            Seller Name <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="text" id="seller-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="John's Repair Service">
+                                        <input type="text" id="seller-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="John's Repair Service" required>
+                                        <div class="error-message" id="seller-name-error">Seller name is required</div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Seller Email
+                                            Seller Email <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="email" id="seller-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="john@example.com">
+                                        <input type="email" id="seller-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="john@example.com" required>
+                                        <div class="error-message" id="seller-email-error">Valid email is required</div>
                                     </div>
                                 </div>
                                 
@@ -412,15 +427,17 @@
                                     <h3 class="text-lg font-medium text-gray-900 mb-4">Buyer Information</h3>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Buyer Name
+                                            Buyer Name <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="text" id="buyer-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="Jane Smith">
+                                        <input type="text" id="buyer-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="Jane Smith" required>
+                                        <div class="error-message" id="buyer-name-error">Buyer name is required</div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Buyer Email
+                                            Buyer Email <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="email" id="buyer-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="jane@example.com">
+                                        <input type="email" id="buyer-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="jane@example.com" required>
+                                        <div class="error-message" id="buyer-email-error">Valid email is required</div>
                                     </div>
                                 </div>
                             </div>
@@ -429,34 +446,38 @@
                                 <h3 class="text-lg font-medium text-gray-900 mb-4">Service Details</h3>
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Service Description
+                                        Service Description <span class="text-red-500">*</span>
                                     </label>
-                                    <textarea id="service-description" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Detailed description of the service provided..."></textarea>
+                                    <textarea id="service-description" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Detailed description of the service provided..." required></textarea>
+                                    <div class="error-message" id="service-description-error">Service description is required</div>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Service Budget ($)
+                                            Service Budget ($) <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="number" id="service-budget" min="0" step="0.01" class="w-full px-4 py-2 input-field rounded-md" placeholder="100.00">
+                                        <input type="number" id="service-budget" min="0" step="0.01" class="w-full px-4 py-2 input-field rounded-md" placeholder="100.00" required>
+                                        <div class="error-message" id="service-budget-error">Valid budget is required</div>
                                         <p class="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
                                         <p class="text-xs text-indigo-600 mt-1">* Exchange rate: $1 = 125৳</p>
                                     </div>
                                     
                                     <div class="mb-4">
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Guarantee Period (days)
+                                            Guarantee Period (days) <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="number" id="guarantee-period" class="w-full px-4 py-2 input-field rounded-md" value="30">
+                                        <input type="number" id="guarantee-period" class="w-full px-4 py-2 input-field rounded-md" value="30" min="1" required>
+                                        <div class="error-message" id="guarantee-period-error">Valid period is required</div>
                                     </div>
                                 </div>
                                 
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Refund Terms & Conditions
+                                        Refund Terms & Conditions <span class="text-red-500">*</span>
                                     </label>
-                                    <textarea id="refund-terms" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Terms of the guarantee...">Full refund within the guarantee period if service quality is not met.</textarea>
+                                    <textarea id="refund-terms" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Terms of the guarantee..." required>Full refund within the guarantee period if service quality is not met.</textarea>
+                                    <div class="error-message" id="refund-terms-error">Refund terms are required</div>
                                 </div>
                                 
                                 <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
@@ -546,16 +567,18 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Transaction ID (TxID)
+                                                Transaction ID (TxID) <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="text" id="transaction-id" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID">
+                                            <input type="text" id="transaction-id" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID" required>
+                                            <div class="error-message" id="transaction-id-error">Transaction ID is required</div>
                                         </div>
                                         
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Your Mobile Number
+                                                Your Mobile Number <span class="text-red-500">*</span>
                                             </label>
-                                            <input type="text" id="mobile-number" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number">
+                                            <input type="text" id="mobile-number" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number" required>
+                                            <div class="error-message" id="mobile-number-error">Valid mobile number is required</div>
                                         </div>
                                     </div>
                                 </div>
@@ -563,9 +586,10 @@
                                 <div id="payment-paypal-form" class="payment-form hidden">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Your PayPal Email
+                                            Your PayPal Email <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="email" id="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email">
+                                        <input type="email" id="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email" required>
+                                        <div class="error-message" id="paypal-email-error">Valid PayPal email is required</div>
                                         <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</p>
                                     </div>
                                 </div>
@@ -879,17 +903,90 @@
             
             // Continue to payment button
             continueButton.addEventListener('click', function() {
-                const budget = parseFloat(budgetInput.value) || 0;
+                // Validate all required fields
+                const sellerName = document.getElementById('seller-name');
+                const sellerEmail = document.getElementById('seller-email');
+                const buyerName = document.getElementById('buyer-name');
+                const buyerEmail = document.getElementById('buyer-email');
+                const serviceDescription = document.getElementById('service-description');
+                const serviceBudget = document.getElementById('service-budget');
+                const guaranteePeriod = document.getElementById('guarantee-period');
+                const refundTerms = document.getElementById('refund-terms');
                 
-                if (budget <= 0) {
-                    alert('Please enter a valid service budget');
+                let isValid = true;
+                
+                // Validate required fields
+                if (!sellerName.value.trim()) {
+                    showError(sellerName, 'seller-name-error');
+                    isValid = false;
+                } else {
+                    hideError(sellerName, 'seller-name-error');
+                }
+                
+                if (!sellerEmail.value.trim() || !isValidEmail(sellerEmail.value)) {
+                    showError(sellerEmail, 'seller-email-error');
+                    isValid = false;
+                } else {
+                    hideError(sellerEmail, 'seller-email-error');
+                }
+                
+                if (!buyerName.value.trim()) {
+                    showError(buyerName, 'buyer-name-error');
+                    isValid = false;
+                } else {
+                    hideError(buyerName, 'buyer-name-error');
+                }
+                
+                if (!buyerEmail.value.trim() || !isValidEmail(buyerEmail.value)) {
+                    showError(buyerEmail, 'buyer-email-error');
+                    isValid = false;
+                } else {
+                    hideError(buyerEmail, 'buyer-email-error');
+                }
+                
+                if (!serviceDescription.value.trim()) {
+                    showError(serviceDescription, 'service-description-error');
+                    isValid = false;
+                } else {
+                    hideError(serviceDescription, 'service-description-error');
+                }
+                
+                if (!serviceBudget.value || parseFloat(serviceBudget.value) <= 0) {
+                    showError(serviceBudget, 'service-budget-error');
+                    isValid = false;
+                } else {
+                    hideError(serviceBudget, 'service-budget-error');
+                }
+                
+                if (!guaranteePeriod.value || parseInt(guaranteePeriod.value) <= 0) {
+                    showError(guaranteePeriod, 'guarantee-period-error');
+                    isValid = false;
+                } else {
+                    hideError(guaranteePeriod, 'guarantee-period-error');
+                }
+                
+                if (!refundTerms.value.trim()) {
+                    showError(refundTerms, 'refund-terms-error');
+                    isValid = false;
+                } else {
+                    hideError(refundTerms, 'refund-terms-error');
+                }
+                
+                if (!isValid) {
+                    // Scroll to the first error
+                    const firstError = document.querySelector('.input-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                     return;
                 }
                 
+                const budget = parseFloat(serviceBudget.value) || 0;
+                
                 // Update order summary
-                document.getElementById('summary-service').textContent = document.getElementById('service-description').value || '-';
-                document.getElementById('summary-seller').textContent = document.getElementById('seller-name').value || '-';
-                document.getElementById('summary-buyer').textContent = document.getElementById('buyer-name').value || '-';
+                document.getElementById('summary-service').textContent = serviceDescription.value || '-';
+                document.getElementById('summary-seller').textContent = sellerName.value || '-';
+                document.getElementById('summary-buyer').textContent = buyerName.value || '-';
                 
                 const fees = calculateFees(budget);
                 document.getElementById('summary-budget').textContent = '$ ' + budget.toFixed(2);
@@ -907,6 +1004,53 @@
                     button.classList.remove('nav-active');
                 });
             });
+            
+            // Email validation function
+            function isValidEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            // Show error function
+            function showError(inputElement, errorElementId) {
+                inputElement.classList.add('input-error');
+                document.getElementById(errorElementId).style.display = 'block';
+            }
+            
+            // Hide error function
+            function hideError(inputElement, errorElementId) {
+                inputElement.classList.remove('input-error');
+                document.getElementById(errorElementId).style.display = 'none';
+            }
+            
+            // Add input event listeners to clear errors when typing
+            const requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+            requiredInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const errorId = this.id + '-error';
+                    if (document.getElementById(errorId)) {
+                        hideError(this, errorId);
+                    }
+                });
+            });
+            
+            // Validate email fields on blur
+            const emailInputs = document.querySelectorAll('input[type="email"]');
+            emailInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value && !isValidEmail(this.value)) {
+                        showError(this, this.id + '-error');
+                    }
+                });
+            });
+            
+            // Restrict mobile number field to numbers only
+            const mobileNumberInput = document.getElementById('mobile-number');
+            if (mobileNumberInput) {
+                mobileNumberInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            }
         }
         
         function setupPaymentFunctionality() {
@@ -937,8 +1081,48 @@
             
             // Submit payment button
             submitPaymentBtn.addEventListener('click', function() {
-                // Get payment details
+                // Get selected payment method
                 const paymentMethod = document.querySelector('.payment-active h3').textContent;
+                let isValid = true;
+                
+                // Validate based on payment method
+                if (paymentMethod === 'PayPal') {
+                    const paypalEmail = document.getElementById('paypal-email');
+                    if (!paypalEmail.value || !isValidEmail(paypalEmail.value)) {
+                        showError(paypalEmail, 'paypal-email-error');
+                        isValid = false;
+                    } else {
+                        hideError(paypalEmail, 'paypal-email-error');
+                    }
+                } else {
+                    const transactionId = document.getElementById('transaction-id');
+                    const mobileNumber = document.getElementById('mobile-number');
+                    
+                    if (!transactionId.value.trim()) {
+                        showError(transactionId, 'transaction-id-error');
+                        isValid = false;
+                    } else {
+                        hideError(transactionId, 'transaction-id-error');
+                    }
+                    
+                    if (!mobileNumber.value.trim() || mobileNumber.value.length < 10) {
+                        showError(mobileNumber, 'mobile-number-error');
+                        isValid = false;
+                    } else {
+                        hideError(mobileNumber, 'mobile-number-error');
+                    }
+                }
+                
+                if (!isValid) {
+                    // Scroll to the first error
+                    const firstError = document.querySelector('.input-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
+                
+                // Get payment details
                 let transactionId = '';
                 let senderInfo = '';
                 
@@ -968,6 +1152,24 @@
                 });
                 document.getElementById('success-section').classList.add('active-section');
             });
+            
+            // Email validation function
+            function isValidEmail(email) {
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            // Show error function
+            function showError(inputElement, errorElementId) {
+                inputElement.classList.add('input-error');
+                document.getElementById(errorElementId).style.display = 'block';
+            }
+            
+            // Hide error function
+            function hideError(inputElement, errorElementId) {
+                inputElement.classList.remove('input-error');
+                document.getElementById(errorElementId).style.display = 'none';
+            }
         }
         
         function setupReceiptDownload() {
