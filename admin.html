@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneXX Admin Panel</title>
+    <title>OneXX - Admin Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,6 +19,8 @@
             --text-dark: #1f2937;
             --text-light: #6b7280;
             --border-light: #e5e7eb;
+            --error: #ef4444;
+            --success: #10b981;
         }
         
         body {
@@ -54,131 +56,82 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
         }
         
+        .input-error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
         .nav-active {
             background-color: rgb(224 231 255);
             color: rgb(79 70 229);
         }
         
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        .stat-card {
+            transition: all 0.3s ease;
         }
         
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
         }
         
-        .page-section {
-            display: none;
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        .active-section {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .admin-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .admin-table tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
         
         .status-active {
-            background-color: #10b981;
-            color: white;
+            background-color: #dcfce7;
+            color: #16a34a;
         }
         
         .status-pending {
-            background-color: #f59e0b;
-            color: white;
+            background-color: #fef3c7;
+            color: #d97706;
         }
         
-        .status-completed {
-            background-color: #3b82f6;
-            color: white;
-        }
-        
-        .status-disputed {
-            background-color: #ef4444;
-            color: white;
-        }
-        
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background: #10b981;
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s;
-        }
-        
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .toast.error {
-            background: #ef4444;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-        
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            opacity: 0.9;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px;
+        .status-expired {
+            background-color: #fee2e2;
+            color: #dc2626;
         }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50">
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Operation completed successfully</span>
-    </div>
-
     <!-- Navigation -->
     <nav class="bg-white shadow-sm fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex items-center text-indigo-600 font-bold text-xl">
+                    <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer">
                         <span class="mr-2"><i class="fas fa-shield-alt"></i></span> OneXX Admin
                     </div>
                 </div>
@@ -189,11 +142,11 @@
                     <button id="nav-guarantees" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
                         Guarantees
                     </button>
-                    <button id="nav-payments" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                        Payment Methods
+                    <button id="nav-settings" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        Settings
                     </button>
-                    <button id="nav-certificate" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                        Certificate Design
+                    <button class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </div>
@@ -203,1049 +156,660 @@
     <!-- Main Content -->
     <main class="pt-16">
         <!-- Dashboard Section -->
-        <section id="dashboard-section" class="page-section active-section p-6">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Dashboard</h2>
+        <section id="dashboard-section" class="page-section active-section">
+            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
                 
                 <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="card-white p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card bg-white p-6 rounded-2xl shadow-md border-l-4 border-indigo-500">
                         <div class="flex items-center">
-                            <div class="rounded-full bg-indigo-100 p-3 mr-4">
-                                <i class="fas fa-file-contract text-indigo-600 text-xl"></i>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-file-contract text-indigo-600 text-2xl"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Total Guarantees</p>
-                                <h3 class="text-2xl font-bold" id="total-guarantees">0</h3>
+                            <div class="ml-4">
+                                <h2 class="text-lg font-semibold text-gray-900">Total Guarantees</h2>
+                                <p class="text-3xl font-bold text-gray-900">127</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card-white p-6">
+                    <div class="stat-card bg-white p-6 rounded-2xl shadow-md border-l-4 border-green-500">
                         <div class="flex items-center">
-                            <div class="rounded-full bg-green-100 p-3 mr-4">
-                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-check-circle text-green-600 text-2xl"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Active Guarantees</p>
-                                <h3 class="text-2xl font-bold" id="active-guarantees">0</h3>
+                            <div class="ml-4">
+                                <h2 class="text-lg font-semibold text-gray-900">Active Guarantees</h2>
+                                <p class="text-3xl font-bold text-gray-900">98</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card-white p-6">
+                    <div class="stat-card bg-white p-6 rounded-2xl shadow-md border-l-4 border-yellow-500">
                         <div class="flex items-center">
-                            <div class="rounded-full bg-blue-100 p-3 mr-4">
-                                <i class="fas fa-money-bill-wave text-blue-600 text-xl"></i>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-clock text-yellow-600 text-2xl"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Total Value</p>
-                                <h3 class="text-2xl font-bold" id="total-value">$0</h3>
+                            <div class="ml-4">
+                                <h2 class="text-lg font-semibold text-gray-900">Pending Verification</h2>
+                                <p class="text-3xl font-bold text-gray-900">15</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card-white p-6">
+                    <div class="stat-card bg-white p-6 rounded-2xl shadow-md border-l-4 border-red-500">
                         <div class="flex items-center">
-                            <div class="rounded-full bg-amber-100 p-3 mr-4">
-                                <i class="fas fa-hand-holding-usd text-amber-600 text-xl"></i>
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-times-circle text-red-600 text-2xl"></i>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Total Fees</p>
-                                <h3 class="text-2xl font-bold" id="total-fees">$0</h3>
+                            <div class="ml-4">
+                                <h2 class="text-lg font-semibold text-gray-900">Expired Guarantees</h2>
+                                <p class="text-3xl font-bold text-gray-900">14</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Recent Guarantees -->
-                <div class="card-white p-6 mb-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Recent Guarantees</h3>
-                        <button class="btn btn-primary" id="view-all-guarantees">View All</button>
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-900">Recent Guarantees</h2>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th>Certificate ID</th>
+                                    <th>Seller</th>
+                                    <th>Buyer</th>
+                                    <th>Value</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="recent-guarantees">
-                                <!-- Will be populated by JavaScript -->
+                            <tbody>
+                                <tr>
+                                    <td class="font-mono">OXX-987654-XYZ</td>
+                                    <td>John's Service</td>
+                                    <td>Jane Client</td>
+                                    <td>$1,200.00</td>
+                                    <td>2023-10-15</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987653-XYZ</td>
+                                    <td>Mike's Repairs</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>$850.00</td>
+                                    <td>2023-10-14</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987652-XYZ</td>
+                                    <td>Tech Solutions Ltd</td>
+                                    <td>Robert Williams</td>
+                                    <td>$2,500.00</td>
+                                    <td>2023-10-13</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987651-XYZ</td>
+                                    <td>Design Studio</td>
+                                    <td>Emily Thompson</td>
+                                    <td>$1,500.00</td>
+                                    <td>2023-10-10</td>
+                                    <td><span class="status-badge status-expired">Expired</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987650-XYZ</td>
+                                    <td>Consulting Experts</td>
+                                    <td>David Miller</td>
+                                    <td>$3,000.00</td>
+                                    <td>2023-10-08</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                        <button class="text-indigo-600 hover:text-indigo-900 font-medium">
+                            View All Guarantees →
+                        </button>
                     </div>
                 </div>
                 
-                <!-- Recent Payments -->
-                <div class="card-white p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Recent Payments</h3>
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Create New Certificate</h3>
+                        <p class="text-gray-600 mb-4">Manually create a new guarantee certificate</p>
+                        <button class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                            Create New
+                        </button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="recent-payments">
-                                <!-- Will be populated by JavaScript -->
-                            </tbody>
-                        </table>
+                    
+                    <div class="bg-white p-6 rounded-2xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Payment Verification</h3>
+                        <p class="text-gray-600 mb-4">Verify pending payments and activate guarantees</p>
+                        <button class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                            Verify Payments
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-2xl shadow-md">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">System Settings</h3>
+                        <p class="text-gray-600 mb-4">Update fee structure and payment methods</p>
+                        <button class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                            Configure
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
         
         <!-- Guarantees Section -->
-        <section id="guarantees-section" class="page-section p-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900">Manage Guarantees</h2>
-                    <div class="actions">
-                        <button class="btn btn-primary" id="add-guarantee"><i class="fas fa-plus"></i> Add New</button>
+        <section id="guarantees-section" class="page-section">
+            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Manage Guarantees</h1>
+                
+                <!-- Filters and Search -->
+                <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                            <input type="text" class="w-full px-4 py-2 input-field rounded-md" placeholder="Certificate ID, Name...">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select class="w-full px-4 py-2 input-field rounded-md">
+                                <option value="">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
+                            <input type="date" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
+                            <input type="date" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-all duration-300 mr-2">
+                            Reset
+                        </button>
+                        <button class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                            Apply Filters
+                        </button>
                     </div>
                 </div>
                 
-                <div class="card-white p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">All Guarantees</h3>
-                        <div>
-                            <input type="text" id="search-guarantees" class="input-field rounded-md px-4 py-2" placeholder="Search guarantees..." style="width: 300px; display: inline-block;">
-                        </div>
+                <!-- Guarantees Table -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-900">All Guarantees</h2>
+                        <button class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-plus mr-2"></i> Add New
+                        </button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th>Certificate ID</th>
+                                    <th>Seller</th>
+                                    <th>Buyer</th>
+                                    <th>Value</th>
+                                    <th>Created</th>
+                                    <th>Expires</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200" id="all-guarantees">
-                                <!-- Will be populated by JavaScript -->
+                            <tbody>
+                                <tr>
+                                    <td class="font-mono">OXX-987654-XYZ</td>
+                                    <td>John's Service</td>
+                                    <td>Jane Client</td>
+                                    <td>$1,200.00</td>
+                                    <td>2023-10-15</td>
+                                    <td>2023-11-15</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987653-XYZ</td>
+                                    <td>Mike's Repairs</td>
+                                    <td>Sarah Johnson</td>
+                                    <td>$850.00</td>
+                                    <td>2023-10-14</td>
+                                    <td>2023-11-14</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987652-XYZ</td>
+                                    <td>Tech Solutions Ltd</td>
+                                    <td>Robert Williams</td>
+                                    <td>$2,500.00</td>
+                                    <td>2023-10-13</td>
+                                    <td>2023-11-13</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987651-XYZ</td>
+                                    <td>Design Studio</td>
+                                    <td>Emily Thompson</td>
+                                    <td>$1,500.00</td>
+                                    <td>2023-10-10</td>
+                                    <td>2023-11-10</td>
+                                    <td><span class="status-badge status-expired">Expired</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987650-XYZ</td>
+                                    <td>Consulting Experts</td>
+                                    <td>David Miller</td>
+                                    <td>$3,000.00</td>
+                                    <td>2023-10-08</td>
+                                    <td>2023-11-08</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987649-XYZ</td>
+                                    <td>Web Developers Inc</td>
+                                    <td>Lisa Anderson</td>
+                                    <td>$4,200.00</td>
+                                    <td>2023-10-05</td>
+                                    <td>2023-11-05</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono">OXX-987648-XYZ</td>
+                                    <td>Marketing Pros</td>
+                                    <td>James Wilson</td>
+                                    <td>$2,100.00</td>
+                                    <td>2023-10-03</td>
+                                    <td>2023-11-03</td>
+                                    <td><span class="status-badge status-expired">Expired</span></td>
+                                    <td>
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
+                        <div class="text-sm text-gray-700">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">7</span> of <span class="font-medium">127</span> results
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                Previous
+                            </button>
+                            <button class="px-3 py-1 rounded-md gradient-bg text-white">
+                                1
+                            </button>
+                            <button class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                2
+                            </button>
+                            <button class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                3
+                            </button>
+                            <button class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                Next
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
         
-        <!-- Payment Methods Section -->
-        <section id="payments-section" class="page-section p-6">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Payment Methods</h2>
+        <!-- Settings Section -->
+        <section id="settings-section" class="page-section">
+            <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">System Settings</h1>
                 
-                <div class="card-white p-6 mb-6">
-                    <div class="mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Available Payment Methods</h3>
+                <!-- Fee Structure -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-2xl font-bold text-white">Fee Structure</h2>
+                        <p class="text-indigo-100 mt-1">Configure the guarantee fee calculation rules</p>
                     </div>
-                    
-                    <div id="payment-methods-container">
-                        <!-- Will be populated by JavaScript -->
+                    <div class="px-6 py-6">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Tier 1 (≤$40) Fee Percentage
+                            </label>
+                            <div class="flex items-center">
+                                <input type="number" value="5" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <span class="ml-2 text-gray-700">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Tier 2 ($40.01-$160) Fee Percentage
+                            </label>
+                            <div class="flex items-center">
+                                <input type="number" value="3" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <span class="ml-2 text-gray-700">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Tier 3 (≥$160.01) Fee Percentage
+                            </label>
+                            <div class="flex items-center">
+                                <input type="number" value="2" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <span class="ml-2 text-gray-700">%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Minimum Fee for Tier 3
+                            </label>
+                            <div class="flex items-center">
+                                <span class="mr-2 text-gray-700">$</span>
+                                <input type="number" value="8" min="0" step="0.01" class="w-32 px-4 py-2 input-field rounded-md">
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
+                                Save Fee Structure
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="card-white p-6">
-                    <div class="mb-4">
-                        <h3 class="text-lg font-medium text-gray-900">Add/Edit Payment Method</h3>
-                    </div>
-                    <form id="payment-form">
-                        <input type="hidden" id="payment-id">
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Payment Method Name
-                            </label>
-                            <input type="text" id="payment-name" class="input-field w-full rounded-md" placeholder="e.g., bKash, PayPal">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Payment Details
-                            </label>
-                            <input type="text" id="payment-details" class="input-field w-full rounded-md" placeholder="Account number, email, etc.">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Payment Type
-                            </label>
-                            <select id="payment-type" class="input-field w-full rounded-md">
-                                <option value="mobile">Mobile Banking</option>
-                                <option value="bank">Bank Transfer</option>
-                                <option value="digital">Digital Wallet</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Special Instructions
-                            </label>
-                            <textarea id="payment-instructions" class="input-field w-full rounded-md" placeholder="Any special instructions for users"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Save Payment Method</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Certificate Design Section -->
-        <section id="certificate-section" class="page-section p-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Certificate Design</h2>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="card-white p-6">
-                        <div class="mb-4">
-                            <h3 class="text-lg font-medium text-gray-900">Customize Certificate</h3>
-                        </div>
-                        <form id="certificate-form">
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Certificate Title
-                                </label>
-                                <input type="text" id="certificate-title" class="input-field w-full rounded-md" value="Service Guarantee Certificate">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Header Text
-                                </label>
-                                <input type="text" id="certificate-header" class="input-field w-full rounded-md" value="This certifies that the following service is guaranteed by OneXX">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Terms & Conditions
-                                </label>
-                                <textarea id="certificate-terms" class="input-field w-full rounded-md">Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.</textarea>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Footer Text
-                                </label>
-                                <input type="text" id="certificate-footer" class="input-field w-full rounded-md" value="For verification, visit onexx.com/verify or scan the QR code">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Primary Color
-                                </label>
-                                <input type="color" id="certificate-color" class="w-full h-10 rounded-md" value="#4f46e5">
-                            </div>
-                            <button type="submit" class="btn btn-success">Save Certificate Design</button>
-                        </form>
+                <!-- Payment Methods -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-2xl font-bold text-white">Payment Methods</h2>
+                        <p class="text-indigo-100 mt-1">Update payment method details</p>
                     </div>
-                    
-                    <div class="card-white p-6">
-                        <div class="mb-4">
-                            <h3 class="text-lg font-medium text-gray-900">Certificate Preview</h3>
+                    <div class="px-6 py-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    bKash Number
+                                </label>
+                                <input type="text" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Nagad Number
+                                </label>
+                                <input type="text" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Rocket Number
+                                </label>
+                                <input type="text" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    PayPal Email
+                                </label>
+                                <input type="email" value="payments@onexx.com" class="w-full px-4 py-2 input-field rounded-md">
+                            </div>
                         </div>
-                        <div class="bg-indigo-50 rounded-xl p-6">
-                            <div class="text-center mb-6">
-                                <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-shield-alt text-4xl text-white"></i>
-                                </div>
-                                <h3 class="text-2xl font-bold text-gray-900" id="preview-title">Service Guarantee Certificate</h3>
-                                <p class="text-gray-600">OXX-123456-ABC789</p>
-                            </div>
-                            
-                            <p class="text-center text-gray-700 mb-6" id="preview-header">This certifies that the following service is guaranteed by OneXX</p>
-                            
-                            <div class="grid grid-cols-2 gap-4 mb-6">
-                                <div>
-                                    <p class="text-gray-500 text-sm">Seller</p>
-                                    <p class="text-gray-900">John's Service</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Buyer</p>
-                                    <p class="text-gray-900">Jane Client</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Value</p>
-                                    <p class="text-gray-900">$1,500</p>
-                                </div>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Status</p>
-                                    <p class="text-green-600">Active</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-100 rounded-lg p-4 mb-6">
-                                <p class="text-sm text-gray-700" id="preview-terms">Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.</p>
-                            </div>
-                            
-                            <div class="bg-gray-100 rounded-lg p-4 text-center">
-                                <div class="w-32 h-32 mx-auto bg-white rounded border border-gray-300 flex items-center justify-center">
-                                    <i class="fas fa-qrcode text-4xl text-gray-400"></i>
-                                </div>
-                                <p class="text-gray-500 mt-2 text-sm" id="preview-footer">For verification, visit onexx.com/verify or scan the QR code</p>
-                            </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
+                                Save Payment Methods
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Certificate -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-2xl font-bold text-white">Sample Certificate</h2>
+                        <p class="text-indigo-100 mt-1">Customize the sample certificate on the homepage</p>
+                    </div>
+                    <div class="px-6 py-6">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Seller Name
+                            </label>
+                            <input type="text" value="John's Service" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Buyer Name
+                            </label>
+                            <input type="text" value="Jane Client" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Service Value
+                            </label>
+                            <input type="text" value="$1,500" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Certificate ID
+                            </label>
+                            <input type="text" value="OXX-123456-ABC789" class="w-full px-4 py-2 input-field rounded-md">
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
+                                Save Certificate Settings
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
-
-    <!-- Edit Guarantee Modal -->
-    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden" id="edit-guarantee-modal">
-        <div class="bg-white rounded-lg w-full max-w-md p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Edit Guarantee</h3>
-                <button class="text-gray-400 hover:text-gray-500" id="close-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="edit-guarantee-form">
-                <input type="hidden" id="edit-guarantee-id">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Seller</label>
-                    <input type="text" id="edit-guarantee-seller" class="input-field w-full rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Buyer</label>
-                    <input type="text" id="edit-guarantee-buyer" class="input-field w-full rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Service</label>
-                    <input type="text" id="edit-guarantee-service" class="input-field w-full rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-                    <input type="text" id="edit-guarantee-amount" class="input-field w-full rounded-md">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select id="edit-guarantee-status" class="input-field w-full rounded-md">
-                        <option value="active">Active</option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                        <option value="disputed">Disputed</option>
-                    </select>
-                </div>
-                <div class="flex justify-end">
-                    <button type="submit" class="btn btn-success">Save Changes</button>
-                </div>
-            </form>
+    
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-6 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
+            <p>© 2023 OneXX Admin Panel. All rights reserved.</p>
+            <p class="mt-2">For support, email: admin@onexx.com</p>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // Data storage keys
-        const STORAGE_KEYS = {
-            GUARANTEES: 'onexx_guarantees',
-            PAYMENT_METHODS: 'onexx_payment_methods',
-            CERTIFICATE_DESIGN: 'onexx_certificate_design',
-            TRANSACTIONS: 'onexx_transactions'
-        };
-
-        // Default data
-        const DEFAULT_DATA = {
-            guarantees: [
-                {
-                    id: 1,
-                    certificateId: 'OXX-123456',
-                    seller: 'John\'s Repair Service',
-                    buyer: 'Jane Smith',
-                    service: 'Laptop Repair',
-                    amount: 1200,
-                    status: 'active',
-                    date: '2023-10-15'
-                },
-                {
-                    id: 2,
-                    certificateId: 'OXX-123457',
-                    seller: 'Sarah\'s Cleaning',
-                    buyer: 'Michael Johnson',
-                    service: 'Office Cleaning',
-                    amount: 850,
-                    status: 'active',
-                    date: '2023-10-14'
-                },
-                {
-                    id: 3,
-                    certificateId: 'OXX-123458',
-                    seller: 'Mike\'s Tutoring',
-                    buyer: 'Emily Williams',
-                    service: 'Math Tutoring',
-                    amount: 600,
-                    status: 'pending',
-                    date: '2023-10-13'
-                },
-                {
-                    id: 4,
-                    certificateId: 'OXX-123459',
-                    seller: 'Anna\'s Catering',
-                    buyer: 'David Brown',
-                    service: 'Event Catering',
-                    amount: 2500,
-                    status: 'active',
-                    date: '2023-10-12'
-                }
-            ],
-            paymentMethods: [
-                {
-                    id: 1,
-                    name: 'bKash',
-                    details: '01322149482',
-                    type: 'mobile',
-                    instructions: 'Use "Send Money" option only. Do not use "Payment" option.'
-                },
-                {
-                    id: 2,
-                    name: 'Nagad',
-                    details: '01322149482',
-                    type: 'mobile',
-                    instructions: 'Use "Send Money" option only. Do not use "Payment" option.'
-                },
-                {
-                    id: 3,
-                    name: 'Rocket',
-                    details: '01322149482',
-                    type: 'mobile',
-                    instructions: 'Use "Send Money" option only. Do not use "Payment" option.'
-                },
-                {
-                    id: 4,
-                    name: 'PayPal',
-                    details: 'payments@onexx.com',
-                    type: 'digital',
-                    instructions: 'Send payment to payments@onexx.com'
-                }
-            ],
-            certificateDesign: {
-                title: 'Service Guarantee Certificate',
-                header: 'This certifies that the following service is guaranteed by OneXX',
-                terms: 'Full refund within the guarantee period if service quality is not met. All disputes will be mediated by OneXX.',
-                footer: 'For verification, visit onexx.com/verify or scan the QR code',
-                color: '#4f46e5'
-            },
-            transactions: [
-                {
-                    id: 'TX123456789',
-                    method: 'bKash',
-                    amount: 154.5,
-                    status: 'completed',
-                    date: '2023-10-15'
-                },
-                {
-                    id: 'TX987654321',
-                    method: 'Nagad',
-                    amount: 309,
-                    status: 'completed',
-                    date: '2023-10-10'
-                }
-            ]
-        };
-
-        // Initialize application
         document.addEventListener('DOMContentLoaded', function() {
-            initializeData();
-            setupEventListeners();
-            loadDashboardData();
-            loadGuaranteesData();
-            loadPaymentMethods();
-            loadCertificateDesign();
-            loadTransactions();
+            // Set up navigation
+            setupNavigation();
+            
+            // Set up form functionality
+            setupFormFunctionality();
         });
-
-        // Initialize data in localStorage
-        function initializeData() {
-            if (!localStorage.getItem(STORAGE_KEYS.GUARANTEES)) {
-                localStorage.setItem(STORAGE_KEYS.GUARANTEES, JSON.stringify(DEFAULT_DATA.guarantees));
-            }
-            
-            if (!localStorage.getItem(STORAGE_KEYS.PAYMENT_METHODS)) {
-                localStorage.setItem(STORAGE_KEYS.PAYMENT_METHODS, JSON.stringify(DEFAULT_DATA.paymentMethods));
-            }
-            
-            if (!localStorage.getItem(STORAGE_KEYS.CERTIFICATE_DESIGN)) {
-                localStorage.setItem(STORAGE_KEYS.CERTIFICATE_DESIGN, JSON.stringify(DEFAULT_DATA.certificateDesign));
-            }
-            
-            if (!localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) {
-                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(DEFAULT_DATA.transactions));
-            }
-        }
-
-        // Get data from localStorage
-        function getData(key) {
-            return JSON.parse(localStorage.getItem(key)) || [];
-        }
-
-        // Save data to localStorage
-        function saveData(key, data) {
-            localStorage.setItem(key, JSON.stringify(data));
-        }
-
-        // Show toast notification
-        function showToast(message, isError = false) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            toastMessage.textContent = message;
-            
-            if (isError) {
-                toast.classList.add('error');
-            } else {
-                toast.classList.remove('error');
-            }
-            
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Handle menu item clicks
+        
+        function setupNavigation() {
+            // Get all navigation buttons
             const navDashboard = document.getElementById('nav-dashboard');
             const navGuarantees = document.getElementById('nav-guarantees');
-            const navPayments = document.getElementById('nav-payments');
-            const navCertificate = document.getElementById('nav-certificate');
+            const navSettings = document.getElementById('nav-settings');
             
+            // Get all page sections
             const dashboardSection = document.getElementById('dashboard-section');
             const guaranteesSection = document.getElementById('guarantees-section');
-            const paymentsSection = document.getElementById('payments-section');
-            const certificateSection = document.getElementById('certificate-section');
+            const settingsSection = document.getElementById('settings-section');
             
             // Function to change active section
             function changeActiveSection(section) {
                 // Hide all sections
                 dashboardSection.classList.remove('active-section');
                 guaranteesSection.classList.remove('active-section');
-                paymentsSection.classList.remove('active-section');
-                certificateSection.classList.remove('active-section');
+                settingsSection.classList.remove('active-section');
                 
                 // Remove active class from all nav buttons
                 navDashboard.classList.remove('nav-active');
                 navGuarantees.classList.remove('nav-active');
-                navPayments.classList.remove('nav-active');
-                navCertificate.classList.remove('nav-active');
+                navSettings.classList.remove('nav-active');
                 
                 // Show the selected section
                 section.classList.add('active-section');
+                
+                // Add active class to the corresponding nav button
+                if (section === dashboardSection) {
+                    navDashboard.classList.add('nav-active');
+                } else if (section === guaranteesSection) {
+                    navGuarantees.classList.add('nav-active');
+                } else if (section === settingsSection) {
+                    navSettings.classList.add('nav-active');
+                }
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
             }
             
             // Add event listeners to navigation buttons
             navDashboard.addEventListener('click', function() {
                 changeActiveSection(dashboardSection);
-                navDashboard.classList.add('nav-active');
-                loadDashboardData();
             });
             
             navGuarantees.addEventListener('click', function() {
                 changeActiveSection(guaranteesSection);
-                navGuarantees.classList.add('nav-active');
-                loadGuaranteesData();
             });
             
-            navPayments.addEventListener('click', function() {
-                changeActiveSection(paymentsSection);
-                navPayments.classList.add('nav-active');
+            navSettings.addEventListener('click', function() {
+                changeActiveSection(settingsSection);
             });
+        }
+        
+        function setupFormFunctionality() {
+            // In a real application, this would connect to a backend API
+            // For this demo, we'll just show success messages
             
-            navCertificate.addEventListener('click', function() {
-                changeActiveSection(certificateSection);
-                navCertificate.classList.add('nav-active');
-            });
-            
-            // Handle edit guarantee buttons (delegation)
-            document.getElementById('all-guarantees').addEventListener('click', function(e) {
-                if (e.target.classList.contains('edit-guarantee')) {
-                    const row = e.target.closest('tr');
-                    const id = row.getAttribute('data-id');
-                    editGuarantee(id);
-                } else if (e.target.classList.contains('delete-guarantee')) {
-                    const row = e.target.closest('tr');
-                    const id = row.getAttribute('data-id');
-                    deleteGuarantee(id);
+            const saveButtons = document.querySelectorAll('button');
+            saveButtons.forEach(button => {
+                if (button.textContent.includes('Save')) {
+                    button.addEventListener('click', function() {
+                        const buttonText = this.textContent;
+                        this.textContent = 'Saving...';
+                        this.disabled = true;
+                        
+                        // Simulate API call
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fas fa-check mr-2"></i> Saved!';
+                            this.classList.remove('gradient-bg');
+                            this.classList.add('bg-green-500');
+                            
+                            // Reset button after 2 seconds
+                            setTimeout(() => {
+                                this.innerHTML = buttonText;
+                                this.classList.remove('bg-green-500');
+                                this.classList.add('gradient-bg');
+                                this.disabled = false;
+                            }, 2000);
+                        }, 1000);
+                    });
                 }
             });
-            
-            // Handle edit payment method buttons (delegation)
-            document.getElementById('payment-methods-container').addEventListener('click', function(e) {
-                if (e.target.classList.contains('edit-payment')) {
-                    const paymentMethod = e.target.closest('.payment-method');
-                    const id = paymentMethod.getAttribute('data-id');
-                    editPaymentMethod(id);
-                } else if (e.target.classList.contains('delete-payment')) {
-                    const paymentMethod = e.target.closest('.payment-method');
-                    const id = paymentMethod.getAttribute('data-id');
-                    deletePaymentMethod(id);
-                }
-            });
-            
-            // Edit guarantee form submission
-            document.getElementById('edit-guarantee-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveGuaranteeChanges();
-            });
-            
-            // Payment form submission
-            document.getElementById('payment-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                savePaymentMethod();
-            });
-            
-            // Certificate form submission
-            document.getElementById('certificate-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveCertificateDesign();
-            });
-            
-            // Close modal when clicking close button
-            document.getElementById('close-modal').addEventListener('click', function() {
-                document.getElementById('edit-guarantee-modal').classList.add('hidden');
-            });
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target === document.getElementById('edit-guarantee-modal')) {
-                    document.getElementById('edit-guarantee-modal').classList.add('hidden');
-                }
-            });
-            
-            // Add new guarantee button
-            document.getElementById('add-guarantee').addEventListener('click', function() {
-                addNewGuarantee();
-            });
-            
-            // Add new payment method button
-            document.getElementById('add-payment-method').addEventListener('click', function() {
-                // Reset the form
-                document.getElementById('payment-form').reset();
-                document.getElementById('payment-id').value = '';
-            });
-            
-            // View all guarantees button
-            document.getElementById('view-all-guarantees').addEventListener('click', function() {
-                changeActiveSection(guaranteesSection);
-                navGuarantees.classList.add('nav-active');
-            });
-        }
-
-        // Load dashboard data
-        function loadDashboardData() {
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            const activeGuarantees = guarantees.filter(g => g.status === 'active').length;
-            const totalValue = guarantees.reduce((sum, g) => sum + g.amount, 0);
-            const totalFees = totalValue * 0.03; // Assuming 3% fee
-            
-            // Update stats
-            document.getElementById('total-guarantees').textContent = guarantees.length;
-            document.getElementById('active-guarantees').textContent = activeGuarantees;
-            document.getElementById('total-value').textContent = `$${totalValue.toLocaleString()}`;
-            document.getElementById('total-fees').textContent = `$${totalFees.toLocaleString()}`;
-            
-            // Update recent guarantees table
-            const recentGuaranteesTable = document.getElementById('recent-guarantees');
-            recentGuaranteesTable.innerHTML = '';
-            
-            // Show only the 4 most recent guarantees
-            const recentGuarantees = [...guarantees].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
-            
-            recentGuarantees.forEach(guarantee => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${guarantee.certificateId}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.seller}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.buyer}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${guarantee.amount.toLocaleString()}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-${guarantee.status}">
-                            ${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.date}</td>
-                `;
-                
-                recentGuaranteesTable.appendChild(row);
-            });
-        }
-
-        // Load transactions
-        function loadTransactions() {
-            const transactions = getData(STORAGE_KEYS.TRANSACTIONS);
-            const recentPaymentsTable = document.getElementById('recent-payments');
-            recentPaymentsTable.innerHTML = '';
-            
-            transactions.forEach(transaction => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${transaction.id}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.method}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${transaction.amount.toLocaleString()}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.status}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${transaction.date}</td>
-                `;
-                
-                recentPaymentsTable.appendChild(row);
-            });
-        }
-
-        // Load guarantees data
-        function loadGuaranteesData() {
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            const allGuaranteesTable = document.getElementById('all-guarantees');
-            allGuaranteesTable.innerHTML = '';
-            
-            guarantees.forEach(guarantee => {
-                const row = document.createElement('tr');
-                row.setAttribute('data-id', guarantee.id);
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${guarantee.certificateId}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.seller}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.buyer}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${guarantee.service}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$${guarantee.amount.toLocaleString()}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-${guarantee.status}">
-                            ${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button class="text-indigo-600 hover:text-indigo-900 edit-guarantee mr-3">Edit</button>
-                        <button class="text-red-600 hover:text-red-900 delete-guarantee">Delete</button>
-                    </td>
-                `;
-                
-                allGuaranteesTable.appendChild(row);
-            });
-        }
-
-        // Load payment methods
-        function loadPaymentMethods() {
-            const paymentMethods = getData(STORAGE_KEYS.PAYMENT_METHODS);
-            const paymentMethodsContainer = document.getElementById('payment-methods-container');
-            paymentMethodsContainer.innerHTML = '';
-            
-            paymentMethods.forEach(method => {
-                const paymentMethod = document.createElement('div');
-                paymentMethod.className = 'payment-method mb-4 p-4 border border-gray-200 rounded-lg';
-                paymentMethod.setAttribute('data-id', method.id);
-                
-                // Set icon based on type
-                let icon = 'fa-credit-card';
-                let bgColor = '#e2136e';
-                let color = 'white';
-                
-                if (method.type === 'mobile') {
-                    icon = 'fa-mobile-alt';
-                    bgColor = '#e2136e';
-                } else if (method.type === 'digital') {
-                    icon = 'fa-wallet';
-                    bgColor = '#003087';
-                } else if (method.type === 'bank') {
-                    icon = 'fa-university';
-                    bgColor = '#7846a0';
-                }
-                
-                paymentMethod.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" style="background: ${bgColor}; color: ${color};">
-                            <i class="fas ${icon}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-medium text-gray-900">${method.name}</h4>
-                            <p class="text-sm text-gray-600">${method.details}</p>
-                        </div>
-                        <div>
-                            <button class="text-indigo-600 hover:text-indigo-900 edit-payment mr-3">Edit</button>
-                            <button class="text-red-600 hover:text-red-900 delete-payment">Delete</button>
-                        </div>
-                    </div>
-                `;
-                
-                paymentMethodsContainer.appendChild(paymentMethod);
-            });
-        }
-
-        // Load certificate design
-        function loadCertificateDesign() {
-            const design = getData(STORAGE_KEYS.CERTIFICATE_DESIGN);
-            
-            // Set form values
-            document.getElementById('certificate-title').value = design.title;
-            document.getElementById('certificate-header').value = design.header;
-            document.getElementById('certificate-terms').value = design.terms;
-            document.getElementById('certificate-footer').value = design.footer;
-            document.getElementById('certificate-color').value = design.color;
-            
-            // Update preview
-            document.getElementById('preview-title').textContent = design.title;
-            document.getElementById('preview-header').textContent = design.header;
-            document.getElementById('preview-terms').textContent = design.terms;
-            document.getElementById('preview-footer').textContent = design.footer;
-            
-            // Update certificate color in preview
-            document.querySelector('.bg-indigo-600').style.backgroundColor = design.color;
-        }
-
-        // Edit guarantee
-        function editGuarantee(id) {
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            const guarantee = guarantees.find(g => g.id == id);
-            
-            if (!guarantee) {
-                showToast('Guarantee not found', true);
-                return;
-            }
-            
-            // Fill the form with current data
-            document.getElementById('edit-guarantee-id').value = guarantee.id;
-            document.getElementById('edit-guarantee-seller').value = guarantee.seller;
-            document.getElementById('edit-guarantee-buyer').value = guarantee.buyer;
-            document.getElementById('edit-guarantee-service').value = guarantee.service;
-            document.getElementById('edit-guarantee-amount').value = guarantee.amount;
-            document.getElementById('edit-guarantee-status').value = guarantee.status;
-            
-            // Show the modal
-            document.getElementById('edit-guarantee-modal').classList.remove('hidden');
-        }
-
-        // Save guarantee changes
-        function saveGuaranteeChanges() {
-            const id = document.getElementById('edit-guarantee-id').value;
-            const seller = document.getElementById('edit-guarantee-seller').value;
-            const buyer = document.getElementById('edit-guarantee-buyer').value;
-            const service = document.getElementById('edit-guarantee-service').value;
-            const amount = document.getElementById('edit-guarantee-amount').value;
-            const status = document.getElementById('edit-guarantee-status').value;
-            
-            if (!seller || !buyer || !service || !amount) {
-                showToast('Please fill all fields', true);
-                return;
-            }
-            
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            const index = guarantees.findIndex(g => g.id == id);
-            
-            if (index === -1) {
-                showToast('Guarantee not found', true);
-                return;
-            }
-            
-            // Update the guarantee
-            guarantees[index] = {
-                ...guarantees[index],
-                seller,
-                buyer,
-                service,
-                amount: parseFloat(amount),
-                status
-            };
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.GUARANTEES, guarantees);
-            
-            // Update UI
-            loadDashboardData();
-            loadGuaranteesData();
-            
-            // Close the modal
-            document.getElementById('edit-guarantee-modal').classList.add('hidden');
-            
-            showToast('Guarantee updated successfully');
-        }
-
-        // Delete guarantee
-        function deleteGuarantee(id) {
-            if (!confirm('Are you sure you want to delete this guarantee? This action cannot be undone.')) {
-                return;
-            }
-            
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            const filteredGuarantees = guarantees.filter(g => g.id != id);
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.GUARANTEES, filteredGuarantees);
-            
-            // Update UI
-            loadDashboardData();
-            loadGuaranteesData();
-            
-            showToast('Guarantee deleted successfully');
-        }
-
-        // Add new guarantee
-        function addNewGuarantee() {
-            const guarantees = getData(STORAGE_KEYS.GUARANTEES);
-            
-            // Generate a new ID
-            const newId = guarantees.length > 0 ? Math.max(...guarantees.map(g => g.id)) + 1 : 1;
-            
-            // Create a new guarantee
-            const newGuarantee = {
-                id: newId,
-                certificateId: `OXX-${Math.floor(100000 + Math.random() * 900000)}`,
-                seller: 'New Seller',
-                buyer: 'New Buyer',
-                service: 'New Service',
-                amount: 0,
-                status: 'pending',
-                date: new Date().toISOString().split('T')[0]
-            };
-            
-            // Add to the list
-            guarantees.push(newGuarantee);
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.GUARANTEES, guarantees);
-            
-            // Update UI
-            loadGuaranteesData();
-            
-            // Edit the new guarantee
-            editGuarantee(newId);
-            
-            showToast('New guarantee added');
-        }
-
-        // Edit payment method
-        function editPaymentMethod(id) {
-            const paymentMethods = getData(STORAGE_KEYS.PAYMENT_METHODS);
-            const method = paymentMethods.find(m => m.id == id);
-            
-            if (!method) {
-                showToast('Payment method not found', true);
-                return;
-            }
-            
-            // Fill the form with current data
-            document.getElementById('payment-id').value = method.id;
-            document.getElementById('payment-name').value = method.name;
-            document.getElementById('payment-details').value = method.details;
-            document.getElementById('payment-type').value = method.type;
-            document.getElementById('payment-instructions').value = method.instructions;
-        }
-
-        // Save payment method
-        function savePaymentMethod() {
-            const id = document.getElementById('payment-id').value;
-            const name = document.getElementById('payment-name').value;
-            const details = document.getElementById('payment-details').value;
-            const type = document.getElementById('payment-type').value;
-            const instructions = document.getElementById('payment-instructions').value;
-            
-            if (!name || !details) {
-                showToast('Please fill all required fields', true);
-                return;
-            }
-            
-            const paymentMethods = getData(STORAGE_KEYS.PAYMENT_METHODS);
-            
-            if (id) {
-                // Update existing payment method
-                const index = paymentMethods.findIndex(m => m.id == id);
-                
-                if (index === -1) {
-                    showToast('Payment method not found', true);
-                    return;
-                }
-                
-                paymentMethods[index] = {
-                    ...paymentMethods[index],
-                    name,
-                    details,
-                    type,
-                    instructions
-                };
-                
-                showToast('Payment method updated successfully');
-            } else {
-                // Add new payment method
-                const newId = paymentMethods.length > 0 ? Math.max(...paymentMethods.map(m => m.id)) + 1 : 1;
-                
-                paymentMethods.push({
-                    id: newId,
-                    name,
-                    details,
-                    type,
-                    instructions
-                });
-                
-                showToast('Payment method added successfully');
-            }
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.PAYMENT_METHODS, paymentMethods);
-            
-            // Update UI
-            loadPaymentMethods();
-            
-            // Reset the form
-            document.getElementById('payment-form').reset();
-            document.getElementById('payment-id').value = '';
-        }
-
-        // Delete payment method
-        function deletePaymentMethod(id) {
-            if (!confirm('Are you sure you want to delete this payment method? This action cannot be undone.')) {
-                return;
-            }
-            
-            const paymentMethods = getData(STORAGE_KEYS.PAYMENT_METHODS);
-            const filteredMethods = paymentMethods.filter(m => m.id != id);
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.PAYMENT_METHODS, filteredMethods);
-            
-            // Update UI
-            loadPaymentMethods();
-            
-            showToast('Payment method deleted successfully');
-        }
-
-        // Save certificate design
-        function saveCertificateDesign() {
-            const title = document.getElementById('certificate-title').value;
-            const header = document.getElementById('certificate-header').value;
-            const terms = document.getElementById('certificate-terms').value;
-            const footer = document.getElementById('certificate-footer').value;
-            const color = document.getElementById('certificate-color').value;
-            
-            if (!title || !header || !terms || !footer) {
-                showToast('Please fill all fields', true);
-                return;
-            }
-            
-            const design = {
-                title,
-                header,
-                terms,
-                footer,
-                color
-            };
-            
-            // Save to localStorage
-            saveData(STORAGE_KEYS.CERTIFICATE_DESIGN, design);
-            
-            // Update preview
-            document.getElementById('preview-title').textContent = title;
-            document.getElementById('preview-header').textContent = header;
-            document.getElementById('preview-terms').textContent = terms;
-            document.getElementById('preview-footer').textContent = footer;
-            document.querySelector('.bg-indigo-600').style.backgroundColor = color;
-            
-            showToast('Certificate design saved successfully');
         }
     </script>
 </body>
