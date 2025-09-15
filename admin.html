@@ -3,1317 +3,438 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneXX Admin Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Admin Portal - Universal Guarantee Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
-        
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --secondary: #06b6d4;
-            --accent: #f59e0b;
-            --light-bg: #f9fafb;
-            --card-bg: #ffffff;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --border-light: #e5e7eb;
-            --error: #ef4444;
-            --success: #10b981;
-        }
-        
-        body {
-            background: var(--light-bg);
-            color: var(--text-dark);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-        
-        .logo i {
-            margin-right: 10px;
-        }
-        
-        .tabs {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .tab {
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .tab:hover:not(.active) {
-            background: #eef2ff;
-        }
-        
-        main {
-            padding: 30px 0;
-        }
-        
-        .section {
-            display: none;
-        }
-        
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .section-header {
-            margin-bottom: 25px;
-        }
-        
-        .section-header h2 {
-            font-size: 1.8rem;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
-        
-        .section-header p {
-            color: var(--text-light);
-        }
-        
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            margin-bottom: 25px;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 15px 20px;
-        }
-        
-        .card-header h3 {
-            font-size: 1.3rem;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-right: 15px;
-        }
-        
-        .stat-content h3 {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 5px;
-        }
-        
-        .stat-content .value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-light);
-        }
-        
-        th {
-            background: #f9fafb;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        
-        tr:hover {
-            background: #f9fafb;
-        }
-        
-        .badge {
+        .status-badge {
             display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
-        
-        .badge-success {
-            background: #dcfce7;
-            color: #16a34a;
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
         }
-        
-        .badge-warning {
-            background: #fef3c7;
-            color: #d97706;
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
         }
-        
-        .badge-error {
-            background: #fee2e2;
-            color: #dc2626;
+        .status-expired {
+            background-color: #fee2e2;
+            color: #b91c1c;
         }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.85rem;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-light);
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-        }
-        
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        .alert {
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        
-        .alert-success {
-            background: #dcfce7;
-            color: #16a34a;
-            border: 1px solid #bbf7d0;
-        }
-        
-        .alert-error {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-        
-        .alert-warning {
-            background: #fef3c7;
-            color: #d97706;
-            border: 1px solid #fed7aa;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 25px;
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-        
-        .tool-box {
-            border: 2px dashed var(--border-light);
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .tool-box:hover {
-            border-color: var(--primary);
-            background: #f5f7ff;
-        }
-        
-        .tool-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--text-light);
-        }
-        
-        .no-data i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #d1d5db;
-        }
-        
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: var(--light-bg);
-        }
-        
-        .login-form {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        .login-form h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-        
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .tabs {
-                flex-wrap: wrap;
-            }
+        .status-verified {
+            background-color: #dbeafe;
+            color: #1e40af;
         }
     </style>
 </head>
-<body>
-    <div id="login-page" class="login-container">
-        <div class="login-form">
-            <h2><i class="fas fa-shield-alt"></i> OneXX Admin</h2>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter admin username" value="admin">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter admin password" value="admin123">
-            </div>
-            <button id="login-btn" class="btn btn-primary" style="width: 100%;">Login</button>
-            <div class="alert alert-warning" style="margin-top: 20px;">
-                <strong>Default credentials:</strong> admin / admin123
-            </div>
-        </div>
-    </div>
-    
-    <div id="app-content" style="display: none;">
-        <header>
-            <div class="container">
-                <div class="header-content">
-                    <div class="logo">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>OneXX Admin Panel</span>
-                    </div>
-                    <div class="tabs">
-                        <div class="tab active" data-tab="dashboard">Dashboard</div>
-                        <div class="tab" data-tab="settings">Settings</div>
-                        <div class="tab" data-tab="tools">Tools</div>
-                        <div class="tab" id="logout-btn">Logout</div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <main class="container">
-            <!-- Dashboard Section -->
-            <section id="dashboard" class="section active">
-                <div class="section-header">
-                    <h2>Guarantee Certificates</h2>
-                    <p>View and manage all guarantee certificates</p>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #eef2ff; color: var(--primary);">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3>Total Certificates</h3>
-                            <div class="value" id="total-certificates">0</div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #dcfce7; color: var(--success);">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3>Active Certificates</h3>
-                            <div class="value" id="active-certificates">0</div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: #dbeafe; color: var(--primary);">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3>Total Value</h3>
-                            <div class="value" id="total-value">$0.00</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3>All Certificates</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="no-data-message" class="no-data">
-                            <i class="fas fa-inbox"></i>
-                            <h3>No guarantee certificates found</h3>
-                            <p>Add sample data or import existing data</p>
-                        </div>
-                        
-                        <table id="certificates-table" style="display: none;">
-                            <thead>
-                                <tr>
-                                    <th>Certificate ID</th>
-                                    <th>Seller</th>
-                                    <th>Buyer</th>
-                                    <th>Service</th>
-                                    <th>Budget</th>
-                                    <th>Fee</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="certificates-table-body">
-                                <!-- Data will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Settings Section -->
-            <section id="settings" class="section">
-                <div class="section-header">
-                    <h2>Admin Settings</h2>
-                    <p>Manage sample certificate and payment methods</p>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Sample Certificate</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="sample-seller-name">Seller Name</label>
-                                <input type="text" id="sample-seller-name" placeholder="John's Repair Service">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="sample-buyer-name">Buyer Name</label>
-                                <input type="text" id="sample-buyer-name" placeholder="Jane Client">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="sample-service-value">Service Value</label>
-                                <input type="text" id="sample-service-value" placeholder="$1,500">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="sample-status">Status</label>
-                                <select id="sample-status">
-                                    <option value="Active">Active</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Expired">Expired</option>
-                                </select>
-                            </div>
-                            
-                            <button id="save-sample-certificate" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Payment Methods</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="bkash-number">bKash Number</label>
-                                <input type="text" id="bkash-number" placeholder="01322149482">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="nagad-number">Nagad Number</label>
-                                <input type="text" id="nagad-number" placeholder="01322149482">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="rocket-number">Rocket Number</label>
-                                <input type="text" id="rocket-number" placeholder="01322149482">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="paypal-email">PayPal Email</label>
-                                <input type="email" id="paypal-email" placeholder="payments@onexx.com">
-                            </div>
-                            
-                            <button id="save-payment-methods" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Fee Structure</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="small-budget-threshold">Small Budget Threshold ($)</label>
-                                <input type="number" id="small-budget-threshold" placeholder="40.00" step="0.01" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="medium-budget-threshold">Medium Budget Threshold ($)</label>
-                                <input type="number" id="medium-budget-threshold" placeholder="160.00" step="0.01" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="small-budget-fee">Small Budget Fee (%)</label>
-                                <input type="number" id="small-budget-fee" placeholder="5" step="0.1" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="medium-budget-fee">Medium Budget Fee (%)</label>
-                                <input type="number" id="medium-budget-fee" placeholder="3" step="0.1" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="large-budget-fee">Large Budget Fee (%)</label>
-                                <input type="number" id="large-budget-fee" placeholder="2" step="0.1" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="minimum-fee">Minimum Fee ($)</label>
-                                <input type="number" id="minimum-fee" placeholder="8.00" step="0.01" min="0">
-                            </div>
-                            
-                            <button id="save-fee-structure" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Tools Section -->
-            <section id="tools" class="section">
-                <div class="section-header">
-                    <h2>Admin Tools</h2>
-                    <p>Import, export, and manage application data</p>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Export Data</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>Export all guarantee data as a JSON file for backup or analysis.</p>
-                            
-                            <div class="tool-box" id="export-data">
-                                <div class="tool-icon">
-                                    <i class="fas fa-file-export"></i>
-                                </div>
-                                <h3>Export Data</h3>
-                                <p>Click to download all data as JSON</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Import Data</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>Import guarantee data from a JSON file. This will replace all current data.</p>
-                            
-                            <div class="tool-box" id="import-data">
-                                <div class="tool-icon">
-                                    <i class="fas fa-file-import"></i>
-                                </div>
-                                <h3>Import Data</h3>
-                                <p>Click to upload and import JSON data</p>
-                                <input type="file" id="import-file" style="display: none;" accept=".json">
-                            </div>
-                            
-                            <div class="alert alert-warning">
-                                <strong>Warning:</strong> Importing data will replace all existing guarantees. Make sure to export your current data first if you want to keep it.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Data Management</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>Manage your application data and storage.</p>
-                            
-                            <div class="alert">
-                                <strong>Storage Information:</strong> <span id="storage-info">Calculating...</span>
-                            </div>
-                            
-                            <div class="alert alert-warning">
-                                <strong>Sample Data:</strong> Add sample data to test the admin panel.
-                                <button id="add-sample-data" class="btn btn-primary btn-sm" style="margin-top: 10px;">Add Sample Data</button>
-                            </div>
-                            
-                            <div class="alert alert-error">
-                                <strong>Danger Zone:</strong> These actions are irreversible. Please be cautious.
-                                <button id="clear-all-data" class="btn btn-primary btn-sm" style="background: #dc2626; margin-top: 10px;">Clear All Data</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-        
-        <!-- Edit Certificate Modal -->
-        <div id="edit-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal">&times;</span>
-                <h2 style="margin-bottom: 20px;">Edit Certificate</h2>
-                
-                <div class="form-group">
-                    <label for="edit-seller-name">Seller Name</label>
-                    <input type="text" id="edit-seller-name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-buyer-name">Buyer Name</label>
-                    <input type="text" id="edit-buyer-name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-service-description">Service Description</label>
-                    <textarea id="edit-service-description" rows="3"></textarea>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="edit-service-budget">Service Budget ($)</label>
-                        <input type="number" id="edit-service-budget" step="0.01" min="0">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-guarantee-fee">Guarantee Fee ($)</label>
-                        <input type="number" id="edit-guarantee-fee" step="0.01" min="0">
-                    </div>
-                </div>
-                
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="edit-guarantee-period">Guarantee Period (days)</label>
-                        <input type="number" id="edit-guarantee-period" min="1">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-status">Status</label>
-                        <select id="edit-status">
-                            <option value="Pending Verification">Pending Verification</option>
-                            <option value="Active">Active</option>
-                            <option value="Expired">Expired</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                </div>
-                </div>
-                
-                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                    <button id="cancel-edit" class="btn btn-sm" style="background: #e5e7eb;">Cancel</button>
-                    <button id="save-certificate-changes" class="btn btn-primary btn-sm">Save Changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<body class="bg-gray-50 min-h-screen">
+    <div id="root"></div>
 
-    <script>
-        // Data storage keys
-        const STORAGE_KEY = 'onexx_guarantees';
-        const SAMPLE_CERTIFICATE_KEY = 'onexx_sample_certificate';
-        const PAYMENT_METHODS_KEY = 'onexx_payment_methods';
-        const FEE_STRUCTURE_KEY = 'onexx_fee_structure';
-        
-        // Current certificate being edited
-        let currentEditCertificateId = null;
-        
-        // Initialize the application
-        function initApp() {
-            // Check if user is logged in
-            const isLoggedIn = localStorage.getItem('onexx_admin_logged_in');
-            if (isLoggedIn === 'true') {
-                showAppContent();
-            } else {
-                showLoginPage();
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Get all certificates from localStorage
+        const getAllCertificates = () => {
+            try {
+                return JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+            } catch (error) {
+                console.error('Error retrieving certificates:', error);
+                return [];
             }
-            
-            // Set up navigation
-            setupNavigation();
-            
-            // Load dashboard data
-            loadDashboardData();
-            
-            // Load settings data
-            loadSettingsData();
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Update storage info
-            updateStorageInfo();
-        }
-        
-        function showLoginPage() {
-            document.getElementById('login-page').style.display = 'flex';
-            document.getElementById('app-content').style.display = 'none';
-        }
-        
-        function showAppContent() {
-            document.getElementById('login-page').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-        }
-        
-        function setupNavigation() {
-            const tabs = document.querySelectorAll('.tab');
-            const sections = document.querySelectorAll('.section');
-            
-            tabs.forEach(tab => {
-                if (tab.id === 'logout-btn') return;
-                
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Update active tab
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding section
-                    sections.forEach(section => section.classList.remove('active'));
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    // Refresh data if needed
-                    if (tabId === 'dashboard') {
-                        loadDashboardData();
-                    } else if (tabId === 'tools') {
-                        updateStorageInfo();
+        };
+
+        // Update certificate status
+        const updateCertificateStatus = (certificateId, status) => {
+            try {
+                const certificates = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                const updatedCertificates = certificates.map(cert => {
+                    if (cert.certificateId === certificateId) {
+                        return { ...cert, status };
                     }
+                    return cert;
                 });
-            });
-        }
-        
-        function loadDashboardData() {
-            const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            const tableBody = document.getElementById('certificates-table-body');
-            const noDataMessage = document.getElementById('no-data-message');
-            const certificatesTable = document.getElementById('certificates-table');
-            const totalCertificates = document.getElementById('total-certificates');
-            const activeCertificates = document.getElementById('active-certificates');
-            const totalValue = document.getElementById('total-value');
-            
-            // Update statistics
-            totalCertificates.textContent = guarantees.length;
-            
-            const activeCount = guarantees.filter(g => g.status === 'Active').length;
-            activeCertificates.textContent = activeCount;
-            
-            const totalBudget = guarantees.reduce((sum, g) => sum + g.serviceBudget, 0);
-            totalValue.textContent = '$' + totalBudget.toFixed(2);
-            
-            if (guarantees.length === 0) {
-                tableBody.innerHTML = '';
-                noDataMessage.style.display = 'block';
-                certificatesTable.style.display = 'none';
-                return;
+                localStorage.setItem('ugcCertificates', JSON.stringify(updatedCertificates));
+                return true;
+            } catch (error) {
+                console.error('Error updating certificate:', error);
+                return false;
             }
-            
-            noDataMessage.style.display = 'none';
-            certificatesTable.style.display = 'table';
-            
-            // Sort guarantees by date (newest first)
-            guarantees.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            tableBody.innerHTML = guarantees.map(guarantee => `
-                <tr>
-                    <td class="font-mono">${guarantee.certificateId}</td>
-                    <td>${guarantee.sellerName}<br><span style="font-size: 0.8rem; color: #6b7280;">${guarantee.sellerEmail}</span></td>
-                    <td>${guarantee.buyerName}<br><span style="font-size: 0.8rem; color: #6b7280;">${guarantee.buyerEmail}</span></td>
-                    <td>${guarantee.serviceDescription}</td>
-                    <td>$ ${guarantee.serviceBudget.toFixed(2)}</td>
-                    <td>$ ${guarantee.guaranteeFee.toFixed(2)}</td>
-                    <td>
-                        <span class="badge ${getStatusClass(guarantee.status)}">
-                            ${guarantee.status}
-                        </span>
-                    </td>
-                    <td>${new Date(guarantee.createdAt).toLocaleDateString()}</td>
-                    <td>
-                        <button class="btn btn-sm edit-btn" data-id="${guarantee.certificateId}" style="background: #eef2ff; color: #4f46e5;">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            // Add event listeners to edit buttons
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const certificateId = this.getAttribute('data-id');
-                    openEditModal(certificateId);
+        };
+
+        // Delete a certificate
+        const deleteCertificate = (certificateId) => {
+            try {
+                const certificates = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                const filteredCertificates = certificates.filter(cert => cert.certificateId !== certificateId);
+                localStorage.setItem('ugcCertificates', JSON.stringify(filteredCertificates));
+                return true;
+            } catch (error) {
+                console.error('Error deleting certificate:', error);
+                return false;
+            }
+        };
+
+        // Format currency
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT' }).format(amount);
+        };
+
+        // Format date
+        const formatDate = (dateString) => {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        };
+
+        // Calculate expiry date
+        const calculateExpiryDate = (createdAt, guaranteePeriod) => {
+            const createdDate = new Date(createdAt);
+            const expiryDate = new Date(createdDate);
+            expiryDate.setDate(expiryDate.getDate() + parseInt(guaranteePeriod));
+            return expiryDate;
+        };
+
+        // Check if certificate is expired
+        const isCertificateExpired = (createdAt, guaranteePeriod) => {
+            const expiryDate = calculateExpiryDate(createdAt, guaranteePeriod);
+            return new Date() > expiryDate;
+        };
+
+        function AdminApp() {
+            const [certificates, setCertificates] = useState([]);
+            const [isLoading, setIsLoading] = useState(true);
+            const [filter, setFilter] = useState('all');
+            const [searchTerm, setSearchTerm] = useState('');
+            const [selectedCertificate, setSelectedCertificate] = useState(null);
+            const [showModal, setShowModal] = useState(false);
+
+            // Load certificates from localStorage
+            useEffect(() => {
+                loadCertificates();
+            }, []);
+
+            const loadCertificates = () => {
+                const certs = getAllCertificates();
+                // Add expiry status to each certificate
+                const certsWithStatus = certs.map(cert => {
+                    const isExpired = isCertificateExpired(cert.createdAt, cert.guaranteePeriod);
+                    return {
+                        ...cert,
+                        isExpired,
+                        status: isExpired ? 'expired' : cert.status
+                    };
                 });
-            });
-        }
-        
-        function getStatusClass(status) {
-            switch(status) {
-                case 'Active':
-                    return 'badge-success';
-                case 'Pending Verification':
-                    return 'badge-warning';
-                case 'Expired':
-                    return 'badge-error';
-                default:
-                    return 'badge-warning';
-            }
-        }
-        
-        function openEditModal(certificateId) {
-            const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            const guarantee = guarantees.find(g => g.certificateId === certificateId);
-            
-            if (!guarantee) return;
-            
-            currentEditCertificateId = certificateId;
-            
-            // Fill the form with guarantee data
-            document.getElementById('edit-seller-name').value = guarantee.sellerName;
-            document.getElementById('edit-buyer-name').value = guarantee.buyerName;
-            document.getElementById('edit-service-description').value = guarantee.serviceDescription;
-            document.getElementById('edit-service-budget').value = guarantee.serviceBudget;
-            document.getElementById('edit-guarantee-fee').value = guarantee.guaranteeFee;
-            document.getElementById('edit-guarantee-period').value = guarantee.guaranteePeriod;
-            document.getElementById('edit-status').value = guarantee.status;
-            
-            // Show the modal
-            document.getElementById('edit-modal').style.display = 'flex';
-        }
-        
-        function loadSettingsData() {
-            // Load sample certificate data
-            const sampleCertificate = JSON.parse(localStorage.getItem(SAMPLE_CERTIFICATE_KEY)) || {
-                sellerName: "John's Service",
-                buyerName: "Jane Client",
-                serviceValue: "$1,500",
-                status: "Active"
+                setCertificates(certsWithStatus);
+                setIsLoading(false);
             };
-            
-            document.getElementById('sample-seller-name').value = sampleCertificate.sellerName;
-            document.getElementById('sample-buyer-name').value = sampleCertificate.buyerName;
-            document.getElementById('sample-service-value').value = sampleCertificate.serviceValue;
-            document.getElementById('sample-status').value = sampleCertificate.status;
-            
-            // Load payment methods data
-            const paymentMethods = JSON.parse(localStorage.getItem(PAYMENT_METHODS_KEY)) || {
-                bkash: "01322149482",
-                nagad: "01322149482",
-                rocket: "01322149482",
-                paypal: "payments@onexx.com"
-            };
-            
-            document.getElementById('bkash-number').value = paymentMethods.bkash;
-            document.getElementById('nagad-number').value = paymentMethods.nagad;
-            document.getElementById('rocket-number').value = paymentMethods.rocket;
-            document.getElementById('paypal-email').value = paymentMethods.paypal;
-            
-            // Load fee structure data
-            const feeStructure = JSON.parse(localStorage.getItem(FEE_STRUCTURE_KEY)) || {
-                smallBudgetThreshold: 40,
-                mediumBudgetThreshold: 160,
-                smallBudgetFee: 5,
-                mediumBudgetFee: 3,
-                largeBudgetFee: 2,
-                minimumFee: 8
-            };
-            
-            document.getElementById('small-budget-threshold').value = feeStructure.smallBudgetThreshold;
-            document.getElementById('medium-budget-threshold').value = feeStructure.mediumBudgetThreshold;
-            document.getElementById('small-budget-fee').value = feeStructure.smallBudgetFee;
-            document.getElementById('medium-budget-fee').value = feeStructure.mediumBudgetFee;
-            document.getElementById('large-budget-fee').value = feeStructure.largeBudgetFee;
-            document.getElementById('minimum-fee').value = feeStructure.minimumFee;
-        }
-        
-        function setupEventListeners() {
-            // Login functionality - FIXED
-            document.getElementById('login-btn').addEventListener('click', function() {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                // Default credentials
-                const defaultCredentials = {
-                    username: 'admin',
-                    password: 'admin123'
-                };
-                
-                // Check if credentials are correct
-                if (username === defaultCredentials.username && password === defaultCredentials.password) {
-                    localStorage.setItem('onexx_admin_logged_in', 'true');
-                    showAppContent();
-                    showAlert('Login successful!', 'success');
-                } else {
-                    showAlert('Invalid credentials. Please try again.', 'error');
+
+            const handleStatusUpdate = (certificateId, status) => {
+                if (updateCertificateStatus(certificateId, status)) {
+                    loadCertificates(); // Reload certificates
                 }
-            });
-            
-            // Logout functionality
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                localStorage.setItem('onexx_admin_logged_in', 'false');
-                showLoginPage();
-                showAlert('You have been logged out.', 'success');
-            });
-            
-            // Save sample certificate
-            document.getElementById('save-sample-certificate').addEventListener('click', function() {
-                const sampleCertificate = {
-                    sellerName: document.getElementById('sample-seller-name').value,
-                    buyerName: document.getElementById('sample-buyer-name').value,
-                    serviceValue: document.getElementById('sample-service-value').value,
-                    status: document.getElementById('sample-status').value
-                };
-                
-                localStorage.setItem(SAMPLE_CERTIFICATE_KEY, JSON.stringify(sampleCertificate));
-                showAlert('Sample certificate settings saved successfully!', 'success');
-            });
-            
-            // Save payment methods
-            document.getElementById('save-payment-methods').addEventListener('click', function() {
-                const paymentMethods = {
-                    bkash: document.getElementById('bkash-number').value,
-                    nagad: document.getElementById('nagad-number').value,
-                    rocket: document.getElementById('rocket-number').value,
-                    paypal: document.getElementById('paypal-email').value
-                };
-                
-                localStorage.setItem(PAYMENT_METHODS_KEY, JSON.stringify(paymentMethods));
-                showAlert('Payment methods saved successfully!', 'success');
-            });
-            
-            // Save fee structure
-            document.getElementById('save-fee-structure').addEventListener('click', function() {
-                const feeStructure = {
-                    smallBudgetThreshold: parseFloat(document.getElementById('small-budget-threshold').value),
-                    mediumBudgetThreshold: parseFloat(document.getElementById('medium-budget-threshold').value),
-                    smallBudgetFee: parseFloat(document.getElementById('small-budget-fee').value),
-                    mediumBudgetFee: parseFloat(document.getElementById('medium-budget-fee').value),
-                    largeBudgetFee: parseFloat(document.getElementById('large-budget-fee').value),
-                    minimumFee: parseFloat(document.getElementById('minimum-fee').value)
-                };
-                
-                localStorage.setItem(FEE_STRUCTURE_KEY, JSON.stringify(feeStructure));
-                showAlert('Fee structure saved successfully!', 'success');
-            });
-            
-            // Cancel edit
-            document.getElementById('cancel-edit').addEventListener('click', function() {
-                document.getElementById('edit-modal').style.display = 'none';
-            });
-            
-            // Close modal with X button
-            document.querySelector('.close-modal').addEventListener('click', function() {
-                document.getElementById('edit-modal').style.display = 'none';
-            });
-            
-            // Close modal when clicking outside
-            document.getElementById('edit-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                }
-            });
-            
-            // Save certificate changes
-            document.getElementById('save-certificate-changes').addEventListener('click', function() {
-                if (!currentEditCertificateId) return;
-                
-                const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const guaranteeIndex = guarantees.findIndex(g => g.certificateId === currentEditCertificateId);
-                
-                if (guaranteeIndex === -1) return;
-                
-                // Update the guarantee data
-                guarantees[guaranteeIndex].sellerName = document.getElementById('edit-seller-name').value;
-                guarantees[guaranteeIndex].buyerName = document.getElementById('edit-buyer-name').value;
-                guarantees[guaranteeIndex].serviceDescription = document.getElementById('edit-service-description').value;
-                guarantees[guaranteeIndex].serviceBudget = parseFloat(document.getElementById('edit-service-budget').value);
-                guarantees[guaranteeIndex].guaranteeFee = parseFloat(document.getElementById('edit-guarantee-fee').value);
-                guarantees[guaranteeIndex].guaranteePeriod = parseInt(document.getElementById('edit-guarantee-period').value);
-                guarantees[guaranteeIndex].status = document.getElementById('edit-status').value;
-                
-                // Save back to localStorage
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(guarantees));
-                
-                // Close the modal and refresh the data
-                document.getElementById('edit-modal').style.display = 'none';
-                loadDashboardData();
-                
-                showAlert('Certificate updated successfully!', 'success');
-            });
-            
-            // Export data
-            document.getElementById('export-data').addEventListener('click', function() {
-                const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const sampleCertificate = JSON.parse(localStorage.getItem(SAMPLE_CERTIFICATE_KEY)) || {};
-                const paymentMethods = JSON.parse(localStorage.getItem(PAYMENT_METHODS_KEY)) || {};
-                const feeStructure = JSON.parse(localStorage.getItem(FEE_STRUCTURE_KEY)) || {};
-                
-                const exportData = {
-                    guarantees: guarantees,
-                    sampleCertificate: sampleCertificate,
-                    paymentMethods: paymentMethods,
-                    feeStructure: feeStructure,
-                    exportedAt: new Date().toISOString()
-                };
-                
-                const dataStr = JSON.stringify(exportData, null, 2);
-                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-                
-                const exportFileDefaultName = `onexx-data-${new Date().toISOString().slice(0,10)}.json`;
-                
-                const linkElement = document.createElement('a');
-                linkElement.setAttribute('href', dataUri);
-                linkElement.setAttribute('download', exportFileDefaultName);
-                linkElement.click();
-                
-                showAlert('Data exported successfully!', 'success');
-            });
-            
-            // Import data
-            document.getElementById('import-data').addEventListener('click', function() {
-                document.getElementById('import-file').click();
-            });
-            
-            document.getElementById('import-file').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importData = JSON.parse(e.target.result);
-                        
-                        if (importData.guarantees) {
-                            localStorage.setItem(STORAGE_KEY, JSON.stringify(importData.guarantees));
-                        }
-                        
-                        if (importData.sampleCertificate) {
-                            localStorage.setItem(SAMPLE_CERTIFICATE_KEY, JSON.stringify(importData.sampleCertificate));
-                        }
-                        
-                        if (importData.paymentMethods) {
-                            localStorage.setItem(PAYMENT_METHODS_KEY, JSON.stringify(importData.paymentMethods));
-                        }
-                        
-                        if (importData.feeStructure) {
-                            localStorage.setItem(FEE_STRUCTURE_KEY, JSON.stringify(importData.feeStructure));
-                        }
-                        
-                        showAlert('Data imported successfully!', 'success');
-                        loadDashboardData();
-                        loadSettingsData();
-                        updateStorageInfo();
-                        
-                    } catch (error) {
-                        showAlert('Error importing data: Invalid file format', 'error');
-                        console.error('Import error:', error);
+            };
+
+            const handleDelete = (certificateId) => {
+                if (window.confirm('Are you sure you want to delete this certificate? This action cannot be undone.')) {
+                    if (deleteCertificate(certificateId)) {
+                        loadCertificates(); // Reload certificates
                     }
-                };
-                reader.readAsText(file);
-            });
-            
-            // Add sample data
-            document.getElementById('add-sample-data').addEventListener('click', function() {
-                const sampleData = [
-                    {
-                        certificateId: 'OXX-100001-ABC123',
-                        sellerName: 'Tech Repair Services',
-                        sellerEmail: 'tech@example.com',
-                        buyerName: 'Sarah Johnson',
-                        buyerEmail: 'sarah@example.com',
-                        serviceDescription: 'Laptop screen replacement and software installation',
-                        serviceBudget: 120.00,
-                        guaranteePeriod: 30,
-                        refundTerms: 'Full refund if not satisfied with the service',
-                        paymentMethod: 'bKash',
-                        transactionId: 'TX100001',
-                        senderInfo: '017XXXXXXXX',
-                        guaranteeFee: 3.60,
-                        totalAmount: 123.60,
-                        status: 'Active',
-                        createdAt: new Date('2023-06-15').toISOString()
-                    },
-                    {
-                        certificateId: 'OXX-100002-XYZ789',
-                        sellerName: 'Home Cleaning Pros',
-                        sellerEmail: 'cleaning@example.com',
-                        buyerName: 'Michael Brown',
-                        buyerEmail: 'michael@example.com',
-                        serviceDescription: 'Deep cleaning of 3-bedroom apartment',
-                        serviceBudget: 200.00,
-                        guaranteePeriod: 14,
-                        refundTerms: 'Full refund if cleaning standards are not met',
-                        paymentMethod: 'Nagad',
-                        transactionId: 'TX100002',
-                        senderInfo: '018XXXXXXXX',
-                        guaranteeFee: 6.00,
-                        totalAmount: 206.00,
-                        status: 'Pending Verification',
-                        createdAt: new Date('2023-07-22').toISOString()
-                    },
-                    {
-                        certificateId: 'OXX-100003-DEF456',
-                        sellerName: 'AC Installation Experts',
-                        sellerEmail: 'ac@example.com',
-                        buyerName: 'Robert Wilson',
-                        buyerEmail: 'robert@example.com',
-                        serviceDescription: 'AC installation and maintenance for office space',
-                        serviceBudget: 500.00,
-                        guaranteePeriod: 90,
-                        refundTerms: 'Free repair within guarantee period',
-                        paymentMethod: 'Rocket',
-                        transactionId: 'TX100003',
-                        senderInfo: '019XXXXXXXX',
-                        guaranteeFee: 10.00,
-                        totalAmount: 510.00,
-                        status: 'Completed',
-                        createdAt: new Date('2023-05-10').toISOString()
-                    }
-                ];
+                }
+            };
+
+            const handleViewDetails = (certificate) => {
+                setSelectedCertificate(certificate);
+                setShowModal(true);
+            };
+
+            const filteredCertificates = certificates.filter(cert => {
+                // Apply filter
+                if (filter !== 'all' && cert.status !== filter) {
+                    return false;
+                }
                 
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleData));
-                showAlert('Sample data added successfully!', 'success');
-                loadDashboardData();
-                updateStorageInfo();
-            });
-            
-            // Clear all data
-            document.getElementById('clear-all-data').addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    localStorage.removeItem(SAMPLE_CERTIFICATE_KEY);
-                    localStorage.removeItem(PAYMENT_METHODS_KEY);
-                    localStorage.removeItem(FEE_STRUCTURE_KEY);
-                    
-                    showAlert('All data has been cleared!', 'success');
-                    loadDashboardData();
-                    loadSettingsData();
-                    updateStorageInfo();
+                // Apply search
+                if (searchTerm) {
+                    const term = searchTerm.toLowerCase();
+                    return (
+                        cert.certificateId.toLowerCase().includes(term) ||
+                        cert.sellerName.toLowerCase().includes(term) ||
+                        cert.buyerName.toLowerCase().includes(term) ||
+                        cert.serviceDescription.toLowerCase().includes(term)
+                    );
                 }
+                
+                return true;
             });
-        }
-        
-        function updateStorageInfo() {
-            let totalSize = 0;
-            
-            // Calculate total storage size
-            for (let key in localStorage) {
-                if (localStorage.hasOwnProperty(key)) {
-                    totalSize += localStorage[key].length * 2; // Approximate size in bytes (2 bytes per character)
-                }
+
+            if (isLoading) {
+                return (
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+                            <p className="mt-4 text-gray-600">Loading certificate data...</p>
+                        </div>
+                    </div>
+                );
             }
-            
-            // Convert to KB
-            const totalSizeKB = (totalSize / 1024).toFixed(2);
-            
-            // Count items
-            const itemCount = localStorage.length;
-            
-            document.getElementById('storage-info').textContent = 
-                `${itemCount} items, ${totalSizeKB} KB used`;
-        }
-        
-        function showAlert(message, type) {
-            // Remove any existing alerts
-            const existingAlerts = document.querySelectorAll('.custom-alert');
-            existingAlerts.forEach(alert => alert.remove());
-            
-            // Create alert element
-            const alert = document.createElement('div');
-            alert.className = `custom-alert alert alert-${type}`;
-            alert.textContent = message;
-            alert.style.position = 'fixed';
-            alert.style.top = '20px';
-            alert.style.right = '20px';
-            alert.style.zIndex = '10000';
-            alert.style.maxWidth = '300px';
-            
-            document.body.appendChild(alert);
-            
-            // Remove alert after 3 seconds
-            setTimeout(() => {
-                alert.remove();
-            }, 3000);
-        }
-        
-        // Initialize the app when the DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up the login button event listener immediately
-            document.getElementById('login-btn').addEventListener('click', function() {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                // Default credentials
-                const defaultCredentials = {
-                    username: 'admin',
-                    password: 'admin123'
-                };
-                
-                // Check if credentials are correct
-                if (username === defaultCredentials.username && password === defaultCredentials.password) {
-                    localStorage.setItem('onexx_admin_logged_in', 'true');
-                    document.getElementById('login-page').style.display = 'none';
-                    document.getElementById('app-content').style.display = 'block';
-                    showAlert('Login successful!', 'success');
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Navigation */}
+                    <nav className="bg-white shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16">
+                                <div className="flex items-center">
+                                    <div className="flex items-center text-indigo-600 font-bold text-xl">
+                                        <span className="mr-1">🛡️</span> Universal Guarantee Card - Admin Portal
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <a href="index.html" className="text-gray-600 hover:text-indigo-600 text-sm font-medium">
+                                        Back to Main Site
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between">
+                                <h2 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Certificate Management</h2>
+                                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            placeholder="Search certificates..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        />
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg className="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 8 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <select
+                                        value={filter}
+                                        onChange={(e) => setFilter(e.target.value)}
+                                        className="px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                    >
+                                        <option value="all">All Statuses</option>
+                                        <option value="pending_payment">Pending Payment</option>
+                                        <option value="pending_verification">Pending Verification</option>
+                                        <option value="active">Active</option>
+                                        <option value="expired">Expired</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div className="px-6 py-4">
+                                {certificates.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <h3 className="mt-2 text-sm font-medium text-gray-900">No certificates</h3>
+                                        <p className="mt-1 text-sm text-gray-500">Get started by creating a new guarantee certificate.</p>
+                                        <div className="mt-6">
+                                            <a
+                                                href="index.html"
+                                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Create Certificate
+                                            </a>
+                                        </div>
+                                    </div>
+                                ) : filteredCertificates.length === 0 ? (
+                                    <div className="text-center py-8">
+                                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <h3 className="mt-2 text-sm font-medium text-gray-900">No matching certificates</h3>
+                                        <p className="mt-1 text-sm text-gray-500">Try changing your search or filter criteria.</p>
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full divide-y divide-gray-200">
+                                            <thead className="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Certificate ID</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="bg-white divide-y divide-gray-200">
+                                                {filteredCertificates.map((cert) => (
+                                                    <tr key={cert.certificateId}>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="text-sm font-medium text-gray-900">{cert.certificateId}</div>
+                                                            <div className="text-sm text-gray-500">{cert.serviceDescription.substring(0, 30)}...</div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="text-sm text-gray-900">{cert.sellerName}</div>
+                                                            <div className="text-sm text-gray-500">{cert.sellerEmail}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="text-sm text-gray-900">{cert.buyerName}</div>
+                                                            <div className="text-sm text-gray-500">{cert.buyerEmail}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            {formatCurrency(cert.fees.total)}
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                            {formatDate(cert.createdAt)}
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <span className={`status-badge status-${cert.status}`}>
+                                                                {cert.status.replace('_', ' ')}
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                                            <button
+                                                                onClick={() => handleViewDetails(cert)}
+                                                                className="text-indigo-600 hover:text-indigo-900"
+                                                            >
+                                                                View
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleStatusUpdate(cert.certificateId, 'active')}
+                                                                className="text-green-600 hover:text-green-900"
+                                                            >
+                                                                Approve
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(cert.certificateId)}
+                                                                className="text-red-600 hover:text-red-900"
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
                     
-                    // Initialize the rest of the app
-                    initApp();
-                } else {
-                    showAlert('Invalid credentials. Please try again.', 'error');
-                }
-            });
-            
-            // Pre-fill the login form with default values for testing
-            document.getElementById('username').value = 'admin';
-            document.getElementById('password').value = 'admin123';
-        });
+                    {/* Certificate Detail Modal */}
+                    {showModal && selectedCertificate && (
+                        <div className="fixed inset-0 overflow-y-auto z-50">
+                            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                                    <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={() => setShowModal(false)}></div>
+                                </div>
+
+                                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                        <div className="sm:flex sm:items-start">
+                                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                                    Certificate Details - {selectedCertificate.certificateId}
+                                                </h3>
+                                                <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Seller Information</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600"><strong>Name:</strong> {selectedCertificate.sellerName}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Email:</strong> {selectedCertificate.sellerEmail}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Buyer Information</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600"><strong>Name:</strong> {selectedCertificate.buyerName}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Email:</strong> {selectedCertificate.buyerEmail}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Service Details</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600"><strong>Description:</strong> {selectedCertificate.serviceDescription}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Guarantee Period:</strong> {selectedCertificate.guaranteePeriod} days</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Financial Information</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600"><strong>Service Budget:</strong> {formatCurrency(selectedCertificate.budget)}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Guarantee Fee:</strong> {formatCurrency(selectedCertificate.fees.fee)}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Total Amount:</strong> {formatCurrency(selectedCertificate.fees.total)}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Dates</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600"><strong>Created:</strong> {formatDate(selectedCertificate.createdAt)}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Expires:</strong> {formatDate(calculateExpiryDate(selectedCertificate.createdAt, selectedCertificate.guaranteePeriod))}</p>
+                                                            <p className="text-sm text-gray-600"><strong>Status:</strong> 
+                                                                <span className={`status-badge status-${selectedCertificate.status} ml-2`}>
+                                                                    {selectedCertificate.status.replace('_', ' ')}
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    {selectedCertificate.payment && (
+                                                        <div>
+                                                            <h4 className="font-medium text-gray-700">Payment Information</h4>
+                                                            <div className="mt-2">
+                                                                <p className="text-sm text-gray-600"><strong>Method:</strong> {selectedCertificate.payment.method.toUpperCase()}</p>
+                                                                <p className="text-sm text-gray-600"><strong>Transaction ID:</strong> {selectedCertificate.payment.txId}</p>
+                                                                <p className="text-sm text-gray-600"><strong>Sender Number:</strong> {selectedCertificate.payment.senderNumber}</p>
+                                                                <p className="text-sm text-gray-600"><strong>Paid At:</strong> {formatDate(selectedCertificate.payment.paidAt)}</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    <div>
+                                                        <h4 className="font-medium text-gray-700">Terms & Conditions</h4>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-600">{selectedCertificate.terms}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                        <button
+                                            type="button"
+                                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                            onClick={() => setShowModal(false)}
+                                        >
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Render the admin app
+        ReactDOM.render(<AdminApp />, document.getElementById('root'));
     </script>
 </body>
 </html>
