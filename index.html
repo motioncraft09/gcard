@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneXX Guarantee Card</title>
+    <title>OneXX Guarantee Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -180,43 +179,19 @@
             }
         }
         
-        .progress-bar {
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
+        .hero-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
         }
         
-        .progress-bar-fill {
-            position: absolute;
-            height: 100%;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            border-radius: 2px;
-            transition: width 0.5s ease;
-        }
-        
-        .step-indicator {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            background: #e2e8f0;
-            color: #64748b;
+        .feature-card {
             transition: all 0.3s ease;
         }
         
-        .step-indicator.active {
-            background: #6366f1;
-            color: white;
-        }
-        
-        .step-indicator.completed {
-            background: #4ade80;
-            color: white;
+        .feature-card:hover {
+            transform: translateY(-5px);
         }
     </style>
 </head>
@@ -262,41 +237,32 @@
             }
         };
 
-        // Get all certificates (for admin view)
-        const getAllCertificates = () => {
-            try {
-                return JSON.parse(localStorage.getItem('onexxCertificates') || '[]');
-            } catch (error) {
-                console.error('Error retrieving certificates:', error);
-                return [];
-            }
-        };
-
         // Calculate fees based on budget
         const calculateFees = (budget) => {
             if (!budget || budget <= 0) return { fee: 0, total: 0 };
             
             let fee = 0;
-            if (budget <= 5000) {
+            if (budget <= 100) {
                 fee = budget * 0.05; // 5% for small budgets
-            } else if (budget <= 20000) {
+            } else if (budget <= 500) {
                 fee = budget * 0.03; // 3% for medium budgets
             } else {
-                fee = Math.max(1000, budget * 0.02); // 2% for large budgets (min ৳1000)
+                fee = Math.max(10, budget * 0.02); // 2% for large budgets (min $10)
             }
             
             return {
-                fee: Math.round(fee),
-                total: Math.round(budget + fee)
+                fee: Math.round(fee * 100) / 100,
+                total: Math.round((budget + fee) * 100) / 100
             };
         };
 
         function App() {
-            const [currentView, setCurrentView] = useState('form');
+            const [currentView, setCurrentView] = useState('home');
             const [certificateData, setCertificateData] = useState(null);
             const [paymentData, setPaymentData] = useState(null);
 
             const navigation = [
+                { name: 'Home', id: 'home' },
                 { name: 'Create Guarantee', id: 'form' },
                 { name: 'Verify', id: 'verify' }
             ];
@@ -307,9 +273,9 @@
                     <nav className="glass-card fixed top-4 left-1/2 transform -translate-x-1/2 z-10 w-11/12 max-w-4xl">
                         <div className="px-6 py-3">
                             <div className="flex justify-between items-center">
-                                <div className="flex items-center text-xl font-bold cursor-pointer" onClick={() => setCurrentView('form')}>
+                                <div className="flex items-center text-xl font-bold cursor-pointer" onClick={() => setCurrentView('home')}>
                                     <span className="gradient-text flex items-center">
-                                        <span className="text-2xl mr-2">🛡️</span> OneXX Guarantee
+                                        <span className="text-2xl mr-2">🛡️</span> OneXX
                                     </span>
                                 </div>
                                 <div className="flex items-center space-x-2">
@@ -329,6 +295,7 @@
 
                     {/* Main Content */}
                     <main className="pt-24 pb-16 px-4">
+                        {currentView === 'home' && <HomePage onGetStarted={() => setCurrentView('form')} />}
                         {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
                         {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
                         {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} />}
@@ -338,10 +305,82 @@
                     {/* Footer */}
                     <footer className="glass-card mt-12 py-6">
                         <div className="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
-                            <p>© 2023 OneXX Guarantee. All rights reserved.</p>
+                            <p>© 2023 OneXX. All rights reserved.</p>
                             <p className="mt-2">For support, email: support@onexx.com</p>
                         </div>
                     </footer>
+                </div>
+            );
+        }
+
+        // Home Page Component
+        function HomePage({ onGetStarted }) {
+            return (
+                <div className="max-w-6xl mx-auto">
+                    {/* Hero Section */}
+                    <div className="hero-section text-white p-12 rounded-2xl mb-16 text-center">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6">Secure Your Transactions with OneXX</h1>
+                        <p className="text-xl mb-8 max-w-2xl mx-auto">The modern guarantee platform that protects both buyers and sellers with secure escrow services</p>
+                        <button onClick={onGetStarted} className="btn-primary bg-white text-indigo-600 text-lg px-8 py-4 hover:bg-gray-100">
+                            Get Started <i className="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+
+                    {/* Features Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-shield-alt"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Secure Guarantees</h3>
+                            <p className="text-gray-600">Protect your transactions with our secure guarantee system that ensures both parties are satisfied.</p>
+                        </div>
+
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-bolt"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Fast Processing</h3>
+                            <p className="text-gray-600">Quick verification and processing means your guarantees are active in minutes, not days.</p>
+                        </div>
+
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-globe"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Global Support</h3>
+                            <p className="text-gray-600">We support transactions from anywhere in the world with multiple payment options.</p>
+                        </div>
+                    </div>
+
+                    {/* How It Works Section */}
+                    <div className="glass-card p-8 mb-16">
+                        <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                                <h3 className="font-semibold mb-2">Create Guarantee</h3>
+                                <p className="text-gray-600 text-sm">Fill out the simple form with transaction details</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                                <h3 className="font-semibold mb-2">Make Payment</h3>
+                                <p className="text-gray-600 text-sm">Pay the guarantee fee via PayPal or Binance</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                                <h3 className="font-semibold mb-2">Receive Certificate</h3>
+                                <p className="text-gray-600 text-sm">Get your guarantee certificate via email</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+                                <h3 className="font-semibold mb-2">Transaction Protected</h3>
+                                <p className="text-gray-600 text-sm">Your transaction is now secured by OneXX</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CTA Section */}
+                    <div className="text-center">
+                        <h2 className="text-3xl font-bold mb-6">Ready to Secure Your Transaction?</h2>
+                        <button onClick={onGetStarted} className="btn-primary px-8 py-4 text-lg">
+                            Create a Guarantee Now
+                        </button>
+                    </div>
                 </div>
             );
         }
@@ -525,18 +564,19 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="mb-4">
                                         <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Service Budget (৳) *
+                                            Service Budget ($) *
                                         </label>
                                         <input
                                             type="number"
                                             name="budget"
                                             id="budget"
                                             min="0"
+                                            step="0.01"
                                             required
                                             value={formData.budget}
                                             onChange={handleChange}
                                             className="w-full form-input"
-                                            placeholder="5000"
+                                            placeholder="100.00"
                                         />
                                         <p className="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
                                     </div>
@@ -585,16 +625,16 @@
                                     </h4>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="text-sm text-gray-600">Service Budget:</div>
-                                        <div className="text-sm font-medium text-right">৳ {formData.budget ? parseInt(formData.budget).toLocaleString() : '0'}</div>
+                                        <div className="text-sm font-medium text-right">$ {formData.budget ? parseFloat(formData.budget).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</div>
                                         
                                         <div className="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div className="text-sm font-medium text-right">৳ {fees.fee.toLocaleString()}</div>
+                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                         
                                         <div className="text-sm text-gray-600 border-t border-gray-200 pt-2 mt-1">Total Amount:</div>
-                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-2 mt-1">৳ {fees.total.toLocaleString()}</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-2 mt-1">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-3">
-                                        Fees: ≤৳5,000 (5%), ৳5,001-৳20,000 (3%), ≥৳20,001 (2%, min ৳1,000)
+                                        Fees: ≤$100 (5%), $101-$500 (3%), ≥$501 (2%, min $10)
                                     </p>
                                 </div>
                             </div>
@@ -624,9 +664,9 @@
 
         // Payment Instruction Component
         function PaymentInstruction({ data, onSuccess }) {
-            const [activeMethod, setActiveMethod] = useState('bkash');
+            const [activeMethod, setActiveMethod] = useState('paypal');
             const [txId, setTxId] = useState('');
-            const [senderNumber, setSenderNumber] = useState('');
+            const [senderInfo, setSenderInfo] = useState('');
             const [isSubmitting, setIsSubmitting] = useState(false);
             
             // Calculate fees based on budget
@@ -634,7 +674,7 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                if (!txId || !senderNumber) return;
+                if (!txId || !senderInfo) return;
                 
                 setIsSubmitting(true);
                 
@@ -643,7 +683,7 @@
                     ...data,
                     payment: {
                         txId,
-                        senderNumber,
+                        senderInfo,
                         method: activeMethod,
                         paidAt: new Date().toISOString()
                     },
@@ -660,7 +700,7 @@
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
-                    onSuccess({ txId, senderNumber, method: activeMethod });
+                    onSuccess({ txId, senderInfo, method: activeMethod });
                 }, 1500);
             };
 
@@ -673,38 +713,27 @@
                         </div>
                         
                         <div className="mb-8">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div 
-                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'bkash' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
-                                    onClick={() => setActiveMethod('bkash')}
+                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'paypal' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
+                                    onClick={() => setActiveMethod('paypal')}
                                 >
-                                    <div className="text-4xl mb-3 text-pink-600"><i className="fas fa-mobile-alt"></i></div>
-                                    <h3 className="font-semibold text-gray-800">bKash</h3>
+                                    <div className="text-4xl mb-3 text-blue-600"><i className="fab fa-paypal"></i></div>
+                                    <h3 className="font-semibold text-gray-800">PayPal</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold text-gray-800">01322149482</p>
-                                    {activeMethod === 'bkash' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
+                                    <p className="font-mono text-lg font-bold text-gray-800">payments@onexx.com</p>
+                                    {activeMethod === 'paypal' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
                                 </div>
                                 
                                 <div 
-                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'nagad' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
-                                    onClick={() => setActiveMethod('nagad')}
+                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'binance' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
+                                    onClick={() => setActiveMethod('binance')}
                                 >
-                                    <div className="text-4xl mb-3 text-green-600"><i className="fas fa-money-check-alt"></i></div>
-                                    <h3 className="font-semibold text-gray-800">Nagad</h3>
+                                    <div className="text-4xl mb-3 text-yellow-600"><i className="fas fa-coins"></i></div>
+                                    <h3 className="font-semibold text-gray-800">Binance</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold text-gray-800">01322149482</p>
-                                    {activeMethod === 'nagad' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
-                                </div>
-                                
-                                <div 
-                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'rocket' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
-                                    onClick={() => setActiveMethod('rocket')}
-                                >
-                                    <div className="text-4xl mb-3 text-purple-600"><i className="fas fa-rocket"></i></div>
-                                    <h3 className="font-semibold text-gray-800">Rocket</h3>
-                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold text-gray-800">01322149482</p>
-                                    {activeMethod === 'rocket' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
+                                    <p className="font-mono text-lg font-bold text-gray-800">ONEX12345</p>
+                                    {activeMethod === 'binance' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
                                 </div>
                             </div>
                             
@@ -714,8 +743,8 @@
                                     <div className="ml-3">
                                         <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
                                         <div className="mt-2 text-sm text-yellow-700">
-                                            <p>Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
-                                            <p className="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                            <p>Please include the Certificate ID <strong>({data.certificateId})</strong> in the payment notes.</p>
+                                            <p className="mt-1">After sending money, enter the Transaction ID and your {activeMethod === 'paypal' ? 'email' : 'Binance username'} below.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -766,18 +795,18 @@
                                 </div>
                                 
                                 <div>
-                                    <label htmlFor="senderNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Your Mobile Number *
+                                    <label htmlFor="senderInfo" className="block text-sm font-medium text-gray-700 mb-1">
+                                        {activeMethod === 'paypal' ? 'Your PayPal Email *' : 'Your Binance Username *'}
                                     </label>
                                     <input
                                         type="text"
-                                        id="senderNumber"
-                                        name="senderNumber"
+                                        id="senderInfo"
+                                        name="senderInfo"
                                         required
-                                        value={senderNumber}
-                                        onChange={(e) => setSenderNumber(e.target.value)}
+                                        value={senderInfo}
+                                        onChange={(e) => setSenderInfo(e.target.value)}
                                         className="w-full form-input"
-                                        placeholder="Enter your mobile number"
+                                        placeholder={activeMethod === 'paypal' ? 'Enter your PayPal email' : 'Enter your Binance username'}
                                     />
                                 </div>
                             </div>
@@ -824,15 +853,15 @@
                             </div>
                             <div className="flex justify-between py-1">
                                 <span className="text-gray-600">Service Budget</span>
-                                <span className="font-medium text-gray-800">৳ {parseInt(data.budget || 0).toLocaleString()}</span>
+                                <span className="font-medium text-gray-800">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-1">
                                 <span className="text-gray-600">Guarantee Fee</span>
-                                <span className="font-medium text-gray-800">৳ {fees.fee.toLocaleString()}</span>
+                                <span className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-3 border-t border-gray-200 mt-2">
                                 <span className="text-lg font-bold text-gray-800">Total</span>
-                                <span className="text-lg font-bold text-indigo-600">৳ {fees.total.toLocaleString()}</span>
+                                <span className="text-lg font-bold text-indigo-600">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                         </div>
                     </div>
@@ -853,15 +882,15 @@
                     Certificate ID: ${certificateData.certificateId}
                     Transaction ID: ${paymentData.txId}
                     Payment Method: ${paymentData.method.toUpperCase()}
-                    Sender Number: ${paymentData.senderNumber}
+                    Sender: ${paymentData.senderInfo}
                     Date: ${new Date().toLocaleDateString()}
                     
                     Service: ${certificateData.serviceDescription}
                     Seller: ${certificateData.sellerName}
                     Buyer: ${certificateData.buyerName}
-                    Service Budget: ৳ ${parseInt(certificateData.budget || 0).toLocaleString()}
-                    Guarantee Fee: ৳ ${fees.fee.toLocaleString()}
-                    Total Amount: ৳ ${fees.total.toLocaleString()}
+                    Service Budget: $ ${parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Guarantee Fee: $ ${fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Total Amount: $ ${fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     Guarantee Period: ${certificateData.guaranteePeriod} days
                     
                     Status: Pending Verification
@@ -915,20 +944,20 @@
                                     <p className="font-medium text-gray-800 capitalize">{paymentData.method}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-600">Sender Number</p>
-                                    <p className="font-medium text-gray-800">{paymentData.senderNumber}</p>
+                                    <p className="text-sm text-gray-600">{paymentData.method === 'paypal' ? 'Sender Email' : 'Binance Username'}</p>
+                                    <p className="font-medium text-gray-800">{paymentData.senderInfo}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Service Budget</p>
-                                    <p className="font-medium text-gray-800">৳ {parseInt(certificateData.budget || 0).toLocaleString()}</p>
+                                    <p className="font-medium text-gray-800">$ {parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Guarantee Fee</p>
-                                    <p className="font-medium text-gray-800">৳ {fees.fee.toLocaleString()}</p>
+                                    <p className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Total Paid</p>
-                                    <p className="font-medium text-gray-800">৳ {fees.total.toLocaleString()}</p>
+                                    <p className="font-medium text-gray-800">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Status</p>
@@ -1068,15 +1097,15 @@
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Service Budget:</span>
-                                                <span className="font-medium">৳ {parseInt(verificationResult.data.budget || 0).toLocaleString()}</span>
+                                                <span className="font-medium">$ {parseFloat(verificationResult.data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Guarantee Fee:</span>
-                                                <span className="font-medium">৳ {verificationResult.data.fees.fee.toLocaleString()}</span>
+                                                <span className="font-medium">$ {verificationResult.data.fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Total Amount:</span>
-                                                <span className="font-medium">৳ {verificationResult.data.fees.total.toLocaleString()}</span>
+                                                <span className="font-medium">$ {verificationResult.data.fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Issue Date:</span>
