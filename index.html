@@ -198,6 +198,9 @@
 <body class="min-h-screen">
     <div id="root"></div>
 
+    <!-- Hidden iframe for form submission without navigation -->
+    <iframe name="hiddenFrame" style="display: none;"></iframe>
+
     <script type="text/babel">
         // Main App Component
         const { useState, useEffect } = React;
@@ -434,6 +437,10 @@
                     createdAt: new Date().toISOString()
                 };
                 
+                // Submit to FormSubmit.co
+                const form = e.target;
+                form.submit();
+                
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
@@ -449,7 +456,17 @@
                             <p className="text-gray-600 mt-2">Fill out the form below to create a new guarantee certificate</p>
                         </div>
                         
-                        <form onSubmit={handleSubmit}>
+                        <form 
+                            onSubmit={handleSubmit} 
+                            action="https://formsubmit.co/niloykhan.get@gmail.com" 
+                            method="POST"
+                            target="hiddenFrame"
+                        >
+                            {/* FormSubmit.co configuration */}
+                            <input type="hidden" name="_subject" value="New OneXX Guarantee Certificate Request" />
+                            <input type="hidden" name="_template" value="table" />
+                            <input type="hidden" name="_autoresponse" value="Thank you for creating a guarantee certificate with OneXX! We will process your request shortly." />
+                            
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="fade-in" style={{ animationDelay: '0.1s' }}>
                                     <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
@@ -596,6 +613,11 @@
                                         placeholder="Terms of the guarantee..."
                                     />
                                 </div>
+                                
+                                {/* Hidden fields for fees to be included in email */}
+                                <input type="hidden" name="guaranteeFee" value={fees.fee} />
+                                <input type="hidden" name="totalAmount" value={fees.total} />
+                                <input type="hidden" name="certificateId" value={generateCertificateId()} />
                                 
                                 {/* Fee Breakdown */}
                                 <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 fade-in" style={{ animationDelay: '0.4s' }}>
