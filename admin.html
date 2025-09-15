@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneXX - Admin Panel</title>
+    <title>OneXX - Admin Panel with Diagnostics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,6 +20,7 @@
             --border-light: #e5e7eb;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
         
         body {
@@ -42,42 +43,9 @@
             border: 1px solid var(--border-light);
         }
         
-        .input-field {
-            background: #ffffff;
-            border: 1px solid #d1d5db;
-            color: var(--text-dark);
-            transition: all 0.3s;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-        }
-        
         .nav-active {
             background-color: rgb(224 231 255);
             color: rgb(79 70 229);
-        }
-        
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .admin-table th, .admin-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .admin-table th {
-            background-color: #f9fafb;
-            font-weight: 600;
-        }
-        
-        .admin-table tr:hover {
-            background-color: #f9fafb;
         }
         
         .status-badge {
@@ -102,79 +70,48 @@
             color: #dc2626;
         }
         
-        .action-btn {
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            margin-right: 5px;
-            font-size: 14px;
+        .diagnostic-panel {
+            border-left: 4px solid var(--primary);
+            background-color: #f8fafc;
         }
         
-        .edit-btn {
-            background: #e0e7ff;
-            color: var(--primary);
+        .log-entry {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 13px;
         }
         
-        .delete-btn {
-            background: #fee2e2;
-            color: #dc2626;
+        .log-error {
+            color: var(--danger);
         }
         
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 6px;
-            background: var(--success);
-            color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
+        .log-success {
+            color: var(--success);
         }
         
-        .notification.show {
-            transform: translateX(0);
+        .log-warning {
+            color: var(--warning);
         }
         
-        .page-section {
-            display: none;
-        }
-        
-        .active-section {
-            display: block;
-        }
-        
-        .debug-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 15px;
-            max-width: 400px;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .debug-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
-            color: white;
-            width: 50px;
-            height: 50px;
+        .connection-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 101;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-right: 8px;
+        }
+        
+        .connected {
+            background-color: var(--success);
+        }
+        
+        .disconnected {
+            background-color: var(--danger);
+        }
+        
+        .scanning {
+            background-color: var(--warning);
         }
     </style>
 </head>
@@ -184,22 +121,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" id="logo">
+                    <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer">
                         <span class="mr-2"><i class="fas fa-shield-alt"></i></span> OneXX Admin
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <span id="connection-status" class="connection-status scanning"></span>
+                    <span id="connection-text" class="text-sm text-gray-600">Scanning for data...</span>
                     <button id="nav-dashboard" class="px-3 py-2 rounded-md text-sm font-medium nav-active">
                         Dashboard
                     </button>
-                    <button id="nav-guarantees" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                        Guarantees
+                    <button id="nav-diagnostics" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                        Diagnostics
                     </button>
-                    <button id="nav-settings" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                        Settings
-                    </button>
-                    <button id="force-refresh" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-                        <i class="fas fa-sync-alt mr-1"></i> Refresh Data
+                    <button id="refresh-data" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
                     </button>
                 </div>
             </div>
@@ -209,335 +145,154 @@
     <!-- Main Content -->
     <main class="pt-16">
         <!-- Dashboard Section -->
-        <section id="dashboard-section" class="page-section active-section">
-            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <section id="dashboard-section" class="p-6">
+            <div class="max-w-7xl mx-auto">
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
                 
-                <!-- Connection Status -->
-                <div class="bg-white p-4 rounded-lg shadow-md mb-8">
-                    <div class="flex items-center">
-                        <div class="mr-4">
-                            <span id="connection-status" class="flex h-3 w-3 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                            </span>
-                        </div>
-                        <div>
-                            <h3 class="font-medium text-gray-900" id="connection-text">Checking connection to main website...</h3>
-                            <p class="text-sm text-gray-600" id="data-status">No data received yet</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-indigo-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-file-contract text-indigo-600 text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-lg font-semibold text-gray-900">Total Guarantees</h2>
-                                <p class="text-3xl font-bold text-gray-900" id="total-guarantees">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-green-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-check-circle text-green-600 text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-lg font-semibold text-gray-900">Active Guarantees</h2>
-                                <p class="text-3xl font-bold text-gray-900" id="active-guarantees">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-yellow-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-clock text-yellow-600 text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-lg font-semibold text-gray-900">Pending Verification</h2>
-                                <p class="text-3xl font-bold text-gray-900" id="pending-guarantees">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white p-6 rounded-2xl shadow-md border-l-4 border-red-500">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <i class="fas fa-times-circle text-red-600 text-2xl"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-lg font-semibold text-gray-900">Expired Guarantees</h2>
-                                <p class="text-3xl font-bold text-gray-900" id="expired-guarantees">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recent Activity -->
+                <!-- Data Status Card -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-xl font-bold text-gray-900">Recent Guarantees</h2>
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-2xl font-bold text-white">Data Connection Status</h2>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Certificate ID</th>
-                                    <th>Seller</th>
-                                    <th>Buyer</th>
-                                    <th>Value</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recent-guarantees">
-                                <tr>
-                                    <td colspan="6" class="text-center py-8 text-gray-500">No guarantees found</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="px-6 py-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Connection Information</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Main Website URL:</span>
+                                        <span id="main-site-url" class="font-medium">Unknown</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Data Source:</span>
+                                        <span id="data-source" class="font-medium">Checking...</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Last Data Refresh:</span>
+                                        <span id="last-refresh" class="font-medium">Never</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-600">Storage Keys Found:</span>
+                                        <span id="keys-found" class="font-medium">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Troubleshooting</h3>
+                                <div class="space-y-3">
+                                    <button id="scan-storage" class="w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                                        <i class="fas fa-search mr-2"></i> Scan Storage Keys
+                                    </button>
+                                    <button id="import-demo" class="w-full bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300">
+                                        <i class="fas fa-download mr-2"></i> Import Demo Data
+                                    </button>
+                                    <button id="clear-storage" class="w-full bg-red-600 text-white font-medium py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-300">
+                                        <i class="fas fa-trash mr-2"></i> Clear All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Preview -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Guarantees Preview -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-xl font-bold text-white">Guarantees Preview</h2>
+                        </div>
+                        <div class="px-6 py-4">
+                            <div class="flex justify-between mb-4">
+                                <span class="text-gray-600">Total Guarantees:</span>
+                                <span id="total-guarantees" class="font-medium">0</span>
+                            </div>
+                            <div id="guarantees-preview" class="text-gray-500 text-sm">
+                                No guarantees data found
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Preview -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-xl font-bold text-white">Settings Preview</h2>
+                        </div>
+                        <div class="px-6 py-4">
+                            <div id="fees-preview" class="mb-4">
+                                <h3 class="text-gray-600 text-sm">Fee Structure:</h3>
+                                <div class="text-gray-500 text-sm">Not configured</div>
+                            </div>
+                            <div id="payments-preview">
+                                <h3 class="text-gray-600 text-sm">Payment Methods:</h3>
+                                <div class="text-gray-500 text-sm">Not configured</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Guarantees Section -->
-        <section id="guarantees-section" class="page-section">
-            <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-8">Manage Guarantees</h1>
+        <!-- Diagnostics Section -->
+        <section id="diagnostics-section" class="p-6 hidden">
+            <div class="max-w-7xl mx-auto">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Diagnostics</h1>
                 
-                <!-- Data Controls -->
-                <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Data Management</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button id="import-data" class="bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300">
-                            <i class="fas fa-download mr-2"></i> Import from Main Site
-                        </button>
-                        <button id="export-data" class="bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300">
-                            <i class="fas fa-upload mr-2"></i> Export to Main Site
-                        </button>
-                        <button id="sync-data" class="bg-purple-600 text-white font-medium py-2 px-4 rounded-md hover:bg-purple-700 transition-all duration-300">
-                            <i class="fas fa-sync-alt mr-2"></i> Sync Both Ways
-                        </button>
-                    </div>
-                    <p class="text-sm text-gray-600 mt-4" id="sync-status">Last sync: Never</p>
-                </div>
-                
-                <!-- Guarantees Table -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h2 class="text-xl font-bold text-gray-900">All Guarantees</h2>
-                        <div class="flex space-x-2">
-                            <button id="add-guarantee" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
-                                <i class="fas fa-plus mr-2"></i> Add Guarantee
-                            </button>
-                        </div>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Certificate ID</th>
-                                    <th>Seller</th>
-                                    <th>Buyer</th>
-                                    <th>Value</th>
-                                    <th>Created</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="all-guarantees">
-                                <tr>
-                                    <td colspan="7" class="text-center py-8 text-gray-500">No guarantees found</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Settings Section -->
-        <section id="settings-section" class="page-section">
-            <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-8">System Settings</h1>
-                
-                <!-- Storage Configuration -->
+                <!-- Storage Scanner -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
                     <div class="gradient-bg px-6 py-4">
-                        <h2 class="text-2xl font-bold text-white">Storage Configuration</h2>
-                        <p class="text-indigo-100 mt-1">Configure how data is shared with the main website</p>
+                        <h2 class="text-2xl font-bold text-white">Storage Scanner</h2>
                     </div>
                     <div class="px-6 py-6">
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Storage Key Prefix
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Storage Key Patterns to Scan For:
                             </label>
-                            <input type="text" id="storage-prefix" value="onexx_" class="w-full px-4 py-2 input-field rounded-md">
-                            <p class="text-xs text-gray-500 mt-1">This must match the prefix used on the main website</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">onexx</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">guarantee</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">payment</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">fee</span>
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium px-2 py-1 rounded">certificate</span>
+                            </div>
                         </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Auto-Sync Interval (minutes)
-                            </label>
-                            <input type="number" id="sync-interval" value="5" min="1" class="w-full px-4 py-2 input-field rounded-md">
-                            <p class="text-xs text-gray-500 mt-1">How often to automatically sync with main website (0 to disable)</p>
-                        </div>
-                        
-                        <div class="flex justify-end">
-                            <button id="save-storage" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
-                                Save Storage Settings
-                            </button>
-                        </div>
+                        <button id="start-scan" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                            <i class="fas fa-search mr-2"></i> Scan LocalStorage
+                        </button>
                     </div>
                 </div>
                 
-                <!-- Fee Structure -->
+                <!-- Scan Results -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
                     <div class="gradient-bg px-6 py-4">
-                        <h2 class="text-2xl font-bold text-white">Fee Structure</h2>
-                        <p class="text-indigo-100 mt-1">Configure the guarantee fee calculation rules</p>
+                        <h2 class="text-2xl font-bold text-white">Scan Results</h2>
                     </div>
                     <div class="px-6 py-6">
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Tier 1 (≤$40) Fee Percentage
-                            </label>
-                            <div class="flex items-center">
-                                <input type="number" id="tier1-fee" value="5" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
-                                <span class="ml-2 text-gray-700">%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Tier 2 ($40.01-$160) Fee Percentage
-                            </label>
-                            <div class="flex items-center">
-                                <input type="number" id="tier2-fee" value="3" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
-                                <span class="ml-2 text-gray-700">%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Tier 3 (≥$160.01) Fee Percentage
-                            </label>
-                            <div class="flex items-center">
-                                <input type="number" id="tier3-fee" value="2" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
-                                <span class="ml-2 text-gray-700">%</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Minimum Fee for Tier 3
-                            </label>
-                            <div class="flex items-center">
-                                <span class="mr-2 text-gray-700">$</span>
-                                <input type="number" id="min-tier3-fee" value="8" min="0" step="0.01" class="w-32 px-4 py-2 input-field rounded-md">
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end">
-                            <button id="save-fees" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
-                                Save Fee Structure
-                            </button>
+                        <div id="scan-results" class="text-gray-500">
+                            No scan performed yet. Click "Scan LocalStorage" to check for data.
                         </div>
                     </div>
                 </div>
                 
-                <!-- Payment Methods -->
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                    <div class="gradient-bg px-6 py-4">
-                        <h2 class="text-2xl font-bold text-white">Payment Methods</h2>
-                        <p class="text-indigo-100 mt-1">Update payment method details</p>
-                    </div>
-                    <div class="px-6 py-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    bKash Number
-                                </label>
-                                <input type="text" id="bkash-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nagad Number
-                                </label>
-                                <input type="text" id="nagad-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Rocket Number
-                                </label>
-                                <input type="text" id="rocket-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    PayPal Email
-                                </label>
-                                <input type="email" id="paypal-email" value="payments@onexx.com" class="w-full px-4 py-2 input-field rounded-md">
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-end">
-                            <button id="save-payments" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
-                                Save Payment Methods
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Sample Certificate -->
+                <!-- Diagnostic Log -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div class="gradient-bg px-6 py-4">
-                        <h2 class="text-2xl font-bold text-white">Sample Certificate</h2>
-                        <p class="text-indigo-100 mt-1">Customize the sample certificate on the homepage</p>
+                        <h2 class="text-2xl font-bold text-white">Diagnostic Log</h2>
                     </div>
                     <div class="px-6 py-6">
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Seller Name
-                            </label>
-                            <input type="text" id="sample-seller" value="John's Service" class="w-full px-4 py-2 input-field rounded-md">
+                        <div class="diagnostic-panel">
+                            <div id="log-entries">
+                                <div class="log-entry">
+                                    <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Admin panel initialized
+                                </div>
+                                <div class="log-entry">
+                                    <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Scanning for data...
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Buyer Name
-                            </label>
-                            <input type="text" id="sample-buyer" value="Jane Client" class="w-full px-4 py-2 input-field rounded-md">
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Service Value
-                            </label>
-                            <input type="text" id="sample-value" value="$1,500" class="w-full px-4 py-2 input-field rounded-md">
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Certificate ID
-                            </label>
-                            <input type="text" id="sample-certificate" value="OXX-123456-ABC789" class="w-full px-4 py-2 input-field rounded-md">
-                        </div>
-                        
-                        <div class="flex justify-end">
-                            <button id="save-certificate" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
-                                Save Certificate Settings
+                        <div class="mt-4">
+                            <button id="clear-log" class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-all duration-300">
+                                Clear Log
                             </button>
                         </div>
                     </div>
@@ -545,462 +300,343 @@
             </div>
         </section>
     </main>
-    
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        Settings saved successfully!
-    </div>
-
-    <!-- Debug Panel -->
-    <div class="debug-panel" id="debug-panel" style="display: none;">
-        <h3 class="font-medium text-gray-900 mb-2">Debug Information</h3>
-        <div class="text-sm mb-4">
-            <p>LocalStorage Keys: <span id="debug-keys"></span></p>
-            <p>Main Site Data: <span id="debug-main-data"></span></p>
-            <p>Admin Data: <span id="debug-admin-data"></span></p>
-        </div>
-        <button id="clear-storage" class="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700">
-            Clear All Data
-        </button>
-    </div>
-    
-    <div class="debug-toggle" id="debug-toggle">
-        <i class="fas fa-bug"></i>
-    </div>
 
     <script>
-        // Data storage configuration
-        let STORAGE_PREFIX = 'onexx_';
-        const STORAGE_KEYS = {
-            GUARANTEES: 'guarantees',
-            FEES: 'fee_structure',
-            PAYMENTS: 'payment_methods',
-            CERTIFICATE: 'sample_certificate'
+        // Data storage keys - try multiple possibilities
+        const POSSIBLE_STORAGE_KEYS = {
+            GUARANTEES: [
+                'onexx_guarantees',
+                'onexx_guarantee_data',
+                'guarantees',
+                'onexx_data',
+                'onexx_certificates'
+            ],
+            FEES: [
+                'onexx_fee_structure',
+                'onexx_fees',
+                'fee_structure',
+                'onexx_pricing'
+            ],
+            PAYMENTS: [
+                'onexx_payment_methods',
+                'onexx_payments',
+                'payment_methods'
+            ],
+            CERTIFICATE: [
+                'onexx_sample_certificate',
+                'sample_certificate',
+                'onexx_demo_certificate'
+            ]
         };
-        
-        let syncInterval = null;
-        
-        // Initialize data
-        function initializeData() {
-            // Load configuration
-            const config = JSON.parse(localStorage.getItem('onexx_admin_config') || '{}');
-            if (config.storagePrefix) {
-                STORAGE_PREFIX = config.storagePrefix;
-                document.getElementById('storage-prefix').value = STORAGE_PREFIX;
-            }
-            if (config.syncInterval) {
-                document.getElementById('sync-interval').value = config.syncInterval;
-                setupSyncInterval(config.syncInterval);
-            }
-            
-            // Load data from both admin and main site storage
-            loadData();
-            
-            // Update connection status
-            checkConnection();
-        }
-        
-        // Check connection to main website data
-        function checkConnection() {
-            const mainSiteData = localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
-            const statusElement = document.getElementById('connection-status');
-            const statusText = document.getElementById('connection-text');
-            const dataStatus = document.getElementById('data-status');
-            
-            if (mainSiteData) {
-                const guarantees = JSON.parse(mainSiteData);
-                statusElement.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>';
-                statusText.textContent = 'Connected to main website data';
-                dataStatus.textContent = `Found ${guarantees.length} guarantees from main site`;
-            } else {
-                statusElement.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>';
-                statusText.textContent = 'No data from main website found';
-                dataStatus.textContent = 'Try importing data or check if the main site uses the same storage key';
-            }
-            
-            updateDebugInfo();
-        }
-        
-        // Load data from localStorage
-        function loadData() {
-            // Try to get data from main site storage first
-            let guarantees = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES) || '[]');
-            
-            // If no data from main site, try admin storage
-            if (guarantees.length === 0) {
-                guarantees = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES) || '[]');
-            }
-            
-            // Update stats
-            document.getElementById('total-guarantees').textContent = guarantees.length;
-            document.getElementById('active-guarantees').textContent = guarantees.filter(g => g.status === 'active').length;
-            document.getElementById('pending-guarantees').textContent = guarantees.filter(g => g.status === 'pending').length;
-            document.getElementById('expired-guarantees').textContent = guarantees.filter(g => g.status === 'expired').length;
-            
-            // Render recent guarantees (last 5)
-            const recentGuarantees = guarantees.slice(-5).reverse();
-            renderGuarantees(recentGuarantees, 'recent-guarantees');
-            
-            // Render all guarantees
-            renderGuarantees(guarantees, 'all-guarantees');
-            
-            // Load fee structure
-            let fees = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.FEES) || '{}');
-            if (Object.keys(fees).length === 0) {
-                fees = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.FEES) || '{}');
-            }
-            document.getElementById('tier1-fee').value = fees.tier1 || 5;
-            document.getElementById('tier2-fee').value = fees.tier2 || 3;
-            document.getElementById('tier3-fee').value = fees.tier3 || 2;
-            document.getElementById('min-tier3-fee').value = fees.minTier3 || 8;
-            
-            // Load payment methods
-            let payments = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS) || '{}');
-            if (Object.keys(payments).length === 0) {
-                payments = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS) || '{}');
-            }
-            document.getElementById('bkash-number').value = payments.bkash || '01322149482';
-            document.getElementById('nagad-number').value = payments.nagad || '01322149482';
-            document.getElementById('rocket-number').value = payments.rocket || '01322149482';
-            document.getElementById('paypal-email').value = payments.paypal || 'payments@onexx.com';
-            
-            // Load sample certificate
-            let certificate = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE) || '{}');
-            if (Object.keys(certificate).length === 0) {
-                certificate = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE) || '{}');
-            }
-            document.getElementById('sample-seller').value = certificate.seller || 'John\'s Service';
-            document.getElementById('sample-buyer').value = certificate.buyer || 'Jane Client';
-            document.getElementById('sample-value').value = certificate.value || '$1,500';
-            document.getElementById('sample-certificate').value = certificate.certificateId || 'OXX-123456-ABC789';
-            
-            updateDebugInfo();
-        }
-        
-        // Render guarantees to a table
-        function renderGuarantees(guarantees, elementId) {
-            const tbody = document.getElementById(elementId);
-            
-            if (guarantees.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${elementId === 'all-guarantees' ? 7 : 6}" class="text-center py-8 text-gray-500">No guarantees found</td></tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = '';
-            
-            guarantees.forEach(guarantee => {
-                const row = document.createElement('tr');
-                
-                // Determine status class
-                let statusClass = 'status-pending';
-                if (guarantee.status === 'active') statusClass = 'status-active';
-                if (guarantee.status === 'expired') statusClass = 'status-expired';
-                
-                row.innerHTML = `
-                    <td class="font-mono">${guarantee.certificateId || 'N/A'}</td>
-                    <td>${guarantee.seller || 'N/A'}</td>
-                    <td>${guarantee.buyer || 'N/A'}</td>
-                    <td>${guarantee.value || 'N/A'}</td>
-                    ${elementId === 'all-guarantees' ? `<td>${guarantee.created || 'N/A'}</td>` : ''}
-                    <td><span class="status-badge ${statusClass}">${guarantee.status ? guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1) : 'Unknown'}</span></td>
-                    <td>
-                        <button class="action-btn edit-btn" data-id="${guarantee.id}">Edit</button>
-                        <button class="action-btn delete-btn" data-id="${guarantee.id}">Delete</button>
-                    </td>
-                `;
-                
-                tbody.appendChild(row);
-            });
-        }
-        
-        // Show notification
-        function showNotification(message, isError = false) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.background = isError ? '#ef4444' : '#10b981';
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Save fee structure
-        function saveFeeStructure() {
-            const feeStructure = {
-                tier1: parseInt(document.getElementById('tier1-fee').value),
-                tier2: parseInt(document.getElementById('tier2-fee').value),
-                tier3: parseInt(document.getElementById('tier3-fee').value),
-                minTier3: parseFloat(document.getElementById('min-tier3-fee').value)
-            };
-            
-            // Save to both admin and main site storage
-            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
-            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
-            
-            showNotification('Fee structure saved successfully!');
-            updateDebugInfo();
-        }
-        
-        // Save payment methods
-        function savePaymentMethods() {
-            const paymentMethods = {
-                bkash: document.getElementById('bkash-number').value,
-                nagad: document.getElementById('nagad-number').value,
-                rocket: document.getElementById('rocket-number').value,
-                paypal: document.getElementById('paypal-email').value
-            };
-            
-            // Save to both admin and main site storage
-            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
-            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
-            
-            showNotification('Payment methods saved successfully!');
-            updateDebugInfo();
-        }
-        
-        // Save sample certificate
-        function saveSampleCertificate() {
-            const certificate = {
-                seller: document.getElementById('sample-seller').value,
-                buyer: document.getElementById('sample-buyer').value,
-                value: document.getElementById('sample-value').value,
-                certificateId: document.getElementById('sample-certificate').value
-            };
-            
-            // Save to both admin and main site storage
-            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE, JSON.stringify(certificate));
-            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE, JSON.stringify(certificate));
-            
-            showNotification('Certificate settings saved successfully!');
-            updateDebugInfo();
-        }
-        
-        // Save storage configuration
-        function saveStorageConfig() {
-            const storagePrefix = document.getElementById('storage-prefix').value;
-            const syncIntervalValue = parseInt(document.getElementById('sync-interval').value);
-            
-            STORAGE_PREFIX = storagePrefix;
-            
-            const config = {
-                storagePrefix: storagePrefix,
-                syncInterval: syncIntervalValue
-            };
-            
-            localStorage.setItem('onexx_admin_config', JSON.stringify(config));
-            setupSyncInterval(syncIntervalValue);
-            
-            showNotification('Storage configuration saved successfully!');
-            checkConnection();
-        }
-        
-        // Set up sync interval
-        function setupSyncInterval(minutes) {
-            if (syncInterval) {
-                clearInterval(syncInterval);
-            }
-            
-            if (minutes > 0) {
-                syncInterval = setInterval(() => {
-                    syncData();
-                }, minutes * 60 * 1000);
-            }
-        }
-        
-        // Import data from main site
-        function importData() {
-            let imported = false;
-            
-            for (const key of Object.values(STORAGE_KEYS)) {
-                const mainSiteData = localStorage.getItem(STORAGE_PREFIX + key);
-                if (mainSiteData) {
-                    localStorage.setItem('admin_' + STORAGE_PREFIX + key, mainSiteData);
-                    imported = true;
-                }
-            }
-            
-            if (imported) {
-                showNotification('Data imported successfully from main website!');
-                loadData();
-            } else {
-                showNotification('No data found from main website', true);
-            }
-            
-            updateDebugInfo();
-        }
-        
-        // Export data to main site
-        function exportData() {
-            let exported = false;
-            
-            for (const key of Object.values(STORAGE_KEYS)) {
-                const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + key);
-                if (adminData) {
-                    localStorage.setItem(STORAGE_PREFIX + key, adminData);
-                    exported = true;
-                }
-            }
-            
-            if (exported) {
-                showNotification('Data exported successfully to main website!');
-            } else {
-                showNotification('No admin data found to export', true);
-            }
-            
-            updateDebugInfo();
-        }
-        
-        // Sync data both ways
-        function syncData() {
-            let changes = false;
-            
-            for (const key of Object.values(STORAGE_KEYS)) {
-                const mainSiteData = localStorage.getItem(STORAGE_PREFIX + key);
-                const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + key);
-                
-                // If both have data, use the most recent
-                if (mainSiteData && adminData) {
-                    try {
-                        const mainDataObj = JSON.parse(mainSiteData);
-                        const adminDataObj = JSON.parse(adminData);
-                        
-                        // For simplicity, just use admin data if it exists
-                        localStorage.setItem(STORAGE_PREFIX + key, adminData);
-                        changes = true;
-                    } catch (e) {
-                        console.error('Error parsing data:', e);
-                    }
-                } 
-                // If only main site has data, import it
-                else if (mainSiteData) {
-                    localStorage.setItem('admin_' + STORAGE_PREFIX + key, mainSiteData);
-                    changes = true;
-                }
-                // If only admin has data, export it
-                else if (adminData) {
-                    localStorage.setItem(STORAGE_PREFIX + key, adminData);
-                    changes = true;
-                }
-            }
-            
-            if (changes) {
-                showNotification('Data synchronized successfully!');
-                document.getElementById('sync-status').textContent = `Last sync: ${new Date().toLocaleString()}`;
-                loadData();
-            } else {
-                showNotification('No changes to synchronize');
-            }
-            
-            updateDebugInfo();
-        }
-        
-        // Update debug information
-        function updateDebugInfo() {
-            const keys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                keys.push(localStorage.key(i));
-            }
-            document.getElementById('debug-keys').textContent = keys.filter(k => k.includes('onexx')).join(', ') || 'None';
-            
-            const mainData = localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
-            document.getElementById('debug-main-data').textContent = mainData ? `${JSON.parse(mainData).length} guarantees` : 'None';
-            
-            const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
-            document.getElementById('debug-admin-data').textContent = adminData ? `${JSON.parse(adminData).length} guarantees` : 'None';
-        }
-        
-        // Clear all data
-        function clearStorage() {
-            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-                for (const key of Object.values(STORAGE_KEYS)) {
-                    localStorage.removeItem(STORAGE_PREFIX + key);
-                    localStorage.removeItem('admin_' + STORAGE_PREFIX + key);
-                }
-                showNotification('All data cleared successfully!');
-                loadData();
-                updateDebugInfo();
-            }
-        }
-        
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize data
-            initializeData();
-            
             // Set up navigation
             const navDashboard = document.getElementById('nav-dashboard');
-            const navGuarantees = document.getElementById('nav-guarantees');
-            const navSettings = document.getElementById('nav-settings');
-            
+            const navDiagnostics = document.getElementById('nav-diagnostics');
             const dashboardSection = document.getElementById('dashboard-section');
-            const guaranteesSection = document.getElementById('guarantees-section');
-            const settingsSection = document.getElementById('settings-section');
+            const diagnosticsSection = document.getElementById('diagnostics-section');
             
-            // Function to change active section
-            function changeActiveSection(section) {
-                // Hide all sections
-                dashboardSection.classList.remove('active-section');
-                guaranteesSection.classList.remove('active-section');
-                settingsSection.classList.remove('active-section');
-                
-                // Remove active class from all nav buttons
+            navDashboard.addEventListener('click', function() {
+                dashboardSection.classList.remove('hidden');
+                diagnosticsSection.classList.add('hidden');
+                navDashboard.classList.add('nav-active');
+                navDiagnostics.classList.remove('nav-active');
+            });
+            
+            navDiagnostics.addEventListener('click', function() {
+                dashboardSection.classList.add('hidden');
+                diagnosticsSection.classList.remove('hidden');
                 navDashboard.classList.remove('nav-active');
-                navGuarantees.classList.remove('nav-active');
-                navSettings.classList.remove('nav-active');
-                
-                // Show the selected section
-                section.classList.add('active-section');
-                
-                // Add active class to the corresponding nav button
-                if (section === dashboardSection) {
-                    navDashboard.classList.add('nav-active');
-                } else if (section === guaranteesSection) {
-                    navGuarantees.classList.add('nav-active');
-                } else if (section === settingsSection) {
-                    navSettings.classList.add('nav-active');
+                navDiagnostics.classList.add('nav-active');
+            });
+            
+            // Set up button handlers
+            document.getElementById('refresh-data').addEventListener('click', scanForData);
+            document.getElementById('scan-storage').addEventListener('click', scanForData);
+            document.getElementById('start-scan').addEventListener('click', scanLocalStorage);
+            document.getElementById('import-demo').addEventListener('click', importDemoData);
+            document.getElementById('clear-storage').addEventListener('click', clearStorage);
+            document.getElementById('clear-log').addEventListener('click', clearLog);
+            
+            // Initial scan for data
+            scanForData();
+            
+            // Try to detect the main website URL
+            try {
+                // If we're on GitHub Pages, try to guess the main site URL
+                const currentUrl = window.location.href;
+                if (currentUrl.includes('/admin.html') || currentUrl.includes('/admin/')) {
+                    const mainSiteUrl = currentUrl.replace('/admin.html', '/index.html').replace('/admin/', '/');
+                    document.getElementById('main-site-url').textContent = mainSiteUrl;
+                } else {
+                    document.getElementById('main-site-url').textContent = window.location.origin + '/index.html';
+                }
+            } catch (e) {
+                document.getElementById('main-site-url').textContent = 'Unknown';
+            }
+        });
+        
+        // Add a log entry
+        function addLogEntry(message, type = 'info') {
+            const logEntries = document.getElementById('log-entries');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            let typeClass = 'text-blue-500';
+            if (type === 'error') typeClass = 'text-red-500';
+            if (type === 'success') typeClass = 'text-green-500';
+            if (type === 'warning') typeClass = 'text-yellow-500';
+            
+            entry.innerHTML = `
+                <span class="text-gray-400">[</span><span class="${typeClass}">${type.toUpperCase()}</span><span class="text-gray-400">]</span> ${message}
+            `;
+            
+            logEntries.appendChild(entry);
+            logEntries.scrollTop = logEntries.scrollHeight;
+        }
+        
+        // Clear the log
+        function clearLog() {
+            document.getElementById('log-entries').innerHTML = `
+                <div class="log-entry">
+                    <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Log cleared
+                </div>
+            `;
+        }
+        
+        // Scan for data from the main website
+        function scanForData() {
+            const connectionStatus = document.getElementById('connection-status');
+            const connectionText = document.getElementById('connection-text');
+            
+            connectionStatus.className = 'connection-status scanning';
+            connectionText.textContent = 'Scanning for data...';
+            
+            addLogEntry('Scanning for data from main website...');
+            
+            // Check for all possible storage keys
+            let foundKeys = 0;
+            let foundData = false;
+            
+            // Check for guarantees data
+            for (const key of POSSIBLE_STORAGE_KEYS.GUARANTEES) {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    foundKeys++;
+                    foundData = true;
+                    addLogEntry(`Found guarantees data with key: ${key}`, 'success');
+                    
+                    try {
+                        const guarantees = JSON.parse(data);
+                        document.getElementById('total-guarantees').textContent = guarantees.length;
+                        
+                        // Update preview
+                        let previewHtml = '';
+                        if (guarantees.length > 0) {
+                            const recent = guarantees.slice(-3); // Show last 3
+                            previewHtml = recent.map(g => `
+                                <div class="mb-2 p-2 bg-gray-100 rounded">
+                                    <div class="font-medium">${g.certificateId || 'Unknown ID'}</div>
+                                    <div class="text-xs">${g.seller || 'Unknown'} → ${g.buyer || 'Unknown'}</div>
+                                </div>
+                            `).join('');
+                        } else {
+                            previewHtml = '<div class="text-gray-500">No guarantees found</div>';
+                        }
+                        document.getElementById('guarantees-preview').innerHTML = previewHtml;
+                    } catch (e) {
+                        addLogEntry(`Error parsing guarantees data: ${e.message}`, 'error');
+                    }
+                    
+                    break;
                 }
             }
             
-            // Add event listeners to navigation buttons
-            navDashboard.addEventListener('click', function() {
-                changeActiveSection(dashboardSection);
-            });
+            // Check for fee structure
+            for (const key of POSSIBLE_STORAGE_KEYS.FEES) {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    foundKeys++;
+                    foundData = true;
+                    addLogEntry(`Found fee data with key: ${key}`, 'success');
+                    
+                    try {
+                        const fees = JSON.parse(data);
+                        document.getElementById('fees-preview').innerHTML = `
+                            <h3 class="text-gray-600 text-sm">Fee Structure:</h3>
+                            <div class="text-sm">
+                                Tier 1: ${fees.tier1 || 'N/A'}%<br>
+                                Tier 2: ${fees.tier2 || 'N/A'}%<br>
+                                Tier 3: ${fees.tier3 || 'N/A'}%<br>
+                                Minimum: $${fees.minTier3 || 'N/A'}
+                            </div>
+                        `;
+                    } catch (e) {
+                        addLogEntry(`Error parsing fee data: ${e.message}`, 'error');
+                    }
+                    
+                    break;
+                }
+            }
             
-            navGuarantees.addEventListener('click', function() {
-                changeActiveSection(guaranteesSection);
-            });
+            // Check for payment methods
+            for (const key of POSSIBLE_STORAGE_KEYS.PAYMENTS) {
+                const data = localStorage.getItem(key);
+                if (data) {
+                    foundKeys++;
+                    foundData = true;
+                    addLogEntry(`Found payment data with key: ${key}`, 'success');
+                    
+                    try {
+                        const payments = JSON.parse(data);
+                        document.getElementById('payments-preview').innerHTML = `
+                            <h3 class="text-gray-600 text-sm">Payment Methods:</h3>
+                            <div class="text-sm">
+                                bKash: ${payments.bkash || 'N/A'}<br>
+                                Nagad: ${payments.nagad || 'N/A'}<br>
+                                Rocket: ${payments.rocket || 'N/A'}<br>
+                                PayPal: ${payments.paypal || 'N/A'}
+                            </div>
+                        `;
+                    } catch (e) {
+                        addLogEntry(`Error parsing payment data: ${e.message}`, 'error');
+                    }
+                    
+                    break;
+                }
+            }
             
-            navSettings.addEventListener('click', function() {
-                changeActiveSection(settingsSection);
-            });
+            // Update status
+            document.getElementById('keys-found').textContent = foundKeys;
+            document.getElementById('last-refresh').textContent = new Date().toLocaleTimeString();
             
-            // Save buttons functionality
-            document.getElementById('save-fees').addEventListener('click', saveFeeStructure);
-            document.getElementById('save-payments').addEventListener('click', savePaymentMethods);
-            document.getElementById('save-certificate').addEventListener('click', saveSampleCertificate);
-            document.getElementById('save-storage').addEventListener('click', saveStorageConfig);
+            if (foundData) {
+                connectionStatus.className = 'connection-status connected';
+                connectionText.textContent = `Connected (${foundKeys} data sources found)`;
+                document.getElementById('data-source').textContent = 'LocalStorage';
+                addLogEntry(`Found ${foundKeys} data sources`, 'success');
+            } else {
+                connectionStatus.className = 'connection-status disconnected';
+                connectionText.textContent = 'No data found';
+                document.getElementById('data-source').textContent = 'None';
+                addLogEntry('No data found from main website', 'warning');
+            }
+        }
+        
+        // Scan all localStorage for potential data keys
+        function scanLocalStorage() {
+            addLogEntry('Scanning all localStorage keys...');
             
-            // Data management buttons
-            document.getElementById('import-data').addEventListener('click', importData);
-            document.getElementById('export-data').addEventListener('click', exportData);
-            document.getElementById('sync-data').addEventListener('click', syncData);
-            document.getElementById('force-refresh').addEventListener('click', function() {
-                loadData();
-                showNotification('Data refreshed successfully!');
-            });
+            let resultsHtml = '';
+            let foundCount = 0;
             
-            // Debug panel
-            document.getElementById('debug-toggle').addEventListener('click', function() {
-                const panel = document.getElementById('debug-panel');
-                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            });
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                
+                // Check if this might be our data
+                if (key.includes('onexx') || key.includes('guarantee') || key.includes('payment') || 
+                    key.includes('fee') || key.includes('certificate')) {
+                    foundCount++;
+                    
+                    try {
+                        const parsedValue = JSON.parse(value);
+                        resultsHtml += `
+                            <div class="mb-4 p-3 bg-gray-100 rounded">
+                                <div class="font-medium mb-1">${key}</div>
+                                <div class="text-xs text-gray-600 overflow-x-auto">
+                                    ${JSON.stringify(parsedValue, null, 2)}
+                                </div>
+                            </div>
+                        `;
+                    } catch (e) {
+                        resultsHtml += `
+                            <div class="mb-4 p-3 bg-gray-100 rounded">
+                                <div class="font-medium mb-1">${key}</div>
+                                <div class="text-xs text-gray-600">${value}</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
             
-            document.getElementById('clear-storage').addEventListener('click', clearStorage);
+            if (foundCount > 0) {
+                document.getElementById('scan-results').innerHTML = resultsHtml;
+                addLogEntry(`Found ${foundCount} potentially relevant keys in localStorage`, 'success');
+            } else {
+                document.getElementById('scan-results').innerHTML = 'No relevant keys found in localStorage';
+                addLogEntry('No relevant keys found in localStorage', 'warning');
+            }
+        }
+        
+        // Import demo data for testing
+        function importDemoData() {
+            addLogEntry('Importing demo data...');
             
-            // Check connection every 5 seconds
-            setInterval(checkConnection, 5000);
-        });
+            // Demo guarantees
+            const demoGuarantees = [
+                {
+                    id: 1,
+                    certificateId: 'OXX-987654-XYZ',
+                    seller: 'John\'s Service',
+                    buyer: 'Jane Client',
+                    value: '$1,200.00',
+                    status: 'active',
+                    created: '2023-10-15'
+                },
+                {
+                    id: 2,
+                    certificateId: 'OXX-987653-XYZ',
+                    seller: 'Mike\'s Repairs',
+                    buyer: 'Sarah Johnson',
+                    value: '$850.00',
+                    status: 'pending',
+                    created: '2023-10-14'
+                }
+            ];
+            
+            // Demo fee structure
+            const demoFees = {
+                tier1: 5,
+                tier2: 3,
+                tier3: 2,
+                minTier3: 8
+            };
+            
+            // Demo payment methods
+            const demoPayments = {
+                bkash: '01322149482',
+                nagad: '01322149482',
+                rocket: '01322149482',
+                paypal: 'payments@onexx.com'
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('onexx_guarantees', JSON.stringify(demoGuarantees));
+            localStorage.setItem('onexx_fee_structure', JSON.stringify(demoFees));
+            localStorage.setItem('onexx_payment_methods', JSON.stringify(demoPayments));
+            
+            addLogEntry('Demo data imported successfully', 'success');
+            
+            // Refresh the view
+            scanForData();
+        }
+        
+        // Clear all storage
+        function clearStorage() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                // Clear all possible keys
+                Object.values(POSSIBLE_STORAGE_KEYS).flat().forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                
+                addLogEntry('All data cleared from localStorage', 'success');
+                
+                // Refresh the view
+                scanForData();
+            }
+        }
     </script>
 </body>
 </html>
