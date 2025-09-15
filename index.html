@@ -198,9 +198,6 @@
 <body class="min-h-screen">
     <div id="root"></div>
 
-    <!-- Hidden iframe for form submission without navigation -->
-    <iframe name="hiddenFrame" style="display: none;"></iframe>
-
     <script type="text/babel">
         // Main App Component
         const { useState, useEffect } = React;
@@ -437,15 +434,11 @@
                     createdAt: new Date().toISOString()
                 };
                 
-                // Submit to FormSubmit.co
-                const form = e.target;
-                form.submit();
-                
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
                     onSuccess(completeData);
-                }, 1500);
+                }, 500);
             };
 
             return (
@@ -456,17 +449,7 @@
                             <p className="text-gray-600 mt-2">Fill out the form below to create a new guarantee certificate</p>
                         </div>
                         
-                        <form 
-                            onSubmit={handleSubmit} 
-                            action="https://formsubmit.co/niloykhan.get@gmail.com" 
-                            method="POST"
-                            target="hiddenFrame"
-                        >
-                            {/* FormSubmit.co configuration */}
-                            <input type="hidden" name="_subject" value="New OneXX Guarantee Certificate Request" />
-                            <input type="hidden" name="_template" value="table" />
-                            <input type="hidden" name="_autoresponse" value="Thank you for creating a guarantee certificate with OneXX! We will process your request shortly." />
-                            
+                        <form onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="fade-in" style={{ animationDelay: '0.1s' }}>
                                     <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
@@ -614,10 +597,6 @@
                                     />
                                 </div>
                                 
-                                {/* Hidden fields for fees to be included in email */}
-                                <input type="hidden" name="guaranteeFee" value={fees.fee} />
-                                <input type="hidden" name="totalAmount" value={fees.total} />
-                                
                                 {/* Fee Breakdown */}
                                 <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 fade-in" style={{ animationDelay: '0.4s' }}>
                                     <h4 className="font-medium text-blue-800 mb-3 flex items-center">
@@ -665,7 +644,6 @@
         // Payment Instruction Component
         function PaymentInstruction({ data, onSuccess }) {
             const [activeMethod, setActiveMethod] = useState('paypal');
-            const [txId, setTxId] = useState('');
             const [senderInfo, setSenderInfo] = useState('');
             const [isSubmitting, setIsSubmitting] = useState(false);
             
@@ -674,7 +652,7 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                if (!txId || !senderInfo) return;
+                if (!senderInfo) return;
                 
                 setIsSubmitting(true);
                 
@@ -682,7 +660,6 @@
                 const updatedData = {
                     ...data,
                     payment: {
-                        txId,
                         senderInfo,
                         method: activeMethod,
                         paidAt: new Date().toISOString()
@@ -693,15 +670,11 @@
                 // Store in localStorage
                 storeCertificateData(updatedData);
                 
-                // Submit to FormSubmit.co
-                const form = e.target;
-                form.submit();
-                
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
-                    onSuccess({ txId, senderInfo, method: activeMethod });
-                }, 1500);
+                    onSuccess({ senderInfo, method: activeMethod });
+                }, 500);
             };
 
             return (
@@ -744,71 +717,28 @@
                                         <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
                                         <div className="mt-2 text-sm text-yellow-700">
                                             <p>Please include the Certificate ID <strong>({data.certificateId})</strong> in the payment notes.</p>
-                                            <p className="mt-1">After sending money, enter the Transaction ID and your {activeMethod === 'paypal' ? 'email' : 'Binance username'} below.</p>
+                                            <p className="mt-1">After sending money, enter your {activeMethod === 'paypal' ? 'email' : 'Binance username'} below.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <form 
-                            onSubmit={handleSubmit} 
-                            action="https://formsubmit.co/niloykhan.get@gmail.com" 
-                            method="POST"
-                            target="hiddenFrame"
-                            className="bg-gray-50 p-6 rounded-lg border border-gray-200"
-                        >
-                            {/* FormSubmit.co configuration */}
-                            <input type="hidden" name="_subject" value="Payment Details for OneXX Guarantee Certificate" />
-                            <input type="hidden" name="_template" value="table" />
-                            <input type="hidden" name="_autoresponse" value="Thank you for your payment! We will verify it and send your guarantee certificate shortly." />
-                            
-                            {/* Include certificate data as hidden fields */}
-                            <input type="hidden" name="certificateId" value={data.certificateId} />
-                            <input type="hidden" name="sellerName" value={data.sellerName} />
-                            <input type="hidden" name="sellerEmail" value={data.sellerEmail} />
-                            <input type="hidden" name="buyerName" value={data.buyerName} />
-                            <input type="hidden" name="buyerEmail" value={data.buyerEmail} />
-                            <input type="hidden" name="serviceDescription" value={data.serviceDescription} />
-                            <input type="hidden" name="budget" value={data.budget} />
-                            <input type="hidden" name="guaranteePeriod" value={data.guaranteePeriod} />
-                            <input type="hidden" name="terms" value={data.terms} />
-                            <input type="hidden" name="paymentMethod" value={activeMethod} />
-                            <input type="hidden" name="guaranteeFee" value={fees.fee} />
-                            <input type="hidden" name="totalAmount" value={fees.total} />
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label htmlFor="txId" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Transaction ID (TxID) *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="txId"
-                                        name="transactionId"
-                                        required
-                                        value={txId}
-                                        onChange={(e) => setTxId(e.target.value)}
-                                        className="w-full form-input"
-                                        placeholder="Enter your transaction ID"
-                                    />
-                                </div>
-                                
-                                <div>
-                                    <label htmlFor="senderInfo" className="block text-sm font-medium text-gray-700 mb-1">
-                                        {activeMethod === 'paypal' ? 'Your PayPal Email *' : 'Your Binance Username *'}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="senderInfo"
-                                        name="senderInfo"
-                                        required
-                                        value={senderInfo}
-                                        onChange={(e) => setSenderInfo(e.target.value)}
-                                        className="w-full form-input"
-                                        placeholder={activeMethod === 'paypal' ? 'Enter your PayPal email' : 'Enter your Binance username'}
-                                    />
-                                </div>
+                        <form onSubmit={handleSubmit} className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <div>
+                                <label htmlFor="senderInfo" className="block text-sm font-medium text-gray-700 mb-1">
+                                    {activeMethod === 'paypal' ? 'Your PayPal Email *' : 'Your Binance Username *'}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="senderInfo"
+                                    name="senderInfo"
+                                    required
+                                    value={senderInfo}
+                                    onChange={(e) => setSenderInfo(e.target.value)}
+                                    className="w-full form-input"
+                                    placeholder={activeMethod === 'paypal' ? 'Enter your PayPal email' : 'Enter your Binance username'}
+                                />
                             </div>
                             
                             <div className="mt-6 flex justify-end">
@@ -823,7 +753,7 @@
                                         </>
                                     ) : (
                                         <>
-                                            Submit Transaction Details <i className="fas fa-check-circle ml-2"></i>
+                                            Submit Payment Details <i className="fas fa-check-circle ml-2"></i>
                                         </>
                                     )}
                                 </button>
@@ -880,7 +810,6 @@
                     OneXX Guarantee - Payment Receipt
                     ------------------------------------------
                     Certificate ID: ${certificateData.certificateId}
-                    Transaction ID: ${paymentData.txId}
                     Payment Method: ${paymentData.method.toUpperCase()}
                     Sender: ${paymentData.senderInfo}
                     Date: ${new Date().toLocaleDateString()}
@@ -902,7 +831,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `onexx-payment-receipt-${paymentData.txId}.txt`;
+                a.download = `onexx-payment-receipt-${certificateData.certificateId}.txt`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -923,7 +852,7 @@
                         </div>
                         <h2 className="text-3xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
                         <p className="mt-4 text-gray-600">
-                            Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                            Your payment details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
                         </p>
                         
                         <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
@@ -934,10 +863,6 @@
                                 <div>
                                     <p className="text-sm text-gray-600">Certificate ID</p>
                                     <p className="font-medium text-gray-800">{certificateData.certificateId}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-600">Transaction ID</p>
-                                    <p className="font-medium text-gray-800">{paymentData.txId}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Payment Method</p>
