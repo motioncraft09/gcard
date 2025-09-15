@@ -145,12 +145,36 @@
         
         .active-section {
             display: block;
-            animation: fadeIn 0.5s ease-in;
         }
         
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        .debug-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 400px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .debug-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 101;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -174,6 +198,9 @@
                     <button id="nav-settings" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
                         Settings
                     </button>
+                    <button id="force-refresh" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh Data
+                    </button>
                 </div>
             </div>
         </div>
@@ -185,6 +212,22 @@
         <section id="dashboard-section" class="page-section active-section">
             <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+                
+                <!-- Connection Status -->
+                <div class="bg-white p-4 rounded-lg shadow-md mb-8">
+                    <div class="flex items-center">
+                        <div class="mr-4">
+                            <span id="connection-status" class="flex h-3 w-3 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-900" id="connection-text">Checking connection to main website...</h3>
+                            <p class="text-sm text-gray-600" id="data-status">No data received yet</p>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Stats Overview -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -255,7 +298,9 @@
                                 </tr>
                             </thead>
                             <tbody id="recent-guarantees">
-                                <!-- Guarantees will be populated here -->
+                                <tr>
+                                    <td colspan="6" class="text-center py-8 text-gray-500">No guarantees found</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -268,48 +313,32 @@
             <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Manage Guarantees</h1>
                 
-                <!-- Filters and Search -->
+                <!-- Data Controls -->
                 <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                            <input type="text" id="search-guarantees" class="w-full px-4 py-2 input-field rounded-md" placeholder="Certificate ID, Name...">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="filter-status" class="w-full px-4 py-2 input-field rounded-md">
-                                <option value="">All Statuses</option>
-                                <option value="active">Active</option>
-                                <option value="pending">Pending</option>
-                                <option value="expired">Expired</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
-                            <input type="date" id="filter-date-from" class="w-full px-4 py-2 input-field rounded-md">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
-                            <input type="date" id="filter-date-to" class="w-full px-4 py-2 input-field rounded-md">
-                        </div>
-                    </div>
-                    <div class="mt-4 flex justify-end">
-                        <button id="reset-filters" class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-all duration-300 mr-2">
-                            Reset
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Data Management</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button id="import-data" class="bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300">
+                            <i class="fas fa-download mr-2"></i> Import from Main Site
                         </button>
-                        <button id="apply-filters" class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
-                            Apply Filters
+                        <button id="export-data" class="bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300">
+                            <i class="fas fa-upload mr-2"></i> Export to Main Site
+                        </button>
+                        <button id="sync-data" class="bg-purple-600 text-white font-medium py-2 px-4 rounded-md hover:bg-purple-700 transition-all duration-300">
+                            <i class="fas fa-sync-alt mr-2"></i> Sync Both Ways
                         </button>
                     </div>
+                    <p class="text-sm text-gray-600 mt-4" id="sync-status">Last sync: Never</p>
                 </div>
                 
                 <!-- Guarantees Table -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                         <h2 class="text-xl font-bold text-gray-900">All Guarantees</h2>
-                        <button id="refresh-guarantees" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
-                            <i class="fas fa-sync-alt mr-2"></i> Refresh Data
-                        </button>
+                        <div class="flex space-x-2">
+                            <button id="add-guarantee" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                                <i class="fas fa-plus mr-2"></i> Add Guarantee
+                            </button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="admin-table">
@@ -325,7 +354,9 @@
                                 </tr>
                             </thead>
                             <tbody id="all-guarantees">
-                                <!-- Guarantees will be populated here -->
+                                <tr>
+                                    <td colspan="7" class="text-center py-8 text-gray-500">No guarantees found</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -337,6 +368,37 @@
         <section id="settings-section" class="page-section">
             <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">System Settings</h1>
+                
+                <!-- Storage Configuration -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-2xl font-bold text-white">Storage Configuration</h2>
+                        <p class="text-indigo-100 mt-1">Configure how data is shared with the main website</p>
+                    </div>
+                    <div class="px-6 py-6">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Storage Key Prefix
+                            </label>
+                            <input type="text" id="storage-prefix" value="onexx_" class="w-full px-4 py-2 input-field rounded-md">
+                            <p class="text-xs text-gray-500 mt-1">This must match the prefix used on the main website</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Auto-Sync Interval (minutes)
+                            </label>
+                            <input type="number" id="sync-interval" value="5" min="1" class="w-full px-4 py-2 input-field rounded-md">
+                            <p class="text-xs text-gray-500 mt-1">How often to automatically sync with main website (0 to disable)</p>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button id="save-storage" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300">
+                                Save Storage Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Fee Structure -->
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
@@ -350,7 +412,7 @@
                                 Tier 1 (≤$40) Fee Percentage
                             </label>
                             <div class="flex items-center">
-                                <input type="number" id="tier1-fee" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <input type="number" id="tier1-fee" value="5" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
                                 <span class="ml-2 text-gray-700">%</span>
                             </div>
                         </div>
@@ -360,7 +422,7 @@
                                 Tier 2 ($40.01-$160) Fee Percentage
                             </label>
                             <div class="flex items-center">
-                                <input type="number" id="tier2-fee" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <input type="number" id="tier2-fee" value="3" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
                                 <span class="ml-2 text-gray-700">%</span>
                             </div>
                         </div>
@@ -370,7 +432,7 @@
                                 Tier 3 (≥$160.01) Fee Percentage
                             </label>
                             <div class="flex items-center">
-                                <input type="number" id="tier3-fee" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
+                                <input type="number" id="tier3-fee" value="2" min="0" max="100" class="w-32 px-4 py-2 input-field rounded-md">
                                 <span class="ml-2 text-gray-700">%</span>
                             </div>
                         </div>
@@ -381,7 +443,7 @@
                             </label>
                             <div class="flex items-center">
                                 <span class="mr-2 text-gray-700">$</span>
-                                <input type="number" id="min-tier3-fee" min="0" step="0.01" class="w-32 px-4 py-2 input-field rounded-md">
+                                <input type="number" id="min-tier3-fee" value="8" min="0" step="0.01" class="w-32 px-4 py-2 input-field rounded-md">
                             </div>
                         </div>
                         
@@ -405,28 +467,28 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     bKash Number
                                 </label>
-                                <input type="text" id="bkash-number" class="w-full px-4 py-2 input-field rounded-md">
+                                <input type="text" id="bkash-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
                             </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     Nagad Number
                                 </label>
-                                <input type="text" id="nagad-number" class="w-full px-4 py-2 input-field rounded-md">
+                                <input type="text" id="nagad-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
                             </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     Rocket Number
                                 </label>
-                                <input type="text" id="rocket-number" class="w-full px-4 py-2 input-field rounded-md">
+                                <input type="text" id="rocket-number" value="01322149482" class="w-full px-4 py-2 input-field rounded-md">
                             </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     PayPal Email
                                 </label>
-                                <input type="email" id="paypal-email" class="w-full px-4 py-2 input-field rounded-md">
+                                <input type="email" id="paypal-email" value="payments@onexx.com" class="w-full px-4 py-2 input-field rounded-md">
                             </div>
                         </div>
                         
@@ -449,28 +511,28 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Seller Name
                             </label>
-                            <input type="text" id="sample-seller" class="w-full px-4 py-2 input-field rounded-md">
+                            <input type="text" id="sample-seller" value="John's Service" class="w-full px-4 py-2 input-field rounded-md">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Buyer Name
                             </label>
-                            <input type="text" id="sample-buyer" class="w-full px-4 py-2 input-field rounded-md">
+                            <input type="text" id="sample-buyer" value="Jane Client" class="w-full px-4 py-2 input-field rounded-md">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Service Value
                             </label>
-                            <input type="text" id="sample-value" class="w-full px-4 py-2 input-field rounded-md">
+                            <input type="text" id="sample-value" value="$1,500" class="w-full px-4 py-2 input-field rounded-md">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 Certificate ID
                             </label>
-                            <input type="text" id="sample-certificate" class="w-full px-4 py-2 input-field rounded-md">
+                            <input type="text" id="sample-certificate" value="OXX-123456-ABC789" class="w-full px-4 py-2 input-field rounded-md">
                         </div>
                         
                         <div class="flex justify-end">
@@ -489,60 +551,85 @@
         Settings saved successfully!
     </div>
 
-    <script>
-        // Data storage keys - must match main website
-        const STORAGE_KEYS = {
-            GUARANTEES: 'onexx_guarantees',
-            FEES: 'onexx_fee_structure',
-            PAYMENTS: 'onexx_payment_methods',
-            CERTIFICATE: 'onexx_sample_certificate'
-        };
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debug-panel" style="display: none;">
+        <h3 class="font-medium text-gray-900 mb-2">Debug Information</h3>
+        <div class="text-sm mb-4">
+            <p>LocalStorage Keys: <span id="debug-keys"></span></p>
+            <p>Main Site Data: <span id="debug-main-data"></span></p>
+            <p>Admin Data: <span id="debug-admin-data"></span></p>
+        </div>
+        <button id="clear-storage" class="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700">
+            Clear All Data
+        </button>
+    </div>
+    
+    <div class="debug-toggle" id="debug-toggle">
+        <i class="fas fa-bug"></i>
+    </div>
 
+    <script>
+        // Data storage configuration
+        let STORAGE_PREFIX = 'onexx_';
+        const STORAGE_KEYS = {
+            GUARANTEES: 'guarantees',
+            FEES: 'fee_structure',
+            PAYMENTS: 'payment_methods',
+            CERTIFICATE: 'sample_certificate'
+        };
+        
+        let syncInterval = null;
+        
         // Initialize data
         function initializeData() {
-            // Initialize guarantees if not exists
-            if (!localStorage.getItem(STORAGE_KEYS.GUARANTEES)) {
-                localStorage.setItem(STORAGE_KEYS.GUARANTEES, JSON.stringify([]));
+            // Load configuration
+            const config = JSON.parse(localStorage.getItem('onexx_admin_config') || '{}');
+            if (config.storagePrefix) {
+                STORAGE_PREFIX = config.storagePrefix;
+                document.getElementById('storage-prefix').value = STORAGE_PREFIX;
             }
-
-            // Initialize fee structure if not exists
-            if (!localStorage.getItem(STORAGE_KEYS.FEES)) {
-                const feeStructure = {
-                    tier1: 5,
-                    tier2: 3,
-                    tier3: 2,
-                    minTier3: 8
-                };
-                localStorage.setItem(STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
+            if (config.syncInterval) {
+                document.getElementById('sync-interval').value = config.syncInterval;
+                setupSyncInterval(config.syncInterval);
             }
-
-            // Initialize payment methods if not exists
-            if (!localStorage.getItem(STORAGE_KEYS.PAYMENTS)) {
-                const paymentMethods = {
-                    bkash: '01322149482',
-                    nagad: '01322149482',
-                    rocket: '01322149482',
-                    paypal: 'payments@onexx.com'
-                };
-                localStorage.setItem(STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
-            }
-
-            // Initialize sample certificate if not exists
-            if (!localStorage.getItem(STORAGE_KEYS.CERTIFICATE)) {
-                const sampleCertificate = {
-                    seller: 'John\'s Service',
-                    buyer: 'Jane Client',
-                    value: '$1,500',
-                    certificateId: 'OXX-123456-ABC789'
-                };
-                localStorage.setItem(STORAGE_KEYS.CERTIFICATE, JSON.stringify(sampleCertificate));
-            }
+            
+            // Load data from both admin and main site storage
+            loadData();
+            
+            // Update connection status
+            checkConnection();
         }
-
+        
+        // Check connection to main website data
+        function checkConnection() {
+            const mainSiteData = localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
+            const statusElement = document.getElementById('connection-status');
+            const statusText = document.getElementById('connection-text');
+            const dataStatus = document.getElementById('data-status');
+            
+            if (mainSiteData) {
+                const guarantees = JSON.parse(mainSiteData);
+                statusElement.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>';
+                statusText.textContent = 'Connected to main website data';
+                dataStatus.textContent = `Found ${guarantees.length} guarantees from main site`;
+            } else {
+                statusElement.innerHTML = '<span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>';
+                statusText.textContent = 'No data from main website found';
+                dataStatus.textContent = 'Try importing data or check if the main site uses the same storage key';
+            }
+            
+            updateDebugInfo();
+        }
+        
         // Load data from localStorage
         function loadData() {
-            // Load guarantees
-            const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUARANTEES) || '[]');
+            // Try to get data from main site storage first
+            let guarantees = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES) || '[]');
+            
+            // If no data from main site, try admin storage
+            if (guarantees.length === 0) {
+                guarantees = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES) || '[]');
+            }
             
             // Update stats
             document.getElementById('total-guarantees').textContent = guarantees.length;
@@ -558,36 +645,48 @@
             renderGuarantees(guarantees, 'all-guarantees');
             
             // Load fee structure
-            const fees = JSON.parse(localStorage.getItem(STORAGE_KEYS.FEES) || '{}');
+            let fees = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.FEES) || '{}');
+            if (Object.keys(fees).length === 0) {
+                fees = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.FEES) || '{}');
+            }
             document.getElementById('tier1-fee').value = fees.tier1 || 5;
             document.getElementById('tier2-fee').value = fees.tier2 || 3;
             document.getElementById('tier3-fee').value = fees.tier3 || 2;
             document.getElementById('min-tier3-fee').value = fees.minTier3 || 8;
             
             // Load payment methods
-            const payments = JSON.parse(localStorage.getItem(STORAGE_KEYS.PAYMENTS) || '{}');
+            let payments = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS) || '{}');
+            if (Object.keys(payments).length === 0) {
+                payments = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS) || '{}');
+            }
             document.getElementById('bkash-number').value = payments.bkash || '01322149482';
             document.getElementById('nagad-number').value = payments.nagad || '01322149482';
             document.getElementById('rocket-number').value = payments.rocket || '01322149482';
             document.getElementById('paypal-email').value = payments.paypal || 'payments@onexx.com';
             
             // Load sample certificate
-            const certificate = JSON.parse(localStorage.getItem(STORAGE_KEYS.CERTIFICATE) || '{}');
+            let certificate = JSON.parse(localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE) || '{}');
+            if (Object.keys(certificate).length === 0) {
+                certificate = JSON.parse(localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE) || '{}');
+            }
             document.getElementById('sample-seller').value = certificate.seller || 'John\'s Service';
             document.getElementById('sample-buyer').value = certificate.buyer || 'Jane Client';
             document.getElementById('sample-value').value = certificate.value || '$1,500';
             document.getElementById('sample-certificate').value = certificate.certificateId || 'OXX-123456-ABC789';
+            
+            updateDebugInfo();
         }
-
+        
         // Render guarantees to a table
         function renderGuarantees(guarantees, elementId) {
             const tbody = document.getElementById(elementId);
-            tbody.innerHTML = '';
             
             if (guarantees.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-500">No guarantees found</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${elementId === 'all-guarantees' ? 7 : 6}" class="text-center py-8 text-gray-500">No guarantees found</td></tr>`;
                 return;
             }
+            
+            tbody.innerHTML = '';
             
             guarantees.forEach(guarantee => {
                 const row = document.createElement('tr');
@@ -598,12 +697,12 @@
                 if (guarantee.status === 'expired') statusClass = 'status-expired';
                 
                 row.innerHTML = `
-                    <td class="font-mono">${guarantee.certificateId}</td>
-                    <td>${guarantee.seller}</td>
-                    <td>${guarantee.buyer}</td>
-                    <td>${guarantee.value}</td>
-                    ${elementId === 'all-guarantees' ? `<td>${guarantee.created}</td>` : ''}
-                    <td><span class="status-badge ${statusClass}">${guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1)}</span></td>
+                    <td class="font-mono">${guarantee.certificateId || 'N/A'}</td>
+                    <td>${guarantee.seller || 'N/A'}</td>
+                    <td>${guarantee.buyer || 'N/A'}</td>
+                    <td>${guarantee.value || 'N/A'}</td>
+                    ${elementId === 'all-guarantees' ? `<td>${guarantee.created || 'N/A'}</td>` : ''}
+                    <td><span class="status-badge ${statusClass}">${guarantee.status ? guarantee.status.charAt(0).toUpperCase() + guarantee.status.slice(1) : 'Unknown'}</span></td>
                     <td>
                         <button class="action-btn edit-btn" data-id="${guarantee.id}">Edit</button>
                         <button class="action-btn delete-btn" data-id="${guarantee.id}">Delete</button>
@@ -613,18 +712,19 @@
                 tbody.appendChild(row);
             });
         }
-
+        
         // Show notification
-        function showNotification(message) {
+        function showNotification(message, isError = false) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
+            notification.style.background = isError ? '#ef4444' : '#10b981';
             notification.classList.add('show');
             
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
         }
-
+        
         // Save fee structure
         function saveFeeStructure() {
             const feeStructure = {
@@ -634,10 +734,14 @@
                 minTier3: parseFloat(document.getElementById('min-tier3-fee').value)
             };
             
-            localStorage.setItem(STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
+            // Save to both admin and main site storage
+            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
+            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.FEES, JSON.stringify(feeStructure));
+            
             showNotification('Fee structure saved successfully!');
+            updateDebugInfo();
         }
-
+        
         // Save payment methods
         function savePaymentMethods() {
             const paymentMethods = {
@@ -647,10 +751,14 @@
                 paypal: document.getElementById('paypal-email').value
             };
             
-            localStorage.setItem(STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
+            // Save to both admin and main site storage
+            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
+            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.PAYMENTS, JSON.stringify(paymentMethods));
+            
             showNotification('Payment methods saved successfully!');
+            updateDebugInfo();
         }
-
+        
         // Save sample certificate
         function saveSampleCertificate() {
             const certificate = {
@@ -660,64 +768,165 @@
                 certificateId: document.getElementById('sample-certificate').value
             };
             
-            localStorage.setItem(STORAGE_KEYS.CERTIFICATE, JSON.stringify(certificate));
+            // Save to both admin and main site storage
+            localStorage.setItem(STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE, JSON.stringify(certificate));
+            localStorage.setItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.CERTIFICATE, JSON.stringify(certificate));
+            
             showNotification('Certificate settings saved successfully!');
+            updateDebugInfo();
         }
-
-        // Filter guarantees
-        function filterGuarantees() {
-            const searchTerm = document.getElementById('search-guarantees').value.toLowerCase();
-            const statusFilter = document.getElementById('filter-status').value;
-            const dateFrom = document.getElementById('filter-date-from').value;
-            const dateTo = document.getElementById('filter-date-to').value;
+        
+        // Save storage configuration
+        function saveStorageConfig() {
+            const storagePrefix = document.getElementById('storage-prefix').value;
+            const syncIntervalValue = parseInt(document.getElementById('sync-interval').value);
             
-            const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUARANTEES) || '[]');
+            STORAGE_PREFIX = storagePrefix;
             
-            let filteredGuarantees = guarantees;
+            const config = {
+                storagePrefix: storagePrefix,
+                syncInterval: syncIntervalValue
+            };
             
-            // Apply search filter
-            if (searchTerm) {
-                filteredGuarantees = filteredGuarantees.filter(g => 
-                    g.certificateId.toLowerCase().includes(searchTerm) ||
-                    g.seller.toLowerCase().includes(searchTerm) ||
-                    g.buyer.toLowerCase().includes(searchTerm) ||
-                    g.value.toLowerCase().includes(searchTerm)
-                );
-            }
+            localStorage.setItem('onexx_admin_config', JSON.stringify(config));
+            setupSyncInterval(syncIntervalValue);
             
-            // Apply status filter
-            if (statusFilter) {
-                filteredGuarantees = filteredGuarantees.filter(g => g.status === statusFilter);
-            }
-            
-            // Apply date filters
-            if (dateFrom) {
-                filteredGuarantees = filteredGuarantees.filter(g => g.created >= dateFrom);
-            }
-            
-            if (dateTo) {
-                filteredGuarantees = filteredGuarantees.filter(g => g.created <= dateTo);
-            }
-            
-            renderGuarantees(filteredGuarantees, 'all-guarantees');
+            showNotification('Storage configuration saved successfully!');
+            checkConnection();
         }
-
-        // Reset filters
-        function resetFilters() {
-            document.getElementById('search-guarantees').value = '';
-            document.getElementById('filter-status').value = '';
-            document.getElementById('filter-date-from').value = '';
-            document.getElementById('filter-date-to').value = '';
+        
+        // Set up sync interval
+        function setupSyncInterval(minutes) {
+            if (syncInterval) {
+                clearInterval(syncInterval);
+            }
             
-            const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEYS.GUARANTEES) || '[]');
-            renderGuarantees(guarantees, 'all-guarantees');
+            if (minutes > 0) {
+                syncInterval = setInterval(() => {
+                    syncData();
+                }, minutes * 60 * 1000);
+            }
         }
-
+        
+        // Import data from main site
+        function importData() {
+            let imported = false;
+            
+            for (const key of Object.values(STORAGE_KEYS)) {
+                const mainSiteData = localStorage.getItem(STORAGE_PREFIX + key);
+                if (mainSiteData) {
+                    localStorage.setItem('admin_' + STORAGE_PREFIX + key, mainSiteData);
+                    imported = true;
+                }
+            }
+            
+            if (imported) {
+                showNotification('Data imported successfully from main website!');
+                loadData();
+            } else {
+                showNotification('No data found from main website', true);
+            }
+            
+            updateDebugInfo();
+        }
+        
+        // Export data to main site
+        function exportData() {
+            let exported = false;
+            
+            for (const key of Object.values(STORAGE_KEYS)) {
+                const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + key);
+                if (adminData) {
+                    localStorage.setItem(STORAGE_PREFIX + key, adminData);
+                    exported = true;
+                }
+            }
+            
+            if (exported) {
+                showNotification('Data exported successfully to main website!');
+            } else {
+                showNotification('No admin data found to export', true);
+            }
+            
+            updateDebugInfo();
+        }
+        
+        // Sync data both ways
+        function syncData() {
+            let changes = false;
+            
+            for (const key of Object.values(STORAGE_KEYS)) {
+                const mainSiteData = localStorage.getItem(STORAGE_PREFIX + key);
+                const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + key);
+                
+                // If both have data, use the most recent
+                if (mainSiteData && adminData) {
+                    try {
+                        const mainDataObj = JSON.parse(mainSiteData);
+                        const adminDataObj = JSON.parse(adminData);
+                        
+                        // For simplicity, just use admin data if it exists
+                        localStorage.setItem(STORAGE_PREFIX + key, adminData);
+                        changes = true;
+                    } catch (e) {
+                        console.error('Error parsing data:', e);
+                    }
+                } 
+                // If only main site has data, import it
+                else if (mainSiteData) {
+                    localStorage.setItem('admin_' + STORAGE_PREFIX + key, mainSiteData);
+                    changes = true;
+                }
+                // If only admin has data, export it
+                else if (adminData) {
+                    localStorage.setItem(STORAGE_PREFIX + key, adminData);
+                    changes = true;
+                }
+            }
+            
+            if (changes) {
+                showNotification('Data synchronized successfully!');
+                document.getElementById('sync-status').textContent = `Last sync: ${new Date().toLocaleString()}`;
+                loadData();
+            } else {
+                showNotification('No changes to synchronize');
+            }
+            
+            updateDebugInfo();
+        }
+        
+        // Update debug information
+        function updateDebugInfo() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                keys.push(localStorage.key(i));
+            }
+            document.getElementById('debug-keys').textContent = keys.filter(k => k.includes('onexx')).join(', ') || 'None';
+            
+            const mainData = localStorage.getItem(STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
+            document.getElementById('debug-main-data').textContent = mainData ? `${JSON.parse(mainData).length} guarantees` : 'None';
+            
+            const adminData = localStorage.getItem('admin_' + STORAGE_PREFIX + STORAGE_KEYS.GUARANTEES);
+            document.getElementById('debug-admin-data').textContent = adminData ? `${JSON.parse(adminData).length} guarantees` : 'None';
+        }
+        
+        // Clear all data
+        function clearStorage() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                for (const key of Object.values(STORAGE_KEYS)) {
+                    localStorage.removeItem(STORAGE_PREFIX + key);
+                    localStorage.removeItem('admin_' + STORAGE_PREFIX + key);
+                }
+                showNotification('All data cleared successfully!');
+                loadData();
+                updateDebugInfo();
+            }
+        }
+        
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize data
             initializeData();
-            loadData();
             
             // Set up navigation
             const navDashboard = document.getElementById('nav-dashboard');
@@ -770,20 +979,27 @@
             document.getElementById('save-fees').addEventListener('click', saveFeeStructure);
             document.getElementById('save-payments').addEventListener('click', savePaymentMethods);
             document.getElementById('save-certificate').addEventListener('click', saveSampleCertificate);
+            document.getElementById('save-storage').addEventListener('click', saveStorageConfig);
             
-            // Filter functionality
-            document.getElementById('apply-filters').addEventListener('click', filterGuarantees);
-            document.getElementById('reset-filters').addEventListener('click', resetFilters);
-            document.getElementById('search-guarantees').addEventListener('input', filterGuarantees);
-            document.getElementById('filter-status').addEventListener('change', filterGuarantees);
-            document.getElementById('filter-date-from').addEventListener('change', filterGuarantees);
-            document.getElementById('filter-date-to').addEventListener('change', filterGuarantees);
-            
-            // Refresh data button
-            document.getElementById('refresh-guarantees').addEventListener('click', function() {
+            // Data management buttons
+            document.getElementById('import-data').addEventListener('click', importData);
+            document.getElementById('export-data').addEventListener('click', exportData);
+            document.getElementById('sync-data').addEventListener('click', syncData);
+            document.getElementById('force-refresh').addEventListener('click', function() {
                 loadData();
                 showNotification('Data refreshed successfully!');
             });
+            
+            // Debug panel
+            document.getElementById('debug-toggle').addEventListener('click', function() {
+                const panel = document.getElementById('debug-panel');
+                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            document.getElementById('clear-storage').addEventListener('click', clearStorage);
+            
+            // Check connection every 5 seconds
+            setInterval(checkConnection, 5000);
         });
     </script>
 </body>
