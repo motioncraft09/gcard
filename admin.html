@@ -130,6 +130,33 @@
             max-height: 80vh;
             overflow-y: auto;
         }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background-color: rgb(224 231 255);
+            color: rgb(79 70 229);
+        }
+        
+        .import-export-box {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .import-export-box:hover {
+            border-color: #4f46e5;
+            background-color: #f5f7ff;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50">
@@ -143,11 +170,14 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button id="nav-dashboard" class="px-3 py-2 rounded-md text-sm font-medium bg-indigo-100 text-indigo-700">
+                    <button id="nav-dashboard" class="tab-button active">
                         Dashboard
                     </button>
-                    <button id="nav-settings" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                    <button id="nav-settings" class="tab-button">
                         Settings
+                    </button>
+                    <button id="nav-tools" class="tab-button">
+                        Tools
                     </button>
                 </div>
             </div>
@@ -192,6 +222,7 @@
                     <div id="no-data-message" class="text-center py-8 text-gray-500">
                         <i class="fas fa-inbox text-4xl mb-2"></i>
                         <p>No guarantee certificates found</p>
+                        <p class="text-sm mt-2">Data will appear here once you've added guarantees on the main website</p>
                     </div>
                 </div>
             </div>
@@ -388,6 +419,91 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Tools Section -->
+        <section id="tools-section" class="hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Admin Tools</h2>
+                <p class="text-gray-600">Import, export, and manage application data</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Data Export -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-xl font-bold text-white">Export Data</h2>
+                    </div>
+                    <div class="px-6 py-4">
+                        <p class="text-gray-600 mb-4">Export all guarantee data as a JSON file for backup or analysis.</p>
+                        
+                        <div class="import-export-box" id="export-data">
+                            <div class="text-4xl mb-2">
+                                <i class="fas fa-file-export text-indigo-600"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-900">Export Data</h3>
+                            <p class="text-sm text-gray-600 mt-1">Click to download all data as JSON</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Import -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-xl font-bold text-white">Import Data</h2>
+                    </div>
+                    <div class="px-6 py-4">
+                        <p class="text-gray-600 mb-4">Import guarantee data from a JSON file. This will replace all current data.</p>
+                        
+                        <div class="import-export-box" id="import-data">
+                            <div class="text-4xl mb-2">
+                                <i class="fas fa-file-import text-indigo-600"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-900">Import Data</h3>
+                            <p class="text-sm text-gray-600 mt-1">Click to upload and import JSON data</p>
+                            <input type="file" id="import-file" class="hidden" accept=".json">
+                        </div>
+                        
+                        <div class="mt-4 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-yellow-800">Warning</h3>
+                                    <div class="mt-2 text-sm text-yellow-700">
+                                        <p>Importing data will replace all existing guarantees. Make sure to export your current data first if you want to keep it.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Management -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                    <div class="gradient-bg px-6 py-4">
+                        <h2 class="text-xl font-bold text-white">Data Management</h2>
+                    </div>
+                    <div class="px-6 py-4">
+                        <p class="text-gray-600 mb-4">Manage your application data and storage.</p>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <h3 class="font-medium text-gray-900 mb-2">Storage Information</h3>
+                            <p class="text-sm text-gray-600" id="storage-info">Calculating...</p>
+                        </div>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                            <h3 class="font-medium text-red-800 mb-2">Danger Zone</h3>
+                            <p class="text-sm text-red-700 mb-4">These actions are irreversible. Please be cautious.</p>
+                            
+                            <button id="clear-all-data" class="bg-red-600 text-white font-medium py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-300 text-sm">
+                                Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
     <!-- Edit Certificate Modal -->
@@ -467,7 +583,7 @@
     </div>
 
     <script>
-        // Data storage keys
+        // Data storage keys - must match the main website
         const STORAGE_KEY = 'onexx_guarantees';
         const SAMPLE_CERTIFICATE_KEY = 'onexx_sample_certificate';
         const PAYMENT_METHODS_KEY = 'onexx_payment_methods';
@@ -488,28 +604,58 @@
             
             // Set up event listeners
             setupEventListeners();
+            
+            // Update storage info
+            updateStorageInfo();
         });
         
         function setupNavigation() {
             const navDashboard = document.getElementById('nav-dashboard');
             const navSettings = document.getElementById('nav-settings');
+            const navTools = document.getElementById('nav-tools');
             const dashboardSection = document.getElementById('dashboard-section');
             const settingsSection = document.getElementById('settings-section');
+            const toolsSection = document.getElementById('tools-section');
             
-            navDashboard.addEventListener('click', function() {
-                dashboardSection.classList.remove('hidden');
+            // Function to change active tab
+            function changeActiveTab(activeTab) {
+                // Hide all sections
+                dashboardSection.classList.add('hidden');
                 settingsSection.classList.add('hidden');
-                navDashboard.classList.add('bg-indigo-100', 'text-indigo-700');
-                navSettings.classList.remove('bg-indigo-100', 'text-indigo-700');
-                loadDashboardData();
+                toolsSection.classList.add('hidden');
+                
+                // Remove active class from all tabs
+                navDashboard.classList.remove('active');
+                navSettings.classList.remove('active');
+                navTools.classList.remove('active');
+                
+                // Show the selected section and activate the tab
+                if (activeTab === 'dashboard') {
+                    dashboardSection.classList.remove('hidden');
+                    navDashboard.classList.add('active');
+                    loadDashboardData();
+                } else if (activeTab === 'settings') {
+                    settingsSection.classList.remove('hidden');
+                    navSettings.classList.add('active');
+                    loadSettingsData();
+                } else if (activeTab === 'tools') {
+                    toolsSection.classList.remove('hidden');
+                    navTools.classList.add('active');
+                    updateStorageInfo();
+                }
+            }
+            
+            // Add event listeners to navigation buttons
+            navDashboard.addEventListener('click', function() {
+                changeActiveTab('dashboard');
             });
             
             navSettings.addEventListener('click', function() {
-                settingsSection.classList.remove('hidden');
-                dashboardSection.classList.add('hidden');
-                navSettings.classList.add('bg-indigo-100', 'text-indigo-700');
-                navDashboard.classList.remove('bg-indigo-100', 'text-indigo-700');
-                loadSettingsData();
+                changeActiveTab('settings');
+            });
+            
+            navTools.addEventListener('click', function() {
+                changeActiveTab('tools');
             });
         }
         
@@ -732,6 +878,110 @@
                     this.style.display = 'none';
                 }
             });
+            
+            // Export data
+            document.getElementById('export-data').addEventListener('click', function() {
+                const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const sampleCertificate = JSON.parse(localStorage.getItem(SAMPLE_CERTIFICATE_KEY)) || {};
+                const paymentMethods = JSON.parse(localStorage.getItem(PAYMENT_METHODS_KEY)) || {};
+                const feeStructure = JSON.parse(localStorage.getItem(FEE_STRUCTURE_KEY)) || {};
+                
+                const exportData = {
+                    guarantees: guarantees,
+                    sampleCertificate: sampleCertificate,
+                    paymentMethods: paymentMethods,
+                    feeStructure: feeStructure,
+                    exportedAt: new Date().toISOString()
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `onexx-data-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            });
+            
+            // Import data
+            document.getElementById('import-data').addEventListener('click', function() {
+                document.getElementById('import-file').click();
+            });
+            
+            document.getElementById('import-file').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importData = JSON.parse(e.target.result);
+                        
+                        if (importData.guarantees) {
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify(importData.guarantees));
+                        }
+                        
+                        if (importData.sampleCertificate) {
+                            localStorage.setItem(SAMPLE_CERTIFICATE_KEY, JSON.stringify(importData.sampleCertificate));
+                        }
+                        
+                        if (importData.paymentMethods) {
+                            localStorage.setItem(PAYMENT_METHODS_KEY, JSON.stringify(importData.paymentMethods));
+                        }
+                        
+                        if (importData.feeStructure) {
+                            localStorage.setItem(FEE_STRUCTURE_KEY, JSON.stringify(importData.feeStructure));
+                        }
+                        
+                        alert('Data imported successfully!');
+                        loadDashboardData();
+                        loadSettingsData();
+                        updateStorageInfo();
+                        
+                    } catch (error) {
+                        alert('Error importing data: Invalid file format');
+                        console.error('Import error:', error);
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            // Clear all data
+            document.getElementById('clear-all-data').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    localStorage.removeItem(SAMPLE_CERTIFICATE_KEY);
+                    localStorage.removeItem(PAYMENT_METHODS_KEY);
+                    localStorage.removeItem(FEE_STRUCTURE_KEY);
+                    
+                    alert('All data has been cleared!');
+                    loadDashboardData();
+                    loadSettingsData();
+                    updateStorageInfo();
+                }
+            });
+        }
+        
+        function updateStorageInfo() {
+            let totalSize = 0;
+            
+            // Calculate total storage size
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    totalSize += localStorage[key].length * 2; // Approximate size in bytes (2 bytes per character)
+                }
+            }
+            
+            // Convert to KB
+            const totalSizeKB = (totalSize / 1024).toFixed(2);
+            
+            // Count items
+            const itemCount = localStorage.length;
+            
+            document.getElementById('storage-info').textContent = 
+                `${itemCount} items, ${totalSizeKB} KB used`;
         }
     </script>
 </body>
