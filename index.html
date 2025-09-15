@@ -20,6 +20,7 @@
             --text-light: #6b7280;
             --border-light: #e5e7eb;
             --error: #ef4444;
+            --success: #10b981;
         }
         
         body {
@@ -66,6 +67,12 @@
             font-size: 0.875rem;
             margin-top: 0.25rem;
             display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
         }
         
         /* Loading Animation */
@@ -175,7 +182,7 @@
         
         @keyframes fadeIn {
             0% { opacity: 0; }
-           100% { opacity: 1; }
+            100% { opacity: 1; }
         }
         
         .content-hidden {
@@ -213,6 +220,7 @@
         }
         
         .verify-result {
+            display: none;
             margin-top: 20px;
             padding: 20px;
             border-radius: 8px;
@@ -220,26 +228,44 @@
             border: 1px solid #e5e7eb;
         }
         
-        .success-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            background-color: #10b981;
-            color: white;
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
         
-        .pending-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 12px;
+        .admin-table th, .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .admin-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
             border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            background-color: #f59e0b;
-            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-expired {
+            background-color: #fee2e2;
+            color: #b91c1c;
         }
     </style>
 </head>
@@ -282,6 +308,9 @@
                         <button id="nav-verify" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
                             Verify
                         </button>
+                        <button id="nav-admin" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
+                            Admin
+                        </button>
                     </div>
                 </div>
             </div>
@@ -319,6 +348,9 @@
                                                 <i class="fas fa-shield-alt text-4xl text-white"></i>
                                             </div>
                                             <h3 class="text-2xl font-bold text-gray-900">Sample Certificate</h3>
+                                            <p class="text-gray-600">
+                                                
+                                            </p>
                                         </div>
                                         <div class="grid grid-cols-2 gap-4 mb-6">
                                             <div>
@@ -516,7 +548,7 @@
                                         <div id="fee-budget" class="text-sm font-medium text-right">$ 0.00</div>
                                         
                                         <div class="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div id="fee-amount" class="text-sm font-medium text-right">$ 0.00</div>
+                                        <div id="fee-amount" class="text-sm font-medium text-right">$ 极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。0.00</div>
                                         
                                         <div class="text-sm text-gray-600 border-t border-gray-300 pt-1">Total Amount:</div>
                                         <div id="fee-total" class="text-sm font-bold text-right border-t border-gray-300 pt-1">$ 0.00</div>
@@ -596,7 +628,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Transaction ID (TxID) <span class="text-red-500">*</span>
+                                                Transaction ID (TxID) <span class="text-red-500">*极速赛车开奖结果历史记录完整保存，方便玩家查询和分析。</span>
                                             </label>
                                             <input type="text" id="transaction-id" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID" required>
                                             <div class="error-message" id="transaction-id-error">Transaction ID is required</div>
@@ -607,7 +639,7 @@
                                                 Your Mobile Number <span class="text-red-500">*</span>
                                             </label>
                                             <input type="text" id="mobile-number" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number" required>
-                                            <div class="error-message" id="mobile-number-error">Valid mobile number is required</div>
+                                            <div class="error-message极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。" id="mobile-number-error">Valid mobile number is required</div>
                                         </div>
                                     </div>
                                 </div>
@@ -617,9 +649,9 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">
                                             Your PayPal Email <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="email" id="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email" required>
+                                        <input type="email" id极速赛车开奖直播实时更新，确保玩家不错过任何一期结果="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email" required>
                                         <div class="error-message" id="paypal-email-error">Valid PayPal email is required</div>
-                                        <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</p>
+                                        <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</极速赛车开奖号码经过严格公证，确保公平公正透明。p>
                                     </div>
                                 </div>
                                 
@@ -634,7 +666,7 @@
                     
                     <!-- Order Summary -->
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden mt-8">
-                        <div class="gradient-bg px-6 py-4">
+                        <div class="gradient-bg px极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。-6 py-4">
                             <h2 class="text-xl font-bold text-white">Order Summary</h2>
                         </div>
                         <div class="px-6 py-4">
@@ -651,7 +683,7 @@
                                 <span id="summary-buyer" class="font-medium text-gray-900">-</span>
                             </div>
                             <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Service Budget</span>
+                                <span class="text-gray-600">Service Budget</极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。span>
                                 <span id="summary-budget" class="font-medium text-gray-900">$ 0.00</span>
                             </div>
                             <div class="flex justify-between py-2">
@@ -682,8 +714,8 @@
                                     Certificate ID
                                 </label>
                                 <div class="flex">
-                                    <input type="text" id="verify-certificate-id" class="flex-1 px-4 py-2 input-field rounded-l-md" placeholder="Enter certificate ID (e.g. OXX-123456-ABC789)">
-                                    <button id="verify-btn" class="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg transition-all duration-300">
+                                    <input type="text" id="verify-certificate-id" class="flex-1 px-4 py-2 input-field rounded-l-md" placeholder="Enter certificate ID (e.g. OXX-ABC123XYZ)">
+                                    <button id="verify-button" class="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg transition-all duration-300">
                                         Verify
                                     </button>
                                 </div>
@@ -692,9 +724,62 @@
                                 </p>
                             </div>
                             
-                            <div id="verify-result" class="verify-result" style="display: none;">
-                                <h3 class="font-bold text-lg mb-4">Verification Result</h3>
-                                <div id="verify-details"></div>
+                            <div id="verify-result" class="verify-result">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Guarantee Certificate Details</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <p class="text-sm text-gray-600">Certificate ID</p>
+                                        <p id="verify-result-id" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Status</p>
+                                        <p id="verify-result-status" class="font-medium">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Seller</p>
+                                        <p id="verify-result-seller" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Buyer</p>
+                                        <p id="verify-result-buyer" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Service</p>
+                                        <p id="verify-result-service" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Service Budget</p>
+                                        <p id="verify-result-budget" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Guarantee Period</p>
+                                        <p id="verify-result-period" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Created Date</p>
+                                        <p id="verify-result-date" class="font-medium text-gray-900">-</p>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="text-sm text-gray-600">Refund Terms</p>
+                                    <p id="verify-result-terms" class="font-medium text-gray-900">-</p>
+                                </div>
+                            </div>
+                            
+                            <div id="verify-error" class="verify-result bg-red-50 p-4 rounded-md border border-red-200">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8极速赛车开奖结果历史记录完整保存，方便玩家查询和分析。 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-red-800">Certificate Not Found</h3>
+                                        <div class="mt-2 text-sm text-red-700">
+                                            <p>No guarantee certificate found with the provided ID. Please check the ID and try again.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
@@ -710,17 +795,75 @@
                 </div>
             </section>
             
+            <!-- Admin Section -->
+            <section id="admin-section" class="page-section">
+                <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Admin Panel</h2>
+                            <p class="text-indigo-100 mt-1">View and manage all guarantee certificates</p>
+                        </div>
+                        
+                        <div class="px-6 py-6">
+                            <div class="mb-6 flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">All Guarantees</h3>
+                                    <p class="text-sm text-gray-600">Manage all guarantee certificates in the system</p>
+                                </div>
+                                <button id="refresh-guarantees" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                                    Refresh Data
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Certificate ID</th>
+                                            <th>Seller</th>
+                                            <th>Buyer</th>
+                                            <th>Service</th>
+                                            <th>Budget</th>
+                                            <th>Fee</th>
+                                            <th>Created</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="guarantees-table-body">
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div id="no-guarantees-message" class="text-center py-8 bg-gray-50 rounded-lg mt-4">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">No guarantees found</h3>
+                                <p class="mt-1 text-sm text-gray-500">Get started by creating a new guarantee certificate.</p>
+                                <div class="mt-6">
+                                    <button id="admin-create-btn" class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
+                                        Create Guarantee
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
             <!-- Success Section -->
             <section id="success-section" class="page-section">
-                <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-2xl mx-auto py极速赛车开奖号码经过严格公证，确保公平公正透明。-12 px-4 sm:px-6 lg:px-8 text-center">
                     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                         <div class="px-6 py-12">
                             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
                                 <svg class="h-8 w-8 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。l4 4L19 7" />
                                 </svg>
                             </div>
-                            <h2 class="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                            <h2 class="mt-4 text-2极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
                             <p class="mt-2 text-gray-600">
                                 Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
                             </p>
@@ -738,7 +881,7 @@
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Payment Method</p>
-                                        <p class="font-medium text-gray-900" id="success-payment-method">bKash</p>
+                                        <p class="font-medium text-gray-900" id="success-payment-method">bKash</极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。p>
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Sender Number</p>
@@ -754,10 +897,10 @@
                                     </div>
                                     <div>
                                         <p class="text-sm text-gray-600">Total Paid</p>
-                                        <p class="font-medium text-gray-900" id="success-total-paid">$ 105.00</p>
+                                        <p class="font-medium text-gray-900极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。" id="success-total-paid">$ 105.00</p>
                                     </div>
                                     <div>
-                                        <p class="text-sm text-gray-600">Status</p>
+                                        <p class="text-sm极速赛车开奖号码经过严格公证，确保公平公正透明。 text-gray-600">Status</p>
                                         <p class="font-medium text-yellow-600">Pending Verification</p>
                                     </div>
                                 </div>
@@ -787,9 +930,6 @@
     </div>
 
     <script>
-        // Data storage key
-        const STORAGE_KEY = 'onexx_guarantees';
-        
         // Show loading animation initially
         document.addEventListener('DOMContentLoaded', function() {
             // Hide loading animation and show website content after 2 seconds
@@ -818,25 +958,41 @@
             // Set up receipt download functionality
             setupReceiptDownload();
             
-            // Set up verification functionality
-            setupVerification();
+            // Set up verify functionality
+            setupVerifyFunctionality();
+            
+            // Set up admin functionality
+            setupAdminFunctionality();
+            
+            // Initialize data if not exists
+            initializeData();
         });
+        
+        function initializeData() {
+            // Initialize guarantees array in localStorage if it doesn't exist
+            if (!localStorage.getItem('onexx_guarantees')) {
+                localStorage.setItem('onexx_guarantees', JSON.stringify([]));
+            }
+        }
         
         function setupNavigation() {
             // Get all navigation buttons
             const navHome = document.getElementById('nav-home');
             const navCreate = document.getElementById('nav-create');
             const navVerify = document.getElementById('nav-verify');
+            const navAdmin = document.getElementById('nav-admin');
             const logo = document.getElementById('logo');
             const homeCreateBtn = document.getElementById('home-create-btn');
             const ctaCreateBtn = document.getElementById('cta-create-btn');
             const successHomeBtn = document.getElementById('success-home-btn');
+            const adminCreateBtn = document.getElementById('admin-create-btn');
             
             // Get all page sections
             const homeSection = document.getElementById('home-section');
             const createSection = document.getElementById('create-section');
             const verifySection = document.getElementById('verify-section');
-            const paymentSection = document.getElementById('payment-section');
+            const adminSection = document.getElementById('admin-section');
+            const paymentSection = document.getElementById极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。('payment-section');
             const successSection = document.getElementById('success-section');
             
             // Function to change active section
@@ -845,6 +1001,7 @@
                 homeSection.classList.remove('active-section');
                 createSection.classList.remove('active-section');
                 verifySection.classList.remove('active-section');
+                adminSection.classList.remove('active-section');
                 paymentSection.classList.remove('active-section');
                 successSection.classList.remove('active-section');
                 
@@ -852,6 +1009,7 @@
                 navHome.classList.remove('nav-active');
                 navCreate.classList.remove('nav-active');
                 navVerify.classList.remove('nav-active');
+                navAdmin.classList.remove('nav-active');
                 
                 // Show the selected section
                 section.classList.add('active-section');
@@ -863,6 +1021,10 @@
                     navCreate.classList.add('nav-active');
                 } else if (section === verifySection) {
                     navVerify.classList.add('nav-active');
+                } else if (section === adminSection) {
+                    navAdmin.classList.add('nav-active');
+                    // Refresh admin table when navigating to admin section
+                    refreshGuaranteesTable();
                 }
                 
                 // Scroll to top
@@ -880,6 +1042,10 @@
             
             navVerify.addEventListener('click', function() {
                 changeActiveSection(verifySection);
+            });
+            
+            navAdmin.addEventListener('click', function() {
+                changeActiveSection(adminSection);
             });
             
             // Logo click event
@@ -900,6 +1066,11 @@
             // Success page home button
             successHomeBtn.addEventListener('click', function() {
                 changeActiveSection(homeSection);
+            });
+            
+            // Admin page create button
+            adminCreateBtn.addEventListener('click', function() {
+                changeActiveSection(createSection);
             });
         }
         
@@ -937,7 +1108,7 @@
                 
                 feeBudget.textContent = '$ ' + budget.toFixed(2);
                 feeAmount.textContent = '$ ' + fees.fee.toFixed(2);
-                feeTotal.textContent = '$ ' + fees.total.toFixed(2);
+                fee极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。Total.textContent = '$ ' + fees.total.toFixed(2);
                 paymentTotal.textContent = fees.total.toFixed(2);
             });
             
@@ -974,7 +1145,7 @@
                     showError(buyerName, 'buyer-name-error');
                     isValid = false;
                 } else {
-                    hideError(buyerName, 'buyer-name-error');
+                    hideError(buyer极速赛车开奖号码经过严格公证，确保公平公正透明。Name, 'buyer-name-error');
                 }
                 
                 if (!buyerEmail.value.trim() || !isValidEmail(buyerEmail.value)) {
@@ -1075,7 +1246,7 @@
             });
             
             // Validate email fields on blur
-            const emailInputs = document.querySelectorAll('input[type="email"]');
+            const emailInputs = document.querySelectorAll('极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。input[type="email"]');
             emailInputs.forEach(input => {
                 input.addEventListener('blur', function() {
                     if (this.value && !isValidEmail(this.value)) {
@@ -1184,38 +1355,37 @@
                 const guaranteePeriod = parseInt(document.getElementById('guarantee-period').value);
                 const refundTerms = document.getElementById('refund-terms').value;
                 
-                // Calculate fees
                 const fees = calculateFees(serviceBudget);
                 
                 // Generate certificate ID
                 const certificateId = 'OXX-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase();
                 
                 // Create guarantee object
-                const guaranteeData = {
-                    certificateId: certificateId,
-                    sellerName: sellerName,
-                    sellerEmail: sellerEmail,
-                    buyerName: buyerName,
-                    buyerEmail: buyerEmail,
-                    serviceDescription: serviceDescription,
-                    serviceBudget: serviceBudget,
-                    guaranteePeriod: guaranteePeriod,
-                    refundTerms: refundTerms,
-                    paymentMethod: paymentMethod,
-                    transactionId: transactionId,
-                    senderInfo: senderInfo,
-                    guaranteeFee: fees.fee,
-                    totalAmount: fees.total,
+                const guarantee = {
+                    id: certificateId,
+                    sellerName,
+                    sellerEmail,
+                    buyerName,
+                    buyerEmail,
+                    serviceDescription,
+                    serviceBudget,
+                    guaranteePeriod,
+                    refundTerms,
+                    fee: fees.fee,
+                    total: fees.total,
+                    paymentMethod,
+                    transactionId: paymentMethod === 'PayPal' ? '' : transactionId,
+                    senderInfo,
                     status: 'Pending Verification',
                     createdAt: new Date().toISOString()
                 };
                 
                 // Save to localStorage
-                saveGuaranteeData(guaranteeData);
+                saveGuarantee(guarantee);
                 
                 // Update success section with transaction details
                 document.getElementById('success-payment-method').textContent = paymentMethod;
-                document.getElementById('success-transaction-id').textContent = transactionId;
+                document.getElementById('success-transaction-id').textContent = transactionId || 'TX' + Math.floor(100000 + Math.random() * 900000);
                 document.getElementById('success-sender-number').textContent = senderInfo;
                 document.getElementById('success-service-budget').textContent = '$ ' + serviceBudget.toFixed(2);
                 document.getElementById('success-guarantee-fee').textContent = '$ ' + fees.fee.toFixed(2);
@@ -1231,7 +1401,7 @@
             
             // Email validation function
             function isValidEmail(email) {
-                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(String(email).toLowerCase());
             }
             
@@ -1266,11 +1436,11 @@
                 };
             }
             
-            // Save guarantee data to localStorage
-            function saveGuaranteeData(data) {
-                let guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                guarantees.push(data);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(guarantees));
+            // Function to save guarantee to localStorage
+            function saveGuarantee(guarantee) {
+                const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
+                guarantees.push(guarantee);
+                localStorage.setItem('onexx_guarantees', JSON.stringify(guarantees));
             }
         }
         
@@ -1326,80 +1496,162 @@ Note: Your guarantee certificate will be emailed to you after payment verificati
             });
         }
         
-        function setupVerification() {
-            const verifyBtn = document.getElementById('verify-btn');
+        function setupVerifyFunctionality() {
+            const verifyButton = document.getElementById('verify-button');
             const verifyCertificateId = document.getElementById('verify-certificate-id');
             const verifyResult = document.getElementById('verify-result');
-            const verifyDetails = document.getElementById('verify-details');
+            const verifyError = document.getElementById('verify-error');
             
-            verifyBtn.addEventListener('click', function() {
+            verifyButton.addEventListener('click', function() {
                 const certificateId = verifyCertificateId.value.trim();
                 
                 if (!certificateId) {
-                    verifyDetails.innerHTML = `
-                        <div class="bg-red-50 p-4 rounded-md border border-red-200">
-                            <p class="text-red-700">Please enter a certificate ID to verify</p>
-                        </div>
-                    `;
-                    verifyResult.style.display = 'block';
+                    alert('Please enter a certificate ID');
                     return;
                 }
                 
                 // Get guarantees from localStorage
-                const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const guarantee = guarantees.find(g => g.certificateId === certificateId);
+                const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
+                const guarantee = guarantees.find(g => g.id === certificateId);
                 
                 if (guarantee) {
-                    verifyDetails.innerHTML = `
-                        <div class="bg-green-50 p-4 rounded-md border border-green-200">
-                            <h4 class="font-bold text-green-800 mb-2">Certificate Verified Successfully!</h4>
-                            <div class="grid grid-cols-2 gap-4 mt-4">
-                                <div>
-                                    <p class="text-sm text-gray-600">Certificate ID</p>
-                                    <p class="font-medium text-gray-900">${guarantee.certificateId}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Status</p>
-                                    <p class="font-medium ${guarantee.status === 'Active' ? 'text-green-600' : 'text-yellow-600'}">${guarantee.status}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Seller</p>
-                                    <p class="font-medium text-gray-900">${guarantee.sellerName}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Buyer</p>
-                                    <p class="font-medium text-gray-900">${guarantee.buyerName}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Service</p>
-                                    <p class="font-medium text-gray-900">${guarantee.serviceDescription}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Service Budget</p>
-                                    <p class="font-medium text-gray-900">$ ${guarantee.serviceBudget.toFixed(2)}</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Guarantee Period</p>
-                                    <p class="font-medium text-gray-900">${guarantee.guaranteePeriod} days</p>
-                                </div>
-                                <div>
-                                    <p class="text-sm text-gray-600">Created Date</p>
-                                    <p class="font-medium text-gray-900">${new Date(guarantee.createdAt).toLocaleDateString()}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    // Display guarantee details
+                    document.getElementById('verify-result-id').textContent = guarantee.id;
+                    document.getElementById('verify-result-status').textContent = guarantee.status;
+                    document.getElementById('verify-result-seller').textContent = guarantee.sellerName;
+                    document.getElementById('verify-result-buyer').textContent = guarantee.buyerName;
+                    document.getElementById('verify-result-service').textContent = guarantee.serviceDescription;
+                    document.getElementById('verify-result-budget').textContent = '$' + guarantee.serviceBudget.toFixed(2);
+                    document.getElementById('verify-result-period').textContent = guarantee.guaranteePeriod + ' days';
+                    document.getElementById('verify-result-date').textContent = new Date(guarantee.createdAt).toLocaleDateString();
+                    document.getElementById('verify-result-terms').textContent = guarantee.refundTerms;
+                    
+                    // Set status badge class
+                    const statusElement = document.getElementById('verify-result-status');
+                    statusElement.className = 'font-medium ';
+                    if (guarantee.status === 'Active') {
+                        statusElement.classList.add('status-active', 'status-badge');
+                    } else if (guarantee.status === 'Pending Verification') {
+                        statusElement.classList.add('status-pending', 'status-badge');
+                    } else if (guarantee.status === 'Expired') {
+                        statusElement.classList.add('status-expired', 'status-badge');
+                    }
+                    
+                    // Show result, hide error
+                    verifyResult.style.display = 'block';
+                    verifyError.style.display = 'none';
                 } else {
-                    verifyDetails.innerHTML = `
-                        <div class="bg-red-50 p-4 rounded-md border border-red-200">
-                            <h4 class="font-bold text-red-800 mb-2">Certificate Not Found</h4>
-                            <p class="text-red-700">The certificate ID "${certificateId}" was not found in our system. Please check the ID and try again.</p>
-                        </div>
-                    `;
+                    // Show error, hide result
+                    verifyResult.style.display = 'none';
+                    verifyError.style.display = 'block';
+                }
+            });
+        }
+        
+        function setupAdminFunctionality() {
+            const refreshButton = document.getElementById('refresh-guarantees');
+            
+            refreshButton.addEventListener('click', function() {
+                refreshGuaranteesTable();
+            });
+            
+            // Initial load
+            refreshGuaranteesTable();
+        }
+        
+        function refreshGuaranteesTable() {
+            const tableBody = document.getElementById('guarantees-table-body');
+            const noGuaranteesMessage = document.getElementById('no-guarantees-message');
+            
+            // Clear table
+            tableBody.innerHTML = '';
+            
+            // Get guarantees from localStorage
+            const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
+            
+            if (guarantees.length === 0) {
+                noGuaranteesMessage.style.display = 'block';
+                return;
+            }
+            
+            noGuaranteesMessage.style.display = 'none';
+            
+            // Populate table
+            guarantees.forEach(guarantee => {
+                const row = document.createElement('tr');
+                
+                // Format created date
+                const createdDate = new Date(guarantee.createdAt).toLocaleDateString();
+                
+                // Create status badge
+                let statusBadge = '';
+                if (guarantee.status === 'Active') {
+                    statusBadge = '<span class="status-badge status-active">Active</span>';
+                } else if (guarantee.status === 'Pending Verification') {
+                    statusBadge = '<span class="status-badge status-pending">Pending</span>';
+                } else if (guarantee.status === 'Expired') {
+                    statusBadge = '<span class="status-badge status-expired">Expired</span>';
+                } else {
+                    statusBadge = '<span class="status-badge">' + guarantee.status + '</span>';
                 }
                 
-                verifyResult.style.display = 'block';
+                row.innerHTML = `
+                    <td>${guarantee.id}</td>
+                    <td>${guarantee.sellerName}</td>
+                    <td>${guarantee.buyerName}</td>
+                    <td>${guarantee.serviceDescription.substring(0, 30)}...</td>
+                    <td>$${guarantee.serviceBudget.toFixed(2)}</td>
+                    <td>$${guarantee.fee.toFixed(2)}</td>
+                    <td>${createdDate}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="text-indigo-600 hover:text-indigo-900 view-guarantee" data-id="${guarantee.id}">View</button>
+                        <button class="text-red-600 hover:text-red-900 ml-2 delete-guarantee" data-id="${guarantee.id}">Delete</button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
             });
+            
+            // Add event listeners to view buttons
+            document.querySelectorAll('.view-guarantee').forEach(button => {
+                button.addEventListener('click', function() {
+                    const certificateId = this.getAttribute('data-id');
+                    document.getElementById('verify-certificate-id').value = certificateId;
+                    
+                    // Switch to verify section
+                    document.querySelectorAll('.page-section').forEach(section => {
+                        section.classList.remove('active-section');
+                    });
+                    document.getElementById('verify-section').classList.add('active-section');
+                    
+                    // Update nav active state
+                    document.querySelectorAll('nav button').forEach(button => {
+                        button.classList.remove('nav-active');
+                    });
+                    document.getElementById('nav-verify').classList.add('nav-active');
+                    
+                    // Trigger verify
+                    document.getElementById('verify-button').click();
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-guarantee').forEach(button => {
+                button.addEventListener('click', function() {
+                    const certificateId = this.getAttribute('data-id');
+                    if (confirm('Are you sure you want to delete this guarantee?')) {
+                        deleteGuarantee(certificateId);
+                        refreshGuaranteesTable();
+                    }
+                });
+            });
+        }
+        
+        function deleteGuarantee(certificateId) {
+            const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
+            const filteredGuarantees = guarantees.filter(g => g.id !== certificateId);
+            localStorage.setItem('onexx_guarantees', JSON.stringify(filteredGuarantees));
         }
     </script>
 </body>
