@@ -368,6 +368,29 @@
             color: #d1d5db;
         }
         
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--light-bg);
+        }
+        
+        .login-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
         @media (max-width: 768px) {
             .grid-2 {
                 grid-template-columns: 1fr;
@@ -384,342 +407,378 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>OneXX Admin Panel</span>
-                </div>
-                <div class="tabs">
-                    <div class="tab active" data-tab="dashboard">Dashboard</div>
-                    <div class="tab" data-tab="settings">Settings</div>
-                    <div class="tab" data-tab="tools">Tools</div>
-                </div>
+    <div id="login-page" class="login-container">
+        <div class="login-form">
+            <h2><i class="fas fa-shield-alt"></i> OneXX Admin</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter admin username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter admin password">
+            </div>
+            <button id="login-btn" class="btn btn-primary" style="width: 100%;">Login</button>
+            <div class="alert alert-warning" style="margin-top: 20px;">
+                <strong>Default credentials:</strong> admin / admin123
             </div>
         </div>
-    </header>
+    </div>
     
-    <main class="container">
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="section active">
-            <div class="section-header">
-                <h2>Guarantee Certificates</h2>
-                <p>View and manage all guarantee certificates</p>
-            </div>
-            
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: #eef2ff; color: var(--primary);">
-                        <i class="fas fa-file-contract"></i>
+    <div id="app-content" style="display: none;">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>OneXX Admin Panel</span>
                     </div>
-                    <div class="stat-content">
-                        <h3>Total Certificates</h3>
-                        <div class="value" id="total-certificates">0</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: #dcfce7; color: var(--success);">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Active Certificates</h3>
-                        <div class="value" id="active-certificates">0</div>
-                    </div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: #dbeafe; color: var(--primary);">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3>Total Value</h3>
-                        <div class="value" id="total-value">$0.00</div>
+                    <div class="tabs">
+                        <div class="tab active" data-tab="dashboard">Dashboard</div>
+                        <div class="tab" data-tab="settings">Settings</div>
+                        <div class="tab" data-tab="tools">Tools</div>
+                        <div class="tab" id="logout-btn">Logout</div>
                     </div>
                 </div>
             </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <h3>All Certificates</h3>
+        </header>
+        
+        <main class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2>Guarantee Certificates</h2>
+                    <p>View and manage all guarantee certificates</p>
                 </div>
-                <div class="card-body">
-                    <div id="no-data-message" class="no-data">
-                        <i class="fas fa-inbox"></i>
-                        <h3>No guarantee certificates found</h3>
-                        <p>Data will appear here once you've added guarantees on the main website</p>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #eef2ff; color: var(--primary);">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Total Certificates</h3>
+                            <div class="value" id="total-certificates">0</div>
+                        </div>
                     </div>
                     
-                    <table id="certificates-table" style="display: none;">
-                        <thead>
-                            <tr>
-                                <th>Certificate ID</th>
-                                <th>Seller</th>
-                                <th>Buyer</th>
-                                <th>Service</th>
-                                <th>Budget</th>
-                                <th>Fee</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="certificates-table-body">
-                            <!-- Data will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Settings Section -->
-        <section id="settings" class="section">
-            <div class="section-header">
-                <h2>Admin Settings</h2>
-                <p>Manage sample certificate and payment methods</p>
-            </div>
-            
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Sample Certificate</h3>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #dcfce7; color: var(--success);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Active Certificates</h3>
+                            <div class="value" id="active-certificates">0</div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="sample-seller-name">Seller Name</label>
-                            <input type="text" id="sample-seller-name" placeholder="John's Repair Service">
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: #dbeafe; color: var(--primary);">
+                            <i class="fas fa-dollar-sign"></i>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="sample-buyer-name">Buyer Name</label>
-                            <input type="text" id="sample-buyer-name" placeholder="Jane Client">
+                        <div class="stat-content">
+                            <h3>Total Value</h3>
+                            <div class="value" id="total-value">$0.00</div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="sample-service-value">Service Value</label>
-                            <input type="text" id="sample-service-value" placeholder="$1,500">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="sample-status">Status</label>
-                            <select id="sample-status">
-                                <option value="Active">Active</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Expired">Expired</option>
-                            </select>
-                        </div>
-                        
-                        <button id="save-sample-certificate" class="btn btn-primary">Save Changes</button>
                     </div>
                 </div>
                 
                 <div class="card">
                     <div class="card-header">
-                        <h3>Payment Methods</h3>
+                        <h3>All Certificates</h3>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="bkash-number">bKash Number</label>
-                            <input type="text" id="bkash-number" placeholder="01322149482">
+                        <div id="no-data-message" class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No guarantee certificates found</h3>
+                            <p>Add sample data or import existing data</p>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="nagad-number">Nagad Number</label>
-                            <input type="text" id="nagad-number" placeholder="01322149482">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="rocket-number">Rocket Number</label>
-                            <input type="text" id="rocket-number" placeholder="01322149482">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="paypal-email">PayPal Email</label>
-                            <input type="email" id="paypal-email" placeholder="payments@onexx.com">
-                        </div>
-                        
-                        <button id="save-payment-methods" class="btn btn-primary">Save Changes</button>
+                        <table id="certificates-table" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Certificate ID</th>
+                                    <th>Seller</th>
+                                    <th>Buyer</th>
+                                    <th>Service</th>
+                                    <th>Budget</th>
+                                    <th>Fee</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="certificates-table-body">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="section-header">
+                    <h2>Admin Settings</h2>
+                    <p>Manage sample certificate and payment methods</p>
                 </div>
                 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Fee Structure</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="small-budget-threshold">Small Budget Threshold ($)</label>
-                            <input type="number" id="small-budget-threshold" placeholder="40.00" step="0.01" min="0">
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Sample Certificate</h3>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="medium-budget-threshold">Medium Budget Threshold ($)</label>
-                            <input type="number" id="medium-budget-threshold" placeholder="160.00" step="0.01" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="small-budget-fee">Small Budget Fee (%)</label>
-                            <input type="number" id="small-budget-fee" placeholder="5" step="0.1" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="medium-budget-fee">Medium Budget Fee (%)</label>
-                            <input type="number" id="medium-budget-fee" placeholder="3" step="0.1" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="large-budget-fee">Large Budget Fee (%)</label>
-                            <input type="number" id="large-budget-fee" placeholder="2" step="0.1" min="0">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="minimum-fee">Minimum Fee ($)</label>
-                            <input type="number" id="minimum-fee" placeholder="8.00" step="0.01" min="0">
-                        </div>
-                        
-                        <button id="save-fee-structure" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Tools Section -->
-        <section id="tools" class="section">
-            <div class="section-header">
-                <h2>Admin Tools</h2>
-                <p>Import, export, and manage application data</p>
-            </div>
-            
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Export Data</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Export all guarantee data as a JSON file for backup or analysis.</p>
-                        
-                        <div class="tool-box" id="export-data">
-                            <div class="tool-icon">
-                                <i class="fas fa-file-export"></i>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="sample-seller-name">Seller Name</label>
+                                <input type="text" id="sample-seller-name" placeholder="John's Repair Service">
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="sample-buyer-name">Buyer Name</label>
+                                <input type="text" id="sample-buyer-name" placeholder="Jane Client">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sample-service-value">Service Value</label>
+                                <input type="text" id="sample-service-value" placeholder="$1,500">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="sample-status">Status</label>
+                                <select id="sample-status">
+                                    <option value="Active">Active</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Expired">Expired</option>
+                                </select>
+                            </div>
+                            
+                            <button id="save-sample-certificate" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Payment Methods</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="bkash-number">bKash Number</label>
+                                <input type="text" id="bkash-number" placeholder="01322149482">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nagad-number">Nagad Number</label>
+                                <input type="text" id="nagad-number" placeholder="01322149482">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="rocket-number">Rocket Number</label>
+                                <input type="text" id="rocket-number" placeholder="01322149482">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="paypal-email">PayPal Email</label>
+                                <input type="email" id="paypal-email" placeholder="payments@onexx.com">
+                            </div>
+                            
+                            <button id="save-payment-methods" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Fee Structure</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="small-budget-threshold">Small Budget Threshold ($)</label>
+                                <input type="number" id="small-budget-threshold" placeholder="40.00" step="0.01" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="medium-budget-threshold">Medium Budget Threshold ($)</label>
+                                <input type="number" id="medium-budget-threshold" placeholder="160.00" step="0.01" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="small-budget-fee">Small Budget Fee (%)</label>
+                                <input type="number" id="small-budget-fee" placeholder="5" step="0.1" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="medium-budget-fee">Medium Budget Fee (%)</label>
+                                <input type="number" id="medium-budget-fee" placeholder="3" step="0.1" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="large-budget-fee">Large Budget Fee (%)</label>
+                                <input type="number" id="large-budget-fee" placeholder="2" step="0.1" min="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="minimum-fee">Minimum Fee ($)</label>
+                                <input type="number" id="minimum-fee" placeholder="8.00" step="0.01" min="0">
+                            </div>
+                            
+                            <button id="save-fee-structure" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tools Section -->
+            <section id="tools" class="section">
+                <div class="section-header">
+                    <h2>Admin Tools</h2>
+                    <p>Import, export, and manage application data</p>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
                             <h3>Export Data</h3>
-                            <p>Click to download all data as JSON</p>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Import Data</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Import guarantee data from a JSON file. This will replace all current data.</p>
-                        
-                        <div class="tool-box" id="import-data">
-                            <div class="tool-icon">
-                                <i class="fas fa-file-import"></i>
+                        <div class="card-body">
+                            <p>Export all guarantee data as a JSON file for backup or analysis.</p>
+                            
+                            <div class="tool-box" id="export-data">
+                                <div class="tool-icon">
+                                    <i class="fas fa-file-export"></i>
+                                </div>
+                                <h3>Export Data</h3>
+                                <p>Click to download all data as JSON</p>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
                             <h3>Import Data</h3>
-                            <p>Click to upload and import JSON data</p>
-                            <input type="file" id="import-file" style="display: none;" accept=".json">
                         </div>
-                        
-                        <div class="alert alert-warning">
-                            <strong>Warning:</strong> Importing data will replace all existing guarantees. Make sure to export your current data first if you want to keep it.
+                        <div class="card-body">
+                            <p>Import guarantee data from a JSON file. This will replace all current data.</p>
+                            
+                            <div class="tool-box" id="import-data">
+                                <div class="tool-icon">
+                                    <i class="fas fa-file-import"></i>
+                                </div>
+                                <h3>Import Data</h3>
+                                <p>Click to upload and import JSON data</p>
+                                <input type="file" id="import-file" style="display: none;" accept=".json">
+                            </div>
+                            
+                            <div class="alert alert-warning">
+                                <strong>Warning:</strong> Importing data will replace all existing guarantees. Make sure to export your current data first if you want to keep it.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Data Management</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Manage your application data and storage.</p>
+                            
+                            <div class="alert">
+                                <strong>Storage Information:</strong> <span id="storage-info">Calculating...</span>
+                            </div>
+                            
+                            <div class="alert alert-warning">
+                                <strong>Sample Data:</strong> Add sample data to test the admin panel.
+                                <button id="add-sample-data" class="btn btn-primary btn-sm" style="margin-top: 10px;">Add Sample Data</button>
+                            </div>
+                            
+                            <div class="alert alert-error">
+                                <strong>Danger Zone:</strong> These actions are irreversible. Please be cautious.
+                                <button id="clear-all-data" class="btn btn-primary btn-sm" style="background: #dc2626; margin-top: 10px;">Clear All Data</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
+        </main>
+        
+        <!-- Edit Certificate Modal -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2 style="margin-bottom: 20px;">Edit Certificate</h2>
                 
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Data Management</h3>
+                <div class="form-group">
+                    <label for="edit-seller-name">Seller Name</label>
+                    <input type="text" id="edit-seller-name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-buyer-name">Buyer Name</label>
+                    <input type="text" id="edit-buyer-name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-service-description">Service Description</label>
+                    <textarea id="edit-service-description" rows="3"></textarea>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="edit-service-budget">Service Budget ($)</label>
+                        <input type="number" id="edit-service-budget" step="0.01" min="0">
                     </div>
-                    <div class="card-body">
-                        <p>Manage your application data and storage.</p>
-                        
-                        <div class="alert">
-                            <strong>Storage Information:</strong> <span id="storage-info">Calculating...</span>
-                        </div>
-                        
-                        <div class="alert alert-error">
-                            <strong>Danger Zone:</strong> These actions are irreversible. Please be cautious.
-                            <button id="clear-all-data" class="btn btn-primary btn-sm" style="background: #dc2626; margin-top: 10px;">Clear All Data</button>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-guarantee-fee">Guarantee Fee ($)</label>
+                        <input type="number" id="edit-guarantee-fee" step="0.01" min="0">
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-    
-    <!-- Edit Certificate Modal -->
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 style="margin-bottom: 20px;">Edit Certificate</h2>
-            
-            <div class="form-group">
-                <label for="edit-seller-name">Seller Name</label>
-                <input type="text" id="edit-seller-name">
-            </div>
-            
-            <div class="form-group">
-                <label for="edit-buyer-name">Buyer Name</label>
-                <input type="text" id="edit-buyer-name">
-            </div>
-            
-            <div class="form-group">
-                <label for="edit-service-description">Service Description</label>
-                <textarea id="edit-service-description" rows="3"></textarea>
-            </div>
-            
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="edit-service-budget">Service Budget ($)</label>
-                    <input type="number" id="edit-service-budget" step="0.01" min="0">
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="edit-guarantee-period">Guarantee Period (days)</label>
+                        <input type="number" id="edit-guarantee-period" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-status">Status</label>
+                        <select id="edit-status">
+                            <option value="Pending Verification">Pending Verification</option>
+                            <option value="Active">Active</option>
+                            <option value="Expired">Expired</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                </div>
                 </div>
                 
-                <div class="form-group">
-                    <label for="edit-guarantee-fee">Guarantee Fee ($)</label>
-                    <input type="number" id="edit-guarantee-fee" step="0.01" min="0">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button id="cancel-edit" class="btn btn-sm" style="background: #e5e7eb;">Cancel</button>
+                    <button id="save-certificate-changes" class="btn btn-primary btn-sm">Save Changes</button>
                 </div>
-            </div>
-            
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="edit-guarantee-period">Guarantee Period (days)</label>
-                    <input type="number" id="edit-guarantee-period" min="1">
-                </div>
-                
-                <div class="form-group">
-                    <label for="edit-status">Status</label>
-                    <select id="edit-status">
-                        <option value="Pending Verification">Pending Verification</option>
-                        <option value="Active">Active</option>
-                        <option value="Expired">Expired</option>
-                        <option value="Completed">Completed</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button id="cancel-edit" class="btn btn-sm" style="background: #e5e7eb;">Cancel</button>
-                <button id="save-certificate-changes" class="btn btn-primary btn-sm">Save Changes</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Data storage keys - must match the main website
+        // Data storage keys
         const STORAGE_KEY = 'onexx_guarantees';
         const SAMPLE_CERTIFICATE_KEY = 'onexx_sample_certificate';
         const PAYMENT_METHODS_KEY = 'onexx_payment_methods';
         const FEE_STRUCTURE_KEY = 'onexx_fee_structure';
+        const ADMIN_CREDENTIALS_KEY = 'onexx_admin_credentials';
         
         // Current certificate being edited
         let currentEditCertificateId = null;
         
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the application
+        function initApp() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('onexx_admin_logged_in');
+            if (isLoggedIn === 'true') {
+                showAppContent();
+            } else {
+                showLoginPage();
+            }
+            
             // Set up navigation
             setupNavigation();
             
@@ -734,13 +793,25 @@
             
             // Update storage info
             updateStorageInfo();
-        });
+        }
+        
+        function showLoginPage() {
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('app-content').style.display = 'none';
+        }
+        
+        function showAppContent() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+        }
         
         function setupNavigation() {
             const tabs = document.querySelectorAll('.tab');
             const sections = document.querySelectorAll('.section');
             
             tabs.forEach(tab => {
+                if (tab.id === 'logout-btn') return;
+                
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
                     
@@ -904,6 +975,34 @@
         }
         
         function setupEventListeners() {
+            // Login functionality
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Default credentials
+                const defaultCredentials = {
+                    username: 'admin',
+                    password: 'admin123'
+                };
+                
+                // Check if credentials are correct
+                if (username === defaultCredentials.username && password === defaultCredentials.password) {
+                    localStorage.setItem('onexx_admin_logged_in', 'true');
+                    showAppContent();
+                    showAlert('Login successful!', 'success');
+                } else {
+                    showAlert('Invalid credentials. Please try again.', 'error');
+                }
+            });
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.setItem('onexx_admin_logged_in', 'false');
+                showLoginPage();
+                showAlert('You have been logged out.', 'success');
+            });
+            
             // Save sample certificate
             document.getElementById('save-sample-certificate').addEventListener('click', function() {
                 const sampleCertificate = {
@@ -1061,6 +1160,71 @@
                 reader.readAsText(file);
             });
             
+            // Add sample data
+            document.getElementById('add-sample-data').addEventListener('click', function() {
+                const sampleData = [
+                    {
+                        certificateId: 'OXX-100001-ABC123',
+                        sellerName: 'Tech Repair Services',
+                        sellerEmail: 'tech@example.com',
+                        buyerName: 'Sarah Johnson',
+                        buyerEmail: 'sarah@example.com',
+                        serviceDescription: 'Laptop screen replacement and software installation',
+                        serviceBudget: 120.00,
+                        guaranteePeriod: 30,
+                        refundTerms: 'Full refund if not satisfied with the service',
+                        paymentMethod: 'bKash',
+                        transactionId: 'TX100001',
+                        senderInfo: '017XXXXXXXX',
+                        guaranteeFee: 3.60,
+                        totalAmount: 123.60,
+                        status: 'Active',
+                        createdAt: new Date('2023-06-15').toISOString()
+                    },
+                    {
+                        certificateId: 'OXX-100002-XYZ789',
+                        sellerName: 'Home Cleaning Pros',
+                        sellerEmail: 'cleaning@example.com',
+                        buyerName: 'Michael Brown',
+                        buyerEmail: 'michael@example.com',
+                        serviceDescription: 'Deep cleaning of 3-bedroom apartment',
+                        serviceBudget: 200.00,
+                        guaranteePeriod: 14,
+                        refundTerms: 'Full refund if cleaning standards are not met',
+                        paymentMethod: 'Nagad',
+                        transactionId: 'TX100002',
+                        senderInfo: '018XXXXXXXX',
+                        guaranteeFee: 6.00,
+                        totalAmount: 206.00,
+                        status: 'Pending Verification',
+                        createdAt: new Date('2023-07-22').toISOString()
+                    },
+                    {
+                        certificateId: 'OXX-100003-DEF456',
+                        sellerName: 'AC Installation Experts',
+                        sellerEmail: 'ac@example.com',
+                        buyerName: 'Robert Wilson',
+                        buyerEmail: 'robert@example.com',
+                        serviceDescription: 'AC installation and maintenance for office space',
+                        serviceBudget: 500.00,
+                        guaranteePeriod: 90,
+                        refundTerms: 'Free repair within guarantee period',
+                        paymentMethod: 'Rocket',
+                        transactionId: 'TX100003',
+                        senderInfo: '019XXXXXXXX',
+                        guaranteeFee: 10.00,
+                        totalAmount: 510.00,
+                        status: 'Completed',
+                        createdAt: new Date('2023-05-10').toISOString()
+                    }
+                ];
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleData));
+                showAlert('Sample data added successfully!', 'success');
+                loadDashboardData();
+                updateStorageInfo();
+            });
+            
             // Clear all data
             document.getElementById('clear-all-data').addEventListener('click', function() {
                 if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
@@ -1119,6 +1283,9 @@
                 alert.remove();
             }, 3000);
         }
+        
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
