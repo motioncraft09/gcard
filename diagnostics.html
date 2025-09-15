@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneXX - Data Connection Diagnostics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --light-bg: #f9fafb;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-light: #e5e7eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-dark);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .card-white {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-light);
+        }
+        
+        .nav-active {
+            background-color: rgb(224 231 255);
+            color: rgb(79 70 229);
+        }
+        
+        .connection-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .connected {
+            background-color: var(--success);
+        }
+        
+        .disconnected {
+            background-color: var(--danger);
+        }
+        
+        .scanning {
+            background-color: var(--warning);
+        }
+        
+        .log-entry {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        
+        .log-error {
+            color: var(--danger);
+        }
+        
+        .log-success {
+            color: var(--success);
+        }
+        
+        .log-warning {
+            color: var(--warning);
+        }
+        
+        .diagnostic-panel {
+            border-left: 4px solid var(--primary);
+            background-color: #f8fafc;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .storage-key {
+            background-color: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer">
+                        <span class="mr-2"><i class="fas fa-shield-alt"></i></span> OneXX Data Diagnostics
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="connection-status" class="connection-status scanning"></span>
+                    <span id="connection-text" class="text-sm text-gray-600">Scanning for data...</span>
+                    <button id="refresh-data" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-16 p-6">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Data Connection Diagnostics</h1>
+            
+            <!-- Connection Status -->
+            <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
+                <div class="flex items-center mb-4">
+                    <div class="mr-4">
+                        <span id="connection-status-icon" class="connection-status scanning"></span>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900" id="connection-status-text">Checking connection to main website...</h3>
+                        <p class="text-sm text-gray-600" id="data-status">Scanning localStorage for data</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button id="scan-storage" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                        <i class="fas fa-search mr-2"></i> Scan Storage
+                    </button>
+                    <button id="import-demo" class="bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300">
+                        <i class="fas fa-download mr-2"></i> Import Demo Data
+                    </button>
+                    <button id="clear-storage" class="bg-red-600 text-white font-medium py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-300">
+                        <i class="fas fa-trash mr-2"></i> Clear All Data
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Two Column Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column - Storage Analysis -->
+                <div class="space-y-8">
+                    <!-- Storage Contents -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Storage Contents</h2>
+                        </div>
+                        <div class="px-6 py-6">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">LocalStorage Keys Found</h3>
+                                <div id="storage-keys" class="text-gray-500">
+                                    Scanning...
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">SessionStorage Keys Found</h3>
+                                <div id="session-storage-keys" class="text-gray-500">
+                                    Scanning...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expected Data Structure -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Expected Data Structure</h2>
+                        </div>
+                        <div class="px-6 py-6">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Main Website Should Save</h3>
+                                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                    <li>Guarantee data under key: <span class="storage-key">onexx_guarantees</span></li>
+                                    <li>Fee structure under key: <span class="storage-key">onexx_fee_structure</span></li>
+                                    <li>Payment methods under key: <span class="storage-key">onexx_payment_methods</span></li>
+                                    <li>Sample certificate under key: <span class="storage-key">onexx_sample_certificate</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Possible Issues</h3>
+                                <ul class="list-disc pl-5 text-gray-600 space-y-2">
+                                    <li>Main website not saving data correctly</li>
+                                    <li>Different key names used on main website</li>
+                                    <li>Data being saved to sessionStorage instead of localStorage</li>
+                                    <li>Browser storage limitations</li>
+                                    <li>Private browsing mode restrictions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Diagnostics -->
+                <div class="space-y-8">
+                    <!-- Diagnostic Results -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Diagnostic Results</h2>
+                        </div>
+                        <div class="px-6 py-6">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Data Availability Check</h3>
+                                <div id="data-check-results" class="space-y-3">
+                                    <div class="flex items-center">
+                                        <span class="connection-status scanning mr-2"></span>
+                                        <span>Checking for guarantee data...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="connection-status scanning mr-2"></span>
+                                        <span>Checking for fee structure...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="connection-status scanning mr-2"></span>
+                                        <span>Checking for payment methods...</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="connection-status scanning mr-2"></span>
+                                        <span>Checking for sample certificate...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Recommended Actions</h3>
+                                <div id="recommended-actions" class="space-y-2 text-gray-600">
+                                    <p>Complete the diagnostic scan to get recommendations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diagnostic Log -->
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="gradient-bg px-6 py-4">
+                            <h2 class="text-2xl font-bold text-white">Diagnostic Log</h2>
+                        </div>
+                        <div class="px-6 py-6">
+                            <div class="diagnostic-panel">
+                                <div id="log-entries">
+                                    <div class="log-entry">
+                                        <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Diagnostic tool initialized
+                                    </div>
+                                    <div class="log-entry">
+                                        <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Beginning storage scan...
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button id="clear-log" class="bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-all duration-300">
+                                    Clear Log
+                                </button>
+                                <button id="export-log" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
+                                    Export Log
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solution Section -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mt-8">
+                <div class="gradient-bg px-6 py-4">
+                    <h2 class="text-2xl font-bold text-white">Next Steps</h2>
+                </div>
+                <div class="px-6 py-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">If No Data Is Found</h3>
+                            <ol class="list-decimal pl-5 text-gray-600 space-y-2">
+                                <li>Check your main website is correctly saving data to localStorage</li>
+                                <li>Verify the main website is using the expected key names</li>
+                                <li>Ensure both sites are on the same domain (github.io)</li>
+                                <li>Try using the "Import Demo Data" button to test the admin panel</li>
+                                <li>Check browser console for errors on the main website</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">If Data Is Found But Not Loading</h3>
+                            <ol class="list-decimal pl-5 text-gray-600 space-y-2">
+                                <li>Check if the data format matches what the admin panel expects</li>
+                                <li>Verify the admin panel is looking for the correct key names</li>
+                                <li>Try manually importing the data using the storage tools</li>
+                                <li>Check for JavaScript errors in the browser console</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <h3 class="text-lg font-medium text-yellow-800 mb-2">Debugging Main Website</h3>
+                        <p class="text-yellow-700">To check if your main website is saving data correctly, open the browser console (F12) on your main website and check for errors when creating a guarantee. Also verify that data is being saved to localStorage.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Add a log entry
+        function addLogEntry(message, type = 'info') {
+            const logEntries = document.getElementById('log-entries');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            let typeClass = 'text-blue-500';
+            if (type === 'error') typeClass = 'text-red-500';
+            if (type === 'success') typeClass = 'text-green-500';
+            if (type === 'warning') typeClass = 'text-yellow-500';
+            
+            entry.innerHTML = `
+                <span class="text-gray-400">[</span><span class="${typeClass}">${type.toUpperCase()}</span><span class="text-gray-400">]</span> ${message}
+            `;
+            
+            logEntries.appendChild(entry);
+            logEntries.scrollTop = logEntries.scrollHeight;
+        }
+        
+        // Clear the log
+        function clearLog() {
+            document.getElementById('log-entries').innerHTML = `
+                <div class="log-entry">
+                    <span class="text-gray-400">[</span><span class="text-blue-500">INFO</span><span class="text-gray-400">]</span> Log cleared
+                </div>
+            `;
+        }
+        
+        // Export the log
+        function exportLog() {
+            const logEntries = document.getElementById('log-entries').textContent;
+            const blob = new Blob([logEntries], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'onexx-diagnostic-log.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addLogEntry('Log exported successfully', 'success');
+        }
+        
+        // Scan storage for data
+        function scanStorage() {
+            addLogEntry('Scanning storage for data...');
+            
+            // Check localStorage
+            const localStorageKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                localStorageKeys.push(localStorage.key(i));
+            }
+            
+            // Check sessionStorage
+            const sessionStorageKeys = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                sessionStorageKeys.push(sessionStorage.key(i));
+            }
+            
+            // Display keys
+            document.getElementById('storage-keys').textContent = 
+                localStorageKeys.length > 0 ? localStorageKeys.join(', ') : 'No keys found';
+            document.getElementById('session-storage-keys').textContent = 
+                sessionStorageKeys.length > 0 ? sessionStorageKeys.join(', ') : 'No keys found';
+            
+            // Check for expected data
+            const expectedKeys = [
+                'onexx_guarantees',
+                'onexx_fee_structure', 
+                'onexx_payment_methods',
+                'onexx_sample_certificate'
+            ];
+            
+            let foundKeys = 0;
+            const dataCheckResults = document.getElementById('data-check-results');
+            dataCheckResults.innerHTML = '';
+            
+            expectedKeys.forEach(key => {
+                const hasKey = localStorageKeys.includes(key);
+                const item = document.createElement('div');
+                item.className = 'flex items-center';
+                
+                if (hasKey) {
+                    item.innerHTML = `
+                        <span class="connection-status connected mr-2"></span>
+                        <span>Found: <span class="storage-key">${key}</span></span>
+                    `;
+                    foundKeys++;
+                    addLogEntry(`Found key: ${key}`, 'success');
+                } else {
+                    item.innerHTML = `
+                        <span class="connection-status disconnected mr-2"></span>
+                        <span>Missing: <span class="storage-key">${key}</span></span>
+                    `;
+                    addLogEntry(`Missing key: ${key}`, 'warning');
+                }
+                
+                dataCheckResults.appendChild(item);
+            });
+            
+            // Update connection status
+            const statusIcon = document.getElementById('connection-status-icon');
+            const statusText = document.getElementById('connection-status-text');
+            const dataStatus = document.getElementById('data-status');
+            
+            if (foundKeys > 0) {
+                statusIcon.className = 'connection-status connected';
+                statusText.textContent = 'Data connection established';
+                dataStatus.textContent = `Found ${foundKeys} of ${expectedKeys.length} expected data sources`;
+                addLogEntry(`Found ${foundKeys} of ${expectedKeys.length} expected data sources`, 'success');
+            } else {
+                statusIcon.className = 'connection-status disconnected';
+                statusText.textContent = 'No data connection';
+                dataStatus.textContent = 'No expected data sources found';
+                addLogEntry('No expected data sources found', 'error');
+            }
+            
+            // Provide recommendations
+            const recommendations = document.getElementById('recommended-actions');
+            if (foundKeys === 0) {
+                recommendations.innerHTML = `
+                    <p class="text-red-600 font-medium">No expected data found. The issue is likely with your main website not saving data correctly.</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Check your main website's JavaScript code for errors</li>
+                        <li>Verify the main website is saving data to localStorage</li>
+                        <li>Ensure the main website uses the correct key names</li>
+                        <li>Try the "Import Demo Data" button to test the admin panel</li>
+                    </ul>
+                `;
+            } else if (foundKeys < expectedKeys.length) {
+                recommendations.innerHTML = `
+                    <p class="text-yellow-600 font-medium">Partial data found. Some data sources are missing.</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Your main website may not be saving all data types</li>
+                        <li>Check if certain features on the main website are working correctly</li>
+                        <li>Verify all key names match between the main website and admin panel</li>
+                    </ul>
+                `;
+            } else {
+                recommendations.innerHTML = `
+                    <p class="text-green-600 font-medium">All expected data found. The connection is working correctly.</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>If the admin panel still isn't showing data, check for JavaScript errors</li>
+                        <li>Verify the admin panel is correctly reading the data</li>
+                        <li>Ensure both sites are on the same domain</li>
+                    </ul>
+                `;
+            }
+        }
+        
+        // Import demo data
+        function importDemoData() {
+            addLogEntry('Importing demo data...');
+            
+            // Demo guarantees
+            const demoGuarantees = [
+                {
+                    id: 1,
+                    certificateId: 'OXX-987654-XYZ',
+                    seller: 'John\'s Service',
+                    buyer: 'Jane Client',
+                    value: '$1,200.00',
+                    status: 'active',
+                    created: '2023-10-15'
+                },
+                {
+                    id: 2,
+                    certificateId: 'OXX-987653-XYZ',
+                    seller: 'Mike\'s Repairs',
+                    buyer: 'Sarah Johnson',
+                    value: '$850.00',
+                    status: 'pending',
+                    created: '2023-10-14'
+                }
+            ];
+            
+            // Demo fee structure
+            const demoFees = {
+                tier1: 5,
+                tier2: 3,
+                tier3: 2,
+                minTier3: 8
+            };
+            
+            // Demo payment methods
+            const demoPayments = {
+                bkash: '01322149482',
+                nagad: '01322149482',
+                rocket: '01322149482',
+                paypal: 'payments@onexx.com'
+            };
+            
+            // Demo certificate
+            const demoCertificate = {
+                seller: 'John\'s Service',
+                buyer: 'Jane Client',
+                value: '$1,500',
+                certificateId: 'OXX-123456-ABC789'
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('onexx_guarantees', JSON.stringify(demoGuarantees));
+            localStorage.setItem('onexx_fee_structure', JSON.stringify(demoFees));
+            localStorage.setItem('onexx_payment_methods', JSON.stringify(demoPayments));
+            localStorage.setItem('onexx_sample_certificate', JSON.stringify(demoCertificate));
+            
+            addLogEntry('Demo data imported successfully', 'success');
+            
+            // Rescan storage
+            scanStorage();
+        }
+        
+        // Clear all storage
+        function clearStorage() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                addLogEntry('All storage cleared', 'success');
+                scanStorage();
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up button handlers
+            document.getElementById('scan-storage').addEventListener('click', scanStorage);
+            document.getElementById('import-demo').addEventListener('click', importDemoData);
+            document.getElementById('clear-storage').addEventListener('click', clearStorage);
+            document.getElementById('refresh-data').addEventListener('click', scanStorage);
+            document.getElementById('clear-log').addEventListener('click', clearLog);
+            document.getElementById('export-log').addEventListener('click', exportLog);
+            
+            // Initial scan
+            scanStorage();
+        });
+    </script>
+</body>
+</html>
