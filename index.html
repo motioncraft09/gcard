@@ -175,7 +175,7 @@
         
         @keyframes fadeIn {
             0% { opacity: 0; }
-            100% { opacity: 1; }
+           100% { opacity: 1; }
         }
         
         .content-hidden {
@@ -210,6 +210,36 @@
             border: 2px solid var(--primary);
             box-shadow: 0 0 10px rgba(79, 70, 229, 0.2), inset 0 0 5px rgba(79, 70, 229, 0.1);
             background-color: rgb(238 242 255);
+        }
+        
+        .verify-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .pending-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: #f59e0b;
+            color: white;
         }
     </style>
 </head>
@@ -289,7 +319,6 @@
                                                 <i class="fas fa-shield-alt text-4xl text-white"></i>
                                             </div>
                                             <h3 class="text-2xl font-bold text-gray-900">Sample Certificate</h3>
-                                            <p class="text-gray-600">OXX-123456-ABC789</p>
                                         </div>
                                         <div class="grid grid-cols-2 gap-4 mb-6">
                                             <div>
@@ -653,14 +682,19 @@
                                     Certificate ID
                                 </label>
                                 <div class="flex">
-                                    <input type="text" class="flex-1 px-4 py-2 input-field rounded-l-md" placeholder="Enter certificate ID (e.g. OXX-ABC123XYZ)">
-                                    <button class="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg transition-all duration-300">
+                                    <input type="text" id="verify-certificate-id" class="flex-1 px-4 py-2 input-field rounded-l-md" placeholder="Enter certificate ID (e.g. OXX-123456-ABC789)">
+                                    <button id="verify-btn" class="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg transition-all duration-300">
                                         Verify
                                     </button>
                                 </div>
                                 <p class="mt-2 text-sm text-gray-500">
                                     Enter a valid certificate ID to verify its status
                                 </p>
+                            </div>
+                            
+                            <div id="verify-result" class="verify-result" style="display: none;">
+                                <h3 class="font-bold text-lg mb-4">Verification Result</h3>
+                                <div id="verify-details"></div>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
@@ -753,6 +787,9 @@
     </div>
 
     <script>
+        // Data storage key
+        const STORAGE_KEY = 'onexx_guarantees';
+        
         // Show loading animation initially
         document.addEventListener('DOMContentLoaded', function() {
             // Hide loading animation and show website content after 2 seconds
@@ -780,6 +817,9 @@
             
             // Set up receipt download functionality
             setupReceiptDownload();
+            
+            // Set up verification functionality
+            setupVerification();
         });
         
         function setupNavigation() {
@@ -1134,16 +1174,52 @@
                     senderInfo = document.getElementById('mobile-number').value;
                 }
                 
-                // Update success section with transaction details
-                document.getElementById('success-payment-method').textContent = paymentMethod;
-                document.getElementById('success-transaction-id').textContent = transactionId || 'TX' + Math.floor(100000 + Math.random() * 900000);
-                document.getElementById('success-sender-number').textContent = senderInfo;
-                document.getElementById('success-service-budget').textContent = document.getElementById('summary-budget').textContent;
-                document.getElementById('success-guarantee-fee').textContent = document.getElementById('summary-fee').textContent;
-                document.getElementById('success-total-paid').textContent = document.getElementById('summary-total').textContent;
+                // Get form data
+                const sellerName = document.getElementById('seller-name').value;
+                const sellerEmail = document.getElementById('seller-email').value;
+                const buyerName = document.getElementById('buyer-name').value;
+                const buyerEmail = document.getElementById('buyer-email').value;
+                const serviceDescription = document.getElementById('service-description').value;
+                const serviceBudget = parseFloat(document.getElementById('service-budget').value);
+                const guaranteePeriod = parseInt(document.getElementById('guarantee-period').value);
+                const refundTerms = document.getElementById('refund-terms').value;
+                
+                // Calculate fees
+                const fees = calculateFees(serviceBudget);
                 
                 // Generate certificate ID
                 const certificateId = 'OXX-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase();
+                
+                // Create guarantee object
+                const guaranteeData = {
+                    certificateId: certificateId,
+                    sellerName: sellerName,
+                    sellerEmail: sellerEmail,
+                    buyerName: buyerName,
+                    buyerEmail: buyerEmail,
+                    serviceDescription: serviceDescription,
+                    serviceBudget: serviceBudget,
+                    guaranteePeriod: guaranteePeriod,
+                    refundTerms: refundTerms,
+                    paymentMethod: paymentMethod,
+                    transactionId: transactionId,
+                    senderInfo: senderInfo,
+                    guaranteeFee: fees.fee,
+                    totalAmount: fees.total,
+                    status: 'Pending Verification',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Save to localStorage
+                saveGuaranteeData(guaranteeData);
+                
+                // Update success section with transaction details
+                document.getElementById('success-payment-method').textContent = paymentMethod;
+                document.getElementById('success-transaction-id').textContent = transactionId;
+                document.getElementById('success-sender-number').textContent = senderInfo;
+                document.getElementById('success-service-budget').textContent = '$ ' + serviceBudget.toFixed(2);
+                document.getElementById('success-guarantee-fee').textContent = '$ ' + fees.fee.toFixed(2);
+                document.getElementById('success-total-paid').textContent = '$ ' + fees.total.toFixed(2);
                 document.getElementById('success-certificate-id').textContent = certificateId;
                 
                 // Switch to success section
@@ -1169,6 +1245,32 @@
             function hideError(inputElement, errorElementId) {
                 inputElement.classList.remove('input-error');
                 document.getElementById(errorElementId).style.display = 'none';
+            }
+            
+            // Function to calculate fees
+            function calculateFees(budget) {
+                if (!budget || budget <= 0) return { fee: 0, total: 0 };
+                
+                let fee = 0;
+                if (budget <= 40) {
+                    fee = budget * 0.05; // 5% for small budgets
+                } else if (budget <= 160) {
+                    fee = budget * 0.03; // 3% for medium budgets
+                } else {
+                    fee = Math.max(8, budget * 0.02); // 2% for large budgets (min $8)
+                }
+                
+                return {
+                    fee: parseFloat(fee.toFixed(2)),
+                    total: parseFloat((budget + fee).toFixed(2))
+                };
+            }
+            
+            // Save guarantee data to localStorage
+            function saveGuaranteeData(data) {
+                let guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                guarantees.push(data);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(guarantees));
             }
         }
         
@@ -1221,6 +1323,82 @@ Note: Your guarantee certificate will be emailed to you after payment verificati
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
+            });
+        }
+        
+        function setupVerification() {
+            const verifyBtn = document.getElementById('verify-btn');
+            const verifyCertificateId = document.getElementById('verify-certificate-id');
+            const verifyResult = document.getElementById('verify-result');
+            const verifyDetails = document.getElementById('verify-details');
+            
+            verifyBtn.addEventListener('click', function() {
+                const certificateId = verifyCertificateId.value.trim();
+                
+                if (!certificateId) {
+                    verifyDetails.innerHTML = `
+                        <div class="bg-red-50 p-4 rounded-md border border-red-200">
+                            <p class="text-red-700">Please enter a certificate ID to verify</p>
+                        </div>
+                    `;
+                    verifyResult.style.display = 'block';
+                    return;
+                }
+                
+                // Get guarantees from localStorage
+                const guarantees = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                const guarantee = guarantees.find(g => g.certificateId === certificateId);
+                
+                if (guarantee) {
+                    verifyDetails.innerHTML = `
+                        <div class="bg-green-50 p-4 rounded-md border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-2">Certificate Verified Successfully!</h4>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div>
+                                    <p class="text-sm text-gray-600">Certificate ID</p>
+                                    <p class="font-medium text-gray-900">${guarantee.certificateId}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Status</p>
+                                    <p class="font-medium ${guarantee.status === 'Active' ? 'text-green-600' : 'text-yellow-600'}">${guarantee.status}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Seller</p>
+                                    <p class="font-medium text-gray-900">${guarantee.sellerName}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Buyer</p>
+                                    <p class="font-medium text-gray-900">${guarantee.buyerName}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Service</p>
+                                    <p class="font-medium text-gray-900">${guarantee.serviceDescription}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Service Budget</p>
+                                    <p class="font-medium text-gray-900">$ ${guarantee.serviceBudget.toFixed(2)}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Guarantee Period</p>
+                                    <p class="font-medium text-gray-900">${guarantee.guaranteePeriod} days</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-600">Created Date</p>
+                                    <p class="font-medium text-gray-900">${new Date(guarantee.createdAt).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    verifyDetails.innerHTML = `
+                        <div class="bg-red-50 p-4 rounded-md border border-red-200">
+                            <h4 class="font-bold text-red-800 mb-2">Certificate Not Found</h4>
+                            <p class="text-red-700">The certificate ID "${certificateId}" was not found in our system. Please check the ID and try again.</p>
+                        </div>
+                    `;
+                }
+                
+                verifyResult.style.display = 'block';
             });
         }
     </script>
