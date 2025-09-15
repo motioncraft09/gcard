@@ -3,788 +3,883 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneXX - Secure Service Guarantees</title>
+    <title>Universal Guarantee Card</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap');
-        
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --secondary: #06b6d4;
-            --accent: #f59e0b;
-            --light-bg: #f9fafb;
-            --card-bg: #ffffff;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --border-light: #e5e7eb;
-            --error: #ef4444;
-            --success: #10b981;
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
-        
-        body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--light-bg);
-            color: var(--text-dark);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
+        .certificate-border {
+            border: 25px solid transparent;
+            padding: 15px;
+            border-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="none"><path d="M5,5 L95,5 L95,95 L5,95 Z" stroke="%23f59e0b" stroke-width="4" stroke-dasharray="10,5" fill="none" /></svg>') 30 stretch;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        }
-        
-        .card-white {
-            background: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--border-light);
-        }
-        
-        .input-field {
-            background: #ffffff;
-            border: 1px solid #d1d5db;
-            color: var(--text-dark);
-            transition: all 0.3s;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-        }
-        
-        .input-error {
-            border-color: var(--error);
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-        }
-        
-        .error-message {
-            color: var(--error);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-        
-        .success-message {
-            color: var(--success);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-        
-        /* Loading Animation */
-        .loading-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-        
-        .loading-content {
-            text-align: center;
-        }
-        
-        .hexagon-loader {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            position: relative;
-        }
-        
-        .hexagon {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            opacity: 0;
-            animation: hexPulse 2s infinite;
-        }
-        
-        .hexagon:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-        
-        .hexagon:nth-child(3) {
-            animation-delay: 0.8s;
-        }
-        
-        @keyframes hexPulse {
-            0% {
-                transform: scale(0.8) rotate(0deg);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.2) rotate(180deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(0.8) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        .loading-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-top: 20px;
-            color: var(--primary);
-        }
-        
-        .loading-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: var(--secondary);
-            border-radius: 50%;
-            margin: 0 5px;
-            animation: dotPulse 1.5s infinite;
-        }
-        
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        @keyframes dotPulse {
-            0%, 100% {
-                transform: scale(0.8);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 1;
-            }
-        }
-        
-        .fade-in {
-            animation: fadeIn 1s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        
-        .content-hidden {
-            display: none;
-        }
-        
-        .page-section {
-            display: none;
-        }
-        
-        .active-section {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        .nav-active {
-            background-color: rgb(224 231 255);
-            color: rgb(79 70 229);
-        }
-        
         .payment-method {
             transition: all 0.3s ease;
-            cursor: pointer;
         }
-        
         .payment-method:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
         }
-        
-        .payment-active {
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 10px rgba(79, 70, 229, 0.2), inset 0 0 5px rgba(79, 70, 229, 0.1);
-            background-color: rgb(238 242 255);
+        @media (max-width: 768px) {
+            .certificate-border {
+                border-width: 15px;
+            }
         }
-        
-        .verify-result {
-            display: none;
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
+        .fee-breakdown {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
         }
-        
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .certificate-card {
+            transition: all 0.3s ease;
         }
-        
-        .admin-table th, .admin-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .admin-table th {
-            background-color: #f9fafb;
-            font-weight: 600;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .status-active {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-        
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        
-        .status-expired {
-            background-color: #fee2e2;
-            color: #b91c1c;
+        .certificate-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50">
-    <!-- Loading Animation -->
-    <div class="loading-container" id="loading">
-        <div class="loading-content">
-            <div class="hexagon-loader">
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-            </div>
-            <div class="loading-text">ONEX<span style="color: #06b6d4">X</span></div>
-            <div class="loading-dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
-    </div>
+<body class="bg-gray-50 min-h-screen">
+    <div id="root"></div>
 
-    <!-- Website Content -->
-    <div id="website-content" class="content-hidden">
-        <!-- Navigation -->
-        <nav class="bg-white shadow-sm fixed w-full z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <div class="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" id="logo">
-                            <span class="mr-2"><i class="fas fa-shield-alt"></i></span> OneXX
+    <!-- Hidden iframe for form submission without navigation -->
+    <iframe name="hiddenFrame" style="display: none;"></iframe>
+
+    <script type="text/babel">
+        // Main App Component
+        const { useState, useEffect } = React;
+
+        // Generate a unique certificate ID
+        const generateCertificateId = () => {
+            const prefix = 'UGC';
+            const timestamp = Date.now().toString(36);
+            const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `${prefix}-${timestamp}-${randomStr}`;
+        };
+
+        // Store certificate data in localStorage
+        const storeCertificateData = (certificateData) => {
+            try {
+                const existingData = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                const newData = [...existingData, certificateData];
+                localStorage.setItem('ugcCertificates', JSON.stringify(newData));
+                return true;
+            } catch (error) {
+                console.error('Error storing certificate data:', error);
+                return false;
+            }
+        };
+
+        // Get certificate data from localStorage
+        const getCertificateData = (certificateId) => {
+            try {
+                const certificates = JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+                return certificates.find(cert => cert.certificateId === certificateId) || null;
+            } catch (error) {
+                console.error('Error retrieving certificate data:', error);
+                return null;
+            }
+        };
+
+        // Get all certificates (for admin view)
+        // Note: This function remains for potential future use with a separate admin site
+        const getAllCertificates = () => {
+            try {
+                return JSON.parse(localStorage.getItem('ugcCertificates') || '[]');
+            } catch (error) {
+                console.error('Error retrieving certificates:', error);
+                return [];
+            }
+        };
+
+        function App() {
+            const [currentView, setCurrentView] = useState('form');
+            const [certificateData, setCertificateData] = useState(null);
+            const [paymentData, setPaymentData] = useState(null);
+
+            // Removed Admin from navigation
+            const navigation = [
+                { name: 'Create Guarantee', id: 'form' },
+                { name: 'Verify', id: 'verify' }
+            ];
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Navigation */}
+                    <nav className="bg-white shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16">
+                                <div className="flex items-center">
+                                    <div className="flex items-center text-indigo-600 font-bold text-xl cursor-pointer" onClick={() => setCurrentView('form')}>
+                                        <span className="mr-1">🛡️</span> Universal Guarantee Card
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    {navigation.map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setCurrentView(item.id)}
+                                            className={`px-3 py-2 rounded-md text-sm font-medium ${currentView === item.id
+                                                ? 'bg-indigo-100 text-indigo-700'
+                                                : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100'
+                                                }`}
+                                        >
+                                            {item.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button id="nav-home" class="px-3 py-2 rounded-md text-sm font-medium nav-active">
-                            Home
-                        </button>
-                        <button id="nav-create" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                            Create Guarantee
-                        </button>
-                        <button id="nav-verify" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                            Verify
-                        </button>
-                        <button id="nav-admin" class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-gray-100">
-                            Admin
-                        </button>
-                    </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
+                        {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
+                        {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} />}
+                        {currentView === 'verify' && <VerificationPage />}
+                    </main>
+                    
+                    {/* Footer */}
+                    <footer className="bg-white mt-12 py-6 border-t border-gray-200">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
+                            <p>© 2023 Universal Guarantee Card. All rights reserved.</p>
+                            <p className="mt-2">For support, email: motioncraft.portal@gmail.com</p>
+                        </div>
+                    </footer>
                 </div>
-            </div>
-        </nav>
+            );
+        }
 
-        <!-- Main Content -->
-        <main class="pt-16">
-            <!-- Home Section -->
-            <section id="home-section" class="page-section active-section">
-                <!-- Hero Section -->
-                <section class="relative z-10 min-h-screen flex items-center">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-                                    Secure Your Services with <span class="text-indigo-600">OneXX</span>
-                                </h1>
-                                <p class="text-xl text-gray-600 mb-8">
-                                    The future of service protection. Get peace of mind with our blockchain-inspired guarantee system that protects both buyers and sellers.
-                                </p>
-                                <div class="flex flex-wrap gap-4">
-                                    <button id="home-create-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition-all duration-300">
-                                        Create Guarantee
-                                    </button>
-                                    <button class="bg-white text-indigo-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-all duration-300 border border-indigo-200">
-                                        Learn More
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="bg-white p-8 rounded-2xl shadow-lg">
-                                    <div class="bg-indigo-50 rounded-xl p-6">
-                                        <div class="text-center mb-6">
-                                            <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                <i class="fas fa-shield-alt text-4xl text-white"></i>
-                                            </div>
-                                            <h3 class="text-2xl font-bold text-gray-900">Sample Certificate</h3>
-                                            <p class="text-gray-600">
-                                                
-                                            </p>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-4 mb-6">
-                                            <div>
-                                                <p class="text-gray-500 text-sm">Seller</p>
-                                                <p class="text-gray-900">John's Service</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-gray-500 text-sm">Buyer</p>
-                                                <p class="text-gray-900">Jane Client</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-gray-500 text-sm">Value</p>
-                                                <p class="text-gray-900">$1,500</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-gray-500 text-sm">Status</p>
-                                                <p class="text-green-600">Active</p>
-                                            </div>
-                                        </div>
-                                        <div class="bg-gray-100 rounded-lg p-4 text-center">
-                                            <div class="w-32 h-32 mx-auto bg-white rounded border border-gray-300 flex items-center justify-center">
-                                                <i class="fas fa-qrcode text-4xl text-gray-400"></i>
-                                            </div>
-                                            <p class="text-gray-500 mt-2">Scan to verify</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Features Section -->
-                <section class="relative z-10 py-20">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="text-center mb-16">
-                            <h2 class="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-                            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Our process is designed to be simple, secure, and efficient for both buyers and sellers.</p>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="bg-white p-6 rounded-2xl shadow-md">
-                                <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mb-6">
-                                    <span class="text-2xl text-white">1</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-3">Create Agreement</h3>
-                                <p class="text-gray-600">Seller creates a guarantee agreement with service details and terms.</p>
-                            </div>
-                            
-                            <div class="bg-white p-6 rounded-2xl shadow-md">
-                                <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mb-6">
-                                    <span class="text-2xl text-white">2</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-3">Secure Payment</h3>
-                                <p class="text-gray-600">Buyer makes payment through our secure escrow system with low fees.</p>
-                            </div>
-                            
-                            <div class="bg-white p-6 rounded-2xl shadow-md">
-                                <div class="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mb-6">
-                                    <span class="text-2xl text-white">3</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-gray-900 mb-3">Get Protection</h3>
-                                <p class="text-gray-600">Both parties are protected by our guarantee for the service period.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- Stats Section -->
-                <section class="relative z-10 py-20 bg-indigo-50">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-indigo-600 mb-2">5,000+</div>
-                                <div class="text-gray-600">Guarantees Issued</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-indigo-600 mb-2">$760K+</div>
-                                <div class="text-gray-600">Value Protected</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-indigo-600 mb-2">99.7%</div>
-                                <div class="text-gray-600">Satisfaction Rate</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-4xl font-bold text-indigo-600 mb-2">24/7</div>
-                                <div class="text-gray-600">Support</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                
-                <!-- CTA Section -->
-                <section class="relative z-10 py-20">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 class="text-4xl font-bold text-gray-900 mb-6">Ready to Secure Your Service?</h2>
-                        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">Join thousands of satisfied customers who trust OneXX for their service protection needs.</p>
-                        <button id="cta-create-btn" class="bg-indigo-600 text-white font-bold py-4 px-12 rounded-lg hover:bg-indigo-700 transition-all duration-300 text-xl">
-                            Get Started Now
-                        </button>
-                    </div>
-                </section>
-            </section>
+        // Calculate fees based on budget
+        const calculateFees = (budget) => {
+            if (!budget || budget <= 0) return { fee: 0, total: 0 };
             
-            <!-- Create Guarantee Section -->
-            <section id="create-section" class="page-section">
-                <div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="gradient-bg px-6 py-4">
-                            <h2 class="text-2xl font-bold text-white">Create Guarantee Certificate</h2>
-                            <p class="text-indigo-100 mt-1">Fill out the form below to create a new guarantee certificate</p>
+            let fee = 0;
+            if (budget <= 5000) {
+                fee = budget * 0.05; // 5% for small budgets
+            } else if (budget <= 20000) {
+                fee = budget * 0.03; // 3% for medium budgets
+            } else {
+                fee = Math.max(1000, budget * 0.02); // 2% for large budgets (min ৳1000)
+            }
+            
+            return {
+                fee: Math.round(fee),
+                total: Math.round(budget + fee)
+            };
+        };
+
+        // Guarantee Form Component
+        function GuaranteeForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                sellerName: '',
+                sellerEmail: '',
+                buyerName: '',
+                buyerEmail: '',
+                serviceDescription: '',
+                budget: '',
+                guaranteePeriod: '30',
+                terms: 'Full refund within the guarantee period if service quality is not met.'
+            });
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [fees, setFees] = useState({ fee: 0, total: 0 });
+
+            const handleChange = (e) => {
+                const newFormData = {
+                    ...formData,
+                    [e.target.name]: e.target.value
+                };
+                
+                setFormData(newFormData);
+                
+                // Recalculate fees when budget changes
+                if (e.target.name === 'budget') {
+                    const budgetValue = parseFloat(e.target.value) || 0;
+                    setFees(calculateFees(budgetValue));
+                }
+            };
+
+            useEffect(() => {
+                // Calculate initial fees
+                const budgetValue = parseFloat(formData.budget) || 0;
+                setFees(calculateFees(budgetValue));
+            }, []);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                // Generate certificate ID
+                const certificateId = generateCertificateId();
+                
+                // Create complete certificate data
+                const completeData = {
+                    ...formData,
+                    fees,
+                    certificateId,
+                    status: 'pending_payment',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Submit to FormSubmit.co
+                const form = e.target;
+                form.submit();
+                
+                // Continue with React flow
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    onSuccess(completeData);
+                }, 1500);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Create Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-1">Fill out the form below to create a new guarantee certificate</p>
                         </div>
                         
-                        <div class="px-6 py-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <form 
+                            onSubmit={handleSubmit} 
+                            action="https://formsubmit.co/niloykhan.get@gmail.com" 
+                            method="POST"
+                            target="hiddenFrame"
+                            className="px-6 py-6"
+                        >
+                            {/* FormSubmit.co configuration */}
+                            <input type="hidden" name="_subject" value="New Guarantee Certificate Request" />
+                            <input type="hidden" name="_template" value="table" />
+                            <input type="hidden" name="_autoresponse" value="Thank you for creating a guarantee certificate with us! We will process your request shortly." />
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Seller Information</h3>
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Seller Name <span class="text-red-500">*</span>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Seller Information</h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Name
                                         </label>
-                                        <input type="text" id="seller-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="John's Repair Service" required>
-                                        <div class="error-message" id="seller-name-error">Seller name is required</div>
+                                        <input
+                                            type="text"
+                                            name="sellerName"
+                                            id="sellerName"
+                                            required
+                                            value={formData.sellerName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="John's Repair Service"
+                                        />
                                     </div>
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Seller Email <span class="text-red-500">*</span>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Email
                                         </label>
-                                        <input type="email" id="seller-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="john@example.com" required>
-                                        <div class="error-message" id="seller-email-error">Valid email is required</div>
+                                        <input
+                                            type="email"
+                                            name="sellerEmail"
+                                            id="sellerEmail"
+                                            required
+                                            value={formData.sellerEmail}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="john@example.com"
+                                        />
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-4">Buyer Information</h3>
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Buyer Name <span class="text-red-500">*</span>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4">Buyer Information</h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Name
                                         </label>
-                                        <input type="text" id="buyer-name" class="w-full px-4 py-2 input-field rounded-md" placeholder="Jane Smith" required>
-                                        <div class="error-message" id="buyer-name-error">Buyer name is required</div>
+                                        <input
+                                            type="text"
+                                            name="buyerName"
+                                            id="buyerName"
+                                            required
+                                            value={formData.buyerName}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Jane Smith"
+                                        />
                                     </div>
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Buyer Email <span class="text-red-500">*</span>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Email
                                         </label>
-                                        <input type="email" id="buyer-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="jane@example.com" required>
-                                        <div class="error-message" id="buyer-email-error">Valid email is required</div>
+                                        <input
+                                            type="email"
+                                            name="buyerEmail"
+                                            id="buyerEmail"
+                                            required
+                                            value={formData.buyerEmail}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="jane@example.com"
+                                        />
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="mt-6">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Service Details</h3>
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Service Description <span class="text-red-500">*</span>
+                            <div className="mt-6">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">Service Details</h3>
+                                <div className="mb-4">
+                                    <label htmlFor="serviceDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Service Description
                                     </label>
-                                    <textarea id="service-description" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Detailed description of the service provided..." required></textarea>
-                                    <div class="error-message" id="service-description-error">Service description is required</div>
+                                    <textarea
+                                        name="serviceDescription"
+                                        id="serviceDescription"
+                                        rows={3}
+                                        required
+                                        value={formData.serviceDescription}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Detailed description of the service provided..."
+                                    />
                                 </div>
                                 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Service Budget ($) <span class="text-red-500">*</span>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="mb-4">
+                                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Service Budget (৳)
                                         </label>
-                                        <input type="number" id="service-budget" min="0" step="0.01" class="w-full px-4 py-2 input-field rounded-md" placeholder="100.00" required>
-                                        <div class="error-message" id="service-budget-error">Valid budget is required</div>
-                                        <p class="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
-                                        <p class="text-xs text-indigo-600 mt-1">* Exchange rate: $1 = 125৳</p>
+                                        <input
+                                            type="number"
+                                            name="budget"
+                                            id="budget"
+                                            min="0"
+                                            required
+                                            value={formData.budget}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="5000"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
                                     </div>
                                     
-                                    <div class="mb-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Guarantee Period (days) <span class="text-red-500">*</span>
+                                    <div className="mb-4">
+                                        <label htmlFor="guaranteePeriod" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Guarantee Period (days)
                                         </label>
-                                        <input type="number" id="guarantee-period" class="w-full px-4 py-2 input-field rounded-md" value="30" min="1" required>
-                                        <div class="error-message" id="guarantee-period-error">Valid period is required</div>
+                                        <input
+                                            type="number"
+                                            name="guaranteePeriod"
+                                            id="guaranteePeriod"
+                                            min="1"
+                                            required
+                                            value={formData.guaranteePeriod}
+                                            onChange={handleChange}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        />
                                     </div>
                                 </div>
                                 
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                                        Refund Terms & Conditions <span class="text-red-500">*</span>
+                                <div className="mb-4">
+                                    <label htmlFor="terms" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Refund Terms & Conditions
                                     </label>
-                                    <textarea id="refund-terms" rows="3" class="w-full px-4 py-2 input-field rounded-md" placeholder="Terms of the guarantee..." required>Full refund within the guarantee period if service quality is not met.</textarea>
-                                    <div class="error-message" id="refund-terms-error">Refund terms are required</div>
+                                    <textarea
+                                        name="terms"
+                                        id="terms"
+                                        rows={3}
+                                        required
+                                        value={formData.terms}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Terms of the guarantee..."
+                                    />
                                 </div>
                                 
-                                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
-                                    <h4 class="font-medium text-indigo-700 mb-2">Fee Breakdown</h4>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <div class="text-sm text-gray-600">Service Budget:</div>
-                                        <div id="fee-budget" class="text-sm font-medium text-right">$ 0.00</div>
+                                {/* Hidden fields for fees to be included in email */}
+                                <input type="hidden" name="guaranteeFee" value={fees.fee} />
+                                <input type="hidden" name="totalAmount" value={fees.total} />
+                                
+                                {/* Fee Breakdown */}
+                                <div className="fee-breakdown p-4 rounded-lg border border-blue-200">
+                                    <h4 className="font-medium text-blue-800 mb-2">Fee Breakdown</h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="text-sm text-gray-600">Service Budget:</div>
+                                        <div className="text-sm font-medium text-right">৳ {formData.budget ? parseInt(formData.budget).toLocaleString() : '0'}</div>
                                         
-                                        <div class="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div id="fee-amount" class="text-sm font-medium text-right">$ 极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。0.00</div>
+                                        <div className="text-sm text-gray-600">Guarantee Fee:</div>
+                                        <div className="text-sm font-medium text-right">৳ {fees.fee.toLocaleString()}</div>
                                         
-                                        <div class="text-sm text-gray-600 border-t border-gray-300 pt-1">Total Amount:</div>
-                                        <div id="fee-total" class="text-sm font-bold text-right border-t border-gray-300 pt-1">$ 0.00</div>
+                                        <div className="text-sm text-gray-600 border-t border-gray-200 pt-1">Total Amount:</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-1">৳ {fees.total.toLocaleString()}</div>
                                     </div>
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        Fees: ≤$40 (5%), $40.01-$160 (3%), ≥$160.01 (2%, min $8)
+                                    <p className="text-xs text-gray-500 mt-2">
+                                        Fees: ≤৳5,000 (5%), ৳5,001-৳20,000 (3%), ≥৳20,001 (2%, min ৳1,000)
                                     </p>
                                 </div>
                             </div>
                             
-                            <div class="mt-8 flex justify-end">
-                                <button id="continue-to-payment" class="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg transition-all duration-300">
-                                    Continue to Payment - $ <span id="payment-total">0.00</span>
+                            <div className="mt-8 flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting || !formData.budget || formData.budget <= 0}
+                                    className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                >
+                                    {isSubmitting ? 'Processing...' : `Continue to Payment - ৳ ${fees.total.toLocaleString()}`}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        // Payment Instruction Component
+        function PaymentInstruction({ data, onSuccess }) {
+            const [activeMethod, setActiveMethod] = useState('bkash');
+            const [txId, setTxId] = useState('');
+            const [senderNumber, setSenderNumber] = useState('');
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            
+            // Calculate fees based on budget
+            const fees = calculateFees(parseFloat(data.budget) || 0);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!txId || !senderNumber) return;
+                
+                setIsSubmitting(true);
+                
+                // Update certificate data with payment info
+                const updatedData = {
+                    ...data,
+                    payment: {
+                        txId,
+                        senderNumber,
+                        method: activeMethod,
+                        paidAt: new Date().toISOString()
+                    },
+                    status: 'pending_verification'
+                };
+                
+                // Store in localStorage
+                storeCertificateData(updatedData);
+                
+                // Submit to FormSubmit.co
+                const form = e.target;
+                form.submit();
+                
+                // Continue with React flow
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    onSuccess({ txId, senderNumber, method: activeMethod });
+                }, 1500);
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden mb-8">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Complete Your Payment</h2>
+                            <p className="text-gray-600 mt-1">Please send money via one of the following methods</p>
+                        </div>
+                        
+                        <div className="px-6 py-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'bkash' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('bkash')}
+                                >
+                                    <div className="text-4xl mb-2">📱</div>
+                                    <h3 className="font-semibold">bKash</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                                
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'nagad' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('nagad')}
+                                >
+                                    <div className="text-4xl mb-2">💳</div>
+                                    <h3 className="font-semibold">Nagad</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                                
+                                <div 
+                                    className={`payment-method p-4 border-2 rounded-lg cursor-pointer text-center ${activeMethod === 'rocket' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}
+                                    onClick={() => setActiveMethod('rocket')}
+                                >
+                                    <div className="text-4xl mb-2">🚀</div>
+                                    <h3 className="font-semibold">Rocket</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold">01322149482</p>
+                                </div>
+                            </div>
+                            
+                            <div className="bg-yellow-50 p-4 rounded-lg mb-6">
+                                <div className="flex">
+                                    <div className="flex-shrink-0">📌</div>
+                                    <div className="ml-3">
+                                        <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
+                                        <div className="mt-2 text-sm text-yellow-700">
+                                            <p>Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
+                                            <p className="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <form 
+                                onSubmit={handleSubmit} 
+                                action="https://formsubmit.co/niloykhan.get@gmail.com" 
+                                method="POST"
+                                target="hiddenFrame"
+                                className="bg-gray-50 p-6 rounded-lg"
+                            >
+                                {/* FormSubmit.co configuration */}
+                                <input type="hidden" name="_subject" value="Payment Details for Guarantee Certificate" />
+                                <input type="hidden" name="_template" value="table" />
+                                <input type="hidden" name="_autoresponse" value="Thank you for your payment! We will verify it and send your guarantee certificate shortly." />
+                                
+                                {/* Include certificate data as hidden fields */}
+                                <input type="hidden" name="certificateId" value={data.certificateId} />
+                                <input type="hidden" name="sellerName" value={data.sellerName} />
+                                <input type="hidden" name="sellerEmail" value={data.sellerEmail} />
+                                <input type="hidden" name="buyerName" value={data.buyerName} />
+                                <input type="hidden" name="buyerEmail" value={data.buyerEmail} />
+                                <input type="hidden" name="serviceDescription" value={data.serviceDescription} />
+                                <input type="hidden" name="budget" value={data.budget} />
+                                <input type="hidden" name="guaranteePeriod" value={data.guaranteePeriod} />
+                                <input type="hidden" name="terms" value={data.terms} />
+                                <input type="hidden" name="paymentMethod" value={activeMethod} />
+                                <input type="hidden" name="guaranteeFee" value={fees.fee} />
+                                <input type="hidden" name="totalAmount" value={fees.total} />
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label htmlFor="txId" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Transaction ID (TxID)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="txId"
+                                            name="transactionId"
+                                            required
+                                            value={txId}
+                                            onChange={(e) => setTxId(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Enter your transaction ID"
+                                        />
+                                    </div>
+                                    
+                                    <div>
+                                        <label htmlFor="senderNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Your Mobile Number
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="senderNumber"
+                                            name="senderNumber"
+                                            required
+                                            value={senderNumber}
+                                            onChange={(e) => setSenderNumber(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder="Enter your mobile number"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-6 flex justify-end">
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    >
+                                        {isSubmitting ? 'Submitting...' : 'Submit Transaction Details'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    {/* Order Summary */}
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-xl font-bold text-gray-800">Order Summary</h2>
+                        </div>
+                        <div className="px-6 py-4">
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Service</span>
+                                <span className="font-medium">{data.serviceDescription.substring(0, 40)}...</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Seller</span>
+                                <span className="font-medium">{data.sellerName}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Buyer</span>
+                                <span className="font-medium">{data.buyerName}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Service Budget</span>
+                                <span className="font-medium">৳ {parseInt(data.budget || 0).toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2">
+                                <span className="text-gray-600">Guarantee Fee</span>
+                                <span className="font-medium">৳ {fees.fee.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
+                                <span className="text-lg font-bold">Total</span>
+                                <span className="text-lg font-bold text-indigo-600">৳ {fees.total.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Success Screen Component
+        function SuccessScreen({ certificateData, paymentData }) {
+            const downloadReceipt = () => {
+                // Calculate fees
+                const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+                
+                // Create a simple receipt text
+                const receiptText = `
+                    Universal Guarantee Card - Payment Receipt
+                    ------------------------------------------
+                    Certificate ID: ${certificateData.certificateId}
+                    Transaction ID: ${paymentData.txId}
+                    Payment Method: ${paymentData.method.toUpperCase()}
+                    Sender Number: ${paymentData.senderNumber}
+                    Date: ${new Date().toLocaleDateString()}
+                    
+                    Service: ${certificateData.serviceDescription}
+                    Seller: ${certificateData.sellerName}
+                    Buyer: ${certificateData.buyerName}
+                    Service Budget: ৳ ${parseInt(certificateData.budget || 0).toLocaleString()}
+                    Guarantee Fee: ৳ ${fees.fee.toLocaleString()}
+                    Total Amount: ৳ ${fees.total.toLocaleString()}
+                    Guarantee Period: ${certificateData.guaranteePeriod} days
+                    
+                    Status: Pending Verification
+                    Note: Your guarantee certificate will be emailed to you after payment verification.
+                `;
+                
+                // Create a blob and download link
+                const blob = new Blob([receiptText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `payment-receipt-${paymentData.txId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Calculate fees for display
+            const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+
+            return (
+                <div className="max-w-2xl mx-auto text-center">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-12">
+                            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                                <svg className="h-6 w-6 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 className="mt-4 text-2xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                            <p className="mt-2 text-gray-600">
+                                Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                            </p>
+                            
+                            <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-gray-600">Certificate ID</p>
+                                        <p className="font-medium">{certificateData.certificateId}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Transaction ID</p>
+                                        <p className="font-medium">{paymentData.txId}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Payment Method</p>
+                                        <p className="font-medium capitalize">{paymentData.method}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Sender Number</p>
+                                        <p className="font-medium">{paymentData.senderNumber}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Service Budget</p>
+                                        <p className="font-medium">৳ {parseInt(certificateData.budget || 0).toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Guarantee Fee</p>
+                                        <p className="font-medium">৳ {fees.fee.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Total Paid</p>
+                                        <p className="font-medium">৳ {fees.total.toLocaleString()}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-gray-600">Status</p>
+                                        <p className="font-medium text-yellow-600">Pending Verification</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8">
+                                <button
+                                    onClick={downloadReceipt}
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Download Receipt
+                                </button>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                >
+                                    Back to Home
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Payment Section -->
-            <section id="payment-section" class="page-section">
-                <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="gradient-bg px-6 py-4">
-                            <h2 class="text-2xl font-bold text-white">Complete Your Payment</h2>
-                            <p class="text-indigo-100 mt-1">Please send money via one of the following methods</p>
-                        </div>
-                        
-                        <div class="px-6 py-6">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-                                <div id="payment-bkash" class="payment-method p-4 border-2 rounded-lg text-center payment-active">
-                                    <div class="text-4xl mb-2">📱</div>
-                                    <h3 class="font-semibold text-gray-900">bKash</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
-                                </div>
-                                
-                                <div id="payment-nagad" class="payment-method p-4 border-2 rounded-lg text-center">
-                                    <div class="text-4xl mb-2">💳</div>
-                                    <h3 class="font-semibold text-gray-900">Nagad</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
-                                </div>
-                                
-                                <div id="payment-rocket" class="payment-method p-4 border-2 rounded-lg text-center">
-                                    <div class="text-4xl mb-2">🚀</div>
-                                    <h3 class="font-semibold text-gray-900">Rocket</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p class="font-mono text-lg font-bold text-indigo-600">01322149482</p>
-                                </div>
-                                
-                                <div id="payment-paypal" class="payment-method p-4 border-2 rounded-lg text-center">
-                                    <div class="text-4xl mb-2">🌎</div>
-                                    <h3 class="font-semibold text-gray-900">PayPal</h3>
-                                    <p class="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p class="font-mono text-sm font-bold text-indigo-600">payments@onexx.com</p>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-yellow-50 p-4 rounded-lg mb-6 border border-yellow-200">
-                                <div class="flex">
-                                    <div class="flex-shrink-0 text-yellow-500 text-xl">📌</div>
-                                    <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-yellow-800">Important Note</h3>
-                                        <div class="mt-2 text-sm text-yellow-700">
-                                            <p>For bKash, Nagad, and Rocket: Please use <strong>"Send Money"</strong> option only. Do not use "Payment" option.</p>
-                                            <p class="mt-1">After sending money, enter the Transaction ID (TxID) and your mobile number below.</p>
-                                            <p class="mt-1">For PayPal: Enter your PayPal email address used for payment.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                                <div id="payment-bkash-form" class="payment-form">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Transaction ID (TxID) <span class="text-red-500">*极速赛车开奖结果历史记录完整保存，方便玩家查询和分析。</span>
-                                            </label>
-                                            <input type="text" id="transaction-id" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your transaction ID" required>
-                                            <div class="error-message" id="transaction-id-error">Transaction ID is required</div>
-                                        </div>
-                                        
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                                Your Mobile Number <span class="text-red-500">*</span>
-                                            </label>
-                                            <input type="text" id="mobile-number" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your mobile number" required>
-                                            <div class="error-message极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。" id="mobile-number-error">Valid mobile number is required</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div id="payment-paypal-form" class="payment-form hidden">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                                            Your PayPal Email <span class="text-red-500">*</span>
-                                        </label>
-                                        <input type="email" id极速赛车开奖直播实时更新，确保玩家不错过任何一期结果="paypal-email" class="w-full px-4 py-2 input-field rounded-md" placeholder="Enter your PayPal email" required>
-                                        <div class="error-message" id="paypal-email-error">Valid PayPal email is required</div>
-                                        <p class="text-xs text-gray-500 mt-2">Make sure to send payment to: payments@onexx.com</极速赛车开奖号码经过严格公证，确保公平公正透明。p>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-6 flex justify-end">
-                                    <button id="submit-payment" class="gradient-bg text-white font-medium py-3 px-8 rounded-md hover:shadow-lg transition-all duration-300">
-                                        Submit Payment Details
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            );
+        }
+
+        // Verification Page Component
+        function VerificationPage() {
+            const [certificateId, setCertificateId] = useState('');
+            const [verificationResult, setVerificationResult] = useState(null);
+            const [isVerifying, setIsVerifying] = useState(false);
+
+            const handleVerify = () => {
+                if (!certificateId) return;
+                
+                setIsVerifying(true);
+                
+                // Check localStorage for certificate data
+                setTimeout(() => {
+                    setIsVerifying(false);
                     
-                    <!-- Order Summary -->
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden mt-8">
-                        <div class="gradient-bg px极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。-6 py-4">
-                            <h2 class="text-xl font-bold text-white">Order Summary</h2>
-                        </div>
-                        <div class="px-6 py-4">
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Service</span>
-                                <span id="summary-service" class="font-medium text-gray-900">-</span>
-                            </div>
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Seller</span>
-                                <span id="summary-seller" class="font-medium text-gray-900">-</span>
-                            </div>
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Buyer</span>
-                                <span id="summary-buyer" class="font-medium text-gray-900">-</span>
-                            </div>
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Service Budget</极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。span>
-                                <span id="summary-budget" class="font-medium text-gray-900">$ 0.00</span>
-                            </div>
-                            <div class="flex justify-between py-2">
-                                <span class="text-gray-600">Guarantee Fee</span>
-                                <span id="summary-fee" class="font-medium text-gray-900">$ 0.00</span>
-                            </div>
-                            <div class="flex justify-between py-2 border-t border-gray-300 mt-2 pt-3">
-                                <span class="text-lg font-bold text-gray-900">Total</span>
-                                <span id="summary-total" class="text-lg font-bold text-indigo-600">$ 0.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Verify Section -->
-            <section id="verify-section" class="page-section">
-                <div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="gradient-bg px-6 py-4">
-                            <h2 class="text-2xl font-bold text-white">Verify Guarantee Certificate</h2>
-                            <p class="text-indigo-100 mt-1">Enter a certificate ID to verify a guarantee</p>
+                    const certificateData = getCertificateData(certificateId);
+                    
+                    if (certificateData) {
+                        // Calculate expiry date
+                        const createdAt = new Date(certificateData.createdAt);
+                        const expiryDate = new Date(createdAt);
+                        expiryDate.setDate(expiryDate.getDate() + parseInt(certificateData.guaranteePeriod));
+                        
+                        const now = new Date();
+                        const isExpired = now > expiryDate;
+                        
+                        setVerificationResult({
+                            status: isExpired ? 'expired' : 'active',
+                            message: isExpired 
+                                ? 'This guarantee certificate has expired.' 
+                                : 'This guarantee certificate is valid and active.',
+                            expiry: expiryDate.toLocaleDateString(),
+                            data: certificateData
+                        });
+                    } else {
+                        setVerificationResult({
+                            status: 'invalid',
+                            message: 'Certificate ID not found. Please check the ID and try again.'
+                        });
+                    }
+                }, 1000);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-white card-shadow rounded-lg overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-1">Enter a certificate ID to verify a guarantee</p>
                         </div>
                         
-                        <div class="px-6 py-6">
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                        <div className="px-6 py-6">
+                            <div className="mb-6">
+                                <label htmlFor="certificateId" className="block text-sm font-medium text-gray-700 mb-1">
                                     Certificate ID
                                 </label>
-                                <div class="flex">
-                                    <input type="text" id="verify-certificate-id" class="flex-1 px-4 py-2 input-field rounded-l-md" placeholder="Enter certificate ID (e.g. OXX-ABC123XYZ)">
-                                    <button id="verify-button" class="gradient-bg text-white font-medium px-4 py-2 rounded-r-md hover:shadow-lg transition-all duration-300">
-                                        Verify
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        id="certificateId"
+                                        value={certificateId}
+                                        onChange={(e) => setCertificateId(e.target.value)}
+                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Enter certificate ID (e.g. UGC-ABC123XYZ)"
+                                    />
+                                    <button
+                                        onClick={handleVerify}
+                                        disabled={isVerifying || !certificateId}
+                                        className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                                    >
+                                        {isVerifying ? 'Verifying...' : 'Verify'}
                                     </button>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-500">
+                                <p className="mt-2 text-sm text-gray-500">
                                     Enter a valid certificate ID to verify its status
                                 </p>
                             </div>
                             
-                            <div id="verify-result" class="verify-result">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Guarantee Certificate Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600">Certificate ID</p>
-                                        <p id="verify-result-id" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Status</p>
-                                        <p id="verify-result-status" class="font-medium">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Seller</p>
-                                        <p id="verify-result-seller" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Buyer</p>
-                                        <p id="verify-result-buyer" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Service</p>
-                                        <p id="verify-result-service" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Service Budget</p>
-                                        <p id="verify-result-budget" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Guarantee Period</p>
-                                        <p id="verify-result-period" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Created Date</p>
-                                        <p id="verify-result-date" class="font-medium text-gray-900">-</p>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <p class="text-sm text-gray-600">Refund Terms</p>
-                                    <p id="verify-result-terms" class="font-medium text-gray-900">-</p>
-                                </div>
-                            </div>
-                            
-                            <div id="verify-error" class="verify-result bg-red-50 p-4 rounded-md border border-red-200">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8极速赛车开奖结果历史记录完整保存，方便玩家查询和分析。 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-red-800">Certificate Not Found</h3>
-                                        <div class="mt-2 text-sm text-red-700">
-                                            <p>No guarantee certificate found with the provided ID. Please check the ID and try again.</p>
+                            {verificationResult && (
+                                <div className={`p-4 rounded-md ${verificationResult.status === 'active' ? 'bg-green-50 text-green-700' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-700' : 'bg-red-50 text-red-700'}`}>
+                                    <h3 className="font-medium text-lg mb-2">
+                                        {verificationResult.status === 'active' ? 'Valid Certificate' : 
+                                         verificationResult.status === 'expired' ? 'Expired Certificate' : 
+                                         'Invalid Certificate'}
+                                    </h3>
+                                    <p>{verificationResult.message}</p>
+                                    
+                                    {verificationResult.data && (
+                                        <div className="mt-4 pt-4 border-t border-current border-opacity-25">
+                                            <h4 className="font-medium mb-2">Certificate Details:</h4>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div>Seller:</div>
+                                                <div className="font-medium">{verificationResult.data.sellerName}</div>
+                                                
+                                                <div>Buyer:</div>
+                                                <div className="font-medium">{verificationResult.data.buyerName}</div>
+                                                
+                                                <div>Service:</div>
+                                                <div className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</div>
+                                                
+                                                <div>Service Budget:</div>
+                                                <div className="font-medium">৳ {parseInt(verificationResult.data.budget || 0).toLocaleString()}</div>
+                                                
+                                                <div>Guarantee Fee:</div>
+                                                <div className="font-medium">৳ {verificationResult.data.fees.fee.toLocaleString()}</div>
+                                                
+                                                <div>Total Amount:</div>
+                                                <div className="font-medium">৳ {verificationResult.data.fees.total.toLocaleString()}</div>
+                                                
+                                                <div>Issue Date:</div>
+                                                <div className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</div>
+                                                
+                                                <div>Expiry Date:</div>
+                                                <div className="font-medium">{verificationResult.expiry}</div>
+                                                
+                                                <div>Payment Status:</div>
+                                                <div className="font-medium capitalize">{verificationResult.data.status.replace('_', ' ')}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                            </div>
+                            )}
                             
-                            <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
-                                <h3 class="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
-                                <ol class="list-decimal pl-5 text-gray-600 space-y-1">
+                            <div className="mt-8 bg-gray-50 p-4 rounded-md">
+                                <h3 className="font-medium text-gray-900 mb-2">How to verify a guarantee</h3>
+                                <ol className="list-decimal pl-5 text-gray-600 space-y-1">
                                     <li>Enter the Certificate ID found on the guarantee certificate</li>
                                     <li>Click the Verify button</li>
                                     <li>The system will display the current status of the guarantee</li>
@@ -793,866 +888,11 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Admin Section -->
-            <section id="admin-section" class="page-section">
-                <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="gradient-bg px-6 py-4">
-                            <h2 class="text-2xl font-bold text-white">Admin Panel</h2>
-                            <p class="text-indigo-100 mt-1">View and manage all guarantee certificates</p>
-                        </div>
-                        
-                        <div class="px-6 py-6">
-                            <div class="mb-6 flex justify-between items-center">
-                                <div>
-                                    <h3 class="text-lg font-medium text-gray-900">All Guarantees</h3>
-                                    <p class="text-sm text-gray-600">Manage all guarantee certificates in the system</p>
-                                </div>
-                                <button id="refresh-guarantees" class="bg-indigo-600 text-white font-medium py-2 px-4 rounded-md hover:bg-indigo-700 transition-all duration-300">
-                                    Refresh Data
-                                </button>
-                            </div>
-                            
-                            <div class="overflow-x-auto">
-                                <table class="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Certificate ID</th>
-                                            <th>Seller</th>
-                                            <th>Buyer</th>
-                                            <th>Service</th>
-                                            <th>Budget</th>
-                                            <th>Fee</th>
-                                            <th>Created</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="guarantees-table-body">
-                                        <!-- Data will be populated by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <div id="no-guarantees-message" class="text-center py-8 bg-gray-50 rounded-lg mt-4">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">No guarantees found</h3>
-                                <p class="mt-1 text-sm text-gray-500">Get started by creating a new guarantee certificate.</p>
-                                <div class="mt-6">
-                                    <button id="admin-create-btn" class="gradient-bg text-white font-medium py-2 px-4 rounded-md hover:shadow-lg transition-all duration-300">
-                                        Create Guarantee
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Success Section -->
-            <section id="success-section" class="page-section">
-                <div class="max-w-2xl mx-auto py极速赛车开奖号码经过严格公证，确保公平公正透明。-12 px-4 sm:px-6 lg:px-8 text-center">
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="px-6 py-12">
-                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
-                                <svg class="h-8 w-8 text-green-600" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。l4 4L19 7" />
-                                </svg>
-                            </div>
-                            <h2 class="mt-4 text-2极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
-                            <p class="mt-2 text-gray-600">
-                                Your transaction details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
-                            </p>
-                            
-                            <div class="mt-8 bg-gray-50 p-6 rounded-lg text-left border border-gray-200">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Transaction Details</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p class="text-sm text-gray-600">Certificate ID</p>
-                                        <p class="font-medium text-gray-900" id="success-certificate-id">OXX-123456-ABC789</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Transaction ID</p>
-                                        <p class="font-medium text-gray-900" id="success-transaction-id">TX123456789</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Payment Method</p>
-                                        <p class="font-medium text-gray-900" id="success-payment-method">bKash</极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Sender Number</p>
-                                        <p class="font-medium text-gray-900" id="success-sender-number">01XXXXXXXXX</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Service Budget</p>
-                                        <p class="font-medium text-gray-900" id="success-service-budget">$ 100.00</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Guarantee Fee</p>
-                                        <p class="font-medium text-gray-900" id="success-guarantee-fee">$ 5.00</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm text-gray-600">Total Paid</p>
-                                        <p class="font-medium text-gray-900极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。" id="success-total-paid">$ 105.00</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm极速赛车开奖号码经过严格公证，确保公平公正透明。 text-gray-600">Status</p>
-                                        <p class="font-medium text-yellow-600">Pending Verification</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8">
-                                <button id="download-receipt" class="gradient-bg text-white font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 mr-3">
-                                    Download Receipt
-                                </button>
-                                <button id="success-home-btn" class="bg-white text-gray-700 font-medium py-2 px-6 rounded-md hover:shadow-lg transition-all duration-300 border border-gray-300">
-                                    Back to Home
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-        
-        <!-- Footer -->
-        <footer class="bg-white mt-12 py-6 border-t border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
-                <p>© 2023 OneXX. All rights reserved.</p>
-                <p class="mt-2">For support, email: support@onexx.com</p>
-            </div>
-        </footer>
-    </div>
+            );
+        }
 
-    <script>
-        // Show loading animation initially
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hide loading animation and show website content after 2 seconds
-            setTimeout(function() {
-                const loadingElement = document.getElementById('loading');
-                const websiteContent = document.getElementById('website-content');
-                
-                if (loadingElement) {
-                    loadingElement.style.opacity = '0';
-                    setTimeout(function() {
-                        loadingElement.style.display = 'none';
-                        websiteContent.classList.remove('content-hidden');
-                    }, 500);
-                }
-            }, 2000);
-            
-            // Set up navigation
-            setupNavigation();
-            
-            // Set up form functionality
-            setupFormFunctionality();
-            
-            // Set up payment functionality
-            setupPaymentFunctionality();
-            
-            // Set up receipt download functionality
-            setupReceiptDownload();
-            
-            // Set up verify functionality
-            setupVerifyFunctionality();
-            
-            // Set up admin functionality
-            setupAdminFunctionality();
-            
-            // Initialize data if not exists
-            initializeData();
-        });
-        
-        function initializeData() {
-            // Initialize guarantees array in localStorage if it doesn't exist
-            if (!localStorage.getItem('onexx_guarantees')) {
-                localStorage.setItem('onexx_guarantees', JSON.stringify([]));
-            }
-        }
-        
-        function setupNavigation() {
-            // Get all navigation buttons
-            const navHome = document.getElementById('nav-home');
-            const navCreate = document.getElementById('nav-create');
-            const navVerify = document.getElementById('nav-verify');
-            const navAdmin = document.getElementById('nav-admin');
-            const logo = document.getElementById('logo');
-            const homeCreateBtn = document.getElementById('home-create-btn');
-            const ctaCreateBtn = document.getElementById('cta-create-btn');
-            const successHomeBtn = document.getElementById('success-home-btn');
-            const adminCreateBtn = document.getElementById('admin-create-btn');
-            
-            // Get all page sections
-            const homeSection = document.getElementById('home-section');
-            const createSection = document.getElementById('create-section');
-            const verifySection = document.getElementById('verify-section');
-            const adminSection = document.getElementById('admin-section');
-            const paymentSection = document.getElementById极速赛车开奖结果实时更新，玩家可随时查看最新中奖号码。('payment-section');
-            const successSection = document.getElementById('success-section');
-            
-            // Function to change active section
-            function changeActiveSection(section) {
-                // Hide all sections
-                homeSection.classList.remove('active-section');
-                createSection.classList.remove('active-section');
-                verifySection.classList.remove('active-section');
-                adminSection.classList.remove('active-section');
-                paymentSection.classList.remove('active-section');
-                successSection.classList.remove('active-section');
-                
-                // Remove active class from all nav buttons
-                navHome.classList.remove('nav-active');
-                navCreate.classList.remove('nav-active');
-                navVerify.classList.remove('nav-active');
-                navAdmin.classList.remove('nav-active');
-                
-                // Show the selected section
-                section.classList.add('active-section');
-                
-                // Add active class to the corresponding nav button
-                if (section === homeSection) {
-                    navHome.classList.add('nav-active');
-                } else if (section === createSection) {
-                    navCreate.classList.add('nav-active');
-                } else if (section === verifySection) {
-                    navVerify.classList.add('nav-active');
-                } else if (section === adminSection) {
-                    navAdmin.classList.add('nav-active');
-                    // Refresh admin table when navigating to admin section
-                    refreshGuaranteesTable();
-                }
-                
-                // Scroll to top
-                window.scrollTo(0, 0);
-            }
-            
-            // Add event listeners to navigation buttons
-            navHome.addEventListener('click', function() {
-                changeActiveSection(homeSection);
-            });
-            
-            navCreate.addEventListener('click', function() {
-                changeActiveSection(createSection);
-            });
-            
-            navVerify.addEventListener('click', function() {
-                changeActiveSection(verifySection);
-            });
-            
-            navAdmin.addEventListener('click', function() {
-                changeActiveSection(adminSection);
-            });
-            
-            // Logo click event
-            logo.addEventListener('click', function() {
-                changeActiveSection(homeSection);
-            });
-            
-            // Home page create button
-            homeCreateBtn.addEventListener('click', function() {
-                changeActiveSection(createSection);
-            });
-            
-            // CTA create button
-            ctaCreateBtn.addEventListener('click', function() {
-                changeActiveSection(createSection);
-            });
-            
-            // Success page home button
-            successHomeBtn.addEventListener('click', function() {
-                changeActiveSection(homeSection);
-            });
-            
-            // Admin page create button
-            adminCreateBtn.addEventListener('click', function() {
-                changeActiveSection(createSection);
-            });
-        }
-        
-        function setupFormFunctionality() {
-            const budgetInput = document.getElementById('service-budget');
-            const feeBudget = document.getElementById('fee-budget');
-            const feeAmount = document.getElementById('fee-amount');
-            const feeTotal = document.getElementById('fee-total');
-            const paymentTotal = document.getElementById('payment-total');
-            const continueButton = document.getElementById('continue-to-payment');
-            
-            // Function to calculate fees
-            function calculateFees(budget) {
-                if (!budget || budget <= 0) return { fee: 0, total: 0 };
-                
-                let fee = 0;
-                if (budget <= 40) {
-                    fee = budget * 0.05; // 5% for small budgets
-                } else if (budget <= 160) {
-                    fee = budget * 0.03; // 3% for medium budgets
-                } else {
-                    fee = Math.max(8, budget * 0.02); // 2% for large budgets (min $8)
-                }
-                
-                return {
-                    fee: parseFloat(fee.toFixed(2)),
-                    total: parseFloat((budget + fee).toFixed(2))
-                };
-            }
-            
-            // Update fee breakdown when budget changes
-            budgetInput.addEventListener('input', function() {
-                const budget = parseFloat(this.value) || 0;
-                const fees = calculateFees(budget);
-                
-                feeBudget.textContent = '$ ' + budget.toFixed(2);
-                feeAmount.textContent = '$ ' + fees.fee.toFixed(2);
-                fee极速赛车开奖直播，结果记录全面精准，玩家可随时查看历史数据。Total.textContent = '$ ' + fees.total.toFixed(2);
-                paymentTotal.textContent = fees.total.toFixed(2);
-            });
-            
-            // Continue to payment button
-            continueButton.addEventListener('click', function() {
-                // Validate all required fields
-                const sellerName = document.getElementById('seller-name');
-                const sellerEmail = document.getElementById('seller-email');
-                const buyerName = document.getElementById('buyer-name');
-                const buyerEmail = document.getElementById('buyer-email');
-                const serviceDescription = document.getElementById('service-description');
-                const serviceBudget = document.getElementById('service-budget');
-                const guaranteePeriod = document.getElementById('guarantee-period');
-                const refundTerms = document.getElementById('refund-terms');
-                
-                let isValid = true;
-                
-                // Validate required fields
-                if (!sellerName.value.trim()) {
-                    showError(sellerName, 'seller-name-error');
-                    isValid = false;
-                } else {
-                    hideError(sellerName, 'seller-name-error');
-                }
-                
-                if (!sellerEmail.value.trim() || !isValidEmail(sellerEmail.value)) {
-                    showError(sellerEmail, 'seller-email-error');
-                    isValid = false;
-                } else {
-                    hideError(sellerEmail, 'seller-email-error');
-                }
-                
-                if (!buyerName.value.trim()) {
-                    showError(buyerName, 'buyer-name-error');
-                    isValid = false;
-                } else {
-                    hideError(buyer极速赛车开奖号码经过严格公证，确保公平公正透明。Name, 'buyer-name-error');
-                }
-                
-                if (!buyerEmail.value.trim() || !isValidEmail(buyerEmail.value)) {
-                    showError(buyerEmail, 'buyer-email-error');
-                    isValid = false;
-                } else {
-                    hideError(buyerEmail, 'buyer-email-error');
-                }
-                
-                if (!serviceDescription.value.trim()) {
-                    showError(serviceDescription, 'service-description-error');
-                    isValid = false;
-                } else {
-                    hideError(serviceDescription, 'service-description-error');
-                }
-                
-                if (!serviceBudget.value || parseFloat(serviceBudget.value) <= 0) {
-                    showError(serviceBudget, 'service-budget-error');
-                    isValid = false;
-                } else {
-                    hideError(serviceBudget, 'service-budget-error');
-                }
-                
-                if (!guaranteePeriod.value || parseInt(guaranteePeriod.value) <= 0) {
-                    showError(guaranteePeriod, 'guarantee-period-error');
-                    isValid = false;
-                } else {
-                    hideError(guaranteePeriod, 'guarantee-period-error');
-                }
-                
-                if (!refundTerms.value.trim()) {
-                    showError(refundTerms, 'refund-terms-error');
-                    isValid = false;
-                } else {
-                    hideError(refundTerms, 'refund-terms-error');
-                }
-                
-                if (!isValid) {
-                    // Scroll to the first error
-                    const firstError = document.querySelector('.input-error');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return;
-                }
-                
-                const budget = parseFloat(serviceBudget.value) || 0;
-                
-                // Update order summary
-                document.getElementById('summary-service').textContent = serviceDescription.value || '-';
-                document.getElementById('summary-seller').textContent = sellerName.value || '-';
-                document.getElementById('summary-buyer').textContent = buyerName.value || '-';
-                
-                const fees = calculateFees(budget);
-                document.getElementById('summary-budget').textContent = '$ ' + budget.toFixed(2);
-                document.getElementById('summary-fee').textContent = '$ ' + fees.fee.toFixed(2);
-                document.getElementById('summary-total').textContent = '$ ' + fees.total.toFixed(2);
-                
-                // Switch to payment section
-                document.querySelectorAll('.page-section').forEach(section => {
-                    section.classList.remove('active-section');
-                });
-                document.getElementById('payment-section').classList.add('active-section');
-                
-                // Update nav active state
-                document.querySelectorAll('nav button').forEach(button => {
-                    button.classList.remove('nav-active');
-                });
-            });
-            
-            // Email validation function
-            function isValidEmail(email) {
-                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(email).toLowerCase());
-            }
-            
-            // Show error function
-            function showError(inputElement, errorElementId) {
-                inputElement.classList.add('input-error');
-                document.getElementById(errorElementId).style.display = 'block';
-            }
-            
-            // Hide error function
-            function hideError(inputElement, errorElementId) {
-                inputElement.classList.remove('input-error');
-                document.getElementById(errorElementId).style.display = 'none';
-            }
-            
-            // Add input event listeners to clear errors when typing
-            const requiredInputs = document.querySelectorAll('input[required], textarea[required]');
-            requiredInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const errorId = this.id + '-error';
-                    if (document.getElementById(errorId)) {
-                        hideError(this, errorId);
-                    }
-                });
-            });
-            
-            // Validate email fields on blur
-            const emailInputs = document.querySelectorAll('极速赛车开奖直播全天候进行，为玩家提供最及时的开奖信息。input[type="email"]');
-            emailInputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    if (this.value && !isValidEmail(this.value)) {
-                        showError(this, this.id + '-error');
-                    }
-                });
-            });
-            
-            // Restrict mobile number field to numbers only
-            const mobileNumberInput = document.getElementById('mobile-number');
-            if (mobileNumberInput) {
-                mobileNumberInput.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^0-9]/g, '');
-                });
-            }
-        }
-        
-        function setupPaymentFunctionality() {
-            const paymentMethods = document.querySelectorAll('.payment-method');
-            const paymentForms = document.querySelectorAll('.payment-form');
-            const submitPaymentBtn = document.getElementById('submit-payment');
-            
-            // Payment method selection
-            paymentMethods.forEach(method => {
-                method.addEventListener('click', function() {
-                    // Remove active class from all methods
-                    paymentMethods.forEach(m => m.classList.remove('payment-active'));
-                    
-                    // Add active class to clicked method
-                    this.classList.add('payment-active');
-                    
-                    // Show appropriate form
-                    const methodId = this.id;
-                    if (methodId === 'payment-paypal') {
-                        document.getElementById('payment-bkash-form').classList.add('hidden');
-                        document.getElementById('payment-paypal-form').classList.remove('hidden');
-                    } else {
-                        document.getElementById('payment-bkash-form').classList.remove('hidden');
-                        document.getElementById('payment-paypal-form').classList.add('hidden');
-                    }
-                });
-            });
-            
-            // Submit payment button
-            submitPaymentBtn.addEventListener('click', function() {
-                // Get selected payment method
-                const paymentMethod = document.querySelector('.payment-active h3').textContent;
-                let isValid = true;
-                
-                // Validate based on payment method
-                if (paymentMethod === 'PayPal') {
-                    const paypalEmail = document.getElementById('paypal-email');
-                    if (!paypalEmail.value || !isValidEmail(paypalEmail.value)) {
-                        showError(paypalEmail, 'paypal-email-error');
-                        isValid = false;
-                    } else {
-                        hideError(paypalEmail, 'paypal-email-error');
-                    }
-                } else {
-                    const transactionId = document.getElementById('transaction-id');
-                    const mobileNumber = document.getElementById('mobile-number');
-                    
-                    if (!transactionId.value.trim()) {
-                        showError(transactionId, 'transaction-id-error');
-                        isValid = false;
-                    } else {
-                        hideError(transactionId, 'transaction-id-error');
-                    }
-                    
-                    if (!mobileNumber.value.trim() || mobileNumber.value.length < 10) {
-                        showError(mobileNumber, 'mobile-number-error');
-                        isValid = false;
-                    } else {
-                        hideError(mobileNumber, 'mobile-number-error');
-                    }
-                }
-                
-                if (!isValid) {
-                    // Scroll to the first error
-                    const firstError = document.querySelector('.input-error');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    return;
-                }
-                
-                // Get payment details
-                let transactionId = '';
-                let senderInfo = '';
-                
-                if (paymentMethod === 'PayPal') {
-                    transactionId = document.getElementById('paypal-email').value;
-                    senderInfo = document.getElementById('paypal-email').value;
-                } else {
-                    transactionId = document.getElementById('transaction-id').value;
-                    senderInfo = document.getElementById('mobile-number').value;
-                }
-                
-                // Get form data
-                const sellerName = document.getElementById('seller-name').value;
-                const sellerEmail = document.getElementById('seller-email').value;
-                const buyerName = document.getElementById('buyer-name').value;
-                const buyerEmail = document.getElementById('buyer-email').value;
-                const serviceDescription = document.getElementById('service-description').value;
-                const serviceBudget = parseFloat(document.getElementById('service-budget').value);
-                const guaranteePeriod = parseInt(document.getElementById('guarantee-period').value);
-                const refundTerms = document.getElementById('refund-terms').value;
-                
-                const fees = calculateFees(serviceBudget);
-                
-                // Generate certificate ID
-                const certificateId = 'OXX-' + Math.floor(100000 + Math.random() * 900000) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase();
-                
-                // Create guarantee object
-                const guarantee = {
-                    id: certificateId,
-                    sellerName,
-                    sellerEmail,
-                    buyerName,
-                    buyerEmail,
-                    serviceDescription,
-                    serviceBudget,
-                    guaranteePeriod,
-                    refundTerms,
-                    fee: fees.fee,
-                    total: fees.total,
-                    paymentMethod,
-                    transactionId: paymentMethod === 'PayPal' ? '' : transactionId,
-                    senderInfo,
-                    status: 'Pending Verification',
-                    createdAt: new Date().toISOString()
-                };
-                
-                // Save to localStorage
-                saveGuarantee(guarantee);
-                
-                // Update success section with transaction details
-                document.getElementById('success-payment-method').textContent = paymentMethod;
-                document.getElementById('success-transaction-id').textContent = transactionId || 'TX' + Math.floor(100000 + Math.random() * 900000);
-                document.getElementById('success-sender-number').textContent = senderInfo;
-                document.getElementById('success-service-budget').textContent = '$ ' + serviceBudget.toFixed(2);
-                document.getElementById('success-guarantee-fee').textContent = '$ ' + fees.fee.toFixed(2);
-                document.getElementById('success-total-paid').textContent = '$ ' + fees.total.toFixed(2);
-                document.getElementById('success-certificate-id').textContent = certificateId;
-                
-                // Switch to success section
-                document.querySelectorAll('.page-section').forEach(section => {
-                    section.classList.remove('active-section');
-                });
-                document.getElementById('success-section').classList.add('active-section');
-            });
-            
-            // Email validation function
-            function isValidEmail(email) {
-                const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[极速赛车开奖官网提供最快速、最准确的开奖信息，确保玩家第一时间获取结果。^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                return re.test(String(email).toLowerCase());
-            }
-            
-            // Show error function
-            function showError(inputElement, errorElementId) {
-                inputElement.classList.add('input-error');
-                document.getElementById(errorElementId).style.display = 'block';
-            }
-            
-            // Hide error function
-            function hideError(inputElement, errorElementId) {
-                inputElement.classList.remove('input-error');
-                document.getElementById(errorElementId).style.display = 'none';
-            }
-            
-            // Function to calculate fees
-            function calculateFees(budget) {
-                if (!budget || budget <= 0) return { fee: 0, total: 0 };
-                
-                let fee = 0;
-                if (budget <= 40) {
-                    fee = budget * 0.05; // 5% for small budgets
-                } else if (budget <= 160) {
-                    fee = budget * 0.03; // 3% for medium budgets
-                } else {
-                    fee = Math.max(8, budget * 0.02); // 2% for large budgets (min $8)
-                }
-                
-                return {
-                    fee: parseFloat(fee.toFixed(2)),
-                    total: parseFloat((budget + fee).toFixed(2))
-                };
-            }
-            
-            // Function to save guarantee to localStorage
-            function saveGuarantee(guarantee) {
-                const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
-                guarantees.push(guarantee);
-                localStorage.setItem('onexx_guarantees', JSON.stringify(guarantees));
-            }
-        }
-        
-        function setupReceiptDownload() {
-            const downloadReceiptBtn = document.getElementById('download-receipt');
-            
-            downloadReceiptBtn.addEventListener('click', function() {
-                // Get all transaction details
-                const certificateId = document.getElementById('success-certificate-id').textContent;
-                const transactionId = document.getElementById('success-transaction-id').textContent;
-                const paymentMethod = document.getElementById('success-payment-method').textContent;
-                const senderNumber = document.getElementById('success-sender-number').textContent;
-                const serviceBudget = document.getElementById('success-service-budget').textContent;
-                const guaranteeFee = document.getElementById('success-guarantee-fee').textContent;
-                const totalPaid = document.getElementById('success-total-paid').textContent;
-                const serviceDescription = document.getElementById('service-description').value || 'Service guarantee';
-                const sellerName = document.getElementById('seller-name').value || 'Unknown Seller';
-                const buyerName = document.getElementById('buyer-name').value || 'Unknown Buyer';
-                const guaranteePeriod = document.getElementById('guarantee-period').value || '30';
-                
-                // Create receipt content
-                const receiptContent = `
-OneXX - Payment Receipt
-------------------------------------------
-Certificate ID: ${certificateId}
-Transaction ID: ${transactionId}
-Payment Method: ${paymentMethod}
-Sender: ${senderNumber}
-Date: ${new Date().toLocaleDateString()}
-
-Service: ${serviceDescription}
-Seller: ${sellerName}
-Buyer: ${buyerName}
-Service Budget: ${serviceBudget}
-Guarantee Fee: ${guaranteeFee}
-Total Amount: ${totalPaid}
-Guarantee Period: ${guaranteePeriod} days
-
-Status: Pending Verification
-Note: Your guarantee certificate will be emailed to you after payment verification.
-                `;
-                
-                // Create download link
-                const blob = new Blob([receiptContent], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `onexx-receipt-${certificateId}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            });
-        }
-        
-        function setupVerifyFunctionality() {
-            const verifyButton = document.getElementById('verify-button');
-            const verifyCertificateId = document.getElementById('verify-certificate-id');
-            const verifyResult = document.getElementById('verify-result');
-            const verifyError = document.getElementById('verify-error');
-            
-            verifyButton.addEventListener('click', function() {
-                const certificateId = verifyCertificateId.value.trim();
-                
-                if (!certificateId) {
-                    alert('Please enter a certificate ID');
-                    return;
-                }
-                
-                // Get guarantees from localStorage
-                const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
-                const guarantee = guarantees.find(g => g.id === certificateId);
-                
-                if (guarantee) {
-                    // Display guarantee details
-                    document.getElementById('verify-result-id').textContent = guarantee.id;
-                    document.getElementById('verify-result-status').textContent = guarantee.status;
-                    document.getElementById('verify-result-seller').textContent = guarantee.sellerName;
-                    document.getElementById('verify-result-buyer').textContent = guarantee.buyerName;
-                    document.getElementById('verify-result-service').textContent = guarantee.serviceDescription;
-                    document.getElementById('verify-result-budget').textContent = '$' + guarantee.serviceBudget.toFixed(2);
-                    document.getElementById('verify-result-period').textContent = guarantee.guaranteePeriod + ' days';
-                    document.getElementById('verify-result-date').textContent = new Date(guarantee.createdAt).toLocaleDateString();
-                    document.getElementById('verify-result-terms').textContent = guarantee.refundTerms;
-                    
-                    // Set status badge class
-                    const statusElement = document.getElementById('verify-result-status');
-                    statusElement.className = 'font-medium ';
-                    if (guarantee.status === 'Active') {
-                        statusElement.classList.add('status-active', 'status-badge');
-                    } else if (guarantee.status === 'Pending Verification') {
-                        statusElement.classList.add('status-pending', 'status-badge');
-                    } else if (guarantee.status === 'Expired') {
-                        statusElement.classList.add('status-expired', 'status-badge');
-                    }
-                    
-                    // Show result, hide error
-                    verifyResult.style.display = 'block';
-                    verifyError.style.display = 'none';
-                } else {
-                    // Show error, hide result
-                    verifyResult.style.display = 'none';
-                    verifyError.style.display = 'block';
-                }
-            });
-        }
-        
-        function setupAdminFunctionality() {
-            const refreshButton = document.getElementById('refresh-guarantees');
-            
-            refreshButton.addEventListener('click', function() {
-                refreshGuaranteesTable();
-            });
-            
-            // Initial load
-            refreshGuaranteesTable();
-        }
-        
-        function refreshGuaranteesTable() {
-            const tableBody = document.getElementById('guarantees-table-body');
-            const noGuaranteesMessage = document.getElementById('no-guarantees-message');
-            
-            // Clear table
-            tableBody.innerHTML = '';
-            
-            // Get guarantees from localStorage
-            const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
-            
-            if (guarantees.length === 0) {
-                noGuaranteesMessage.style.display = 'block';
-                return;
-            }
-            
-            noGuaranteesMessage.style.display = 'none';
-            
-            // Populate table
-            guarantees.forEach(guarantee => {
-                const row = document.createElement('tr');
-                
-                // Format created date
-                const createdDate = new Date(guarantee.createdAt).toLocaleDateString();
-                
-                // Create status badge
-                let statusBadge = '';
-                if (guarantee.status === 'Active') {
-                    statusBadge = '<span class="status-badge status-active">Active</span>';
-                } else if (guarantee.status === 'Pending Verification') {
-                    statusBadge = '<span class="status-badge status-pending">Pending</span>';
-                } else if (guarantee.status === 'Expired') {
-                    statusBadge = '<span class="status-badge status-expired">Expired</span>';
-                } else {
-                    statusBadge = '<span class="status-badge">' + guarantee.status + '</span>';
-                }
-                
-                row.innerHTML = `
-                    <td>${guarantee.id}</td>
-                    <td>${guarantee.sellerName}</td>
-                    <td>${guarantee.buyerName}</td>
-                    <td>${guarantee.serviceDescription.substring(0, 30)}...</td>
-                    <td>$${guarantee.serviceBudget.toFixed(2)}</td>
-                    <td>$${guarantee.fee.toFixed(2)}</td>
-                    <td>${createdDate}</td>
-                    <td>${statusBadge}</td>
-                    <td>
-                        <button class="text-indigo-600 hover:text-indigo-900 view-guarantee" data-id="${guarantee.id}">View</button>
-                        <button class="text-red-600 hover:text-red-900 ml-2 delete-guarantee" data-id="${guarantee.id}">Delete</button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Add event listeners to view buttons
-            document.querySelectorAll('.view-guarantee').forEach(button => {
-                button.addEventListener('click', function() {
-                    const certificateId = this.getAttribute('data-id');
-                    document.getElementById('verify-certificate-id').value = certificateId;
-                    
-                    // Switch to verify section
-                    document.querySelectorAll('.page-section').forEach(section => {
-                        section.classList.remove('active-section');
-                    });
-                    document.getElementById('verify-section').classList.add('active-section');
-                    
-                    // Update nav active state
-                    document.querySelectorAll('nav button').forEach(button => {
-                        button.classList.remove('nav-active');
-                    });
-                    document.getElementById('nav-verify').classList.add('nav-active');
-                    
-                    // Trigger verify
-                    document.getElementById('verify-button').click();
-                });
-            });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-guarantee').forEach(button => {
-                button.addEventListener('click', function() {
-                    const certificateId = this.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this guarantee?')) {
-                        deleteGuarantee(certificateId);
-                        refreshGuaranteesTable();
-                    }
-                });
-            });
-        }
-        
-        function deleteGuarantee(certificateId) {
-            const guarantees = JSON.parse(localStorage.getItem('onexx_guarantees') || '[]');
-            const filteredGuarantees = guarantees.filter(g => g.id !== certificateId);
-            localStorage.setItem('onexx_guarantees', JSON.stringify(filteredGuarantees));
-        }
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
