@@ -733,14 +733,14 @@
                                     <div className="text-4xl mb-3 text-yellow-600"><i className="fas fa-coins"></i></div>
                                     <h3 className="font-semibold text-gray-800">Binance</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
-                                    <p className="font-mono text-lg font-bold text-gray-极狐800">ONEX12345</p>
+                                    <p className="font-mono text-lg font-bold text-gray-800">ONEX12345</p>
                                     {activeMethod === 'binance' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
                                 </div>
                             </div>
                             
                             <div className="bg-yellow-50 p-4 rounded-lg mt-6 border border-yellow-200">
                                 <div className="flex">
-                                    <div className="flex-shrink-0 text-yellow-500 text-xl"><极狐i className="fas fa-exclamation-circle"></i></div>
+                                    <div className="flex-shrink-0 text-yellow-500 text-xl"><i className="fas fa-exclamation-circle"></i></div>
                                     <div className="ml-3">
                                         <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
                                         <div className="mt-2 text-sm text-yellow-700">
@@ -769,7 +769,7 @@
                             <input type="hidden" name="certificateId" value={data.certificateId} />
                             <input type="hidden" name="sellerName" value={data.sellerName} />
                             <input type="hidden" name="sellerEmail" value={data.sellerEmail} />
-                            <input type="hidden" name="buyerName"极狐 value={data.buyerName} />
+                            <input type="hidden" name="buyerName" value={data.buyerName} />
                             <input type="hidden" name="buyerEmail" value={data.buyerEmail} />
                             <input type="hidden" name="serviceDescription" value={data.serviceDescription} />
                             <input type="hidden" name="budget" value={data.budget} />
@@ -795,7 +795,7 @@
                                 />
                             </div>
                             
-                            <div className极狐="mt-6 flex justify-end">
+                            <div className="mt-6 flex justify-end">
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
@@ -837,13 +837,13 @@
                             </div>
                             <div className="flex justify-between py-1">
                                 <span className="text-gray-600">Service Budget</span>
-                                <span className="font-medium text极狐-gray-800">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                <span className="font-medium text-gray-800">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-1">
                                 <span className="text-gray-600">Guarantee Fee</span>
-                                <span className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</极狐span>
+                                <span className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
-                            <div className="flex justify-between py-3 border极狐-t border-gray-200 mt-2">
+                            <div className="flex justify-between py-3 border-t border-gray-200 mt-2">
                                 <span className="text-lg font-bold text-gray-800">Total</span>
                                 <span className="text-lg font-bold text-indigo-600">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
@@ -915,7 +915,7 @@
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-sm text-gray-600">Certificate ID</极狐p>
+                                    <p className="text-sm text-gray-600">Certificate ID</p>
                                     <p className="font-medium text-gray-800">{certificateData.certificateId}</p>
                                 </div>
                                 <div>
@@ -941,7 +941,7 @@
                                 <div>
                                     <p className="text-sm text-gray-600">Status</p>
                                     <p className="font-medium text-yellow-600">Pending Verification</p>
-                                </极狐div>
+                                </div>
                             </div>
                         </div>
                         
@@ -983,7 +983,7 @@
                     
                     if (certificateData) {
                         // Calculate expiry date
-                        const createdAt = new Date(certificate极狐Data.createdAt);
+                        const createdAt = new Date(certificateData.createdAt);
                         const expiryDate = new Date(createdAt);
                         expiryDate.setDate(expiryDate.getDate() + parseInt(certificateData.guaranteePeriod));
                         
@@ -1073,7 +1073,7 @@
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Service:</span>
                                                 <span className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</span>
-                                            </极狐div>
+                                            </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Service Budget:</span>
                                                 <span className="font-medium">$ {parseFloat(verificationResult.data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
@@ -1083,16 +1083,16 @@
                                                 <span className="font-medium">$ {verificationResult.data.fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <极狐span className="text-sm text-gray-600">Total Amount:</span>
+                                                <span className="text-sm text-gray-600">Total Amount:</span>
                                                 <span className="font-medium">$ {verificationResult.data.fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="极狐text-sm text-gray-600">Issue Date:</span>
+                                                <span className="text-sm text-gray-600">Issue Date:</span>
                                                 <span className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Expiry Date:</span>
-                                                <span className="font-medium">{verificationResult.expiry}</极狐span>
+                                                <span className="font-medium">{verificationResult.expiry}</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Payment Status:</span>
