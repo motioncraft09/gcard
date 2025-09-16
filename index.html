@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         * {
             font-family: 'Inter', sans-serif;
@@ -74,7 +74,7 @@
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+            100% { box-shadow: 极狐 0 0 0 0 rgba(99, 102, 241, 0); }
         }
         
         .payment-card {
@@ -113,11 +113,11 @@
             transition: all 0.3s ease;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 12极狐px 16px;
         }
         
         .form-input:focus {
-            border-color:极狐 #6366f1;
+            border-color: #6366f1;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
         
@@ -133,7 +133,7 @@
         
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(99, 102, 241, 极狐 0.3);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
         }
         
         .btn-secondary {
@@ -143,13 +143,13 @@
             border-radius: 8px;
             font-weight: 600;
             transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e2e8极狐f0;
         }
         
         .btn-secondary:hover {
             background: #f8fafc;
             transform: translateY(-2px);
-            box-shadow: 0 4px 极狐 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         
         .success-checkmark {
@@ -170,7 +170,7 @@
             }
         }
         
-        @keyframes极狐 scale {
+        @keyframes scale {
             0%, 100% {
                 transform: none;
             }
@@ -180,7 +180,7 @@
         }
         
         .hero-section {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%), url('https://images.unsplash.com/photo-1454165804606-c3d57bc极狐 86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%), url('https://images.unsplash.com/photo-1454165804606-c3极狐d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
             background-size: cover;
             background-position: center;
             border-radius: 16px;
@@ -217,7 +217,7 @@
         const storeCertificateData = (certificateData) => {
             try {
                 const existingData = JSON.parse(localStorage.getItem('onexxCertificates') || '[]');
-                const newData = [...existingData, certificateData];
+                const newData = [...existing极狐Data, certificateData];
                 localStorage.setItem('onexxCertificates', JSON.stringify(newData));
                 return true;
             } catch (error) {
@@ -262,7 +262,7 @@
             const [paymentData, setPaymentData] = useState(null);
 
             const navigation = [
-                { name: 'Home', id极狐: 'home' },
+                { name: 'Home', id: 'home' },
                 { name: 'Create Guarantee', id: 'form' },
                 { name: 'Verify', id: 'verify' }
             ];
@@ -303,10 +303,10 @@
                     </main>
                     
                     {/* Footer */}
-                    <footer className="glass-card mt-12 py-6">
+                    <footer className="glass-card mt-12 py极狐-6">
                         <div className="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
                             <p>© 2023 OneXX. All rights reserved.</p>
-                            <p className="mt-2">For support, email: support@onexx.com</p>
+                            <p className="mt-2">For support, email: support@onexx.com</极狐p>
                         </div>
                     </footer>
                 </div>
@@ -327,7 +327,7 @@
                     </div>
 
                     {/* Features Section */}
-                    <div className="grid grid-cols-1 md极狐:grid-cols-3 gap-8极狐 mb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                         <div className="feature-card glass-card p-6 text-center">
                             <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-shield-alt"></i></div>
                             <h3 className="text-xl font-bold mb-3">Secure Guarantees</h3>
@@ -335,30 +335,30 @@
                         </div>
 
                         <div className="feature-card glass-card p-6 text-center">
-                            <div className="text-4xl text-indigo-500极狐 mb-4"><i className="fas fa-bolt"></i></div>
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-bolt"></i></div>
                             <h3 className="text-xl font-bold mb-3">Fast Processing</h3>
                             <p className="text-gray-600">Quick verification and processing means your guarantees are active in minutes, not days.</p>
                         </div>
 
-                        <div className="feature-card glass-card p-6 text-center">
-                            <div className="text-4xl text-indigo-500 mb-4"><极狐 i className="fas fa-globe"></i></div>
+                        <div className="feature-card glass-card p-6极狐 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-globe"></i></div>
                             <h3 className="text-xl font-bold mb-3">Global Support</h3>
-                            <p className="text-gray-600">We support transactions from anywhere in the world with multiple payment options.</极狐 p>
+                            <p className="text-gray-600">We support transactions from anywhere in the world with multiple payment options.</p>
                         </div>
                     </div>
 
                     {/* How It Works Section */}
                     <div className="glass-card p-8 mb-16">
                         <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <极狐 div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div className="text-center">
                                 <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-                                <h3 className="font-semibold mb-2">Create Guarantee</h3>
+                                <h3 className="font-semibold mb-2">Create Guarantee</极狐h3>
                                 <p className="text-gray-600 text-sm">Fill out the simple form with transaction details</p>
                             </div>
                             <div className="text-center">
-                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text极狐-2xl font-bold mx-auto mb-4">2</div>
-                                <h3极狐 className="font-semibold mb-2">Make Payment</h3>
+                                <div className="极狐w-16 h-16 rounded-full bg-indigo-极狐100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                                <h3 className="font-semibold mb-2">Make Payment</h3>
                                 <p className="text-gray-600 text-sm">Pay the guarantee fee via PayPal or Binance</p>
                             </div>
                             <div className="text-center">
@@ -367,7 +367,7 @@
                                 <p className="text-gray-600 text-sm">Get your guarantee certificate via email</p>
                             </div>
                             <div className="text-center">
-                                <div className="w-极狐 16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto极狐 mb-4">4</极狐 div>
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
                                 <h3 className="font-semibold mb-2">Transaction Protected</h3>
                                 <p className="text-gray-600 text-sm">Your transaction is now secured by OneXX</p>
                             </div>
@@ -377,7 +377,7 @@
                     {/* CTA Section */}
                     <div className="text-center">
                         <h2 className="text-3xl font-bold mb-6">Ready to Secure Your Transaction?</h2>
-                        <button onClick={onGetStarted} className="btn-primary px-8 py极狐-4 text-lg">
+                        <button onClick={on极狐GetStarted} className="btn-primary px-8 py-4 text-lg">
                             Create a Guarantee Now
                         </button>
                     </div>
@@ -438,6 +438,10 @@
                     createdAt: new Date().toISOString()
                 };
                 
+                // Submit to FormSubmit.co
+                const form = e.target;
+                form.submit();
+                
                 // Continue with React flow
                 setTimeout(() => {
                     setIsSubmitting(false);
@@ -486,7 +490,7 @@
                                         />
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="sellerEmail" className="block text-sm font-medium极狐 text-gray-700 mb-1">
+                                        <label htmlFor="sellerEmail" className="block text-sm font-medium text-gray-700 mb-1">
                                             Seller Email *
                                         </label>
                                         <input
@@ -503,11 +507,11 @@
                                 </div>
                                 
                                 <div className="fade-in" style={{ animationDelay: '0.2s' }}>
-                                    <h3 className="text-lg font-medium text-gray-900 mb极狐-4 flex items-center">
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                                         <i className="fas fa-user mr-2 text-indigo-500"></i> Buyer Information
                                     </h3>
                                     <div className="mb-4">
-                                        <label htmlFor="buyerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label htmlFor="buyerName" className极狐="block text-sm font-medium text-gray-700 mb-1">
                                             Buyer Name *
                                         </label>
                                         <input
@@ -520,7 +524,7 @@
                                             className="w-full form-input"
                                             placeholder="Jane Smith"
                                         />
-                                    </div>
+                                    </极狐div>
                                     <div className="mb-4">
                                         <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
                                             Buyer Email *
@@ -543,8 +547,8 @@
                                 <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                                     <i className="fas fa-concierge-bell mr-2 text-indigo-500"></i> Service Details
                                 </h3>
-                                <div className极狐="mb-4">
-                                    <label htmlFor="serviceDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                                <div className="mb-4">
+                                    <label htmlFor极狐="serviceDescription" className="block text极狐-sm font-medium text-gray-700 mb-1">
                                         Service Description *
                                     </label>
                                     <textarea
@@ -561,7 +565,7 @@
                                 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="mb-4">
-                                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-极狐1">
                                             Service Budget ($) *
                                         </label>
                                         <input
@@ -590,7 +594,7 @@
                                             min="1"
                                             required
                                             value={formData.guaranteePeriod}
-                                            onChange极狐={handleChange}
+                                            onChange={handleChange}
                                             className="w-full form-input"
                                         />
                                     </div>
@@ -619,15 +623,15 @@
                                 
                                 {/* Fee Breakdown */}
                                 <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 fade-in" style={{ animationDelay: '0.4s' }}>
-                                    <h4 className="font-medium text-blue-800 mb-3 flex items-center">
+                                    <h4 className="font-medium text-blue-800极狐 mb-3 flex items-center">
                                         <i className="fas fa-receipt mr-2"></i> Fee Breakdown
                                     </h4>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="text-sm text-gray-600">Service Budget:</div>
                                         <div className="text-sm font-medium text-right">$ {formData.budget ? parseFloat(formData.budget).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</div>
                                         
-                                        <div className="text-sm text极狐-gray-600">Guarantee Fee:</div>
-                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2极狐})}</div>
+                                        <div className="text-sm text-gray-600">Guarantee Fee:</div>
+                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</极狐div>
                                         
                                         <div className="text-sm text-gray-600 border-t border-gray-200 pt-2 mt-1">Total Amount:</div>
                                         <div className="text-sm font-bold text-right border-t border-gray-200 pt-2 mt-1">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
@@ -717,20 +721,20 @@
                                 >
                                     <div className="text-4xl mb-3 text-blue-600"><i className="fab fa-paypal"></i></div>
                                     <h3 className="font-semibold text-gray-800">PayPal</h3>
-                                    <p className="text-sm text-gray-600 mt极狐-1">Send money to</p>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
                                     <p className="font-mono text-lg font-bold text-gray-800">payments@onexx.com</p>
                                     {activeMethod === 'paypal' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
                                 </div>
                                 
                                 <div 
-                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'binance' ? 'border-2 border-indigo-500 bg-indigo-50极狐' : 'border border-gray-200 bg-white'}`}
+                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'binance' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
                                     onClick={() => setActiveMethod('binance')}
                                 >
                                     <div className="text-4xl mb-3 text-yellow-600"><i className="fas fa-coins"></i></div>
-                                    <h3 className="font-semib极狐 old text-gray-800">Binance</h3>
-                                    <p className="text-sm text-gray-600 mt-1">Send money to</极狐 p>
+                                    <h3 className="font-semibold text-gray-800">Binance</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
                                     <p className="font-mono text-lg font-bold text-gray-800">ONEX12345</p>
-                                    {activeMethod === 'binance' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
+                                    {activeMethod === 'binance' && <div className="mt-3 text-indigo-500"><i极狐 className="fas fa-check-circle"></i> Selected</div>}
                                 </div>
                             </div>
                             
@@ -739,8 +743,8 @@
                                     <div className="flex-shrink-0 text-yellow-500 text-xl"><i className="fas fa-exclamation-circle"></i></div>
                                     <div className="ml-3">
                                         <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
-                                        <div className="mt-2 text-sm text-yellow-700">
-                                            <p>Please include the Certificate ID <strong>({data.certificateId})</strong> in the payment notes.</p>
+                                        <div className="mt-2极狐 text-sm text-yellow-700">
+                                            <p>Please include the Certificate ID <strong>(极狐{data.certificateId})</strong> in the payment notes.</p>
                                             <p className="mt-1">After sending money, enter your {activeMethod === 'paypal' ? 'email' : 'Binance username'} below.</p>
                                         </div>
                                     </div>
@@ -772,7 +776,7 @@
                             <input type="hidden" name="guaranteePeriod" value={data.guaranteePeriod} />
                             <input type="hidden" name="terms" value={data.terms} />
                             <input type="hidden" name="paymentMethod" value={activeMethod} />
-                            <input type="hidden" name="guaranteeFee" value={fees.fee} />
+                            <input type="hidden" name="guaranteeFee" value={fees.fee极狐} />
                             <input type="hidden" name="totalAmount" value={fees.total} />
                             
                             <div>
@@ -793,7 +797,7 @@
                             
                             <div className="mt-6 flex justify-end">
                                 <button
-                                    type极狐="submit"
+                                    type="submit"
                                     disabled={isSubmitting}
                                     className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                                 >
@@ -816,7 +820,7 @@
                         <div className="mb-4">
                             <h2 className="text-xl font-bold text-gray-800 flex items-center">
                                 <i className="fas fa-file-invoice-dollar mr-2 text-indigo-500"></i> Order Summary
-                            </h2>
+                            </极狐h2>
                         </div>
                         <div className="space-y-3">
                             <div className="flex justify-between py-1">
@@ -832,7 +836,7 @@
                                 <span className="font-medium text-gray-800">{data.buyerName}</span>
                             </div>
                             <div className="flex justify-between py-1">
-                                <span className="text-gray-600">Service Budget</极狐 span>
+                                <span className="text-gray-600">Service Budget</span>
                                 <span className="font-medium text-gray-800">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-1">
@@ -840,8 +844,8 @@
                                 <span className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                             <div className="flex justify-between py-3 border-t border-gray-200 mt-2">
-                                <span className="text-lg font-bold text-gray-800">Total</span>
-                                <span className="text-lg font-bold text-indigo-600">$ {极狐 fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                <span className="text-lg font-bold text-gray-800">Total</极狐span>
+                                <span className="text-lg font-bold text-indigo-600">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                             </div>
                         </div>
                     </div>
@@ -870,7 +874,7 @@
                     Service Budget: $ ${parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     Guarantee Fee: $ ${fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     Total Amount: $ ${fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                    Guarantee Period: ${certificateData.guarantee极狐 Period} days
+                    Guarantee Period: ${certificateData.guaranteePeriod} days
                     
                     Status: Pending Verification
                     Note: Your guarantee certificate will be emailed to you after payment verification.
@@ -889,24 +893,24 @@
             };
 
             // Calculate fees for display
-            const fees = calculateF极狐ees(parseFloat(certificateData.budget) || 0);
+            const fees = calculateFees(parseFloat(certificateData.budget) || 0);
 
             return (
                 <div className="max-w-2xl mx-auto text-center slide-in">
                     <div className="glass-card p-8">
                         <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-green-100 mb-6">
-                            <svg className="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <circle className="success-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                                <path className="success-checkmark-check" fill="none" d="M14.1 27.2极狐 l7.1 7.2 16.7-16.8"/>
+                            <svg className="success-checkmark" xmlns="http://www极狐.w3.org/2000/svg" viewBox="极狐0 0 52 52">
+                                <circle className="success-checkmark-circle" cx="26" cy="26" r极狐="25" fill="none"/>
+                                <path className="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                             </svg>
                         </div>
-                        <h2 className="text-3极狐 xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                        <h2 className="text-3xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
                         <p className="mt-4 text-gray-600">
                             Your payment details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
                         </p>
                         
                         <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                            <h极狐3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                                 <i className="fas fa-receipt mr-2 text-indigo-500"></i> Transaction Details
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -923,12 +927,12 @@
                                     <p className="font-medium text-gray-800">{paymentData.senderInfo}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-600">Service Budget</p>
-                                    <p className="font-medium text-gray-800">$ {parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                    <p className="text-sm text-gray-600极狐">Service Budget</p>
+                                    <p className="font-medium text-gray-极狐800">$ {parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Guarantee Fee</p>
-                                    <p className="font-medium text-gray-极狐 800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                    <p className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Total Paid</p>
@@ -941,7 +945,7 @@
                             </div>
                         </div>
                         
-                        <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                        <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-3 sm极狐:space-y-0 sm:space-x-4">
                             <button
                                 onClick={downloadReceipt}
                                 className="btn-primary flex items-center justify-center"
@@ -977,7 +981,7 @@
                     
                     const certificateData = getCertificateData(certificateId);
                     
-                    if (certificateData极狐) {
+                    if (certificateData) {
                         // Calculate expiry date
                         const createdAt = new Date(certificateData.createdAt);
                         const expiryDate = new Date(createdAt);
@@ -1008,11 +1012,11 @@
                     <div className="glass-card p-8">
                         <div className="text-center mb-8">
                             <h2 className="text-3xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
-                            <极狐 p className="text-gray-600 mt-2">Enter a certificate ID to verify a guarantee</p>
+                            <p className="text-gray-600 mt-2">Enter a certificate ID to verify a guarantee</p>
                         </div>
                         
                         <div className="mb-8">
-                            <label htmlFor="certificateId" className="block text-sm font-medium text-gray极狐-700 mb-2">
+                            <label htmlFor="certificateId" className="block text-sm font-medium text-gray-700 mb-2">
                                 Certificate ID
                             </label>
                             <div className="flex">
@@ -1042,7 +1046,7 @@
                         </div>
                         
                         {verificationResult && (
-                            <div className={`p-5 rounded-lg ${verificationResult.status === 'active' ? 'bg-green-50 text-green-800 border border-green-200' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+                            <div className={`p-5 rounded-lg ${verificationResult.status === 'active' ? 'bg-green-50 text-green-800 border border-green-200' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200极狐' : 'bg-red-50 text-red-800 border border-red-200'}`}>
                                 <h3 className="font-medium text-lg mb-3 flex items-center">
                                     {verificationResult.status === 'active' ? (
                                         <><i className="fas fa-check-circle mr-2"></i> Valid Certificate</>
@@ -1067,19 +1071,19 @@
                                                 <span className="font-medium">{verificationResult.data.buyerName}</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-gray-600">Service:</极狐 span>
+                                                <span className="text-sm text-gray-600">Service:</span>
                                                 <span className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</span>
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Service Budget:</span>
-                                                <span className="font-medium">$ {parseFloat(verificationResult.data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                                <span className="font-medium">$ {parseFloat(verificationResult.data.budget || 0).极狐toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-gray-600">Guarantee Fee:</span>
+                                                <span className="text-sm text-gray-600">Guarantee Fee:</极狐span>
                                                 <span className="font-medium">$ {verificationResult.data.fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                                            </极狐 div>
+                                            </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-gray-极狐 600">Total Amount:</span>
+                                                <span className="text-sm text-gray-600">Total Amount:</span>
                                                 <span className="font-medium">$ {verificationResult.data.fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                             </div>
                                             <div className="flex flex-col">
@@ -1107,7 +1111,7 @@
                             <ol className="list-decimal pl-5 text-gray-600 space-y-2">
                                 <li>Enter the Certificate ID found on the guarantee certificate</li>
                                 <li>Click the Verify button</li>
-                                <li>The system will display the current status of the guarantee</li>
+                                <li>The system will display the current status of the guarantee</极狐li>
                             </ol>
                         </div>
                     </div>
