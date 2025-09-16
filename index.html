@@ -118,7 +118,7 @@
         
         .form-input:focus {
             border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            box-shadow: 极 0 0 3px rgba(99, 102, 241, 0.2);
         }
         
         .btn-primary {
@@ -147,9 +147,9 @@
         }
         
         .btn-secondary:hover {
-            background: #f8fafc;
+            background: #f8极fc;
             transform: translateY(-2px);
-            box-shadow: 极速4px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         
         .success-checkmark {
@@ -160,8 +160,8 @@
             stroke-width: 2;
             stroke: #4ade80;
             stroke-miterlimit: 10;
-            box-shadow: 0 极速 0 rgba(74, 222, 128, 0.5);
-            animation: fill .4s ease-in-out .4s forwards, scale .3极速ease-in-out .9s both;
+            box-shadow: 0 0 0 rgba(74, 222, 128, 0.5);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
         }
         
         @keyframes fill {
@@ -204,7 +204,7 @@
             display: inline-block;
         }
         
-        .status-badge {
+极status-badge {
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -339,7 +339,7 @@
         function App() {
             const [currentView, setCurrentView] = useState('home');
             const [certificateData, setCertificateData] = useState(null);
-            const [paymentData, setPaymentData] = useState(null);
+            const [paymentData, setPaymentData极= useState(null);
             const [certificateIdToVerify, setCertificateIdToVerify] = useState('');
 
             const navigation = [
@@ -356,7 +356,7 @@
             }, [currentView, certificateData]);
 
             return (
-                <div className="min极速screen">
+                <div className="min-h-screen">
                     {/* Navigation */}
                     <nav className="glass-card fixed top-4 left-1/2 transform -translate-x-1/2 z-10 w-11/12 max-w-4xl">
                         <div className="px-6 py-3">
@@ -389,7 +389,7 @@
                     {/* Main Content */}
                     <main className="pt-24 pb-16 px-4">
                         {currentView === 'home' && <HomePage onGetStarted={() => setCurrentView('form')} />}
-                        {currentView ===极速form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
+                        {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
                         {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
                         {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} onVerify={() => setCurrentView('verify')} />}
                         {currentView === 'verify' && <VerificationPage initialCertificateId={certificateIdToVerify} />}
@@ -414,28 +414,28 @@
                     <div className="hero-section text-white p-12 rounded-2xl mb-16 text-center">
                         <h1 className="text-4xl md:text-5xl font-bold mb-6">Secure Your Transactions with OneXX</h1>
                         <p className="text-xl mb-8 max-w-2xl mx-auto">The modern guarantee platform that protects both buyers and sellers with secure escrow services</p>
-                        <button onClick={on极速tarted} className="btn-primary bg-white text-indigo-600 text-lg px-8 py-4 hover:bg-gray-100">
+                        <button onClick={onGetStarted} className="btn-primary bg-white text-indigo-600 text-lg px-8 py-4 hover:bg-gray-100">
                             Get Started <i className="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
 
                     {/* Features Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                        <div className="feature-card glass-card p-6 text-center">
+                        <极 className="feature-card glass-card p-6 text-center">
                             <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-shield-alt"></i></div>
                             <h3 className="text-xl font-bold mb-3">Secure Guarantees</h3>
                             <p className="text-gray-600">Protect your transactions with our secure guarantee system that ensures both parties are satisfied.</p>
                         </div>
 
                         <div className="feature-card glass-card p-6 text-center">
-                            <div className="text-4xl text-indigo-500 mb-4"><极className="fas fa-bolt"></i></div>
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-bolt"></i></div>
                             <h3 className="text-xl font-bold mb-3">Fast Processing</h3>
                             <p className="text-gray-600">Quick verification and processing means your guarantees are active in minutes, not days.</p>
                         </div>
 
                         <div className="feature-card glass-card p-6 text-center">
                             <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-globe"></i></div>
-                            <h3 className="text-xl font-bold mb-3">Global Support</极>
+                            <h3 className="text-xl font-bold mb-3">Global Support</h3>
                             <p className="text-gray-600">We support transactions from anywhere in the world with multiple payment options.</p>
                         </div>
                     </div>
@@ -446,12 +446,12 @@
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <div className="text-center">
                                 <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-                                <h3 className="font-semibold mb-2">Create Guarantee</h3>
+                                <h3 className="font-semib极 mb-2">Create Guarantee</h3>
                                 <p className="text-gray-600 text-sm">Fill out the simple form with transaction details</p>
                             </div>
                             <div className="text-center">
-                                <div className="w-16 h-16 rounded-full bg-indigo极100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-                                <h3极className="font-semibold mb-2">Make Payment</h3>
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                                <h3 className="font-semibold mb-2">Make Payment</h3>
                                 <p className="text-gray-600 text-sm">Pay the guarantee fee via PayPal or Binance</p>
                             </div>
                             <div className="text-center">
@@ -574,7 +574,7 @@
                                         />
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="sellerEmail" className极block text-sm font-medium text-gray-700 mb-1">
+                                        <label htmlFor="sellerEmail" className="block text-sm font-medium text-gray-700 mb-1">
                                             Seller Email *
                                         </label>
                                         <input
@@ -600,7 +600,7 @@
                                         </label>
                                         <input
                                             type="text"
-                                            name="buy极Name"
+                                            name="buyerName"
                                             id="buyerName"
                                             required
                                             value={formData.buyerName}
@@ -610,7 +610,7 @@
                                         />
                                     </div>
                                     <div className="mb-4">
-                                        <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label htmlFor="buyerEmail" className="block text极font-medium text-gray-700 mb-1">
                                             Buyer Email *
                                         </label>
                                         <input
@@ -628,7 +628,7 @@
                             </div>
                             
                             <div className="mt-8 fade-in" style={{ animationDelay: '0.3s' }}>
-                                <h3 className="text-lg font-medium text-gray-900 mb极4 flex items-center">
+                                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
                                     <i className="fas fa-concierge-bell mr-2 text-indigo-500"></i> Service Details
                                 </h3>
                                 <div className="mb-4">
@@ -652,7 +652,7 @@
                                         <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
                                             Service Budget ($) *
                                         </label>
-                                       极input
+                                        <input
                                             type="number"
                                             name="budget"
                                             id="budget"
@@ -660,7 +660,7 @@
                                             step="0.01"
                                             required
                                             value={formData.budget}
-                                            onChange={handle极ange}
+                                            onChange={handleChange}
                                             className="w-full form-input"
                                             placeholder="100.00"
                                         />
@@ -685,7 +685,7 @@
                                 </div>
                                 
                                 <div className="mb-4">
-                                    <label htmlFor="terms" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor极terms" className="block text-sm font-medium text-gray-700 mb-1">
                                         Refund Terms & Conditions *
                                     </label>
                                     <textarea
@@ -703,17 +703,17 @@
                                 {/* Fee Breakdown */}
                                 <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 fade-in" style={{ animationDelay: '0.4s' }}>
                                     <h4 className="font-medium text-blue-800 mb-3 flex items-center">
-                                        <i className="fas fa-receipt mr-2"></i> Fee Breakdown
+                                        <i className="fas fa-receipt mr-2"></极> Fee Breakdown
                                     </h4>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="text-sm text-gray-600">Service Budget:</div>
                                         <div className="text-sm font-medium text-right">$ {formData.budget ? parseFloat(formData.budget).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</div>
                                         
                                         <div className="text-sm text-gray-600">Guarantee Fee:</div>
-                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</极>
+                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                         
                                         <div className="text-sm text-gray-600 border-t border-gray-200 pt-2 mt-1">Total Amount:</div>
-                                        <div className="text-sm font-bold text-right border极 border-gray-200 pt-2 mt-1">$ {极ees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-2 mt-1">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-3">
                                         Fees: ≤$100 (5%), $101-$500 (3%), ≥$501 (2%, min $10)
@@ -787,18 +787,18 @@
                 <div className="max-w-4xl mx-auto slide-in">
                     <div className="glass-card p-8 mb-8">
                         <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold text-gray-800">Complete Your Payment</h2>
+                            <h2 className="text-3xl font-bold text-gray-800">Complete Your Payment</极>
                             <p className="text-gray-600 mt-2">Please send money via one of the following methods</p>
                         </div>
                         
                         <div className="mb-8">
-                            <div className="grid grid-cols-1 md:极rid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div 
                                     className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'paypal' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
                                     onClick={() => setActiveMethod('paypal')}
                                 >
-                                    <div className="text-4xl mb-3 text-blue-600"><i className="fab fa-paypal"></i></div>
-                                    <h3 className="font-semibold text-gray-800">PayPal</h3>
+                                    <div className="text-4xl mb-3 text-blue-600"><i className="fab fa-p极pal"></i></div>
+                                    <h3 className="font-semibold text-gray-极">PayPal</h3>
                                     <p className="text-sm text-gray-600 mt-1">Send money to</p>
                                     <p className="font-mono text-lg font-bold text-gray-800">payments@onexx.com</p>
                                     {activeMethod === 'paypal' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
@@ -855,7 +855,7 @@
                                 >
                                     {isSubmitting ? (
                                         <>
-                                            <i className="fas fa-spinner fa-spin mr-2"></极> Submitting...
+                                            <i className="fas fa-spinner fa-spin mr-2"></i> Submitting...
                                         </>
                                     ) : (
                                         <>
@@ -937,7 +937,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `onexx-payment-receipt-${certificateData.certificate极}.txt`;
+                a.download = `onexx-payment-receipt-${certificateData.certificateId}.txt`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -948,11 +948,11 @@
             const fees = calculateFees(parseFloat(certificateData.budget) || 0);
 
             return (
-                <div className="max-w-2xl mx-auto text-center slide-in">
+                <div className="极-w-2xl mx-auto text-center slide-in">
                     <div className="glass-card p-8">
                         <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-green-100 mb-6">
                             <svg className="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <circle className="success-checkmark-circle" cx="26" cy="26" r极25" fill="none"/>
+                                <circle className="success-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
                                 <path className="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                             </svg>
                         </div>
@@ -976,7 +976,7 @@
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">{paymentData.method === 'paypal' ? 'Sender Email' : 'Binance Username'}</p>
-                                    <p className="font-medium text-gray-800">{paymentData.senderInfo}</p>
+                                    <p className="font-medium text-gray-800">{paymentData.sender极}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Service Budget</p>
@@ -987,7 +987,7 @@
                                     <p className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
-                                    <p className="text-sm text-gray-600">Total Paid</极>
+                                    <p className="text-sm text-gray-600">Total Paid</p>
                                     <p className="font-medium text-gray-800">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                                 </div>
                                 <div>
@@ -1165,9 +1165,9 @@
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Total Amount:</span>
-                                                <span className="font-medium">$ {verificationResult.data.fees?.total?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</span>
+                                                <极 className="font-medium">$ {verificationResult.data.fees?.total?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) || '0.00'}</span>
                                             </div>
-                                            <div className="flex极flex-col">
+                                            <div className="flex flex-col">
                                                 <span className="text-sm text-gray-600">Issue Date:</span>
                                                 <span className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</span>
                                             </div>
@@ -1176,7 +1176,7 @@
                                                 <span className="font-medium">{verificationResult.expiry}</span>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm text-gray-600">Payment Status:</span>
+                                                <span className="text-sm text-gray-极">Payment Status:</span>
                                                 <span className={`status-badge ${
                                                     verificationResult.data.status === 'active' ? 'status-active' :
                                                     verificationResult.data.status === 'pending_verification' ? 'status-pending' :
