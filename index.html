@@ -1,86 +1,1276 @@
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    if (data.type === 'ADD_CERTIFICATE') {
-      const certificate = data.data;
-      const row = [
-        certificate.certificateId,
-        certificate.sellerName,
-        certificate.sellerEmail,
-        certificate.buyerName,
-        certificate.buyerEmail,
-        certificate.serviceDescription,
-        certificate.budget,
-        certificate.fees.fee,
-        certificate.fees.total,
-        certificate.guaranteePeriod,
-        certificate.terms,
-        certificate.status,
-        certificate.createdAt,
-        certificate.payment ? certificate.payment.method : '',
-        certificate.payment ? certificate.payment.senderInfo : '',
-        certificate.payment ? certificate.payment.paidAt : ''
-      ];
-      
-      // Add headers if sheet is empty
-      if (sheet.getLastRow() === 0) {
-        const headers = [
-          'Certificate ID', 'Seller Name', 'Seller Email', 'Buyer Name', 'Buyer Email',
-          'Service Description', 'Budget', 'Fee', 'Total', 'Guarantee Period', 'Terms',
-          'Status', 'Created At', 'Payment Method', 'Sender Info', 'Paid At'
-        ];
-        sheet.appendRow(headers);
-      }
-      
-      sheet.appendRow(row);
-      
-      return ContentService
-        .createTextOutput(JSON.stringify({status: 'success', message: 'Certificate stored successfully'}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({status: 'error', message: error.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function doGet(e) {
-  try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const data = sheet.getDataRange().getValues();
-    const headers = data[0];
-    
-    if (e.parameter.type === 'GET_CERTIFICATE' && e.parameter.id) {
-      const certificateId = e.parameter.id;
-      
-      // Skip headers row
-      for (let i = 1; i < data.length; i++) {
-        if (data[i][0] === certificateId) {
-          const certificate = {};
-          headers.forEach((header, index) => {
-            certificate[header] = data[i][index];
-          });
-          
-          return ContentService
-            .createTextOutput(JSON.stringify({status: 'success', certificate}))
-            .setMimeType(ContentService.MimeType.JSON);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneXX Guarantee Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
         }
-      }
-      
-      return ContentService
-        .createTextOutput(JSON.stringify({status: 'error', message: 'Certificate not found'}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({status: 'error', message: 'Invalid request'}))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({status: 'error', message: error.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .pulse-border {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        .payment-card {
+            transition: all 0.3s ease;
+        }
+        
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+        
+        .nav-item {
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .nav-item.active:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+        
+        .form-input {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+        
+        .form-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #6366f1;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #4ade80;
+            stroke-miterlimit: 10;
+            box-shadow: 0 0 0 rgba(74, 222, 128, 0.5);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: 0 0 0 30px rgba(255, 255, 255, 0);
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div id="root"></div>
+
+    <!-- Hidden iframe for form submission without navigation -->
+    <iframe name="hiddenFrame" style="display: none;"></iframe>
+
+    <script type="text/babel">
+        // Main App Component
+        const { useState, useEffect } = React;
+
+        // Generate a unique certificate ID
+        const generateCertificateId = () => {
+            const prefix = 'ONEX';
+            const timestamp = Date.now().toString(36);
+            const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+            return `${prefix}-${timestamp}-${randomStr}`;
+        };
+
+        // Store certificate data in Google Sheets
+        const storeCertificateData = async (certificateData) => {
+            try {
+                // Google Apps Script Web App URL - YOU NEED TO REPLACE THIS WITH YOUR OWN
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxr6u6b9JfqMJW0VH8Y3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q/exec';
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'ADD_CERTIFICATE',
+                        data: certificateData
+                    })
+                });
+                
+                return true;
+            } catch (error) {
+                console.error('Error storing certificate data:', error);
+                // Fallback to localStorage
+                const existingData = JSON.parse(localStorage.getItem('onexxCertificates') || '[]');
+                const newData = [...existingData, certificateData];
+                localStorage.setItem('onexxCertificates', JSON.stringify(newData));
+                return true;
+            }
+        };
+
+        // Get certificate data from Google Sheets
+        const getCertificateData = async (certificateId) => {
+            try {
+                // Google Apps Script Web App URL - YOU NEED TO REPLACE THIS WITH YOUR OWN
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxr6u6b9JfqMJW0VH8Y3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q3Q/exec';
+                
+                const response = await fetch(`${scriptURL}?type=GET_CERTIFICATE&id=${certificateId}`);
+                const data = await response.json();
+                
+                if (data && data.status === 'success') {
+                    return data.certificate;
+                }
+                
+                throw new Error('Certificate not found');
+            } catch (error) {
+                console.error('Error retrieving certificate data:', error);
+                // Fallback to localStorage
+                const certificates = JSON.parse(localStorage.getItem('onexxCertificates') || '[]');
+                return certificates.find(cert => cert.certificateId === certificateId) || null;
+            }
+        };
+
+        // Calculate fees based on budget
+        const calculateFees = (budget) => {
+            if (!budget || budget <= 0) return { fee: 0, total: 0 };
+            
+            let fee = 0;
+            if (budget <= 100) {
+                fee = budget * 0.05; // 5% for small budgets
+            } else if (budget <= 500) {
+                fee = budget * 0.03; // 3% for medium budgets
+            } else {
+                fee = Math.max(10, budget * 0.02); // 2% for large budgets (min $10)
+            }
+            
+            return {
+                fee: Math.round(fee * 100) / 100,
+                total: Math.round((budget + fee) * 100) / 100
+            };
+        };
+
+        function App() {
+            const [currentView, setCurrentView] = useState('home');
+            const [certificateData, setCertificateData] = useState(null);
+            const [paymentData, setPaymentData] = useState(null);
+
+            const navigation = [
+                { name: 'Home', id: 'home' },
+                { name: 'Create Guarantee', id: 'form' },
+                { name: 'Verify', id: 'verify' },
+                { name: 'Admin', id: 'admin' }
+            ];
+
+            return (
+                <div className="min-h-screen">
+                    {/* Navigation */}
+                    <nav className="glass-card fixed top-4 left-1/2 transform -translate-x-1/2 z-10 w-11/12 max-w-4xl">
+                        <div className="px-6 py-3">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center text-xl font-bold cursor-pointer" onClick={() => setCurrentView('home')}>
+                                    <span className="gradient-text flex items-center">
+                                        <span className="text-2xl mr-2">🛡️</span> OneXX
+                                    </span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    {navigation.map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setCurrentView(item.id)}
+                                            className={`nav-item ${currentView === item.id ? 'active text-indigo-600 font-medium' : 'text-gray-600 hover:text-indigo-600'}`}
+                                        >
+                                            {item.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="pt-24 pb-16 px-4">
+                        {currentView === 'home' && <HomePage onGetStarted={() => setCurrentView('form')} />}
+                        {currentView === 'form' && <GuaranteeForm onSuccess={(data) => { setCertificateData(data); setCurrentView('payment'); }} />}
+                        {currentView === 'payment' && <PaymentInstruction data={certificateData} onSuccess={(data) => { setPaymentData(data); setCurrentView('success'); }} />}
+                        {currentView === 'success' && <SuccessScreen certificateData={certificateData} paymentData={paymentData} />}
+                        {currentView === 'verify' && <VerificationPage />}
+                        {currentView === 'admin' && <AdminPanel />}
+                    </main>
+                    
+                    {/* Footer */}
+                    <footer className="glass-card mt-12 py-6">
+                        <div className="max-w-7xl mx-auto px-4 text-center text-gray-600 text-sm">
+                            <p>© 2023 OneXX. All rights reserved.</p>
+                            <p className="mt-2">For support, email: support@onexx.com</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Home Page Component
+        function HomePage({ onGetStarted }) {
+            return (
+                <div className="max-w-6xl mx-auto">
+                    {/* Hero Section */}
+                    <div className="hero-section text-white p-12 rounded-2xl mb-16 text-center">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6">Secure Your Transactions with OneXX</h1>
+                        <p className="text-xl mb-8 max-w-2xl mx-auto">The modern guarantee platform that protects both buyers and sellers with secure escrow services</p>
+                        <button onClick={onGetStarted} className="btn-primary bg-white text-indigo-600 text-lg px-8 py-4 hover:bg-gray-100">
+                            Get Started <i className="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+
+                    {/* Features Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-shield-alt"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Secure Guarantees</h3>
+                            <p className="text-gray-600">Protect your transactions with our secure guarantee system that ensures both parties are satisfied.</p>
+                        </div>
+
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-bolt"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Fast Processing</h3>
+                            <p className="text-gray-600">Quick verification and processing means your guarantees are active in minutes, not days.</p>
+                        </div>
+
+                        <div className="feature-card glass-card p-6 text-center">
+                            <div className="text-4xl text-indigo-500 mb-4"><i className="fas fa-globe"></i></div>
+                            <h3 className="text-xl font-bold mb-3">Global Support</h3>
+                            <p className="text-gray-600">We support transactions from anywhere in the world with multiple payment options.</p>
+                        </div>
+                    </div>
+
+                    {/* How It Works Section */}
+                    <div className="glass-card p-8 mb-16">
+                        <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                                <h3 className="font-semibold mb-2">Create Guarantee</h3>
+                                <p className="text-gray-600 text-sm">Fill out the simple form with transaction details</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                                <h3 className="font-semibold mb-2">Make Payment</h3>
+                                <p className="text-gray-600 text-sm">Pay the guarantee fee via PayPal or Binance</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                                <h3 className="font-semibold mb-2">Receive Certificate</h3>
+                                <p className="text-gray-600 text-sm">Get your guarantee certificate via email</p>
+                            </div>
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+                                <h3 className="font-semibold mb-2">Transaction Protected</h3>
+                                <p className="text-gray-600 text-sm">Your transaction is now secured by OneXX</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CTA Section */}
+                    <div className="text-center">
+                        <h2 className="text-3xl font-bold mb-6">Ready to Secure Your Transaction?</h2>
+                        <button onClick={onGetStarted} className="btn-primary px-8 py-4 text-lg">
+                            Create a Guarantee Now
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // Guarantee Form Component
+        function GuaranteeForm({ onSuccess }) {
+            const [formData, setFormData] = useState({
+                sellerName: '',
+                sellerEmail: '',
+                buyerName: '',
+                buyerEmail: '',
+                serviceDescription: '',
+                budget: '',
+                guaranteePeriod: '30',
+                terms: 'Full refund within the guarantee period if service quality is not met.'
+            });
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [fees, setFees] = useState({ fee: 0, total: 0 });
+            const [certificateId, setCertificateId] = useState('');
+
+            const handleChange = (e) => {
+                const newFormData = {
+                    ...formData,
+                    [e.target.name]: e.target.value
+                };
+                
+                setFormData(newFormData);
+                
+                // Recalculate fees when budget changes
+                if (e.target.name === 'budget') {
+                    const budgetValue = parseFloat(e.target.value) || 0;
+                    setFees(calculateFees(budgetValue));
+                }
+            };
+
+            useEffect(() => {
+                // Generate certificate ID on component mount
+                setCertificateId(generateCertificateId());
+                
+                // Calculate initial fees
+                const budgetValue = parseFloat(formData.budget) || 0;
+                setFees(calculateFees(budgetValue));
+            }, []);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                // Create complete certificate data
+                const completeData = {
+                    ...formData,
+                    fees,
+                    certificateId,
+                    status: 'pending_payment',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Store in Google Sheets
+                await storeCertificateData(completeData);
+                
+                // Continue with React flow
+                setIsSubmitting(false);
+                onSuccess(completeData);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto slide-in">
+                    <div className="glass-card p-8">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold text-gray-800">Create Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-2">Fill out the form below to create a new guarantee certificate</p>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit}>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="fade-in" style={{ animationDelay: '0.1s' }}>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                        <i className="fas fa-user-tie mr-2 text-indigo-500"></i> Seller Information
+                                    </h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="sellerName"
+                                            id="sellerName"
+                                            required
+                                            value={formData.sellerName}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                            placeholder="John's Repair Service"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="sellerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Seller Email *
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="sellerEmail"
+                                            id="sellerEmail"
+                                            required
+                                            value={formData.sellerEmail}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="fade-in" style={{ animationDelay: '0.2s' }}>
+                                    <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                        <i className="fas fa-user mr-2 text-indigo-500"></i> Buyer Information
+                                    </h3>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerName" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="buyerName"
+                                            id="buyerName"
+                                            required
+                                            value={formData.buyerName}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                            placeholder="Jane Smith"
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Buyer Email *
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="buyerEmail"
+                                            id="buyerEmail"
+                                            required
+                                            value={formData.buyerEmail}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                            placeholder="jane@example.com"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8 fade-in" style={{ animationDelay: '0.3s' }}>
+                                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                    <i className="fas fa-concierge-bell mr-2 text-indigo-500"></i> Service Details
+                                </h3>
+                                <div className="mb-4">
+                                    <label htmlFor="serviceDescription" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Service Description *
+                                    </label>
+                                    <textarea
+                                        name="serviceDescription"
+                                        id="serviceDescription"
+                                        rows={3}
+                                        required
+                                        value={formData.serviceDescription}
+                                        onChange={handleChange}
+                                        className="w-full form-input"
+                                        placeholder="Detailed description of the service provided..."
+                                    />
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="mb-4">
+                                        <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Service Budget ($) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="budget"
+                                            id="budget"
+                                            min="0"
+                                            step="0.01"
+                                            required
+                                            value={formData.budget}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                            placeholder="100.00"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">The total value of the service being guaranteed</p>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label htmlFor="guaranteePeriod" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Guarantee Period (days) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="guaranteePeriod"
+                                            id="guaranteePeriod"
+                                            min="1"
+                                            required
+                                            value={formData.guaranteePeriod}
+                                            onChange={handleChange}
+                                            className="w-full form-input"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="mb-4">
+                                    <label htmlFor="terms" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Refund Terms & Conditions *
+                                    </label>
+                                    <textarea
+                                        name="terms"
+                                        id="terms"
+                                        rows={3}
+                                        required
+                                        value={formData.terms}
+                                        onChange={handleChange}
+                                        className="w-full form-input"
+                                        placeholder="Terms of the guarantee..."
+                                    />
+                                </div>
+                                
+                                {/* Fee Breakdown */}
+                                <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 fade-in" style={{ animationDelay: '0.4s' }}>
+                                    <h4 className="font-medium text-blue-800 mb-3 flex items-center">
+                                        <i className="fas fa-receipt mr-2"></i> Fee Breakdown
+                                    </h4>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="text-sm text-gray-600">Service Budget:</div>
+                                        <div className="text-sm font-medium text-right">$ {formData.budget ? parseFloat(formData.budget).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '0.00'}</div>
+                                        
+                                        <div className="text-sm text-gray-600">Guarantee Fee:</div>
+                                        <div className="text-sm font-medium text-right">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                                        
+                                        <div className="text-sm text-gray-600 border-t border-gray-200 pt-2 mt-1">Total Amount:</div>
+                                        <div className="text-sm font-bold text-right border-t border-gray-200 pt-2 mt-1">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-3">
+                                        Fees: ≤$100 (5%), $101-$500 (3%), ≥$501 (2%, min $10)
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div className="mt-8 flex justify-end fade-in" style={{ animationDelay: '0.5s' }}>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting || !formData.budget || formData.budget <= 0}
+                                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <i className="fas fa-spinner fa-spin mr-2"></i> Processing...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Continue to Payment <i className="fas fa-arrow-right ml-2"></i>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        // Payment Instruction Component
+        function PaymentInstruction({ data, onSuccess }) {
+            const [activeMethod, setActiveMethod] = useState('paypal');
+            const [senderInfo, setSenderInfo] = useState('');
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            
+            // Calculate fees based on budget
+            const fees = calculateFees(parseFloat(data.budget) || 0);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                if (!senderInfo) return;
+                
+                setIsSubmitting(true);
+                
+                // Update certificate data with payment info
+                const updatedData = {
+                    ...data,
+                    payment: {
+                        senderInfo,
+                        method: activeMethod,
+                        paidAt: new Date().toISOString()
+                    },
+                    status: 'pending_verification'
+                };
+                
+                // Store in Google Sheets
+                await storeCertificateData(updatedData);
+                
+                // Continue with React flow
+                setIsSubmitting(false);
+                onSuccess({ senderInfo, method: activeMethod });
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto slide-in">
+                    <div className="glass-card p-8 mb-8">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold text-gray-800">Complete Your Payment</h2>
+                            <p className="text-gray-600 mt-2">Please send money via one of the following methods</p>
+                        </div>
+                        
+                        <div className="mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div 
+                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'paypal' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
+                                    onClick={() => setActiveMethod('paypal')}
+                                >
+                                    <div className="text-4xl mb-3 text-blue-600"><i className="fab fa-paypal"></i></div>
+                                    <h3 className="font-semibold text-gray-800">PayPal</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold text-gray-800">payments@onexx.com</p>
+                                    {activeMethod === 'paypal' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
+                                </div>
+                                
+                                <div 
+                                    className={`payment-card p-5 rounded-xl cursor-pointer text-center ${activeMethod === 'binance' ? 'border-2 border-indigo-500 bg-indigo-50' : 'border border-gray-200 bg-white'}`}
+                                    onClick={() => setActiveMethod('binance')}
+                                >
+                                    <div className="text-4xl mb-3 text-yellow-600"><i className="fas fa-coins"></i></div>
+                                    <h3 className="font-semibold text-gray-800">Binance</h3>
+                                    <p className="text-sm text-gray-600 mt-1">Send money to</p>
+                                    <p className="font-mono text-lg font-bold text-gray-800">ONEX12345</p>
+                                    {activeMethod === 'binance' && <div className="mt-3 text-indigo-500"><i className="fas fa-check-circle"></i> Selected</div>}
+                                </div>
+                            </div>
+                            
+                            <div className="bg-yellow-50 p-4 rounded-lg mt-6 border border-yellow-200">
+                                <div className="flex">
+                                    <div className="flex-shrink-0 text-yellow-500 text-xl"><i className="fas fa-exclamation-circle"></i></div>
+                                    <div className="ml-3">
+                                        <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
+                                        <div className="mt-2 text-sm text-yellow-700">
+                                            <p>Please include the Certificate ID <strong>({data.certificateId})</strong> in the payment notes.</p>
+                                            <p className="mt-1">After sending money, enter your {activeMethod === 'paypal' ? 'email' : 'Binance username'} below.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form onSubmit={handleSubmit} className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <div>
+                                <label htmlFor="senderInfo" className="block text-sm font-medium text-gray-700 mb-1">
+                                    {activeMethod === 'paypal' ? 'Your PayPal Email *' : 'Your Binance Username *'}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="senderInfo"
+                                    name="senderInfo"
+                                    required
+                                    value={senderInfo}
+                                    onChange={(e) => setSenderInfo(e.target.value)}
+                                    className="w-full form-input"
+                                    placeholder={activeMethod === 'paypal' ? 'Enter your PayPal email' : 'Enter your Binance username'}
+                                />
+                            </div>
+                            
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <i className="fas fa-spinner fa-spin mr-2"></i> Submitting...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Submit Payment Details <i className="fas fa-check-circle ml-2"></i>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    {/* Order Summary */}
+                    <div className="glass-card p-6">
+                        <div className="mb-4">
+                            <h2 className="text-xl font-bold text-gray-800 flex items-center">
+                                <i className="fas fa-file-invoice-dollar mr-2 text-indigo-500"></i> Order Summary
+                            </h2>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex justify-between py-1">
+                                <span className="text-gray-600">Service</span>
+                                <span className="font-medium text-gray-800">{data.serviceDescription.substring(0, 40)}...</span>
+                            </div>
+                            <div className="flex justify-between py-1">
+                                <span className="text-gray-600">Seller</span>
+                                <span className="font-medium text-gray-800">{data.sellerName}</span>
+                            </div>
+                            <div className="flex justify-between py-1">
+                                <span className="text-gray-600">Buyer</span>
+                                <span className="font-medium text-gray-800">{data.buyerName}</span>
+                            </div>
+                            <div className="flex justify-between py-1">
+                                <span className="text-gray-600">Service Budget</span>
+                                <span className="font-medium text-gray-800">$ {parseFloat(data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                            </div>
+                            <div className="flex justify-between py-1">
+                                <span className="text-gray-600">Guarantee Fee</span>
+                                <span className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                            </div>
+                            <div className="flex justify-between py-3 border-t border-gray-200 mt-2">
+                                <span className="text-lg font-bold text-gray-800">Total</span>
+                                <span className="text-lg font-bold text-indigo-600">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Success Screen Component
+        function SuccessScreen({ certificateData, paymentData }) {
+            const downloadReceipt = () => {
+                // Calculate fees
+                const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+                
+                // Create a simple receipt text
+                const receiptText = `
+                    OneXX Guarantee - Payment Receipt
+                    ------------------------------------------
+                    Certificate ID: ${certificateData.certificateId}
+                    Payment Method: ${paymentData.method.toUpperCase()}
+                    Sender: ${paymentData.senderInfo}
+                    Date: ${new Date().toLocaleDateString()}
+                    
+                    Service: ${certificateData.serviceDescription}
+                    Seller: ${certificateData.sellerName}
+                    Buyer: ${certificateData.buyerName}
+                    Service Budget: $ ${parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Guarantee Fee: $ ${fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Total Amount: $ ${fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    Guarantee Period: ${certificateData.guaranteePeriod} days
+                    
+                    Status: Pending Verification
+                    Note: Your guarantee certificate will be emailed to you after payment verification.
+                `;
+                
+                // Create a blob and download link
+                const blob = new Blob([receiptText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `onexx-payment-receipt-${certificateData.certificateId}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Calculate fees for display
+            const fees = calculateFees(parseFloat(certificateData.budget) || 0);
+
+            return (
+                <div className="max-w-2xl mx-auto text-center slide-in">
+                    <div className="glass-card p-8">
+                        <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-green-100 mb-6">
+                            <svg className="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle className="success-checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path className="success-checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        </div>
+                        <h2 className="text-3xl font-bold text-gray-900">Payment Submitted Successfully!</h2>
+                        <p className="mt-4 text-gray-600">
+                            Your payment details have been submitted. The guarantee certificate will be generated and emailed to you after manual verification of your payment.
+                        </p>
+                        
+                        <div className="mt-8 bg-gray-50 p-6 rounded-lg text-left">
+                            <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
+                                <i className="fas fa-receipt mr-2 text-indigo-500"></i> Transaction Details
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-sm text-gray-600">Certificate ID</p>
+                                    <p className="font-medium text-gray-800">{certificateData.certificateId}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Payment Method</p>
+                                    <p className="font-medium text-gray-800 capitalize">{paymentData.method}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">{paymentData.method === 'paypal' ? 'Sender Email' : 'Binance Username'}</p>
+                                    <p className="font-medium text-gray-800">{paymentData.senderInfo}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Service Budget</p>
+                                    <p className="font-medium text-gray-800">$ {parseFloat(certificateData.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Guarantee Fee</p>
+                                    <p className="font-medium text-gray-800">$ {fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Total Paid</p>
+                                    <p className="font-medium text-gray-800">$ {fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Status</p>
+                                    <p className="font-medium text-yellow-600">Pending Verification</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-8 flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                            <button
+                                onClick={downloadReceipt}
+                                className="btn-primary flex items-center justify-center"
+                            >
+                                <i className="fas fa-download mr-2"></i> Download Receipt
+                            </button>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="btn-secondary flex items-center justify-center"
+                            >
+                                <i className="fas fa-home mr-2"></i> Back to Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Verification Page Component
+        function VerificationPage() {
+            const [certificateId, setCertificateId] = useState('');
+            const [verificationResult, setVerificationResult] = useState(null);
+            const [isVerifying, setIsVerifying] = useState(false);
+
+            const handleVerify = async () => {
+                if (!certificateId) return;
+                
+                setIsVerifying(true);
+                
+                // Check for certificate data
+                const certificateData = await getCertificateData(certificateId);
+                
+                setTimeout(() => {
+                    setIsVerifying(false);
+                    
+                    if (certificateData) {
+                        // Calculate expiry date
+                        const createdAt = new Date(certificateData.createdAt);
+                        const expiryDate = new Date(createdAt);
+                        expiryDate.setDate(expiryDate.getDate() + parseInt(certificateData.guaranteePeriod));
+                        
+                        const now = new Date();
+                        const isExpired = now > expiryDate;
+                        
+                        setVerificationResult({
+                            status: isExpired ? 'expired' : 'active',
+                            message: isExpired 
+                                ? 'This guarantee certificate has expired.' 
+                                : 'This guarantee certificate is valid and active.',
+                            expiry: expiryDate.toLocaleDateString(),
+                            data: certificateData
+                        });
+                    } else {
+                        setVerificationResult({
+                            status: 'invalid',
+                            message: 'Certificate ID not found. Please check the ID and try again.'
+                        });
+                    }
+                }, 1000);
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto slide-in">
+                    <div className="glass-card p-8">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold text-gray-800">Verify Guarantee Certificate</h2>
+                            <p className="text-gray-600 mt-2">Enter a certificate ID to verify a guarantee</p>
+                        </div>
+                        
+                        <div className="mb-8">
+                            <label htmlFor="certificateId" className="block text-sm font-medium text-gray-700 mb-2">
+                                Certificate ID
+                            </label>
+                            <div className="flex">
+                                <input
+                                    type="text"
+                                    id="certificateId"
+                                    value={certificateId}
+                                    onChange={(e) => setCertificateId(e.target.value)}
+                                    className="flex-1 form-input rounded-r-none"
+                                    placeholder="Enter certificate ID (e.g. ONEX-ABC123XYZ)"
+                                />
+                                <button
+                                    onClick={handleVerify}
+                                    disabled={isVerifying || !certificateId}
+                                    className="btn-primary rounded-l-none disabled:opacity-50 disabled:cursor-not-allowed px-6"
+                                >
+                                    {isVerifying ? (
+                                        <i className="fas fa-spinner fa-spin"></i>
+                                    ) : (
+                                        'Verify'
+                                    )}
+                                </button>
+                            </div>
+                            <p className="mt-2 text-sm text-gray-500">
+                                Enter a valid certificate ID to verify its status
+                            </p>
+                        </div>
+                        
+                        {verificationResult && (
+                            <div className={`p-5 rounded-lg ${verificationResult.status === 'active' ? 'bg-green-50 text-green-800 border border-green-200' : verificationResult.status === 'expired' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+                                <h3 className="font-medium text-lg mb-3 flex items-center">
+                                    {verificationResult.status === 'active' ? (
+                                        <><i className="fas fa-check-circle mr-2"></i> Valid Certificate</>
+                                    ) : verificationResult.status === 'expired' ? (
+                                        <><i className="fas fa-exclamation-triangle mr-2"></i> Expired Certificate</>
+                                    ) : (
+                                        <><i className="fas fa-times-circle mr-2"></i> Invalid Certificate</>
+                                    )}
+                                </h3>
+                                <p>{verificationResult.message}</p>
+                                
+                                {verificationResult.data && (
+                                    <div className="mt-4 pt-4 border-t border-current border-opacity-25">
+                                        <h4 className="font-medium mb-3">Certificate Details:</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Seller:</span>
+                                                <span className="font-medium">{verificationResult.data.sellerName}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Buyer:</span>
+                                                <span className="font-medium">{verificationResult.data.buyerName}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Service:</span>
+                                                <span className="font-medium">{verificationResult.data.serviceDescription.substring(0, 50)}...</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Service Budget:</span>
+                                                <span className="font-medium">$ {parseFloat(verificationResult.data.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Guarantee Fee:</span>
+                                                <span className="font-medium">$ {verificationResult.data.fees.fee.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Total Amount:</span>
+                                                <span className="font-medium">$ {verificationResult.data.fees.total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Issue Date:</span>
+                                                <span className="font-medium">{new Date(verificationResult.data.createdAt).toLocaleDateString()}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Expiry Date:</span>
+                                                <span className="font-medium">{verificationResult.expiry}</span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-gray-600">Payment Status:</span>
+                                                <span className="font-medium capitalize">{verificationResult.data.status.replace('_', ' ')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        <div className="mt-8 bg-gray-50 p-5 rounded-lg border border-gray-200">
+                            <h3 className="font-medium text-gray-900 mb-3 flex items-center">
+                                <i className="fas fa-info-circle mr-2 text-indigo-500"></i> How to verify a guarantee
+                            </h3>
+                            <ol className="list-decimal pl-5 text-gray-600 space-y-2">
+                                <li>Enter the Certificate ID found on the guarantee certificate</li>
+                                <li>Click the Verify button</li>
+                                <li>The system will display the current status of the guarantee</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Admin Panel Component
+        function AdminPanel() {
+            const [certificates, setCertificates] = useState([]);
+            const [isLoading, setIsLoading] = useState(true);
+
+            useEffect(() => {
+                // Load certificates from localStorage (fallback)
+                const loadCertificates = () => {
+                    try {
+                        const storedCertificates = JSON.parse(localStorage.getItem('onexxCertificates') || '[]');
+                        setCertificates(storedCertificates);
+                    } catch (error) {
+                        console.error('Error loading certificates:', error);
+                        setCertificates([]);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+
+                loadCertificates();
+            }, []);
+
+            const exportToCSV = () => {
+                if (certificates.length === 0) return;
+                
+                // Create CSV content
+                const headers = ['Certificate ID', 'Seller Name', 'Seller Email', 'Buyer Name', 'Buyer Email', 'Service', 'Budget', 'Fee', 'Total', 'Status', 'Created At'];
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...certificates.map(cert => [
+                        cert.certificateId,
+                        `"${cert.sellerName}"`,
+                        cert.sellerEmail,
+                        `"${cert.buyerName}"`,
+                        cert.buyerEmail,
+                        `"${cert.serviceDescription.replace(/"/g, '""')}"`,
+                        cert.budget,
+                        cert.fees.fee,
+                        cert.fees.total,
+                        cert.status,
+                        cert.createdAt
+                    ].join(','))
+                ].join('\n');
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                link.setAttribute('download', `onexx-certificates-${new Date().toISOString().slice(0, 10)}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            if (isLoading) {
+                return (
+                    <div className="admin-panel">
+                        <div className="text-center py-8">
+                            <i className="fas fa-spinner fa-spin text-3xl text-indigo-600"></i>
+                            <p className="mt-4 text-gray-600">Loading certificates...</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="admin-panel">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6">Admin Panel - Certificate Management</h2>
+                    
+                    <div className="mb-6 flex justify-between items-center">
+                        <p className="text-gray-600">
+                            {certificates.length} certificate{certificates.length !== 1 ? 's' : ''} found
+                        </p>
+                        <button
+                            onClick={exportToCSV}
+                            disabled={certificates.length === 0}
+                            className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <i className="fas fa-download mr-2"></i> Export to CSV
+                        </button>
+                    </div>
+                    
+                    {certificates.length === 0 ? (
+                        <div className="text-center py-12 bg-gray-50 rounded-lg">
+                            <i className="fas fa-inbox text-4xl text-gray-400 mb-4"></i>
+                            <h3 className="text-xl font-medium text-gray-600">No certificates found</h3>
+                            <p className="text-gray-500 mt-2">Certificates will appear here once they are created</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Certificate ID
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Seller
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Buyer
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Budget
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Created
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {certificates.map((certificate) => (
+                                        <tr key={certificate.certificateId}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                {certificate.certificateId}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {certificate.sellerName}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {certificate.buyerName}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                ${parseFloat(certificate.budget || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                                    certificate.status === 'active' ? 'bg-green-100 text-green-800' :
+                                                    certificate.status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' :
+                                                    certificate.status === 'pending_verification' ? 'bg-blue-100 text-blue-800' :
+                                                    'bg-red-100 text-red-800'
+                                                }`}>
+                                                    {certificate.status.replace('_', ' ')}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {new Date(certificate.createdAt).toLocaleDateString()}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    
+                    <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <h3 className="font-medium text-blue-800 mb-2 flex items-center">
+                            <i className="fas fa-info-circle mr-2"></i> Note for Admin
+                        </h3>
+                        <p className="text-blue-700 text-sm">
+                            This panel currently shows data stored in your browser's localStorage. To implement a proper database solution, you need to set up a Google Apps Script as explained in the documentation.
+                        </p>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
