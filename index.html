@@ -816,7 +816,7 @@
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: column;
             gap: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
@@ -1046,41 +1046,30 @@
         .home-banner {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 20px;
-            padding: 30px;
             margin: 80px auto;
             display: flex;
             align-items: center;
-            gap: 30px;
+            justify-content: center;
             color: white;
             max-width: 1000px;
             box-shadow: 0 20px 40px rgba(67, 97, 238, 0.3);
-        }
-        
-        .home-banner-content {
-            flex: 1;
-        }
-        
-        .home-banner h3 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
-        
-        .home-banner p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            opacity: 0.9;
+            overflow: hidden;
+            height: 250px;
         }
         
         .home-banner-img {
-            width: 200px;
-            height: 200px;
-            background: white;
-            border-radius: 15px;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
-            color: var(--primary);
+            overflow: hidden;
+        }
+        
+        .home-banner-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         /* Responsive for card */
@@ -1143,8 +1132,7 @@
             }
             
             .home-banner {
-                flex-direction: column;
-                text-align: center;
+                height: 200px;
             }
         }
         
@@ -1368,16 +1356,11 @@
         </div>
     </section>
 
-    <!-- Home Banner Ad -->
+    <!-- Home Banner Ad - Image Only -->
     <div class="container">
         <div class="home-banner float-animation">
-            <div class="home-banner-content">
-                <h3>Special Limited Time Offer!</h3>
-                <p>Get 20% off on your next transaction when you create a Guarantee Card this month.</p>
-                <a href="#form" class="cta-button" style="background: white; color: var(--primary);">Claim Discount Now <i class="fas fa-gift"></i></a>
-            </div>
             <div class="home-banner-img">
-                <i class="fas fa-gift"></i>
+                <img src="https://images.unsplash.com/photo-1563013546-73e4c9c5f4de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Special Offer">
             </div>
         </div>
     </div>
@@ -1614,7 +1597,7 @@
                         </div>
                         
                         <a href="https://onexx.com/special-offer" class="banner-ad" target="_blank">
-                            <img src="https://via.placeholder.com/300x100/4361ee/ffffff?text=Special+Offer+-+20%25+Off" alt="Special Offer - 20% Off on Onexx Services">
+                            <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Special Offer">
                         </a>
                     </div>
                 </div>
@@ -1818,17 +1801,6 @@
             // Scroll to card
             modernCard.scrollIntoView({ behavior: 'smooth' });
             
-            // In a real implementation, you would send the data to Google Apps Script here
-            console.log('Form data:', {
-                userType,
-                yourEmail,
-                counterpartyEmail,
-                serviceName,
-                transactionId,
-                amount,
-                cardId
-            });
-            
             // Simulate API call
             simulateAPICall();
         });
@@ -1996,21 +1968,6 @@
         
         // Simulate API call to Google Apps Script
         function simulateAPICall() {
-            // This would be replaced with actual fetch call to Google Apps Script URL
-            /*
-            fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
-                method: 'POST',
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-            */
-            
             // For demo purposes, we'll just show a success message after a delay
             setTimeout(() => {
                 alert('Guarantee Card created successfully! Verification emails have been sent to both parties.');
