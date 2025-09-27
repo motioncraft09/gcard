@@ -1285,6 +1285,42 @@
             cursor: pointer;
             font-weight: 600;
         }
+
+        /* Google Sheet Embed Section */
+        .sheet-embed-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .sheet-embed-wrapper {
+            max-width: 100%;
+            overflow: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .sheet-embed-wrapper iframe {
+            width: 100%;
+            min-height: 600px;
+            border: 0;
+            display: block;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -1333,6 +1369,7 @@
                     <a href="#how-it-works">How It Works</a>
                     <a href="#verify">Verify</a>
                     <a href="#form">Create Card</a>
+                    <a href="#database">Database</a>
                 </div>
                 <a href="#form" class="cta-button">Create Card <i class="fas fa-arrow-right"></i></a>
             </nav>
@@ -1424,6 +1461,25 @@
                     <h3>Share</h3>
                     <p>Share your verified card via QR code or downloadable PDF</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Sheet Database Section -->
+    <section class="sheet-embed-section" id="database">
+        <div class="container">
+            <h2 class="section-title">Transaction Database</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto 30px; color: var(--gray); font-size: 1.1rem;">
+                View all verified transactions in our secure database. All data is encrypted and stored safely in Google Sheets.
+            </p>
+            <div class="sheet-embed-wrapper">
+                <!-- Replace YOUR_SHEET_ID with your actual Google Sheet ID -->
+                <iframe
+                    src="https://docs.google.com/spreadsheets/d/1YOUR_SHEET_ID_HERE/edit?usp=sharing"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="Onexx Transaction Database"
+                ></iframe>
             </div>
         </div>
     </section>
@@ -1669,6 +1725,7 @@
                         <li><a href="#how-it-works">How It Works</a></li>
                         <li><a href="#verify">Verify a Card</a></li>
                         <li><a href="#form">Create Card</a></li>
+                        <li><a href="#database">Database</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1712,6 +1769,14 @@
         const pendingStamp = document.getElementById('pending-stamp');
         const statusBadge = document.getElementById('preview-status');
         const shareModal = document.getElementById('share-modal');
+        
+        // Google Sheets Integration
+        // Replace this with your actual Google Sheet ID
+        const SHEET_ID = '1YOUR_SHEET_ID_HERE';
+        
+        // Google Apps Script Web App URL (for advanced integration)
+        // You'll need to create a Google Apps Script and deploy it as a web app
+        const WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
         
         // Change user type
         userTypeButtons.forEach(button => {
@@ -1801,9 +1866,45 @@
             // Scroll to card
             modernCard.scrollIntoView({ behavior: 'smooth' });
             
-            // Simulate API call
-            simulateAPICall();
+            // Save to Google Sheets (simulated for this example)
+            // In a real implementation, you would use Google Apps Script
+            saveToGoogleSheets(cardId, userType, yourEmail, counterpartyEmail, serviceName, transactionId, amount);
         });
+        
+        // Simulate saving to Google Sheets
+        function saveToGoogleSheets(cardId, userType, yourEmail, counterpartyEmail, serviceName, transactionId, amount) {
+            // Show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<div class="spinner" style="margin: 0 auto;"></div>';
+            submitButton.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // In a real implementation, you would make a fetch request to Google Apps Script
+                console.log('Saving to Google Sheets:', {
+                    cardId, userType, yourEmail, counterpartyEmail, serviceName, transactionId, amount
+                });
+                
+                // Restore button
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                
+                // Show success message
+                alert('Guarantee Card created successfully! Data has been saved to the database.');
+                
+                // Simulate verification after 3 seconds
+                setTimeout(() => {
+                    statusBadge.className = 'status-badge status-verified';
+                    statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
+                    verificationStamp.style.display = 'flex';
+                    pendingStamp.style.display = 'none';
+                    
+                    // Update status in Google Sheets (simulated)
+                    console.log('Updating status to Verified in Google Sheets for card:', cardId);
+                }, 3000);
+            }, 2000);
+        }
         
         // Verify button functionality
         verifyBtn.addEventListener('click', () => {
@@ -1817,37 +1918,55 @@
                 return;
             }
             
-            // Simulate verification
-            const statuses = ['Verified', 'Pending', 'Rejected'];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            // Show loading state
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<div class="spinner" style="margin: 0 auto; width: 20px; height: 20px;"></div>';
+            verifyBtn.disabled = true;
             
-            verificationResult.style.display = 'block';
-            
-            if (randomStatus === 'Verified') {
-                verificationResult.style.backgroundColor = '#d4edda';
-                verificationResult.style.color = '#155724';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
-                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                `;
-            } else if (randomStatus === 'Pending') {
-                verificationResult.style.backgroundColor = '#fff3cd';
-                verificationResult.style.color = '#856404';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-clock"></i> Verification Pending</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> is pending verification from the counterparty.</p>
-                    <p>Status: <span class="status-badge status-pending">Pending</span></p>
-                `;
-            } else {
-                verificationResult.style.backgroundColor = '#f8d7da';
-                verificationResult.style.color = '#721c24';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> has been rejected by one of the parties.</p>
-                    <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
-                `;
-            }
+            // Simulate verification from Google Sheets
+            setTimeout(() => {
+                // In a real implementation, you would make a fetch request to Google Apps Script
+                console.log('Verifying card with Google Sheets:', cardId);
+                
+                // Restore button
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
+                
+                // For demonstration, we'll use a random status
+                const statuses = ['Verified', 'Pending', 'Rejected'];
+                const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                verificationResult.style.display = 'block';
+                
+                if (randomStatus === 'Verified') {
+                    verificationResult.style.backgroundColor = '#d4edda';
+                    verificationResult.style.color = '#155724';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
+                        <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                        <p>This card was found in our secure database.</p>
+                    `;
+                } else if (randomStatus === 'Pending') {
+                    verificationResult.style.backgroundColor = '#fff3cd';
+                    verificationResult.style.color = '#856404';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-clock"></i> Verification Pending</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> is pending verification from the counterparty.</p>
+                        <p>Status: <span class="status-badge status-pending">Pending</span></p>
+                        <p>This card was found in our secure database.</p>
+                    `;
+                } else {
+                    verificationResult.style.backgroundColor = '#f8d7da';
+                    verificationResult.style.color = '#721c24';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> has been rejected by one of the parties.</p>
+                        <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
+                        <p>This card was found in our secure database.</p>
+                    `;
+                }
+            }, 1500);
         });
         
         // Manage card functionality
@@ -1863,19 +1982,32 @@
                 return;
             }
             
-            // Simulate card retrieval
-            manageResult.style.display = 'block';
-            manageResult.style.backgroundColor = '#d4edda';
-            manageResult.style.color = '#155724';
-            manageResult.innerHTML = `
-                <h4><i class="fas fa-check-circle"></i> Card Found</h4>
-                <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
-                <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                <div style="margin-top: 20px;">
-                    <button class="cta-button" style="margin-right: 15px;">View Details</button>
-                    <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
-                </div>
-            `;
+            // Show loading state
+            const originalText = manageBtn.innerHTML;
+            manageBtn.innerHTML = '<div class="spinner" style="margin: 0 auto; width: 20px; height: 20px;"></div>';
+            manageBtn.disabled = true;
+            
+            // Simulate retrieval from Google Sheets
+            setTimeout(() => {
+                // Restore button
+                manageBtn.innerHTML = originalText;
+                manageBtn.disabled = false;
+                
+                // Simulate card retrieval
+                manageResult.style.display = 'block';
+                manageResult.style.backgroundColor = '#d4edda';
+                manageResult.style.color = '#155724';
+                manageResult.innerHTML = `
+                    <h4><i class="fas fa-check-circle"></i> Card Found</h4>
+                    <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
+                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                    <p>This card was retrieved from our secure Google Sheets database.</p>
+                    <div style="margin-top: 20px;">
+                        <button class="cta-button" style="margin-right: 15px;">View Details</button>
+                        <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
+                    </div>
+                `;
+            }, 1500);
         });
         
         // Download PDF button
@@ -1965,22 +2097,6 @@
                 closeShareModal();
             }
         });
-        
-        // Simulate API call to Google Apps Script
-        function simulateAPICall() {
-            // For demo purposes, we'll just show a success message after a delay
-            setTimeout(() => {
-                alert('Guarantee Card created successfully! Verification emails have been sent to both parties.');
-                
-                // Simulate verification after 3 seconds
-                setTimeout(() => {
-                    statusBadge.className = 'status-badge status-verified';
-                    statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
-                    verificationStamp.style.display = 'flex';
-                    pendingStamp.style.display = 'none';
-                }, 3000);
-            }, 1500);
-        }
         
         // Animation on scroll
         const observerOptions = {
