@@ -800,16 +800,6 @@
             color: var(--success);
         }
         
-        .status-pending {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-        
-        .status-rejected {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-        
         .qr-code {
             background: white;
             padding: 20px;
@@ -852,7 +842,6 @@
             justify-content: center;
             opacity: 0.9;
             transform: rotate(15deg);
-            display: none;
         }
         
         .stamp-circle {
@@ -879,48 +868,6 @@
         }
         
         .stamp-text {
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 16px;
-        }
-        
-        .pending-stamp {
-            position: absolute;
-            top: 45px;
-            right: 45px;
-            width: 140px;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.9;
-            transform: rotate(-15deg);
-        }
-        
-        .pending-circle {
-            width: 100%;
-            height: 100%;
-            border: 8px solid var(--warning);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-        }
-        
-        .pending-content {
-            text-align: center;
-            color: var(--warning);
-        }
-        
-        .pending-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-        
-        .pending-text {
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -1102,22 +1049,22 @@
                 gap: 20px;
             }
             
-            .verification-stamp, .pending-stamp {
+            .verification-stamp {
                 top: 30px;
                 right: 30px;
                 width: 100px;
                 height: 100px;
             }
             
-            .stamp-circle, .pending-circle {
+            .stamp-circle {
                 border-width: 6px;
             }
             
-            .stamp-icon, .pending-icon {
+            .stamp-icon {
                 font-size: 28px;
             }
             
-            .stamp-text, .pending-text {
+            .stamp-text {
                 font-size: 12px;
             }
         }
@@ -1304,65 +1251,6 @@
             cursor: pointer;
             font-weight: 600;
         }
-
-        /* Admin Panel */
-        .admin-panel {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: 50px auto;
-            display: none;
-        }
-
-        .admin-panel h3 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--dark);
-        }
-
-        .admin-cards {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .admin-card {
-            background: var(--light);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .admin-card-info {
-            flex: 1;
-        }
-
-        .admin-card-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .admin-btn {
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-        }
-
-        .approve-btn {
-            background: var(--success);
-            color: white;
-        }
-
-        .reject-btn {
-            background: var(--danger);
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -1498,8 +1386,8 @@
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-icon"><i class="fas fa-check-circle"></i></div>
-                    <h3>Admin Approval</h3>
-                    <p>Our team reviews and approves the transaction for maximum security</p>
+                    <h3>Auto-Approval</h3>
+                    <p>Cards are automatically verified and ready to use</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
@@ -1535,7 +1423,6 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="create">Create New Card</button>
                 <button class="tab-btn" data-tab="manage">Manage Existing Card</button>
-                <button class="tab-btn" data-tab="admin">Admin Panel</button>
             </div>
             
             <div class="tab-content active" id="create-tab">
@@ -1606,17 +1493,6 @@
                 </div>
             </div>
             
-            <div class="tab-content" id="admin-tab">
-                <div class="admin-panel" id="admin-panel">
-                    <h3>Admin Approval Panel</h3>
-                    <p style="text-align: center; margin-bottom: 30px;">Approve or reject pending guarantee cards</p>
-                    
-                    <div class="admin-cards" id="admin-cards-list">
-                        <!-- Admin cards will be populated here -->
-                    </div>
-                </div>
-            </div>
-            
             <!-- Modern Card Preview -->
             <div class="modern-card" id="modern-card-preview">
                 <div class="card-header">
@@ -1681,9 +1557,9 @@
                     </div>
                     
                     <div class="card-sidebar">
-                        <div class="status-badge status-pending" id="preview-status">
-                            <i class="fas fa-clock"></i>
-                            PENDING VERIFICATION
+                        <div class="status-badge status-verified" id="preview-status">
+                            <i class="fas fa-check-circle"></i>
+                            VERIFIED
                         </div>
                         
                         <div class="qr-code">
@@ -1702,15 +1578,6 @@
                         <div class="stamp-content">
                             <div class="stamp-icon"><i class="fas fa-check-double"></i></div>
                             <div class="stamp-text">Verified</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="pending-stamp" id="pending-stamp">
-                    <div class="pending-circle">
-                        <div class="pending-content">
-                            <div class="pending-icon"><i class="fas fa-clock"></i></div>
-                            <div class="pending-text">Pending</div>
                         </div>
                     </div>
                 </div>
@@ -1804,11 +1671,8 @@
         const manageResult = document.getElementById('manage-result');
         const modernCard = document.getElementById('modern-card-preview');
         const verificationStamp = document.getElementById('verification-stamp');
-        const pendingStamp = document.getElementById('pending-stamp');
         const statusBadge = document.getElementById('preview-status');
         const shareModal = document.getElementById('share-modal');
-        const adminPanel = document.getElementById('admin-panel');
-        const adminCardsList = document.getElementById('admin-cards-list');
         
         // Store created cards
         let createdCards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
@@ -1841,11 +1705,6 @@
                 });
                 
                 document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
-                
-                // If admin tab is clicked, load pending cards
-                if (btn.dataset.tab === 'admin') {
-                    loadAdminPanel();
-                }
             });
         });
         
@@ -1896,11 +1755,10 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
             
-            // Show pending stamp and status
-            pendingStamp.style.display = 'flex';
-            verificationStamp.style.display = 'none';
-            statusBadge.className = 'status-badge status-pending';
-            statusBadge.innerHTML = '<i class="fas fa-clock"></i> PENDING VERIFICATION';
+            // Show verified status
+            statusBadge.className = 'status-badge status-verified';
+            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
+            verificationStamp.style.display = 'flex';
             
             // Show card
             modernCard.style.display = 'block';
@@ -1915,7 +1773,7 @@
                 transactionId,
                 amount,
                 date: new Date().toISOString(),
-                status: 'pending'
+                status: 'verified'
             };
             
             createdCards.push(cardData);
@@ -1925,7 +1783,7 @@
             modernCard.scrollIntoView({ behavior: 'smooth' });
             
             // Show success message
-            alert('Guarantee Card created successfully! It is now pending admin approval.');
+            alert('Guarantee Card created successfully! Your card is now verified and ready to use.');
         });
         
         // Verify button functionality
@@ -1947,31 +1805,13 @@
             verificationResult.style.display = 'block';
             
             if (card) {
-                if (card.status === 'verified') {
-                    verificationResult.style.backgroundColor = '#d4edda';
-                    verificationResult.style.color = '#155724';
-                    verificationResult.innerHTML = `
-                        <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
-                        <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
-                        <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                    `;
-                } else if (card.status === 'pending') {
-                    verificationResult.style.backgroundColor = '#fff3cd';
-                    verificationResult.style.color = '#856404';
-                    verificationResult.innerHTML = `
-                        <h4><i class="fas fa-clock"></i> Verification Pending</h4>
-                        <p>The Guarantee Card <strong>${cardId}</strong> is pending admin approval.</p>
-                        <p>Status: <span class="status-badge status-pending">Pending</span></p>
-                    `;
-                } else {
-                    verificationResult.style.backgroundColor = '#f8d7da';
-                    verificationResult.style.color = '#721c24';
-                    verificationResult.innerHTML = `
-                        <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
-                        <p>The Guarantee Card <strong>${cardId}</strong> has been rejected by admin.</p>
-                        <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
-                    `;
-                }
+                verificationResult.style.backgroundColor = '#d4edda';
+                verificationResult.style.color = '#155724';
+                verificationResult.innerHTML = `
+                    <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
+                    <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
+                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                `;
             } else {
                 verificationResult.style.backgroundColor = '#f8d7da';
                 verificationResult.style.color = '#721c24';
@@ -2001,36 +1841,17 @@
             
             if (card) {
                 manageResult.style.display = 'block';
-                
-                if (card.status === 'verified') {
-                    manageResult.style.backgroundColor = '#d4edda';
-                    manageResult.style.color = '#155724';
-                    manageResult.innerHTML = `
-                        <h4><i class="fas fa-check-circle"></i> Card Found</h4>
-                        <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
-                        <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                        <div style="margin-top: 20px;">
-                            <button class="cta-button" style="margin-right: 15px;">View Details</button>
-                            <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
-                        </div>
-                    `;
-                } else if (card.status === 'pending') {
-                    manageResult.style.backgroundColor = '#fff3cd';
-                    manageResult.style.color = '#856404';
-                    manageResult.innerHTML = `
-                        <h4><i class="fas fa-clock"></i> Card Pending Approval</h4>
-                        <p>Guarantee Card <strong>${cardId}</strong> is waiting for admin approval.</p>
-                        <p>Status: <span class="status-badge status-pending">Pending</span></p>
-                    `;
-                } else {
-                    manageResult.style.backgroundColor = '#f8d7da';
-                    manageResult.style.color = '#721c24';
-                    manageResult.innerHTML = `
-                        <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
-                        <p>Guarantee Card <strong>${cardId}</strong> has been rejected by admin.</p>
-                        <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
-                    `;
-                }
+                manageResult.style.backgroundColor = '#d4edda';
+                manageResult.style.color = '#155724';
+                manageResult.innerHTML = `
+                    <h4><i class="fas fa-check-circle"></i> Card Found</h4>
+                    <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
+                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                    <div style="margin-top: 20px;">
+                        <button class="cta-button" style="margin-right: 15px;">View Details</button>
+                        <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
+                    </div>
+                `;
             } else {
                 manageResult.style.display = 'block';
                 manageResult.style.backgroundColor = '#f8d7da';
@@ -2065,16 +1886,9 @@
             doc.text(`Date: ${document.getElementById('preview-date').textContent}`, 20, 135);
             
             // Add status
-            const status = document.getElementById('preview-status').textContent.trim();
             doc.setFontSize(14);
-            
-            if (status === 'VERIFIED') {
-                doc.setTextColor(16, 185, 129);
-                doc.text('Status: VERIFIED', 20, 155);
-            } else {
-                doc.setTextColor(245, 158, 11);
-                doc.text('Status: PENDING VERIFICATION', 20, 155);
-            }
+            doc.setTextColor(16, 185, 129);
+            doc.text('Status: VERIFIED', 20, 155);
             
             // Add QR code image if available
             const qrCodeImg = document.querySelector('#qrcode img');
@@ -2133,100 +1947,6 @@
                 closeShareModal();
             }
         });
-        
-        // Load admin panel with pending cards
-        function loadAdminPanel() {
-            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-            const pendingCards = cards.filter(card => card.status === 'pending');
-            
-            adminCardsList.innerHTML = '';
-            
-            if (pendingCards.length === 0) {
-                adminCardsList.innerHTML = '<p style="text-align: center;">No pending cards for approval</p>';
-                return;
-            }
-            
-            pendingCards.forEach(card => {
-                const adminCard = document.createElement('div');
-                adminCard.className = 'admin-card';
-                adminCard.innerHTML = `
-                    <div class="admin-card-info">
-                        <strong>${card.id}</strong> - ${card.serviceName} ($${card.amount})
-                        <div>Client: ${card.userType === 'client' ? card.yourEmail : card.counterpartyEmail}</div>
-                        <div>Seller: ${card.userType === 'seller' ? card.yourEmail : card.counterpartyEmail}</div>
-                    </div>
-                    <div class="admin-card-actions">
-                        <button class="admin-btn approve-btn" data-id="${card.id}">Approve</button>
-                        <button class="admin-btn reject-btn" data-id="${card.id}">Reject</button>
-                    </div>
-                `;
-                
-                adminCardsList.appendChild(adminCard);
-            });
-            
-            // Add event listeners to approve/reject buttons
-            document.querySelectorAll('.approve-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    approveCard(btn.dataset.id);
-                });
-            });
-            
-            document.querySelectorAll('.reject-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    rejectCard(btn.dataset.id);
-                });
-            });
-            
-            adminPanel.style.display = 'block';
-        }
-        
-        // Approve a card
-        function approveCard(cardId) {
-            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-            const cardIndex = cards.findIndex(card => card.id === cardId);
-            
-            if (cardIndex !== -1) {
-                cards[cardIndex].status = 'verified';
-                localStorage.setItem('onexx_cards', JSON.stringify(cards));
-                
-                // If this is the current card, update its status
-                if (currentCardId === cardId) {
-                    statusBadge.className = 'status-badge status-verified';
-                    statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
-                    verificationStamp.style.display = 'flex';
-                    pendingStamp.style.display = 'none';
-                }
-                
-                // Reload admin panel
-                loadAdminPanel();
-                
-                alert(`Card ${cardId} has been approved!`);
-            }
-        }
-        
-        // Reject a card
-        function rejectCard(cardId) {
-            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-            const cardIndex = cards.findIndex(card => card.id === cardId);
-            
-            if (cardIndex !== -1) {
-                cards[cardIndex].status = 'rejected';
-                localStorage.setItem('onexx_cards', JSON.stringify(cards));
-                
-                // If this is the current card, update its status
-                if (currentCardId === cardId) {
-                    statusBadge.className = 'status-badge status-rejected';
-                    statusBadge.innerHTML = '<i class="fas fa-times-circle"></i> REJECTED';
-                    verificationStamp.style.display = 'none';
-                    pendingStamp.style.display = 'none';
-                }
-                
-                // Reload admin panel
-                loadAdminPanel();
-                
-                alert(`Card ${cardId} has been rejected!`);
-            }
-        }
         
         // Animation on scroll
         const observerOptions = {
