@@ -1251,6 +1251,95 @@
             cursor: pointer;
             font-weight: 600;
         }
+
+        /* Verification Result Card */
+        .verification-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            text-align: left;
+            display: none;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .verification-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .verification-card-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .verification-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .verification-detail-group {
+            margin-bottom: 25px;
+        }
+
+        .verification-detail-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .verification-detail-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .verification-ad {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .verification-ad h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .ad-image {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .ad-image:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .ad-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .verification-card-body {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1410,7 +1499,64 @@
                     <input type="text" placeholder="Enter Card ID (e.g. ONX-1234)" id="verification-id">
                     <button class="cta-button" id="verify-btn">Verify Now <i class="fas fa-search"></i></button>
                 </div>
-                <div id="verification-result" style="margin-top: 30px; padding: 25px; border-radius: 15px; display: none;"></div>
+                
+                <!-- Verification Result Card -->
+                <div class="verification-card" id="verification-result">
+                    <div class="verification-card-header">
+                        <h3 class="verification-card-title">Guarantee Card Details</h3>
+                        <div class="status-badge status-verified">Verified</div>
+                    </div>
+                    
+                    <div class="verification-card-body">
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Card ID</div>
+                            <div class="verification-detail-value" id="result-id">ONX-8742</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Client</div>
+                            <div class="verification-detail-value" id="result-client">client@example.com</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Seller</div>
+                            <div class="verification-detail-value" id="result-seller">seller@example.com</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Product / Service</div>
+                            <div class="verification-detail-value" id="result-service">Website Design Package</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Transaction ID</div>
+                            <div class="verification-detail-value" id="result-transaction">TX987654321</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Amount</div>
+                            <div class="verification-detail-value" id="result-amount">$500.00</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Created Date</div>
+                            <div class="verification-detail-value" id="result-created">Oct 28, 2023</div>
+                        </div>
+                        
+                        <div class="verification-detail-group">
+                            <div class="verification-detail-label">Verified Date</div>
+                            <div class="verification-detail-value" id="result-verified">Oct 29, 2023</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Clickable Image Ad -->
+                    <div class="verification-ad">
+                        <h4>Special Offer for Verified Users</h4>
+                        <a href="https://onexx.com/premium-services" class="ad-image" target="_blank">
+                            <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Upgrade to Onexx Premium">
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1422,7 +1568,6 @@
             
             <div class="tabs">
                 <button class="tab-btn active" data-tab="create">Create New Card</button>
-                <button class="tab-btn" data-tab="manage">Manage Existing Card</button>
             </div>
             
             <div class="tab-content active" id="create-tab">
@@ -1469,27 +1614,6 @@
                             Create Guarantee Card <i class="fas fa-shield-alt"></i>
                         </button>
                     </form>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="manage-tab">
-                <div class="form-container">
-                    <h3 class="form-title">Manage Your Guarantee Card</h3>
-                    <p style="text-align: center; margin-bottom: 30px;">Enter your Card ID and email to access your existing guarantee card</p>
-                    
-                    <div class="form-group">
-                        <label for="manage-card-id">Card ID</label>
-                        <input type="text" id="manage-card-id" required placeholder="Enter your Card ID">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="manage-email">Your Email</label>
-                        <input type="email" id="manage-email" required placeholder="Enter your email address">
-                    </div>
-                    
-                    <button class="cta-button" style="width: 100%;" id="manage-btn">Access Card <i class="fas fa-lock-open"></i></button>
-                    
-                    <div id="manage-result" style="margin-top: 30px; padding: 25px; border-radius: 15px; display: none;"></div>
                 </div>
             </div>
             
@@ -1667,8 +1791,6 @@
         const verifyBtn = document.getElementById('verify-btn');
         const verificationResult = document.getElementById('verification-result');
         const tabBtns = document.querySelectorAll('.tab-btn');
-        const manageBtn = document.getElementById('manage-btn');
-        const manageResult = document.getElementById('manage-result');
         const modernCard = document.getElementById('modern-card-preview');
         const verificationStamp = document.getElementById('verification-stamp');
         const statusBadge = document.getElementById('preview-status');
@@ -1773,6 +1895,7 @@
                 transactionId,
                 amount,
                 date: new Date().toISOString(),
+                verifiedDate: new Date().toISOString(),
                 status: 'verified'
             };
             
@@ -1802,61 +1925,44 @@
             const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
             const card = cards.find(c => c.id === cardId);
             
-            verificationResult.style.display = 'block';
-            
             if (card) {
+                // Update verification result with card details
+                document.getElementById('result-id').textContent = card.id;
+                document.getElementById('result-client').textContent = card.userType === 'client' ? card.yourEmail : card.counterpartyEmail;
+                document.getElementById('result-seller').textContent = card.userType === 'seller' ? card.yourEmail : card.counterpartyEmail;
+                document.getElementById('result-service').textContent = card.serviceName;
+                document.getElementById('result-transaction').textContent = card.transactionId;
+                document.getElementById('result-amount').textContent = '$' + parseFloat(card.amount).toFixed(2);
+                document.getElementById('result-created').textContent = new Date(card.date).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                document.getElementById('result-verified').textContent = new Date(card.verifiedDate).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                
+                verificationResult.style.display = 'block';
                 verificationResult.style.backgroundColor = '#d4edda';
                 verificationResult.style.color = '#155724';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
-                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                `;
             } else {
+                verificationResult.style.display = 'block';
                 verificationResult.style.backgroundColor = '#f8d7da';
                 verificationResult.style.color = '#721c24';
                 verificationResult.innerHTML = `
-                    <h4><i class="fas fa-times-circle"></i> Card Not Found</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> was not found in our system.</p>
-                `;
-            }
-        });
-        
-        // Manage card functionality
-        manageBtn.addEventListener('click', () => {
-            const cardId = document.getElementById('manage-card-id').value;
-            const email = document.getElementById('manage-email').value;
-            
-            if (!cardId || !email) {
-                manageResult.style.display = 'block';
-                manageResult.style.backgroundColor = '#f8d7da';
-                manageResult.style.color = '#721c24';
-                manageResult.innerHTML = '<p>Please enter both Card ID and email address.</p>';
-                return;
-            }
-            
-            // Check if card exists
-            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-            const card = cards.find(c => c.id === cardId && (c.yourEmail === email || c.counterpartyEmail === email));
-            
-            if (card) {
-                manageResult.style.display = 'block';
-                manageResult.style.backgroundColor = '#d4edda';
-                manageResult.style.color = '#155724';
-                manageResult.innerHTML = `
-                    <h4><i class="fas fa-check-circle"></i> Card Found</h4>
-                    <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
-                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                    <div style="margin-top: 20px;">
-                        <button class="cta-button" style="margin-right: 15px;">View Details</button>
-                        <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
+                    <div style="text-align: center; padding: 20px;">
+                        <h4><i class="fas fa-times-circle"></i> Card Not Found</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> was not found in our system.</p>
+                        <div class="verification-ad" style="margin-top: 30px;">
+                            <h4>Create Your Own Guarantee Card</h4>
+                            <a href="#form" class="ad-image">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Create Your Guarantee Card">
+                            </a>
+                        </div>
                     </div>
                 `;
-            } else {
-                manageResult.style.display = 'block';
-                manageResult.style.backgroundColor = '#f8d7da';
-                manageResult.style.color = '#721c24';
-                manageResult.innerHTML = '<p>No card found with this ID and email combination.</p>';
             }
         });
         
