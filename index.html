@@ -816,7 +816,7 @@
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            align-items: column;
+            align-items: center;
             gap: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
@@ -1046,23 +1046,41 @@
         .home-banner {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 20px;
+            padding: 30px;
             margin: 80px auto;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 30px;
             color: white;
             max-width: 1000px;
             box-shadow: 0 20px 40px rgba(67, 97, 238, 0.3);
-            overflow: hidden;
-            height: 250px;
+        }
+        
+        .home-banner-content {
+            flex: 1;
+        }
+        
+        .home-banner h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .home-banner p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
         }
         
         .home-banner-img {
-            width: 100%;
-            height: 100%;
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 50px;
+            color: var(--primary);
             overflow: hidden;
         }
         
@@ -1132,7 +1150,8 @@
             }
             
             .home-banner {
-                height: 200px;
+                flex-direction: column;
+                text-align: center;
             }
         }
         
@@ -1285,52 +1304,64 @@
             cursor: pointer;
             font-weight: 600;
         }
-        
-        /* Google Sheet Integration Styles */
-        .sheet-section {
-            padding: 100px 0;
-            background: white;
-        }
-        
-        .sheet-container {
+
+        /* Admin Panel */
+        .admin-panel {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-            max-width: 1000px;
-            margin: 0 auto;
-            border: 1px solid rgba(67, 97, 238, 0.1);
+            max-width: 800px;
+            margin: 50px auto;
+            display: none;
         }
-        
-        .sheet-wrapper {
-            width: 100%;
-            height: 500px;
-            overflow: auto;
-            border: 1px solid #e2e8f0;
+
+        .admin-panel h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+
+        .admin-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .admin-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-card-info {
+            flex: 1;
+        }
+
+        .admin-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .admin-btn {
+            padding: 10px 15px;
             border-radius: 10px;
-            margin-top: 30px;
-        }
-        
-        .sheet-iframe {
-            width: 100%;
-            height: 100%;
+            font-weight: 600;
+            cursor: pointer;
             border: none;
         }
-        
-        @media (max-width: 768px) {
-            .sheet-wrapper {
-                height: 400px;
-            }
-            
-            .sheet-container {
-                padding: 30px;
-            }
+
+        .approve-btn {
+            background: var(--success);
+            color: white;
         }
-        
-        @media (max-width: 480px) {
-            .sheet-wrapper {
-                height: 300px;
-            }
+
+        .reject-btn {
+            background: var(--danger);
+            color: white;
         }
     </style>
 </head>
@@ -1380,7 +1411,6 @@
                     <a href="#how-it-works">How It Works</a>
                     <a href="#verify">Verify</a>
                     <a href="#form">Create Card</a>
-                    <a href="#sheet-section">Records</a>
                 </div>
                 <a href="#form" class="cta-button">Create Card <i class="fas fa-arrow-right"></i></a>
             </nav>
@@ -1404,11 +1434,16 @@
         </div>
     </section>
 
-    <!-- Home Banner Ad - Image Only -->
+    <!-- Home Banner Ad -->
     <div class="container">
         <div class="home-banner float-animation">
+            <div class="home-banner-content">
+                <h3>Special Limited Time Offer!</h3>
+                <p>Get 20% off on your next transaction when you create a Guarantee Card this month.</p>
+                <a href="#form" class="cta-button" style="background: white; color: var(--primary);">Claim Discount Now <i class="fas fa-gift"></i></a>
+            </div>
             <div class="home-banner-img">
-                <img src="https://images.unsplash.com/photo-1563013546-73e4c9c5f4de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Special Offer">
+                <img src="https://images.unsplash.com/photo-1563013546-73e4c9c5f4de?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Special Offer">
             </div>
         </div>
     </div>
@@ -1463,8 +1498,8 @@
                 <div class="step">
                     <div class="step-number">3</div>
                     <div class="step-icon"><i class="fas fa-check-circle"></i></div>
-                    <h3>Confirm</h3>
-                    <p>Once both parties verify, the card becomes active and secure</p>
+                    <h3>Admin Approval</h3>
+                    <p>Our team reviews and approves the transaction for maximum security</p>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
@@ -1500,6 +1535,7 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="create">Create New Card</button>
                 <button class="tab-btn" data-tab="manage">Manage Existing Card</button>
+                <button class="tab-btn" data-tab="admin">Admin Panel</button>
             </div>
             
             <div class="tab-content active" id="create-tab">
@@ -1567,6 +1603,17 @@
                     <button class="cta-button" style="width: 100%;" id="manage-btn">Access Card <i class="fas fa-lock-open"></i></button>
                     
                     <div id="manage-result" style="margin-top: 30px; padding: 25px; border-radius: 15px; display: none;"></div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="admin-tab">
+                <div class="admin-panel" id="admin-panel">
+                    <h3>Admin Approval Panel</h3>
+                    <p style="text-align: center; margin-bottom: 30px;">Approve or reject pending guarantee cards</p>
+                    
+                    <div class="admin-cards" id="admin-cards-list">
+                        <!-- Admin cards will be populated here -->
+                    </div>
                 </div>
             </div>
             
@@ -1645,7 +1692,7 @@
                         </div>
                         
                         <a href="https://onexx.com/special-offer" class="banner-ad" target="_blank">
-                            <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Special Offer">
+                            <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Special Offer - 20% Off on Onexx Services">
                         </a>
                     </div>
                 </div>
@@ -1695,29 +1742,6 @@
             </div>
         </div>
     </section>
-    
-    <!-- Google Sheet Integration Section -->
-    <section class="sheet-section" id="sheet-section">
-        <div class="container">
-            <h2 class="section-title">Transaction Records</h2>
-            <div class="sheet-container">
-                <h3 style="text-align: center; margin-bottom: 20px; color: var(--dark-blue);">Live Transaction Data</h3>
-                <p style="text-align: center; color: var(--gray); margin-bottom: 30px;">View and manage all your transaction records in real-time</p>
-                
-                <div class="sheet-wrapper">
-                    <!-- Replace the src URL with your actual Google Sheet URL -->
-                    <iframe class="sheet-iframe" 
-                            src="https://docs.google.com/spreadsheets/d/1zKoVoY4nrK3qYRRAA6ee0e7tVbIr6c7bDS8iCEvmL_w/edit?usp=sharing?widget=true&amp;headers=false" 
-                            loading="lazy">
-                    </iframe>
-                </div>
-                
-                <div style="margin-top: 20px; text-align: center; color: var(--gray); font-size: 14px;">
-                    <p>Live transaction data from our secure database</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer id="contact">
@@ -1740,7 +1764,6 @@
                         <li><a href="#how-it-works">How It Works</a></li>
                         <li><a href="#verify">Verify a Card</a></li>
                         <li><a href="#form">Create Card</a></li>
-                        <li><a href="#sheet-section">Records</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -1784,6 +1807,12 @@
         const pendingStamp = document.getElementById('pending-stamp');
         const statusBadge = document.getElementById('preview-status');
         const shareModal = document.getElementById('share-modal');
+        const adminPanel = document.getElementById('admin-panel');
+        const adminCardsList = document.getElementById('admin-cards-list');
+        
+        // Store created cards
+        let createdCards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+        let currentCardId = null;
         
         // Change user type
         userTypeButtons.forEach(button => {
@@ -1812,6 +1841,11 @@
                 });
                 
                 document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+                
+                // If admin tab is clicked, load pending cards
+                if (btn.dataset.tab === 'admin') {
+                    loadAdminPanel();
+                }
             });
         });
         
@@ -1829,6 +1863,7 @@
             
             // Generate a card ID
             const cardId = 'ONX-' + Math.floor(1000 + Math.random() * 9000);
+            currentCardId = cardId;
             
             // Update preview card
             if (userType === 'client') {
@@ -1870,11 +1905,27 @@
             // Show card
             modernCard.style.display = 'block';
             
+            // Store card data
+            const cardData = {
+                id: cardId,
+                userType,
+                yourEmail,
+                counterpartyEmail,
+                serviceName,
+                transactionId,
+                amount,
+                date: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            createdCards.push(cardData);
+            localStorage.setItem('onexx_cards', JSON.stringify(createdCards));
+            
             // Scroll to card
             modernCard.scrollIntoView({ behavior: 'smooth' });
             
-            // Simulate API call
-            simulateAPICall();
+            // Show success message
+            alert('Guarantee Card created successfully! It is now pending admin approval.');
         });
         
         // Verify button functionality
@@ -1889,35 +1940,44 @@
                 return;
             }
             
-            // Simulate verification
-            const statuses = ['Verified', 'Pending', 'Rejected'];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            // Check if card exists
+            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+            const card = cards.find(c => c.id === cardId);
             
             verificationResult.style.display = 'block';
             
-            if (randomStatus === 'Verified') {
-                verificationResult.style.backgroundColor = '#d4edda';
-                verificationResult.style.color = '#155724';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
-                    <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                `;
-            } else if (randomStatus === 'Pending') {
-                verificationResult.style.backgroundColor = '#fff3cd';
-                verificationResult.style.color = '#856404';
-                verificationResult.innerHTML = `
-                    <h4><i class="fas fa-clock"></i> Verification Pending</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> is pending verification from the counterparty.</p>
-                    <p>Status: <span class="status-badge status-pending">Pending</span></p>
-                `;
+            if (card) {
+                if (card.status === 'verified') {
+                    verificationResult.style.backgroundColor = '#d4edda';
+                    verificationResult.style.color = '#155724';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-check-circle"></i> Card Verified</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> has been verified and is valid.</p>
+                        <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                    `;
+                } else if (card.status === 'pending') {
+                    verificationResult.style.backgroundColor = '#fff3cd';
+                    verificationResult.style.color = '#856404';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-clock"></i> Verification Pending</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> is pending admin approval.</p>
+                        <p>Status: <span class="status-badge status-pending">Pending</span></p>
+                    `;
+                } else {
+                    verificationResult.style.backgroundColor = '#f8d7da';
+                    verificationResult.style.color = '#721c24';
+                    verificationResult.innerHTML = `
+                        <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
+                        <p>The Guarantee Card <strong>${cardId}</strong> has been rejected by admin.</p>
+                        <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
+                    `;
+                }
             } else {
                 verificationResult.style.backgroundColor = '#f8d7da';
                 verificationResult.style.color = '#721c24';
                 verificationResult.innerHTML = `
-                    <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
-                    <p>The Guarantee Card <strong>${cardId}</strong> has been rejected by one of the parties.</p>
-                    <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
+                    <h4><i class="fas fa-times-circle"></i> Card Not Found</h4>
+                    <p>The Guarantee Card <strong>${cardId}</strong> was not found in our system.</p>
                 `;
             }
         });
@@ -1935,19 +1995,48 @@
                 return;
             }
             
-            // Simulate card retrieval
-            manageResult.style.display = 'block';
-            manageResult.style.backgroundColor = '#d4edda';
-            manageResult.style.color = '#155724';
-            manageResult.innerHTML = `
-                <h4><i class="fas fa-check-circle"></i> Card Found</h4>
-                <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
-                <p>Status: <span class="status-badge status-verified">Verified</span></p>
-                <div style="margin-top: 20px;">
-                    <button class="cta-button" style="margin-right: 15px;">View Details</button>
-                    <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
-                </div>
-            `;
+            // Check if card exists
+            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+            const card = cards.find(c => c.id === cardId && (c.yourEmail === email || c.counterpartyEmail === email));
+            
+            if (card) {
+                manageResult.style.display = 'block';
+                
+                if (card.status === 'verified') {
+                    manageResult.style.backgroundColor = '#d4edda';
+                    manageResult.style.color = '#155724';
+                    manageResult.innerHTML = `
+                        <h4><i class="fas fa-check-circle"></i> Card Found</h4>
+                        <p>Guarantee Card <strong>${cardId}</strong> has been found associated with ${email}.</p>
+                        <p>Status: <span class="status-badge status-verified">Verified</span></p>
+                        <div style="margin-top: 20px;">
+                            <button class="cta-button" style="margin-right: 15px;">View Details</button>
+                            <button class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Download PDF</button>
+                        </div>
+                    `;
+                } else if (card.status === 'pending') {
+                    manageResult.style.backgroundColor = '#fff3cd';
+                    manageResult.style.color = '#856404';
+                    manageResult.innerHTML = `
+                        <h4><i class="fas fa-clock"></i> Card Pending Approval</h4>
+                        <p>Guarantee Card <strong>${cardId}</strong> is waiting for admin approval.</p>
+                        <p>Status: <span class="status-badge status-pending">Pending</span></p>
+                    `;
+                } else {
+                    manageResult.style.backgroundColor = '#f8d7da';
+                    manageResult.style.color = '#721c24';
+                    manageResult.innerHTML = `
+                        <h4><i class="fas fa-times-circle"></i> Card Rejected</h4>
+                        <p>Guarantee Card <strong>${cardId}</strong> has been rejected by admin.</p>
+                        <p>Status: <span class="status-badge status-rejected">Rejected</span></p>
+                    `;
+                }
+            } else {
+                manageResult.style.display = 'block';
+                manageResult.style.backgroundColor = '#f8d7da';
+                manageResult.style.color = '#721c24';
+                manageResult.innerHTML = '<p>No card found with this ID and email combination.</p>';
+            }
         });
         
         // Download PDF button
@@ -1976,9 +2065,16 @@
             doc.text(`Date: ${document.getElementById('preview-date').textContent}`, 20, 135);
             
             // Add status
+            const status = document.getElementById('preview-status').textContent.trim();
             doc.setFontSize(14);
-            doc.setTextColor(16, 185, 129);
-            doc.text('Status: VERIFIED', 20, 155);
+            
+            if (status === 'VERIFIED') {
+                doc.setTextColor(16, 185, 129);
+                doc.text('Status: VERIFIED', 20, 155);
+            } else {
+                doc.setTextColor(245, 158, 11);
+                doc.text('Status: PENDING VERIFICATION', 20, 155);
+            }
             
             // Add QR code image if available
             const qrCodeImg = document.querySelector('#qrcode img');
@@ -2038,20 +2134,98 @@
             }
         });
         
-        // Simulate API call to Google Apps Script
-        function simulateAPICall() {
-            // For demo purposes, we'll just show a success message after a delay
-            setTimeout(() => {
-                alert('Guarantee Card created successfully! Verification emails have been sent to both parties.');
+        // Load admin panel with pending cards
+        function loadAdminPanel() {
+            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+            const pendingCards = cards.filter(card => card.status === 'pending');
+            
+            adminCardsList.innerHTML = '';
+            
+            if (pendingCards.length === 0) {
+                adminCardsList.innerHTML = '<p style="text-align: center;">No pending cards for approval</p>';
+                return;
+            }
+            
+            pendingCards.forEach(card => {
+                const adminCard = document.createElement('div');
+                adminCard.className = 'admin-card';
+                adminCard.innerHTML = `
+                    <div class="admin-card-info">
+                        <strong>${card.id}</strong> - ${card.serviceName} ($${card.amount})
+                        <div>Client: ${card.userType === 'client' ? card.yourEmail : card.counterpartyEmail}</div>
+                        <div>Seller: ${card.userType === 'seller' ? card.yourEmail : card.counterpartyEmail}</div>
+                    </div>
+                    <div class="admin-card-actions">
+                        <button class="admin-btn approve-btn" data-id="${card.id}">Approve</button>
+                        <button class="admin-btn reject-btn" data-id="${card.id}">Reject</button>
+                    </div>
+                `;
                 
-                // Simulate verification after 3 seconds
-                setTimeout(() => {
+                adminCardsList.appendChild(adminCard);
+            });
+            
+            // Add event listeners to approve/reject buttons
+            document.querySelectorAll('.approve-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    approveCard(btn.dataset.id);
+                });
+            });
+            
+            document.querySelectorAll('.reject-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    rejectCard(btn.dataset.id);
+                });
+            });
+            
+            adminPanel.style.display = 'block';
+        }
+        
+        // Approve a card
+        function approveCard(cardId) {
+            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+            const cardIndex = cards.findIndex(card => card.id === cardId);
+            
+            if (cardIndex !== -1) {
+                cards[cardIndex].status = 'verified';
+                localStorage.setItem('onexx_cards', JSON.stringify(cards));
+                
+                // If this is the current card, update its status
+                if (currentCardId === cardId) {
                     statusBadge.className = 'status-badge status-verified';
                     statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
                     verificationStamp.style.display = 'flex';
                     pendingStamp.style.display = 'none';
-                }, 3000);
-            }, 1500);
+                }
+                
+                // Reload admin panel
+                loadAdminPanel();
+                
+                alert(`Card ${cardId} has been approved!`);
+            }
+        }
+        
+        // Reject a card
+        function rejectCard(cardId) {
+            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+            const cardIndex = cards.findIndex(card => card.id === cardId);
+            
+            if (cardIndex !== -1) {
+                cards[cardIndex].status = 'rejected';
+                localStorage.setItem('onexx_cards', JSON.stringify(cards));
+                
+                // If this is the current card, update its status
+                if (currentCardId === cardId) {
+                    statusBadge.className = 'status-badge status-rejected';
+                    statusBadge.innerHTML = '<i class="fas fa-times-circle"></i> REJECTED';
+                    verificationStamp.style.display = 'none';
+                    pendingStamp.style.display = 'none';
+                }
+                
+                // Reload admin panel
+                loadAdminPanel();
+                
+                alert(`Card ${cardId} has been rejected!`);
+            }
         }
         
         // Animation on scroll
@@ -2071,34 +2245,6 @@
         
         document.querySelectorAll('.feature-card').forEach(card => {
             observer.observe(card);
-        });
-        
-        // Google Sheet Integration Script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Replace with your actual Google Sheet ID
-            const sheetId = '1YOUR_SHEET_ID_HERE';
-            const iframe = document.querySelector('.sheet-iframe');
-            
-            // Update the iframe source with your actual sheet ID
-            iframe.src = `https://docs.google.com/spreadsheets/d/${sheetId}/edit?usp=sharing?widget=true&amp;headers=false`;
-            
-            // Make the iframe responsive
-            function adjustIframeHeight() {
-                const wrapper = document.querySelector('.sheet-wrapper');
-                if (window.innerWidth < 768) {
-                    wrapper.style.height = '400px';
-                } else if (window.innerWidth < 480) {
-                    wrapper.style.height = '300px';
-                } else {
-                    wrapper.style.height = '500px';
-                }
-            }
-            
-            // Initial adjustment
-            adjustIframeHeight();
-            
-            // Adjust on window resize
-            window.addEventListener('resize', adjustIframeHeight);
         });
     </script>
 </body>
