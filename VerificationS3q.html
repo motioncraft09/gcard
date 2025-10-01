@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onexx Payment Verification</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .card h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px 0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      color: #fff;
+    }
+
+    .btn-yes {
+      background: #18A05D;
+    }
+
+    .btn-yes:hover {
+      background: #14914f;
+      transform: scale(1.05);
+    }
+
+    .btn-no {
+      background: #E53E3E;
+    }
+
+    .btn-no:hover {
+      background: #c03131;
+      transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card {
+        padding: 30px 20px;
+      }
+
+      .btn-container {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Verify Payment</h1>
+    <p>Transaction ID: <strong>#TX12345</strong><br>
+       Amount: <strong>৳2,500</strong></p>
+
+    <div class="btn-container">
+      <button class="btn btn-yes">✅ Yes, Payment Done</button>
+      <button class="btn btn-no">❌ No, Payment Not Done</button>
+    </div>
+  </div>
+
+</body>
+</html>
