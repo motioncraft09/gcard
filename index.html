@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onexx Guarantee Card - Secure Payment Verification</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -671,14 +670,14 @@
             animation: glow 3s ease-in-out infinite;
         }
         
-        /* Modern Card Design */
+        /* Modern Card Design - Updated for compact size */
         .modern-card {
             background: var(--card-bg);
-            border-radius: 25px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 950px;
+            max-width: 500px;
             margin: 50px auto;
             position: relative;
             display: none;
@@ -687,7 +686,7 @@
         
         .card-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            padding: 35px;
+            padding: 25px;
             color: white;
             display: flex;
             justify-content: space-between;
@@ -710,89 +709,93 @@
         .card-logo {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 28px;
+            gap: 12px;
+            font-size: 22px;
             font-weight: 800;
             z-index: 1;
         }
         
         .card-logo-icon {
             background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--primary);
-            font-size: 28px;
+            font-size: 22px;
         }
         
         .card-id {
             background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 15px;
+            padding: 8px 15px;
+            border-radius: 12px;
             font-weight: 700;
             backdrop-filter: blur(10px);
             z-index: 1;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .card-body {
-            padding: 45px;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 40px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
         .card-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            grid-template-columns: 1fr;
+            gap: 18px;
         }
         
         .detail-item {
-            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
         }
         
         .detail-label {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--gray);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .detail-value {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--dark);
+            text-align: right;
         }
         
         .card-sidebar {
             background: var(--light);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
         
         .status-badge {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 15px;
-            border-radius: 15px;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 12px;
             font-weight: 700;
             background: var(--light-gray);
             color: var(--gray);
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .status-verified {
@@ -800,43 +803,12 @@
             color: var(--success);
         }
         
-        .qr-code {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background: var(--light-gray);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
-            font-size: 14px;
-            text-align: center;
-        }
-        
-        .qr-text {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gray);
-            text-align: center;
-        }
-        
         .verification-stamp {
             position: absolute;
-            top: 45px;
-            right: 45px;
-            width: 140px;
-            height: 140px;
+            top: 25px;
+            right: 25px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -847,13 +819,13 @@
         .stamp-circle {
             width: 100%;
             height: 100%;
-            border: 8px solid var(--success);
+            border: 6px solid var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             animation: pulse 2s infinite;
         }
         
@@ -863,20 +835,20 @@
         }
         
         .stamp-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 5px;
         }
         
         .stamp-text {
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 16px;
+            letter-spacing: 1px;
+            font-size: 10px;
         }
         
         .card-footer {
             background: var(--light);
-            padding: 30px 45px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -885,20 +857,20 @@
         
         .card-actions {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
         
         .action-btn {
-            padding: 15px 25px;
-            border-radius: 15px;
+            padding: 12px 20px;
+            border-radius: 12px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .btn-primary {
@@ -926,12 +898,12 @@
         
         .social-share {
             display: flex;
-            gap: 15px;
+            gap: 12px;
         }
         
         .share-btn {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -941,7 +913,7 @@
             border: 1px solid var(--light-gray);
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 20px;
+            font-size: 16px;
         }
         
         .share-btn:hover {
@@ -969,9 +941,9 @@
         
         .banner-ad {
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
-            margin-top: 25px;
+            margin-top: 20px;
             text-decoration: none;
             color: var(--dark);
             transition: all 0.3s;
@@ -1050,35 +1022,35 @@
             }
             
             .verification-stamp {
-                top: 30px;
-                right: 30px;
-                width: 100px;
-                height: 100px;
+                top: 20px;
+                right: 20px;
+                width: 70px;
+                height: 70px;
             }
             
             .stamp-circle {
-                border-width: 6px;
+                border-width: 5px;
             }
             
             .stamp-icon {
-                font-size: 28px;
+                font-size: 20px;
             }
             
             .stamp-text {
-                font-size: 12px;
+                font-size: 9px;
             }
         }
         
         @media (max-width: 768px) {
             .card-header {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
                 align-items: flex-start;
             }
             
             .card-footer {
                 flex-direction: column;
-                gap: 25px;
+                gap: 20px;
                 align-items: flex-start;
             }
             
@@ -1252,72 +1224,79 @@
             font-weight: 600;
         }
 
-        /* Verification Result Card */
+        /* Verification Result Card - Updated for compact size */
         .verification-card {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             margin-top: 30px;
             text-align: left;
             display: none;
             border: 1px solid rgba(67, 97, 238, 0.1);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .verification-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--light-gray);
         }
 
         .verification-card-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--dark);
             font-weight: 700;
         }
 
         .verification-card-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .verification-detail-group {
-            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
         }
 
         .verification-detail-label {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--gray);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
         }
 
         .verification-detail-value {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--dark);
+            text-align: right;
         }
 
         .verification-ad {
-            margin-top: 40px;
+            margin-top: 30px;
             text-align: center;
         }
 
         .verification-ad h4 {
             margin-bottom: 15px;
             color: var(--dark);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .ad-image {
             width: 100%;
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
@@ -1338,6 +1317,93 @@
             .verification-card-body {
                 grid-template-columns: 1fr;
                 gap: 20px;
+            }
+        }
+
+        /* NEW: Verification Card Footer */
+        .verification-card-footer {
+            background: var(--light);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--light-gray);
+            margin-top: 25px;
+        }
+        
+        .verification-card-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .verification-share-options {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .verification-share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        .verification-share-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .verification-share-whatsapp:hover {
+            background: #25D366;
+            color: white;
+            border-color: #25D366;
+        }
+        
+        .verification-share-instagram:hover {
+            background: #E1306C;
+            color: white;
+            border-color: #E1306C;
+        }
+        
+        .verification-share-telegram:hover {
+            background: #0088cc;
+            color: white;
+            border-color: #0088cc;
+        }
+        
+        .verification-share-messenger:hover {
+            background: #006AFF;
+            color: white;
+            border-color: #006AFF;
+        }
+        
+        @media (max-width: 768px) {
+            .verification-card-footer {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .verification-share-options {
+                align-self: flex-end;
+            }
+            
+            .verification-card-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .verification-action-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -1544,6 +1610,35 @@
                         </div>
                     </div>
                     
+                    <!-- NEW: Verification Card Footer with Download and Share Options -->
+                    <div class="verification-card-footer">
+                        <div class="verification-card-actions">
+                            <button class="action-btn btn-primary verification-action-btn" id="download-verification-pdf">
+                                <i class="fas fa-download"></i>
+                                Download PDF
+                            </button>
+                            <button class="action-btn btn-secondary verification-action-btn" id="share-verification-card">
+                                <i class="fas fa-share-alt"></i>
+                                Share Card
+                            </button>
+                        </div>
+                        
+                        <div class="verification-share-options">
+                            <div class="verification-share-btn verification-share-whatsapp" onclick="shareOnWhatsApp()">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="verification-share-btn verification-share-instagram" onclick="shareOnInstagram()">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div class="verification-share-btn verification-share-telegram" onclick="shareOnTelegram()">
+                                <i class="fab fa-telegram"></i>
+                            </div>
+                            <div class="verification-share-btn verification-share-messenger" onclick="shareOnMessenger()">
+                                <i class="fab fa-facebook-messenger"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Clickable Image Ad -->
                     <div class="verification-ad">
                         <h4>Special Offer for Verified Users</h4>
@@ -1679,11 +1774,7 @@
                             VERIFIED
                         </div>
                         
-                        <div class="qr-code">
-                            <div id="qrcode"></div>
-                            <div class="qr-text">Scan to verify this guarantee</div>
-                        </div>
-                        
+                        <!-- Ad Banner -->
                         <a href="https://onexx.com/special-offer" class="banner-ad" target="_blank">
                             <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Special Offer - 20% Off on Onexx Services">
                         </a>
@@ -1774,476 +1865,547 @@
         </div>
     </footer>
 
-<script>
-    // SheetDB API Configuration
-    const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/c9k81rpft0mg3';
-    
-    // DOM Elements
-    const userTypeButtons = document.querySelectorAll('.user-type-btn');
-    const counterpartyGroup = document.getElementById('counterparty-group');
-    const counterpartyLabel = counterpartyGroup.querySelector('label');
-    const counterpartyInput = document.getElementById('counterparty-email');
-    const form = document.getElementById('guarantee-form');
-    const verifyBtn = document.getElementById('verify-btn');
-    const verificationResult = document.getElementById('verification-result');
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const modernCard = document.getElementById('modern-card-preview');
-    const verificationStamp = document.getElementById('verification-stamp');
-    const statusBadge = document.getElementById('preview-status');
-    const shareModal = document.getElementById('share-modal');
-    const proofUpload = document.getElementById('proof-upload');
-    
-    // Store created cards
-    let createdCards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-    let currentCardId = null;
-    let uploadedImageData = null;
-    
-    // Change user type
-    userTypeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            userTypeButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            
-            if (button.dataset.type === 'client') {
-                counterpartyLabel.textContent = 'Seller Email';
-                counterpartyInput.placeholder = "Enter seller's email address";
-            } else {
-                counterpartyLabel.textContent = 'Client Email';
-                counterpartyInput.placeholder = "Enter client's email address";
-            }
-        });
-    });
-    
-    // Handle image upload
-    proofUpload.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Image size should be less than 2MB');
-                this.value = '';
-                uploadedImageData = null;
-                return;
-            }
-            
-            if (!file.type.match('image.*')) {
-                alert('Please select an image file');
-                this.value = '';
-                uploadedImageData = null;
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedImageData = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        } else {
-            uploadedImageData = null;
-        }
-    });
-    
-    // Tab functionality
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
-        });
-    });
-    
-    // Generate unique card ID
-    function generateCardId() {
-        const timestamp = Date.now().toString().slice(-4);
-        const random = Math.floor(100 + Math.random() * 900);
-        return `ONX-${timestamp}${random}`;
-    }
-    
-    // Submit form to SheetDB
-    async function submitToSheetDB(cardData) {
-        try {
-            const response = await fetch(SHEETDB_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    data: [cardData]
-                })
-            });
-            
-            return response.ok;
-        } catch (error) {
-            console.error('Error saving to SheetDB:', error);
-            return false;
-        }
-    }
-    
-    // Get data from SheetDB by card ID
-    async function getCardFromSheetDB(cardId) {
-        try {
-            const response = await fetch(`${SHEETDB_API_URL}/search?CardID=${cardId}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (!data || data.length === 0) {
-                    return null;
-                }
-                return data[0];
-            }
-            return null;
-        } catch (error) {
-            console.error('Error fetching from SheetDB:', error);
-            return null;
-        }
-    }
-    
-    // Form submission
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    <script>
+        // SheetDB API Configuration
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/c9k81rpft0mg3';
         
-        const yourEmail = document.getElementById('your-email').value;
-        const counterpartyEmail = document.getElementById('counterparty-email').value;
-        const currency = document.getElementById('currency').value;
-        const amount = document.getElementById('amount').value;
+        // DOM Elements
+        const userTypeButtons = document.querySelectorAll('.user-type-btn');
+        const counterpartyGroup = document.getElementById('counterparty-group');
+        const counterpartyLabel = counterpartyGroup.querySelector('label');
+        const counterpartyInput = document.getElementById('counterparty-email');
+        const form = document.getElementById('guarantee-form');
+        const verifyBtn = document.getElementById('verify-btn');
+        const verificationResult = document.getElementById('verification-result');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const modernCard = document.getElementById('modern-card-preview');
+        const verificationStamp = document.getElementById('verification-stamp');
+        const statusBadge = document.getElementById('preview-status');
+        const shareModal = document.getElementById('share-modal');
+        const proofUpload = document.getElementById('proof-upload');
         
-        if (!yourEmail || !counterpartyEmail || !currency || !amount) {
-            alert('Please fill all required fields');
-            return;
-        }
+        // Store created cards
+        let createdCards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+        let currentCardId = null;
+        let uploadedImageData = null;
         
-        if (!uploadedImageData) {
-            alert('Please upload a receipt/proof image. This field is now required.');
-            return;
-        }
-        
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Card...';
-        submitBtn.disabled = true;
-        
-        try {
-            const userType = document.querySelector('.user-type-btn.active').dataset.type;
-            const cardId = generateCardId();
-            currentCardId = cardId;
-            
-            const cardData = {
-                CardID: cardId,
-                UserType: userType,
-                YourEmail: yourEmail,
-                CounterpartyEmail: counterpartyEmail,
-                Currency: currency,
-                Amount: amount,
-                CreatedDate: new Date().toISOString(),
-                Status: 'pending',
-                HasImage: 'Yes'
-            };
-            
-            const dbSuccess = await submitToSheetDB(cardData);
-            
-            if (dbSuccess) {
-                // Store image locally
-                const imageData = {
-                    cardId: cardId,
-                    imageData: uploadedImageData,
-                    uploadDate: new Date().toISOString()
-                };
+        // Change user type
+        userTypeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                userTypeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
                 
-                const storedImages = JSON.parse(localStorage.getItem('onexx_images')) || [];
-                storedImages.push(imageData);
-                localStorage.setItem('onexx_images', JSON.stringify(storedImages));
-                
-                // Update preview card
-                if (userType === 'client') {
-                    document.getElementById('preview-client').textContent = yourEmail;
-                    document.getElementById('preview-seller').textContent = counterpartyEmail;
+                if (button.dataset.type === 'client') {
+                    counterpartyLabel.textContent = 'Seller Email';
+                    counterpartyInput.placeholder = "Enter seller's email address";
                 } else {
-                    document.getElementById('preview-client').textContent = counterpartyEmail;
-                    document.getElementById('preview-seller').textContent = yourEmail;
+                    counterpartyLabel.textContent = 'Client Email';
+                    counterpartyInput.placeholder = "Enter client's email address";
+                }
+            });
+        });
+        
+        // Handle image upload
+        proofUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Image size should be less than 2MB');
+                    this.value = '';
+                    uploadedImageData = null;
+                    return;
                 }
                 
-                document.getElementById('preview-currency').textContent = currency;
-                document.getElementById('preview-amount').textContent = amount;
-                document.getElementById('preview-date').textContent = new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric' 
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file');
+                    this.value = '';
+                    uploadedImageData = null;
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImageData = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                uploadedImageData = null;
+            }
+        });
+        
+        // Tab functionality
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
                 });
                 
-                document.querySelector('.card-id').textContent = 'ID: ' + cardId;
-                
-                // Generate QR Code
-                document.getElementById('qrcode').innerHTML = '';
-                new QRCode(document.getElementById('qrcode'), {
-                    text: `https://onexx.com/verify/${cardId}`,
-                    width: 180,
-                    height: 180,
-                    colorDark: '#0f172a',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
+                document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+        
+        // Generate unique card ID
+        function generateCardId() {
+            const timestamp = Date.now().toString().slice(-4);
+            const random = Math.floor(100 + Math.random() * 900);
+            return `ONX-${timestamp}${random}`;
+        }
+        
+        // Submit form to SheetDB
+        async function submitToSheetDB(cardData) {
+            try {
+                const response = await fetch(SHEETDB_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: [cardData]
+                    })
                 });
                 
-                // Show PENDING status
-                statusBadge.className = 'status-badge status-pending';
-                statusBadge.innerHTML = '<i class="fas fa-clock"></i> PENDING';
-                verificationStamp.style.display = 'none';
+                return response.ok;
+            } catch (error) {
+                console.error('Error saving to SheetDB:', error);
+                return false;
+            }
+        }
+        
+        // Get data from SheetDB by card ID
+        async function getCardFromSheetDB(cardId) {
+            try {
+                const response = await fetch(`${SHEETDB_API_URL}/search?CardID=${cardId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (!data || data.length === 0) {
+                        return null;
+                    }
+                    return data[0];
+                }
+                return null;
+            } catch (error) {
+                console.error('Error fetching from SheetDB:', error);
+                return null;
+            }
+        }
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const yourEmail = document.getElementById('your-email').value;
+            const counterpartyEmail = document.getElementById('counterparty-email').value;
+            const currency = document.getElementById('currency').value;
+            const amount = document.getElementById('amount').value;
+            
+            if (!yourEmail || !counterpartyEmail || !currency || !amount) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            if (!uploadedImageData) {
+                alert('Please upload a receipt/proof image. This field is now required.');
+                return;
+            }
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Card...';
+            submitBtn.disabled = true;
+            
+            try {
+                const userType = document.querySelector('.user-type-btn.active').dataset.type;
+                const cardId = generateCardId();
+                currentCardId = cardId;
                 
-                // Show card
-                modernCard.style.display = 'block';
-                
-                // Store locally
-                const localCardData = {
-                    id: cardId,
-                    userType,
-                    yourEmail,
-                    counterpartyEmail,
-                    currency,
-                    amount,
-                    date: new Date().toISOString(),
-                    status: 'pending',
-                    hasImage: true
+                const cardData = {
+                    CardID: cardId,
+                    UserType: userType,
+                    YourEmail: yourEmail,
+                    CounterpartyEmail: counterpartyEmail,
+                    Currency: currency,
+                    Amount: amount,
+                    CreatedDate: new Date().toISOString(),
+                    Status: 'pending',
+                    HasImage: 'Yes'
                 };
                 
-                createdCards.push(localCardData);
-                localStorage.setItem('onexx_cards', JSON.stringify(createdCards));
+                const dbSuccess = await submitToSheetDB(cardData);
                 
-                modernCard.scrollIntoView({ behavior: 'smooth' });
-                alert('Guarantee Card created successfully! Your card is now pending verification.');
-                
-                form.reset();
-                uploadedImageData = null;
-                
-            } else {
-                alert('There was an error creating your card. Please try again.');
-            }
-        } catch (error) {
-            console.error('Error creating card:', error);
-            alert('There was an error creating your card. Please try again.');
-        } finally {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }
-    });
-    
-    // Get image data by card ID
-    function getImageByCardId(cardId) {
-        const storedImages = JSON.parse(localStorage.getItem('onexx_images')) || [];
-        return storedImages.find(img => img.cardId === cardId);
-    }
-    
-    // Verify button functionality
-    verifyBtn.addEventListener('click', async () => {
-        const cardId = document.getElementById('verification-id').value.trim();
-        
-        if (!cardId) {
-            showVerificationError('Please enter a Card ID to verify.');
-            return;
-        }
-        
-        const originalText = verifyBtn.innerHTML;
-        verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-        verifyBtn.disabled = true;
-        
-        try {
-            const cardData = await getCardFromSheetDB(cardId);
-            
-            if (cardData) {
-                document.getElementById('result-id').textContent = cardData.CardID;
-                document.getElementById('result-client').textContent = cardData.UserType === 'client' ? cardData.YourEmail : cardData.CounterpartyEmail;
-                document.getElementById('result-seller').textContent = cardData.UserType === 'seller' ? cardData.YourEmail : cardData.CounterpartyEmail;
-                document.getElementById('result-currency').textContent = cardData.Currency;
-                document.getElementById('result-amount').textContent = cardData.Amount;
-                document.getElementById('result-created').textContent = new Date(cardData.CreatedDate).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric' 
-                });
-                
-                // Show uploaded image
-                const imageData = getImageByCardId(cardId);
-                if (imageData) {
-                    const imagePreview = document.createElement('div');
-                    imagePreview.className = 'verification-detail-group';
-                    imagePreview.innerHTML = `
-                        <div class="verification-detail-label">
-                            <i class="fas fa-image"></i>
-                            UPLOADED PROOF
-                        </div>
-                        <div class="verification-detail-value">
-                            <img src="${imageData.imageData}" alt="Uploaded Proof" style="max-width: 200px; max-height: 200px; border-radius: 10px; margin-top: 10px;">
-                            <br>
-                            <small>Image uploaded on ${new Date(imageData.uploadDate).toLocaleDateString()}</small>
-                        </div>
-                    `;
-                    document.querySelector('.verification-card-body').appendChild(imagePreview);
-                }
-                
-                // Update status
-                const statusBadge = document.querySelector('#verification-result .status-badge');
-                if (cardData.Status === 'verified') {
-                    statusBadge.className = 'status-badge status-verified';
-                    statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
-                    document.getElementById('result-verified').textContent = new Date().toLocaleDateString('en-US', { 
+                if (dbSuccess) {
+                    // Store image locally
+                    const imageData = {
+                        cardId: cardId,
+                        imageData: uploadedImageData,
+                        uploadDate: new Date().toISOString()
+                    };
+                    
+                    const storedImages = JSON.parse(localStorage.getItem('onexx_images')) || [];
+                    storedImages.push(imageData);
+                    localStorage.setItem('onexx_images', JSON.stringify(storedImages));
+                    
+                    // Update preview card
+                    if (userType === 'client') {
+                        document.getElementById('preview-client').textContent = yourEmail;
+                        document.getElementById('preview-seller').textContent = counterpartyEmail;
+                    } else {
+                        document.getElementById('preview-client').textContent = counterpartyEmail;
+                        document.getElementById('preview-seller').textContent = yourEmail;
+                    }
+                    
+                    document.getElementById('preview-currency').textContent = currency;
+                    document.getElementById('preview-amount').textContent = amount;
+                    document.getElementById('preview-date').textContent = new Date().toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'short', 
                         day: 'numeric' 
                     });
-                } else {
+                    
+                    document.querySelector('.card-id').textContent = 'ID: ' + cardId;
+                    
+                    // Show PENDING status
                     statusBadge.className = 'status-badge status-pending';
                     statusBadge.innerHTML = '<i class="fas fa-clock"></i> PENDING';
-                    document.getElementById('result-verified').textContent = 'Not Verified Yet';
-                }
-                
-                verificationResult.style.display = 'block';
-                verificationResult.style.backgroundColor = '';
-                verificationResult.style.color = '';
-                
-            } else {
-                const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-                const localCard = cards.find(c => c.id === cardId);
-                
-                if (localCard) {
-                    showVerificationError(`The Guarantee Card <strong>${cardId}</strong> was not found in our system. This card may have been deleted.`);
+                    verificationStamp.style.display = 'none';
+                    
+                    // Show card
+                    modernCard.style.display = 'block';
+                    
+                    // Store locally
+                    const localCardData = {
+                        id: cardId,
+                        userType,
+                        yourEmail,
+                        counterpartyEmail,
+                        currency,
+                        amount,
+                        date: new Date().toISOString(),
+                        status: 'pending',
+                        hasImage: true
+                    };
+                    
+                    createdCards.push(localCardData);
+                    localStorage.setItem('onexx_cards', JSON.stringify(createdCards));
+                    
+                    modernCard.scrollIntoView({ behavior: 'smooth' });
+                    alert('Guarantee Card created successfully! Your card is now pending verification.');
+                    
+                    form.reset();
+                    uploadedImageData = null;
+                    
                 } else {
-                    showVerificationError(`The Guarantee Card <strong>${cardId}</strong> was not found in our system.`);
+                    alert('There was an error creating your card. Please try again.');
                 }
-            }
-        } catch (error) {
-            console.error('Error verifying card:', error);
-            showVerificationError('There was an error verifying the card. Please try again.');
-        } finally {
-            verifyBtn.innerHTML = originalText;
-            verifyBtn.disabled = false;
-        }
-    });
-    
-    // Helper function to show verification error
-    function showVerificationError(message) {
-        verificationResult.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <h4><i class="fas fa-times-circle"></i> Card Not Found</h4>
-                <p>${message}</p>
-                <div class="verification-ad" style="margin-top: 30px;">
-                    <h4>Create Your Own Guarantee Card</h4>
-                    <a href="#form" class="ad-image">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Create Your Guarantee Card">
-                    </a>
-                </div>
-            </div>
-        `;
-        verificationResult.style.display = 'block';
-        verificationResult.style.backgroundColor = '#f8d7da';
-        verificationResult.style.color = '#721c24';
-    }
-    
-    // Download PDF button
-    document.getElementById('download-pdf').addEventListener('click', () => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        doc.setFillColor(67, 97, 238);
-        doc.rect(0, 0, 210, 50, 'F');
-        doc.setFontSize(28);
-        doc.setTextColor(255, 255, 255);
-        doc.text('Onexx Guarantee Card', 105, 25, { align: 'center' });
-        
-        doc.setFontSize(16);
-        doc.setTextColor(0, 0, 0);
-        doc.text('Transaction Details:', 20, 70);
-        
-        doc.setFontSize(12);
-        doc.text(`Client: ${document.getElementById('preview-client').textContent}`, 20, 85);
-        doc.text(`Seller: ${document.getElementById('preview-seller').textContent}`, 20, 95);
-        doc.text(`Currency: ${document.getElementById('preview-currency').textContent}`, 20, 105);
-        doc.text(`Amount: ${document.getElementById('preview-amount').textContent}`, 20, 115);
-        doc.text(`Date: ${document.getElementById('preview-date').textContent}`, 20, 125);
-        
-        const status = document.getElementById('preview-status').textContent.includes('VERIFIED') ? 'VERIFIED' : 'PENDING';
-        doc.setFontSize(14);
-        if (status === 'VERIFIED') {
-            doc.setTextColor(16, 185, 129);
-        } else {
-            doc.setTextColor(239, 68, 68);
-        }
-        doc.text(`Status: ${status}`, 20, 145);
-        
-        const qrCodeImg = document.querySelector('#qrcode img');
-        if (qrCodeImg) {
-            const imgData = qrCodeImg.src;
-            doc.addImage(imgData, 'PNG', 150, 70, 40, 40);
-        }
-        
-        doc.save('onexx-guarantee-card.pdf');
-    });
-    
-    // Share card button
-    document.getElementById('share-card').addEventListener('click', () => {
-        openShareModal();
-    });
-    
-    // Social sharing functions
-    function shareOnFacebook() {
-        const url = encodeURIComponent(window.location.href);
-        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        window.open(shareUrl, '_blank');
-    }
-    
-    function shareOnTwitter() {
-        const url = encodeURIComponent(window.location.href);
-        const text = encodeURIComponent('Check out my Onexx Guarantee Card!');
-        const shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-        window.open(shareUrl, '_blank');
-    }
-    
-    function shareOnLinkedIn() {
-        const url = encodeURIComponent(window.location.href);
-        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        window.open(shareUrl, '_blank');
-    }
-    
-    function copyLink() {
-        const urlInput = document.getElementById('share-url');
-        urlInput.select();
-        document.execCommand('copy');
-        alert('Link copied to clipboard!');
-    }
-    
-    function openShareModal() {
-        shareModal.style.display = 'flex';
-    }
-    
-    function closeShareModal() {
-        shareModal.style.display = 'none';
-    }
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target === shareModal) {
-            closeShareModal();
-        }
-    });
-    
-    // Animation on scroll
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
+            } catch (error) {
+                console.error('Error creating card:', error);
+                alert('There was an error creating your card. Please try again.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         });
-    }, observerOptions);
-    
-    document.querySelectorAll('.feature-card').forEach(card => {
-        observer.observe(card);
-    });
-</script>
+        
+        // Get image data by card ID
+        function getImageByCardId(cardId) {
+            const storedImages = JSON.parse(localStorage.getItem('onexx_images')) || [];
+            return storedImages.find(img => img.cardId === cardId);
+        }
+        
+        // Verify button functionality
+        verifyBtn.addEventListener('click', async () => {
+            const cardId = document.getElementById('verification-id').value.trim();
+            
+            if (!cardId) {
+                showVerificationError('Please enter a Card ID to verify.');
+                return;
+            }
+            
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            verifyBtn.disabled = true;
+            
+            try {
+                const cardData = await getCardFromSheetDB(cardId);
+                
+                if (cardData) {
+                    document.getElementById('result-id').textContent = cardData.CardID;
+                    document.getElementById('result-client').textContent = cardData.UserType === 'client' ? cardData.YourEmail : cardData.CounterpartyEmail;
+                    document.getElementById('result-seller').textContent = cardData.UserType === 'seller' ? cardData.YourEmail : cardData.CounterpartyEmail;
+                    document.getElementById('result-currency').textContent = cardData.Currency;
+                    document.getElementById('result-amount').textContent = cardData.Amount;
+                    document.getElementById('result-created').textContent = new Date(cardData.CreatedDate).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                    
+                    // Show uploaded image
+                    const imageData = getImageByCardId(cardId);
+                    if (imageData) {
+                        const imagePreview = document.createElement('div');
+                        imagePreview.className = 'verification-detail-group';
+                        imagePreview.innerHTML = `
+                            <div class="verification-detail-label">
+                                <i class="fas fa-image"></i>
+                                UPLOADED PROOF
+                            </div>
+                            <div class="verification-detail-value">
+                                <img src="${imageData.imageData}" alt="Uploaded Proof" style="max-width: 200px; max-height: 200px; border-radius: 10px; margin-top: 10px;">
+                                <br>
+                                <small>Image uploaded on ${new Date(imageData.uploadDate).toLocaleDateString()}</small>
+                            </div>
+                        `;
+                        document.querySelector('.verification-card-body').appendChild(imagePreview);
+                    }
+                    
+                    // Update status
+                    const statusBadge = document.querySelector('#verification-result .status-badge');
+                    if (cardData.Status === 'verified') {
+                        statusBadge.className = 'status-badge status-verified';
+                        statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> VERIFIED';
+                        document.getElementById('result-verified').textContent = new Date().toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        });
+                    } else {
+                        statusBadge.className = 'status-badge status-pending';
+                        statusBadge.innerHTML = '<i class="fas fa-clock"></i> PENDING';
+                        document.getElementById('result-verified').textContent = 'Not Verified Yet';
+                    }
+                    
+                    verificationResult.style.display = 'block';
+                    verificationResult.style.backgroundColor = '';
+                    verificationResult.style.color = '';
+                    
+                } else {
+                    const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
+                    const localCard = cards.find(c => c.id === cardId);
+                    
+                    if (localCard) {
+                        showVerificationError(`The Guarantee Card <strong>${cardId}</strong> was not found in our system. This card may have been deleted.`);
+                    } else {
+                        showVerificationError(`The Guarantee Card <strong>${cardId}</strong> was not found in our system.`);
+                    }
+                }
+            } catch (error) {
+                console.error('Error verifying card:', error);
+                showVerificationError('There was an error verifying the card. Please try again.');
+            } finally {
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
+            }
+        });
+        
+        // Helper function to show verification error
+        function showVerificationError(message) {
+            verificationResult.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h4><i class="fas fa-times-circle"></i> Card Not Found</h4>
+                    <p>${message}</p>
+                    <div class="verification-ad" style="margin-top: 30px;">
+                        <h4>Create Your Own Guarantee Card</h4>
+                        <a href="#form" class="ad-image">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Create Your Guarantee Card">
+                        </a>
+                    </div>
+                </div>
+            `;
+            verificationResult.style.display = 'block';
+            verificationResult.style.backgroundColor = '#f8d7da';
+            verificationResult.style.color = '#721c24';
+        }
+        
+        // Download PDF button for verification result
+        document.getElementById('download-verification-pdf').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Card header
+            doc.setFillColor(67, 97, 238);
+            doc.rect(0, 0, 210, 50, 'F');
+            doc.setFontSize(28);
+            doc.setTextColor(255, 255, 255);
+            doc.text('Onexx Guarantee Card', 105, 25, { align: 'center' });
+            
+            // Verification details
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Verification Details:', 20, 70);
+            
+            doc.setFontSize(12);
+            doc.text(`Card ID: ${document.getElementById('result-id').textContent}`, 20, 85);
+            doc.text(`Client: ${document.getElementById('result-client').textContent}`, 20, 95);
+            doc.text(`Seller: ${document.getElementById('result-seller').textContent}`, 20, 105);
+            doc.text(`Currency: ${document.getElementById('result-currency').textContent}`, 20, 115);
+            doc.text(`Amount: ${document.getElementById('result-amount').textContent}`, 20, 125);
+            doc.text(`Created Date: ${document.getElementById('result-created').textContent}`, 20, 135);
+            doc.text(`Verified Date: ${document.getElementById('result-verified').textContent}`, 20, 145);
+            
+            // Status
+            const status = document.querySelector('#verification-result .status-badge').textContent;
+            doc.setFontSize(14);
+            if (status.includes('VERIFIED')) {
+                doc.setTextColor(16, 185, 129);
+            } else {
+                doc.setTextColor(239, 68, 68);
+            }
+            doc.text(`Status: ${status}`, 20, 165);
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Verified by Onexx Guarantee System', 105, 280, { align: 'center' });
+            doc.text(new Date().toLocaleDateString(), 105, 285, { align: 'center' });
+            
+            doc.save('onexx-verification-result.pdf');
+        });
+        
+        // Share verification card
+        document.getElementById('share-verification-card').addEventListener('click', () => {
+            openShareModal();
+        });
+        
+        // Download PDF button for created card
+        document.getElementById('download-pdf').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFillColor(67, 97, 238);
+            doc.rect(0, 0, 210, 50, 'F');
+            doc.setFontSize(28);
+            doc.setTextColor(255, 255, 255);
+            doc.text('Onexx Guarantee Card', 105, 25, { align: 'center' });
+            
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text('Transaction Details:', 20, 70);
+            
+            doc.setFontSize(12);
+            doc.text(`Client: ${document.getElementById('preview-client').textContent}`, 20, 85);
+            doc.text(`Seller: ${document.getElementById('preview-seller').textContent}`, 20, 95);
+            doc.text(`Currency: ${document.getElementById('preview-currency').textContent}`, 20, 105);
+            doc.text(`Amount: ${document.getElementById('preview-amount').textContent}`, 20, 115);
+            doc.text(`Date: ${document.getElementById('preview-date').textContent}`, 20, 125);
+            
+            const status = document.getElementById('preview-status').textContent.includes('VERIFIED') ? 'VERIFIED' : 'PENDING';
+            doc.setFontSize(14);
+            if (status === 'VERIFIED') {
+                doc.setTextColor(16, 185, 129);
+            } else {
+                doc.setTextColor(239, 68, 68);
+            }
+            doc.text(`Status: ${status}`, 20, 145);
+            
+            doc.save('onexx-guarantee-card.pdf');
+        });
+        
+        // Share card button
+        document.getElementById('share-card').addEventListener('click', () => {
+            openShareModal();
+        });
+        
+        // Social sharing functions
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Check out my Onexx Guarantee Card!');
+            const shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function shareOnLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function shareOnWhatsApp() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Check out this Onexx Guarantee Card verification!');
+            const shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function shareOnInstagram() {
+            // Instagram doesn't have a direct web sharing API
+            // We'll copy the link and show a message
+            const url = window.location.href;
+            copyToClipboard(url);
+            alert('Link copied! You can now paste it in your Instagram story or post.');
+        }
+        
+        function shareOnTelegram() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Check out this Onexx Guarantee Card verification!');
+            const shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function shareOnMessenger() {
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://www.facebook.com/dialog/send?link=${url}&app_id=YOUR_FACEBOOK_APP_ID&redirect_uri=${encodeURIComponent(window.location.href)}`;
+            window.open(shareUrl, '_blank');
+        }
+        
+        function copyLink() {
+            const urlInput = document.getElementById('share-url');
+            urlInput.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+        
+        // Helper function to copy text to clipboard
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+        
+        function openShareModal() {
+            shareModal.style.display = 'flex';
+        }
+        
+        function closeShareModal() {
+            shareModal.style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === shareModal) {
+                closeShareModal();
+            }
+        });
+        
+        // Animation on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
