@@ -203,6 +203,32 @@
             margin-top: 30px;
         }
         
+        /* Clickable Image Ad in Hero Section */
+        .hero-ad {
+            margin: 40px auto 0;
+            max-width: 800px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+        }
+        
+        .hero-ad:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-ad a {
+            display: block;
+            width: 100%;
+        }
+        
+        .hero-ad img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
         /* Features Section */
         .features {
             padding: 100px 0;
@@ -613,6 +639,10 @@
             
             .verification-box, .form-container {
                 padding: 30px;
+            }
+            
+            .hero-ad {
+                margin: 30px 20px 0;
             }
         }
         
@@ -1497,6 +1527,13 @@
                     <a href="#form" class="cta-button pulse-animation">Create Your Guarantee Card <i class="fas fa-plus-circle"></i></a>
                     <a href="#verify" class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Verify a Card <i class="fas fa-qrcode"></i></a>
                 </div>
+                
+                <!-- Clickable Image Ad in Hero Section -->
+                <div class="hero-ad">
+                    <a href="https://onexx.com/special-offer" target="_blank">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="Special Offer - Get 20% Off on Onexx Premium Services">
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1510,7 +1547,7 @@
                 <a href="#form" class="cta-button" style="background: white; color: var(--primary);">get offer <i class="fas fa-gift"></i></a>
             </div>
             <div class="home-banner-img">
-                <img src="https://postimg.cc/MvthZK2d">
+                <img src="https://i.postimg.cc/MvthZK2d/offer-image.png" alt="Special Offer">
             </div>
         </div>
     </div>
