@@ -1572,7 +1572,7 @@
 </head>
 <body>
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/01322149482?text=Hello%2C%20I%20need%20support%20with%20my%20Onexx%20Guarantee%20Card%20from%20https%3A%2F%2Fwww.onexx.space" class="whatsapp-btn" target="_blank">
+    <a href="https://wa.me/01322149482?text=Hello%2C%20I%20need%20support%20with%20my%20Onexx%20Guarantee%20Card" class="whatsapp-btn" target="_blank">
         <i class="fab fa-whatsapp"></i>
         <span class="whatsapp-tooltip">Need Help? Chat with us</span>
     </a>
@@ -1600,7 +1600,7 @@
                 </div>
             </div>
             <div class="share-url">
-                <input type="text" id="share-url" value="https://www.onexx.space/verify/ONX-8742" readonly>
+                <input type="text" id="share-url" value="https://onexx.space/verify/ONX-8742" readonly>
                 <button class="copy-btn" onclick="copyLink()">Copy</button>
             </div>
             <button class="cta-button" onclick="closeShareModal()">Close</button>
@@ -1953,7 +1953,7 @@
                         </div>
                         
                         <!-- before verify Ad Banner -->
-                        <a href="https://onexx.com/special-offer" class="banner-ad" target="_blank">
+                        <a href="https://onexx.space/special-offer" class="banner-ad" target="_blank">
                             <img src="https://i.postimg.cc/XvhTjk2Z/Capt5r5r5rture.png" alt="Special Offer - 20% Off on Onexx Services">
                         </a>
                     </div>
@@ -2032,8 +2032,8 @@
                     <h3>Contact Us</h3>
                     <ul>
                         <li><a href="mailto:support@onexx.com"><i class="fas fa-envelope"></i> inbox.onexx@gmail.com</a></li>
-                        <li><a href="https://www.onexx.space"><i class="fas fa-globe"></i> www.onexx.space</a></li>
-                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Global Service</a></li>
+                        <li><a href="tel:+11234567890"><i class="fas fa-phone"></i>wait...</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> New York, NY</a></li>
                     </ul>
                 </div>
             </div>
@@ -2442,11 +2442,7 @@
         // Remove auto-refresh to prevent multiple API calls
         // setInterval(refreshCardStatus, 30000); // COMMENTED OUT
 
-        // Helper function to get shareable URL
-        function getCardShareUrl(cardId) {
-            return `https://www.onexx.space/verify/${cardId}`;
-        }
-        
+        // ... rest of your existing functions (PDF download, sharing, etc.) remain the same
         // Download PDF button for verification result
         document.getElementById('download-verification-pdf').addEventListener('click', () => {
             const { jsPDF } = window.jspdf;
@@ -2536,63 +2532,56 @@
             openShareModal();
         });
         
-        // Social sharing functions - UPDATED TO USE YOUR WEBSITE URL
+        // Social sharing functions
         function shareOnFacebook() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
+            const url = encodeURIComponent(window.location.href);
             const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             window.open(shareUrl, '_blank');
         }
         
         function shareOnTwitter() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
+            const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent('Check out my Onexx Guarantee Card!');
             const shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
             window.open(shareUrl, '_blank');
         }
         
         function shareOnLinkedIn() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
+            const url = encodeURIComponent(window.location.href);
             const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
             window.open(shareUrl, '_blank');
         }
         
         function shareOnWhatsApp() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
+            const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent('Check out this Onexx Guarantee Card verification!');
             const shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
             window.open(shareUrl, '_blank');
         }
         
         function shareOnInstagram() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = getCardShareUrl(cardId);
+            const url = window.location.href;
             copyToClipboard(url);
             alert('Link copied! You can now paste it in your Instagram story or post.');
         }
         
         function shareOnTelegram() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
+            const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent('Check out this Onexx Guarantee Card verification!');
             const shareUrl = `https://t.me/share/url?url=${url}&text=${text}`;
             window.open(shareUrl, '_blank');
         }
         
         function shareOnMessenger() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = encodeURIComponent(getCardShareUrl(cardId));
-            const shareUrl = `https://www.facebook.com/dialog/send?link=${url}&app_id=YOUR_FACEBOOK_APP_ID&redirect_uri=${encodeURIComponent('https://www.onexx.space')}`;
+            const url = encodeURIComponent(window.location.href);
+            const shareUrl = `https://www.facebook.com/dialog/send?link=${url}&app_id=YOUR_FACEBOOK_APP_ID&redirect_uri=${encodeURIComponent(window.location.href)}`;
             window.open(shareUrl, '_blank');
         }
         
         function copyLink() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const url = getCardShareUrl(cardId);
-            copyToClipboard(url);
+            const urlInput = document.getElementById('share-url');
+            urlInput.select();
+            document.execCommand('copy');
             alert('Link copied to clipboard!');
         }
         
@@ -2607,9 +2596,6 @@
         }
         
         function openShareModal() {
-            const cardId = currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
-            const shareUrl = getCardShareUrl(cardId);
-            document.getElementById('share-url').value = shareUrl;
             shareModal.style.display = 'flex';
         }
         
