@@ -1568,25 +1568,6 @@
                 margin-bottom: 5px;
             }
         }
-
-        /* Share View Styles */
-        .share-view {
-            display: none;
-            padding: 150px 0 50px;
-            text-align: center;
-        }
-
-        .shared-card-container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .shared-card-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
     </style>
 </head>
 <body>
@@ -1619,7 +1600,7 @@
                 </div>
             </div>
             <div class="share-url">
-                <input type="text" id="share-url" value="https://www.onexx.space/verify/ONX-8742" readonly>
+                <input type="text" id="share-url" value="https://www.onexx.space/?card=ONX-8742" readonly>
                 <button class="copy-btn" onclick="copyLink()">Copy</button>
             </div>
             <button class="cta-button" onclick="closeShareModal()">Close</button>
@@ -1650,26 +1631,8 @@
         </div>
     </header>
 
-    <!-- Share View (shown when accessing shared card link) -->
-    <section class="share-view" id="share-view">
-        <div class="container">
-            <div class="shared-card-container">
-                <h2 class="section-title">Onexx Guarantee Card</h2>
-                <p>This card was shared with you via Onexx Guarantee Card system</p>
-                
-                <!-- Shared Card will be inserted here -->
-                <div id="shared-card-placeholder"></div>
-                
-                <div class="shared-card-actions">
-                    <a href="#form" class="cta-button">Create Your Own Card</a>
-                    <a href="#verify" class="cta-button" style="background: linear-gradient(135deg, var(--secondary) 0%, #5a08a9 100%);">Verify Another Card</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Hero Section -->
-    <section class="hero" id="hero">
+    <section class="hero">
         <div class="hero-bg"></div>
         <div class="floating-element float-1"></div>
         <div class="floating-element float-2"></div>
@@ -2100,9 +2063,6 @@
         const proofUpload = document.getElementById('proof-upload');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.getElementById('nav-links');
-        const shareView = document.getElementById('share-view');
-        const heroSection = document.getElementById('hero');
-        const sharedCardPlaceholder = document.getElementById('shared-card-placeholder');
         
         // Store created cards
         let createdCards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
@@ -2110,231 +2070,6 @@
         let uploadedImageData = null;
         let isSubmitting = false;
         let isVerifying = false;
-        
-        // Check if we're opening a shared card link
-        function checkForSharedCard() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const cardId = urlParams.get('card');
-            
-            if (cardId) {
-                // Hide normal sections and show share view
-                document.querySelectorAll('section:not(#share-view)').forEach(section => {
-                    section.style.display = 'none';
-                });
-                document.querySelectorAll('.container .home-banner, footer').forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                shareView.style.display = 'block';
-                header.style.display = 'none';
-                
-                // Load and display the shared card
-                loadAndDisplaySharedCard(cardId);
-            }
-        }
-        
-        // Load and display shared card
-        function loadAndDisplaySharedCard(cardId) {
-            // Try to find card in local storage first
-            const cards = JSON.parse(localStorage.getItem('onexx_cards')) || [];
-            const card = cards.find(c => c.id === cardId);
-            
-            if (card) {
-                displaySharedCard(card);
-            } else {
-                // If not found locally, try to fetch from API
-                fetch(`${SHEETDB_API_URL}/search?CardID=${cardId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data && data.length > 0) {
-                            const cardData = data[0];
-                            displaySharedCard(cardData);
-                        } else {
-                            sharedCardPlaceholder.innerHTML = `
-                                <div class="verification-card">
-                                    <div style="text-align: center; padding: 40px 20px;">
-                                        <h3><i class="fas fa-exclamation-triangle"></i> Card Not Found</h3>
-                                        <p>The Guarantee Card <strong>${cardId}</strong> was not found in our system.</p>
-                                        <p>It may have been deleted or the ID might be incorrect.</p>
-                                        <div style="margin-top: 30px;">
-                                            <a href="#form" class="cta-button">Create Your Own Card</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching shared card:', error);
-                        sharedCardPlaceholder.innerHTML = `
-                            <div class="verification-card">
-                                <div style="text-align: center; padding: 40px 20px;">
-                                    <h3><i class="fas fa-exclamation-triangle"></i> Error Loading Card</h3>
-                                    <p>There was an error loading the Guarantee Card.</p>
-                                    <p>Please try again later.</p>
-                                </div>
-                            </div>
-                        `;
-                    });
-            }
-        }
-        
-        // Display shared card in the share view
-        function displaySharedCard(cardData) {
-            const cardId = cardData.CardID || cardData.id;
-            const clientEmail = cardData.UserType === 'client' ? cardData.YourEmail : cardData.CounterpartyEmail;
-            const sellerEmail = cardData.UserType === 'seller' ? cardData.YourEmail : cardData.CounterpartyEmail;
-            const currency = cardData.Currency;
-            const amount = cardData.Amount;
-            const createdDate = cardData.CreatedDate || cardData.date;
-            const status = cardData.Status || 'verified';
-            
-            const formattedDate = new Date(createdDate).toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
-            });
-            
-            sharedCardPlaceholder.innerHTML = `
-                <div class="modern-card" style="display: block;">
-                    <div class="card-header">
-                        <div class="card-logo">
-                            <div class="card-logo-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <span>Onexx Guarantee</span>
-                        </div>
-                        <div class="card-id">ID: ${cardId}</div>
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="card-details">
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="fas fa-user"></i>
-                                    CLIENT
-                                </div>
-                                <div class="detail-value">${clientEmail}</div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="fas fa-store"></i>
-                                    SELLER
-                                </div>
-                                <div class="detail-value">${sellerEmail}</div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    CURRENCY
-                                </div>
-                                <div class="detail-value">${currency}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="fas fa-dollar-sign"></i>
-                                    AMOUNT
-                                </div>
-                                <div class="detail-value">${amount}</div>
-                            </div>
-                            
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="fas fa-calendar"></i>
-                                    DATE
-                                </div>
-                                <div class="detail-value">${formattedDate}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="card-sidebar">
-                            <div class="status-badge ${status === 'verified' ? 'status-verified' : ''}">
-                                <i class="fas fa-${status === 'verified' ? 'check-circle' : 'clock'}"></i>
-                                ${status === 'verified' ? 'VERIFIED' : 'PENDING'}
-                            </div>
-                            
-                            <!-- Ad Banner -->
-                            <a href="https://onexx.com/special-offer" class="banner-ad" target="_blank">
-                                <img src="https://i.postimg.cc/XvhTjk2Z/Capt5r5r5rture.png" alt="Special Offer - 20% Off on Onexx Services">
-                            </a>
-                        </div>
-                    </div>
-                    
-                    ${status === 'verified' ? `
-                    <div class="verification-stamp" style="display: block;">
-                        <div class="stamp-circle">
-                            <div class="stamp-content">
-                                <div class="stamp-icon"><i class="fas fa-check-double"></i></div>
-                                <div class="stamp-text">Verified</div>
-                            </div>
-                        </div>
-                    </div>
-                    ` : ''}
-                    
-                    <div class="card-footer">
-                        <div class="card-actions">
-                            <button class="action-btn btn-primary" onclick="downloadSharedCardPDF('${cardId}', '${clientEmail}', '${sellerEmail}', '${currency}', '${amount}', '${formattedDate}', '${status}')">
-                                <i class="fas fa-download"></i>
-                                Download PDF
-                            </button>
-                            <button class="action-btn btn-secondary" onclick="shareCard('${cardId}')">
-                                <i class="fas fa-share-alt"></i>
-                                Share Card
-                            </button>
-                        </div>
-                        
-                        <div class="social-share">
-                            <div class="share-btn share-fb" onclick="shareOnFacebook('${cardId}')">
-                                <i class="fab fa-facebook-f"></i>
-                            </div>
-                            <div class="share-btn share-twitter" onclick="shareOnTwitter('${cardId}')">
-                                <i class="fab fa-twitter"></i>
-                            </div>
-                            <div class="share-btn share-linkedin" onclick="shareOnLinkedIn('${cardId}')">
-                                <i class="fab fa-linkedin-in"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Download PDF for shared card
-        function downloadSharedCardPDF(cardId, client, seller, currency, amount, date, status) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            doc.setFillColor(67, 97, 238);
-            doc.rect(0, 0, 210, 50, 'F');
-            doc.setFontSize(28);
-            doc.setTextColor(255, 255, 255);
-            doc.text('Onexx Guarantee Card', 105, 25, { align: 'center' });
-            
-            doc.setFontSize(16);
-            doc.setTextColor(0, 0, 0);
-            doc.text('Transaction Details:', 20, 70);
-            
-            doc.setFontSize(12);
-            doc.text(`Card ID: ${cardId}`, 20, 85);
-            doc.text(`Client: ${client}`, 20, 95);
-            doc.text(`Seller: ${seller}`, 20, 105);
-            doc.text(`Currency: ${currency}`, 20, 115);
-            doc.text(`Amount: ${amount}`, 20, 125);
-            doc.text(`Date: ${date}`, 20, 135);
-            
-            doc.setFontSize(14);
-            if (status === 'verified') {
-                doc.setTextColor(16, 185, 129);
-            } else {
-                doc.setTextColor(239, 68, 68);
-            }
-            doc.text(`Status: ${status === 'verified' ? 'VERIFIED' : 'PENDING'}`, 20, 155);
-            
-            doc.save(`onexx-guarantee-card-${cardId}.pdf`);
-        }
         
         // Mobile menu toggle
         mobileMenuBtn.addEventListener('click', () => {
@@ -2413,7 +2148,7 @@
             return `ONX-${timestamp}${random}`;
         }
         
-        // Form submission - SINGLE API CALL VERSION
+        // Form submission
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -2462,7 +2197,7 @@
 
             console.log('Submitting data:', cardData);
 
-            // ONLY ONE API CALL - Using fetch directly without async/await
+            // API CALL
             fetch(SHEETDB_API_URL, {
                 method: 'POST',
                 headers: {
@@ -2523,7 +2258,7 @@
             });
         });
         
-        // Verify button functionality - SINGLE API CALL VERSION
+        // Verify button functionality
         verifyBtn.addEventListener('click', function() {
             const cardId = document.getElementById('verification-id').value.trim();
             
@@ -2542,7 +2277,7 @@
             verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
             verifyBtn.disabled = true;
 
-            // ONLY ONE API CALL - Using fetch directly without async/await
+            // API CALL
             fetch(`${SHEETDB_API_URL}/search?CardID=${cardId}`)
             .then(response => {
                 if (response.ok) {
@@ -2704,9 +2439,6 @@
             verificationResult.style.color = '#721c24';
         }
 
-        // Remove auto-refresh to prevent multiple API calls
-        // setInterval(refreshCardStatus, 30000); // COMMENTED OUT
-
         // Helper function to get shareable URL
         function getCardShareUrl(cardId) {
             return `https://www.onexx.space/?card=${cardId}`;
@@ -2807,7 +2539,7 @@
             openShareModal(cardIdToShare);
         }
         
-        // Social sharing functions - UPDATED TO USE YOUR WEBSITE URL
+        // Social sharing functions
         function shareOnFacebook(cardId) {
             const cardIdToShare = cardId || currentCardId || document.getElementById('result-id')?.textContent || 'ONX-8742';
             const url = encodeURIComponent(getCardShareUrl(cardIdToShare));
@@ -2916,8 +2648,18 @@
 
         // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
-            // Check for shared card on page load
-            checkForSharedCard();
+            // Check if we have a card parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const cardId = urlParams.get('card');
+            
+            if (cardId) {
+                // If there's a card parameter, verify and show that card
+                document.getElementById('verification-id').value = cardId;
+                document.getElementById('verify-btn').click();
+                
+                // Scroll to verification section
+                document.getElementById('verify').scrollIntoView({ behavior: 'smooth' });
+            }
         });
     </script>
 </body>
