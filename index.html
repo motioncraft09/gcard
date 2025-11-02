@@ -451,10 +451,10 @@
             
             <div class="modal-header">
                 <div class="premium-badge">PREMIUM ACCESS</div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4" id="modal-title">
                     Unlock Unlimited Power
                 </h2>
-                <p class="text-slate-300 text-sm md:text-base">
+                <p class="text-slate-300 text-sm md:text-base" id="modal-description">
                     You've exhausted your free trial. Upgrade to premium for unlimited access to our AI-powered offer generator.
                 </p>
             </div>
@@ -462,7 +462,7 @@
             <div class="modal-body">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                        <h3 class="text-lg font-bold text-white mb-4">Premium Benefits</h3>
+                        <h3 class="text-lg font-bold text-white mb-4" id="benefits-title">Premium Benefits</h3>
                         
                         <div class="space-y-4">
                             <div class="feature-card">
@@ -471,8 +471,8 @@
                                         <i class="fas fa-bolt text-purple-400"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-white mb-1">Unlimited Offer Generation</h4>
-                                        <p class="text-slate-400 text-sm">Create as many high-converting offers as you need, anytime.</p>
+                                        <h4 class="font-bold text-white mb-1" id="benefit-1-title">Unlimited Offer Generation</h4>
+                                        <p class="text-slate-400 text-sm" id="benefit-1-desc">Create as many high-converting offers as you need, anytime.</p>
                                     </div>
                                 </div>
                             </div>
@@ -483,8 +483,8 @@
                                         <i class="fas fa-chart-line text-blue-400"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-white mb-1">Advanced Analytics</h4>
-                                        <p class="text-slate-400 text-sm">Track performance and optimize your offers with detailed insights.</p>
+                                        <h4 class="font-bold text-white mb-1" id="benefit-2-title">Advanced Analytics</h4>
+                                        <p class="text-slate-400 text-sm" id="benefit-2-desc">Track performance and optimize your offers with detailed insights.</p>
                                     </div>
                                 </div>
                             </div>
@@ -495,8 +495,8 @@
                                         <i class="fas fa-rocket text-amber-400"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-white mb-1">Priority Support</h4>
-                                        <p class="text-slate-400 text-sm">Get fast responses from our expert team whenever you need help.</p>
+                                        <h4 class="font-bold text-white mb-1" id="benefit-3-title">Priority Support</h4>
+                                        <p class="text-slate-400 text-sm" id="benefit-3-desc">Get fast responses from our expert team whenever you need help.</p>
                                     </div>
                                 </div>
                             </div>
@@ -507,8 +507,8 @@
                                         <i class="fas fa-star text-green-400"></i>
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-white mb-1">Exclusive Templates</h4>
-                                        <p class="text-slate-400 text-sm">Access premium offer templates proven to convert at higher rates.</p>
+                                        <h4 class="font-bold text-white mb-1" id="benefit-4-title">Exclusive Templates</h4>
+                                        <p class="text-slate-400 text-sm" id="benefit-4-desc">Access premium offer templates proven to convert at higher rates.</p>
                                     </div>
                                 </div>
                             </div>
@@ -516,48 +516,42 @@
                     </div>
                     
                     <div>
-                        <h3 class="text-lg font-bold text-white mb-4">Get Premium Access</h3>
+                        <h3 class="text-lg font-bold text-white mb-4" id="get-premium-title">Get Premium Access</h3>
                         
                         <div class="payment-card">
                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="font-bold text-white">Crypto Payment</h4>
+                                <h4 class="font-bold text-white" id="crypto-title">Crypto Payment</h4>
                                 <span class="text-sm text-slate-400">$3/month</span>
                             </div>
                             
-                            <p class="text-slate-300 text-sm mb-4">Send exactly <span class="font-bold text-white">2363264</span> via crypto to our account:</p>
+                            <p class="text-slate-300 text-sm mb-4" id="crypto-desc">Send exactly <span class="font-bold text-white">2363264</span> via crypto to our account:</p>
                             
                             <div class="crypto-address" id="crypto-address">
                                 0x8a19c7d8a6c9f2e1b3d4f5a6b7c8d9e0f1a2b3c4
                                 <i class="fas fa-copy copy-icon"></i>
                             </div>
                             
-                            <p class="text-slate-400 text-sm mb-4">After payment, contact us with your transaction ID to get manual access.</p>
+                            <p class="text-slate-400 text-sm mb-4" id="crypto-note">After payment, contact us with your transaction ID to get manual access.</p>
                             
                             <button class="unlock-btn" id="payment-made-btn">
                                 <i class="fas fa-lock-open mr-2"></i>
-                                I've Made Payment
+                                <span id="payment-btn-text">I've Made Payment</span>
                             </button>
                         </div>
                         
                         <div class="payment-card">
-                            <h4 class="font-bold text-white mb-4">Unlock Code</h4>
+                            <h4 class="font-bold text-white mb-4" id="unlock-code-title">Unlock Code</h4>
                             
-                            <p class="text-slate-300 text-sm mb-4">Enter your premium unlock code below:</p>
+                            <p class="text-slate-300 text-sm mb-4" id="unlock-code-desc">Enter your premium unlock code below:</p>
                             
                             <input type="text" id="unlock-code-input" class="unlock-input" placeholder="Enter your premium code">
                             
                             <button id="submit-code" class="unlock-btn">
                                 <i class="fas fa-key mr-2"></i>
-                                Unlock Premium
+                                <span id="unlock-btn-text">Unlock Premium</span>
                             </button>
                             
                             <p id="code-message" class="text-sm mt-2 text-center hidden"></p>
-                            
-                            <!-- URL Activation Section -->
-                            <div class="mt-4 pt-4 border-t border-slate-700">
-                                <p class="text-slate-300 text-sm mb-2">Or use activation link from admin</p>
-                                <p class="text-xs text-slate-400">If you received an activation link, simply visit it to activate premium</p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -565,7 +559,7 @@
             
             <div class="modal-footer">
                 <p class="text-slate-400 text-sm">
-                    Need assistance? Contact our premium support at 
+                    <span id="support-text">Need assistance? Contact our premium support at</span>
                     <span class="text-purple-400">support@dopamineoffers.com</span>
                 </p>
             </div>
@@ -584,15 +578,15 @@
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
         <div class="container mx-auto px-4 z-10">
             <div class="max-w-4xl mx-auto text-center">
-                <div class="usage-badge">Free uses left: <span id="free-uses">3</span></div>
+                <div class="usage-badge"><span id="free-uses-text">Free uses left:</span> <span id="free-uses">3</span></div>
                 <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800">
-                    Dopamine-Driven
-                    <span class="block mt-2 text-primary">Offer Generator</span>
+                    <span id="hero-title-1">Dopamine-Driven</span>
+                    <span class="block mt-2 text-primary" id="hero-title-2">Offer Generator</span>
                 </h1>
-                <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+                <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto" id="hero-description">
                     Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.
                 </p>
-                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow">
+                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow" id="cta-button">
                     Generate Offers Now
                 </a>
             </div>
@@ -610,8 +604,8 @@
     <section id="generator" class="py-16 px-4">
         <div class="container mx-auto max-w-5xl">
             <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-800">AI Offer Generator</h2>
-                <p class="text-lg text-slate-600 max-w-xl mx-auto">Create high-converting offers tailored to your product and audience in seconds.</p>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-800" id="generator-title">AI Offer Generator</h2>
+                <p class="text-lg text-slate-600 max-w-xl mx-auto" id="generator-description">Create high-converting offers tailored to your product and audience in seconds.</p>
                 
                 <!-- Language Selector - Always Visible -->
                 <div class="mt-8 flex justify-center">
@@ -632,28 +626,28 @@
                 <form id="offer-form" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="product-name" class="block text-base font-medium mb-2 text-slate-700">Product/Service Name</label>
+                            <label for="product-name" class="block text-base font-medium mb-2 text-slate-700" id="product-label">Product/Service Name</label>
                             <input type="text" id="product-name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Premium Fitness App">
                         </div>
                         <div>
-                            <label for="target-audience" class="block text-base font-medium mb-2 text-slate-700">Target Audience</label>
+                            <label for="target-audience" class="block text-base font-medium mb-2 text-slate-700" id="audience-label">Target Audience</label>
                             <input type="text" id="target-audience" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Busy professionals aged 25-40">
                         </div>
                     </div>
                     
                     <div>
-                        <label for="product-description" class="block text-base font-medium mb-2 text-slate-700">Product Description</label>
+                        <label for="product-description" class="block text-base font-medium mb-2 text-slate-700" id="description-label">Product Description</label>
                         <textarea id="product-description" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Describe your product/service in detail..."></textarea>
                     </div>
                     
                     <div>
-                        <label for="usp" class="block text-base font-medium mb-2 text-slate-700">Unique Selling Point (USP)</label>
+                        <label for="usp" class="block text-base font-medium mb-2 text-slate-700" id="usp-label">Unique Selling Point (USP)</label>
                         <input type="text" id="usp" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="What makes your product unique?">
                     </div>
                     
                     <div class="pt-4">
                         <button type="submit" id="generate-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow flex items-center justify-center">
-                            <span>Generate Offers</span>
+                            <span id="generate-btn-text">Generate Offers</span>
                             <i class="fas fa-bolt ml-2"></i>
                         </button>
                     </div>
@@ -667,49 +661,51 @@
                         <div></div>
                         <div></div>
                     </div>
-                    <p class="text-lg text-slate-600">Crafting your dopamine-driven offers...</p>
+                    <p class="text-lg text-slate-600" id="loading-text">Crafting your dopamine-driven offers...</p>
                 </div>
                 
                 <!-- Output Section -->
                 <div id="output-section" class="hidden mt-10">
                     <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                        <h3 class="text-xl font-bold text-slate-800">Your Generated Offers</h3>
-                        <p class="text-sm text-slate-500">Language: <span id="current-language">English</span></p>
+                        <h3 class="text-xl font-bold text-slate-800" id="output-title">Your Generated Offers</h3>
+                        <p class="text-sm text-slate-500"><span id="language-text">Language:</span> <span id="current-language">English</span></p>
                     </div>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Offer 1 -->
                         <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
-                            <div class="score-badge">Winning Score: 92%</div>
+                            <div class="score-badge"><span id="score-1-text">Winning Score:</span> 92%</div>
                             <div id="offer-output-1" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="1" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
                                 <i class="far fa-copy mr-2"></i>
-                                <span>Copy Offer</span>
+                                <span id="copy-btn-text-1">Copy Offer</span>
                             </button>
                         </div>
                         
                         <!-- Offer 2 -->
                         <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
-                            <div class="score-badge">Winning Score: 87%</div>
+                            <div class="score-badge"><span id="score-2-text">Winning Score:</span> 87%</div>
                             <div id="offer-output-2" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="2" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
                                 <i class="far fa-copy mr-2"></i>
-                                <span>Copy Offer</span>
+                                <span id="copy-btn-text-2">Copy Offer</span>
                             </button>
                         </div>
                         
                         <!-- Offer 3 -->
                         <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
-                            <div class="score-badge">Winning Score: 95%</div>
+                            <div class="score-badge"><span id="score-3-text">Winning Score:</span> 95%</div>
                             <div id="offer-output-3" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="3" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
                                 <i class="far fa-copy mr-2"></i>
-                                <span>Copy Offer</span>
+                                <span id="copy-btn-text-3">Copy Offer</span>
                             </button>
                         </div>
                     </div>
                     
-                    <p class="text-center text-slate-500 text-sm mt-6">Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.</p>
+                    <p class="text-center text-slate-500 text-sm mt-6" id="output-note">
+                        Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.
+                    </p>
                 </div>
             </div>
             
@@ -719,22 +715,22 @@
                     <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
                         <i class="fas fa-brain text-primary text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800">Psychology-Backed</h3>
-                    <p class="text-slate-600 text-sm">Our AI leverages proven psychological principles to create offers that trigger dopamine responses.</p>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-1-title">Psychology-Backed</h3>
+                    <p class="text-slate-600 text-sm" id="feature-1-desc">Our AI leverages proven psychological principles to create offers that trigger dopamine responses.</p>
                 </div>
                 <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
                     <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
                         <i class="fas fa-chart-line text-secondary text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800">Market-Validated</h3>
-                    <p class="text-slate-600 text-sm">Every offer comes with a winning score based on real market performance data.</p>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-2-title">Market-Validated</h3>
+                    <p class="text-slate-600 text-sm" id="feature-2-desc">Every offer comes with a winning score based on real market performance data.</p>
                 </div>
                 <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
                     <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
                         <i class="fas fa-globe text-accent text-xl"></i>
                     </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800">Multi-Language</h3>
-                    <p class="text-slate-600 text-sm">Generate offers in English or Bangla to connect with your target audience effectively.</p>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-3-title">Multi-Language</h3>
+                    <p class="text-slate-600 text-sm" id="feature-3-desc">Generate offers in English or Bangla to connect with your target audience effectively.</p>
                 </div>
             </div>
         </div>
@@ -745,22 +741,156 @@
         <div class="container mx-auto max-w-6xl">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
-                    <h2 class="text-xl font-bold text-slate-800">Dopamine-Driven Offer Generator</h2>
-                    <p class="text-slate-500 text-sm mt-1">Creating irresistible offers through AI and psychology.</p>
+                    <h2 class="text-xl font-bold text-slate-800" id="footer-title">Dopamine-Driven Offer Generator</h2>
+                    <p class="text-slate-500 text-sm mt-1" id="footer-tagline">Creating irresistible offers through AI and psychology.</p>
                 </div>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Privacy Policy</a>
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Terms of Service</a>
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Contact</a>
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="privacy-link">Privacy Policy</a>
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="terms-link">Terms of Service</a>
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="contact-link">Contact</a>
                 </div>
             </div>
             <div class="mt-8 pt-6 border-t border-slate-200 text-center text-slate-400 text-sm">
-                <p>&copy; 2023 Dopamine-Driven Offer Generator. All rights reserved.</p>
+                <p id="copyright">&copy; 2023 Dopamine-Driven Offer Generator. All rights reserved.</p>
             </div>
         </div>
     </footer>
     
     <script>
+        // Translation data
+        const translations = {
+            en: {
+                // Hero Section
+                "hero-title-1": "Dopamine-Driven",
+                "hero-title-2": "Offer Generator",
+                "hero-description": "Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.",
+                "cta-button": "Generate Offers Now",
+                "free-uses-text": "Free uses left:",
+                
+                // Generator Section
+                "generator-title": "AI Offer Generator",
+                "generator-description": "Create high-converting offers tailored to your product and audience in seconds.",
+                "product-label": "Product/Service Name",
+                "audience-label": "Target Audience",
+                "description-label": "Product Description",
+                "usp-label": "Unique Selling Point (USP)",
+                "generate-btn-text": "Generate Offers",
+                "loading-text": "Crafting your dopamine-driven offers...",
+                "output-title": "Your Generated Offers",
+                "language-text": "Language:",
+                "score-1-text": "Winning Score:",
+                "score-2-text": "Winning Score:",
+                "score-3-text": "Winning Score:",
+                "copy-btn-text-1": "Copy Offer",
+                "copy-btn-text-2": "Copy Offer",
+                "copy-btn-text-3": "Copy Offer",
+                "output-note": "Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.",
+                
+                // Features
+                "feature-1-title": "Psychology-Backed",
+                "feature-1-desc": "Our AI leverages proven psychological principles to create offers that trigger dopamine responses.",
+                "feature-2-title": "Market-Validated",
+                "feature-2-desc": "Every offer comes with a winning score based on real market performance data.",
+                "feature-3-title": "Multi-Language",
+                "feature-3-desc": "Generate offers in English or Bangla to connect with your target audience effectively.",
+                
+                // Modal
+                "modal-title": "Unlock Unlimited Power",
+                "modal-description": "You've exhausted your free trial. Upgrade to premium for unlimited access to our AI-powered offer generator.",
+                "benefits-title": "Premium Benefits",
+                "benefit-1-title": "Unlimited Offer Generation",
+                "benefit-1-desc": "Create as many high-converting offers as you need, anytime.",
+                "benefit-2-title": "Advanced Analytics",
+                "benefit-2-desc": "Track performance and optimize your offers with detailed insights.",
+                "benefit-3-title": "Priority Support",
+                "benefit-3-desc": "Get fast responses from our expert team whenever you need help.",
+                "benefit-4-title": "Exclusive Templates",
+                "benefit-4-desc": "Access premium offer templates proven to convert at higher rates.",
+                "get-premium-title": "Get Premium Access",
+                "crypto-title": "Crypto Payment",
+                "crypto-desc": "Send exactly",
+                "crypto-note": "After payment, contact us with your transaction ID to get manual access.",
+                "payment-btn-text": "I've Made Payment",
+                "unlock-code-title": "Unlock Code",
+                "unlock-code-desc": "Enter your premium unlock code below:",
+                "unlock-btn-text": "Unlock Premium",
+                "support-text": "Need assistance? Contact our premium support at",
+                
+                // Footer
+                "footer-title": "Dopamine-Driven Offer Generator",
+                "footer-tagline": "Creating irresistible offers through AI and psychology.",
+                "privacy-link": "Privacy Policy",
+                "terms-link": "Terms of Service",
+                "contact-link": "Contact",
+                "copyright": "© 2023 Dopamine-Driven Offer Generator. All rights reserved."
+            },
+            bn: {
+                // Hero Section
+                "hero-title-1": "ডোপামিন-চালিত",
+                "hero-title-2": "অফার জেনারেটর",
+                "hero-description": "AI-চালিত, মনোবিজ্ঞান-ভিত্তিক কপি দিয়ে আপনার পণ্যকে অপ্রতিরোধ্য অফারে রূপান্তর করুন যা রূপান্তরিত করে।",
+                "cta-button": "এখনই অফার তৈরি করুন",
+                "free-uses-text": "বিনামূল্যে ব্যবহার বাকি:",
+                
+                // Generator Section
+                "generator-title": "AI অফার জেনারেটর",
+                "generator-description": "সেকেন্ডের মধ্যে আপনার পণ্য এবং শ্রোতাদের জন্য উপযুক্ত উচ্চ-রূপান্তর অফার তৈরি করুন।",
+                "product-label": "পণ্য/সেবার নাম",
+                "audience-label": "লক্ষ্য শ্রোতা",
+                "description-label": "পণ্যের বিবরণ",
+                "usp-label": "অনন্য বিক্রয় পয়েন্ট (USP)",
+                "generate-btn-text": "অফার তৈরি করুন",
+                "loading-text": "আপনার ডোপামিন-চালিত অফার তৈরি করা হচ্ছে...",
+                "output-title": "আপনার তৈরি অফারসমূহ",
+                "language-text": "ভাষা:",
+                "score-1-text": "জয়ের স্কোর:",
+                "score-2-text": "জয়ের স্কোর:",
+                "score-3-text": "জয়ের স্কোর:",
+                "copy-btn-text-1": "অফার কপি করুন",
+                "copy-btn-text-2": "অফার কপি করুন",
+                "copy-btn-text-3": "অফার কপি করুন",
+                "output-note": "প্রতিটি অফার রূপান্তর সর্বাধিক করতে মনস্তাত্ত্বিক ট্রিগার দিয়ে ডিজাইন করা হয়েছে। জয়ের স্কোর বাজারের পারফরম্যান্স ডেটার উপর ভিত্তি করে।",
+                
+                // Features
+                "feature-1-title": "মনোবিজ্ঞান-ভিত্তিক",
+                "feature-1-desc": "আমাদের AI প্রমাণিত মনস্তাত্ত্বিক নীতিগুলি ব্যবহার করে যা ডোপামিন প্রতিক্রিয়া ট্রিগার করে এমন অফার তৈরি করে।",
+                "feature-2-title": "বাজার-যাচাইকৃত",
+                "feature-2-desc": "প্রতিটি অফার আসল বাজার পারফরম্যান্স ডেটার উপর ভিত্তি করে একটি জয়ের স্কোর নিয়ে আসে।",
+                "feature-3-title": "বহুভাষিক",
+                "feature-3-desc": "আপনার লক্ষ্য শ্রোতাদের সাথে কার্যকরভাবে সংযোগ করতে ইংরেজি বা বাংলায় অফার তৈরি করুন।",
+                
+                // Modal
+                "modal-title": "সীমাহীন শক্তি আনলক করুন",
+                "modal-description": "আপনি আপনার বিনামূল্যে ট্রায়াল শেষ করেছেন। আমাদের AI-চালিত অফার জেনারেটরে সীমাহীন অ্যাক্সেসের জন্য প্রিমিয়ামে আপগ্রেড করুন।",
+                "benefits-title": "প্রিমিয়াম সুবিধা",
+                "benefit-1-title": "সীমাহীন অফার জেনারেশন",
+                "benefit-1-desc": "আপনার প্রয়োজন মতো যতগুলি উচ্চ-রূপান্তর অফার তৈরি করুন, যেকোনো সময়।",
+                "benefit-2-title": "উন্নত বিশ্লেষণ",
+                "benefit-2-desc": "বিস্তারিত অন্তর্দৃষ্টি দিয়ে পারফরম্যান্স ট্র্যাক করুন এবং আপনার অফারগুলি অপ্টিমাইজ করুন।",
+                "benefit-3-title": "অগ্রাধিকার সমর্থন",
+                "benefit-3-desc": "আপনার যখনই সাহায্যের প্রয়োজন হবে আমাদের বিশেষজ্ঞ দল থেকে দ্রুত প্রতিক্রিয়া পান।",
+                "benefit-4-title": "একচেটিয়া টেমপ্লেট",
+                "benefit-4-desc": "উচ্চতর হারে রূপান্তরিত হওয়া প্রমাণিত প্রিমিয়াম অফার টেমপ্লেটে অ্যাক্সেস পান।",
+                "get-premium-title": "প্রিমিয়াম অ্যাক্সেস পান",
+                "crypto-title": "ক্রিপ্টো পেমেন্ট",
+                "crypto-desc": "ঠিক পাঠান",
+                "crypto-note": "পেমেন্টের পরে, ম্যানুয়াল অ্যাক্সেস পেতে আপনার লেনদেন আইডি নিয়ে আমাদের সাথে যোগাযোগ করুন।",
+                "payment-btn-text": "আমি পেমেন্ট করেছি",
+                "unlock-code-title": "আনলক কোড",
+                "unlock-code-desc": "নিচে আপনার প্রিমিয়াম আনলক কোড লিখুন:",
+                "unlock-btn-text": "প্রিমিয়াম আনলক করুন",
+                "support-text": "সাহায্য প্রয়োজন? আমাদের প্রিমিয়াম সাপোর্টে যোগাযোগ করুন",
+                
+                // Footer
+                "footer-title": "ডোপামিন-চালিত অফার জেনারেটর",
+                "footer-tagline": "AI এবং মনোবিজ্ঞানের মাধ্যমে অপ্রতিরোধ্য অফার তৈরি করা।",
+                "privacy-link": "গোপনীয়তা নীতি",
+                "terms-link": "সেবার শর্তাবলী",
+                "contact-link": "যোগাযোগ",
+                "copyright": "© 2023 ডোপামিন-চালিত অফার জেনারেটর। সমস্ত অধিকার সংরক্ষিত।"
+            }
+        };
+
         // Check for URL parameters on page load
         function checkURLForUnlockCode() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -769,9 +899,44 @@
             const months = urlParams.get('months') || 12;
             
             if (unlockCode) {
-                // Validate the unlock code
-                if (unlockCode === '778432') {
+                // Check if this is a valid admin-generated code
+                const adminCodes = JSON.parse(localStorage.getItem('adminCodes') || '[]');
+                const codeData = adminCodes.find(code => code.code === unlockCode);
+                
+                if (codeData) {
                     // Get current user data
+                    const userData = initializeUsageTracking();
+                    
+                    // Check if code is for this user or any user
+                    if (codeData.userId === 'any' || codeData.userId === userData.visitorId || !codeData.userId) {
+                        // Check if code is already used
+                        if (!codeData.used) {
+                            // Mark code as used
+                            codeData.used = true;
+                            codeData.usedAt = new Date().toISOString();
+                            codeData.usedBy = userData.visitorId;
+                            localStorage.setItem('adminCodes', JSON.stringify(adminCodes));
+                            
+                            // Grant premium access
+                            const subscriptionMonths = codeData.months === 'lifetime' ? 1200 : parseInt(codeData.months || months);
+                            setSubscriptionData(userData.visitorId, true, subscriptionMonths);
+                            
+                            // Show success message
+                            showToast('Premium access activated successfully!', 'success');
+                            
+                            // Update usage display
+                            updateUsageDisplay();
+                            
+                            // Remove the unlock parameters from URL without refreshing
+                            removeUnlockParamsFromURL();
+                        } else {
+                            showToast('This code has already been used.', 'error');
+                        }
+                    } else {
+                        showToast('This code is not valid for your account.', 'error');
+                    }
+                } else if (unlockCode === '778432') {
+                    // Fallback to the original hardcoded code for backward compatibility
                     const userData = initializeUsageTracking();
                     
                     // If specific user ID is provided, verify it matches
@@ -787,11 +952,6 @@
                         
                         // Remove the unlock parameters from URL without refreshing
                         removeUnlockParamsFromURL();
-                        
-                        // Close modal if open
-                        const subscriptionModal = document.getElementById('subscription-modal');
-                        subscriptionModal.classList.add('hidden');
-                        document.body.style.overflow = 'auto';
                     } else {
                         showToast('User ID does not match. Please use the correct activation link.', 'error');
                     }
@@ -839,8 +999,7 @@
             const cryptoAddress = document.getElementById('crypto-address');
             const paymentMadeBtn = document.getElementById('payment-made-btn');
             
-            let currentLanguage = 'english';
-            const UNLOCK_CODE = '778432';
+            let currentLanguage = 'en';
             
             // Initialize usage tracking
             function initializeUsageTracking() {
@@ -922,12 +1081,30 @@
                 }
             ];
             
+            // Translation function
+            function translatePage(language) {
+                const elements = document.querySelectorAll('[id]');
+                elements.forEach(element => {
+                    const key = element.id;
+                    if (translations[language] && translations[language][key]) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.placeholder = translations[language][key];
+                        } else {
+                            element.textContent = translations[language][key];
+                        }
+                    }
+                });
+                
+                // Update current language display
+                currentLanguageSpan.textContent = language === 'en' ? 'English' : 'Bangla';
+            }
+            
             // Language switching
             englishBtn.addEventListener('click', function() {
-                currentLanguage = 'english';
+                currentLanguage = 'en';
                 englishBtn.classList.add('active');
                 banglaBtn.classList.remove('active');
-                currentLanguageSpan.textContent = 'English';
+                translatePage('en');
                 
                 // Update offers if they're already generated
                 if (outputSection.classList.contains('hidden') === false) {
@@ -936,10 +1113,10 @@
             });
             
             banglaBtn.addEventListener('click', function() {
-                currentLanguage = 'bangla';
+                currentLanguage = 'bn';
                 banglaBtn.classList.add('active');
                 englishBtn.classList.remove('active');
-                currentLanguageSpan.textContent = 'Bangla';
+                translatePage('bn');
                 
                 // Update offers if they're already generated
                 if (outputSection.classList.contains('hidden') === false) {
@@ -965,7 +1142,9 @@
                 
                 // Validate form
                 if (!productName || !productDescription || !targetAudience || !usp) {
-                    alert('Please fill in all fields before generating offers.');
+                    alert(currentLanguage === 'en' 
+                        ? 'Please fill in all fields before generating offers.'
+                        : 'অফার তৈরি করার আগে সমস্ত ফিল্ড পূরণ করুন।');
                     return;
                 }
                 
@@ -1017,7 +1196,7 @@
                 const textToCopy = '2363264';
                 navigator.clipboard.writeText(textToCopy).then(() => {
                     const originalText = cryptoAddress.innerHTML;
-                    cryptoAddress.innerHTML = 'Copied! <i class="fas fa-check copy-icon"></i>';
+                    cryptoAddress.innerHTML = (currentLanguage === 'en' ? 'Copied!' : 'কপি হয়েছে!') + ' <i class="fas fa-check copy-icon"></i>';
                     
                     setTimeout(() => {
                         cryptoAddress.innerHTML = originalText;
@@ -1027,21 +1206,66 @@
             
             // Payment made button
             paymentMadeBtn.addEventListener('click', function() {
-                alert('Thank you for your payment! Please contact us with your transaction ID at support@dopamineoffers.com to activate your premium access.');
+                alert(currentLanguage === 'en'
+                    ? 'Thank you for your payment! Please contact us with your transaction ID at support@dopamineoffers.com to activate your premium access.'
+                    : 'আপনার পেমেন্টের জন্য ধন্যবাদ! আপনার প্রিমিয়াম অ্যাক্সেস সক্রিয় করতে support@dopamineoffers.com এ আপনার লেনদেন আইডি নিয়ে আমাদের সাথে যোগাযোগ করুন।');
             });
             
             // Unlock code submission
             submitCodeBtn.addEventListener('click', function() {
                 const enteredCode = unlockCodeInput.value.trim();
                 
-                if (enteredCode === UNLOCK_CODE) {
-                    // Grant unlimited access
+                // Check admin codes first
+                const adminCodes = JSON.parse(localStorage.getItem('adminCodes') || '[]');
+                const codeData = adminCodes.find(code => code.code === enteredCode);
+                
+                if (codeData) {
+                    // Check if code is already used
+                    if (!codeData.used) {
+                        // Mark code as used
+                        codeData.used = true;
+                        codeData.usedAt = new Date().toISOString();
+                        codeData.usedBy = userData.visitorId;
+                        localStorage.setItem('adminCodes', JSON.stringify(adminCodes));
+                        
+                        // Grant premium access
+                        const subscriptionMonths = codeData.months === 'lifetime' ? 1200 : parseInt(codeData.months || 12);
+                        setSubscriptionData(userData.visitorId, true, subscriptionMonths);
+                        userData.hasUnlimitedAccess = true;
+                        
+                        // Show success message
+                        codeMessage.textContent = currentLanguage === 'en'
+                            ? `Success! Premium access unlocked for ${codeData.months === 'lifetime' ? 'lifetime' : codeData.months + ' months'}!`
+                            : `সফল! প্রিমিয়াম অ্যাক্সেস আনলক করা হয়েছে ${codeData.months === 'lifetime' ? 'আজীবনের জন্য' : codeData.months + ' মাসের জন্য'}!`;
+                        codeMessage.className = 'text-sm mt-2 text-center text-green-400';
+                        codeMessage.classList.remove('hidden');
+                        
+                        // Update usage display
+                        updateUsageDisplay();
+                        
+                        // Close modal after delay
+                        setTimeout(() => {
+                            subscriptionModal.classList.add('hidden');
+                            document.body.style.overflow = 'auto';
+                        }, 2000);
+                    } else {
+                        // Show error message
+                        codeMessage.textContent = currentLanguage === 'en'
+                            ? 'This code has already been used.'
+                            : 'এই কোডটি ইতিমধ্যে ব্যবহার করা হয়েছে।';
+                        codeMessage.className = 'text-sm mt-2 text-center text-red-400';
+                        codeMessage.classList.remove('hidden');
+                    }
+                } else if (enteredCode === '778432') {
+                    // Fallback to original code
                     const userData = initializeUsageTracking();
                     setSubscriptionData(userData.visitorId, true, 12);
                     userData.hasUnlimitedAccess = true;
                     
                     // Show success message
-                    codeMessage.textContent = 'Success! Premium access unlocked for 12 months!';
+                    codeMessage.textContent = currentLanguage === 'en'
+                        ? 'Success! Premium access unlocked for 12 months!'
+                        : 'সফল! প্রিমিয়াম অ্যাক্সেস 12 মাসের জন্য আনলক করা হয়েছে!';
                     codeMessage.className = 'text-sm mt-2 text-center text-green-400';
                     codeMessage.classList.remove('hidden');
                     
@@ -1055,7 +1279,9 @@
                     }, 2000);
                 } else {
                     // Show error message
-                    codeMessage.textContent = 'Invalid code. Please try again.';
+                    codeMessage.textContent = currentLanguage === 'en'
+                        ? 'Invalid code. Please try again.'
+                        : 'অবৈধ কোড। আবার চেষ্টা করুন।';
                     codeMessage.className = 'text-sm mt-2 text-center text-red-400';
                     codeMessage.classList.remove('hidden');
                 }
@@ -1072,7 +1298,7 @@
             // Function to update usage display
             function updateUsageDisplay() {
                 if (userData.hasUnlimitedAccess) {
-                    freeUsesSpan.textContent = 'Unlimited';
+                    freeUsesSpan.textContent = currentLanguage === 'en' ? 'Unlimited' : 'সীমাহীন';
                     freeUsesSpan.parentElement.classList.add('bg-green-500');
                 } else {
                     const remainingUses = 3 - userData.usageCount;
@@ -1088,15 +1314,15 @@
             
             // Function to update offers based on language and form data
             function updateOffers(productName = '', productDescription = '', targetAudience = '', usp = '') {
-                const offers = currentLanguage === 'english' ? englishOffers : banglaOffers;
+                const offers = currentLanguage === 'en' ? englishOffers : banglaOffers;
                 
                 offers.forEach((offer, index) => {
                     const offerElement = document.getElementById(`offer-output-${index + 1}`);
                     
                     // Replace placeholders with actual values
                     let finalOffer = offer.text
-                        .replace('[Product Name]', productName || 'Your Product')
-                        .replace('[Target Audience]', targetAudience || 'Your Audience')
+                        .replace('[Product Name]', productName || (currentLanguage === 'en' ? 'Your Product' : 'আপনার পণ্য'))
+                        .replace('[Target Audience]', targetAudience || (currentLanguage === 'en' ? 'Your Audience' : 'আপনার শ্রোতা'))
                         .replace('[Key Benefit]', getKeyBenefit(usp))
                         .replace('[Pain Point]', getPainPoint(productDescription))
                         .replace('[Discount]', getDiscount())
@@ -1122,7 +1348,8 @@
                     navigator.clipboard.writeText(textToCopy).then(() => {
                         const originalText = this.innerHTML;
                         this.classList.add('copied');
-                        this.innerHTML = '<i class="fas fa-check mr-2"></i><span>Copied!</span>';
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i><span>' + 
+                            (currentLanguage === 'en' ? 'Copied!' : 'কপি হয়েছে!') + '</span>';
                         
                         setTimeout(() => {
                             this.classList.remove('copied');
@@ -1134,21 +1361,21 @@
             
             // Helper functions for placeholder replacement
             function getKeyBenefit(usp) {
-                if (!usp) return 'exceptional results';
+                if (!usp) return currentLanguage === 'en' ? 'exceptional results' : 'ব্যতিক্রমী ফলাফল';
                 return usp.split(',')[0] || usp;
             }
             
             function getPainPoint(description) {
-                if (!description) return 'common problems';
+                if (!description) return currentLanguage === 'en' ? 'common problems' : 'সাধারণ সমস্যা';
                 
                 if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return 'lack of energy or motivation';
+                    return currentLanguage === 'en' ? 'lack of energy or motivation' : 'শক্তি বা অনুপ্রেরণার অভাব';
                 } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return 'wasting time on inefficient tasks';
+                    return currentLanguage === 'en' ? 'wasting time on inefficient tasks' : 'অদক্ষ কাজে সময় নষ্ট করা';
                 } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return 'financial stress and uncertainty';
+                    return currentLanguage === 'en' ? 'financial stress and uncertainty' : 'আর্থিক চাপ এবং অনিশ্চয়তা';
                 } else {
-                    return 'common challenges';
+                    return currentLanguage === 'en' ? 'common challenges' : 'সাধারণ চ্যালেঞ্জ';
                 }
             }
             
@@ -1158,10 +1385,15 @@
             }
             
             function getTimeLimit() {
-                const timeLimits = [
+                const timeLimitsEn = [
                     '24 hours', '48 hours', '3 days', 'this week only', 
                     'the next 72 hours'
                 ];
+                const timeLimitsBn = [
+                    '24 ঘন্টা', '48 ঘন্টা', '3 দিন', 'শুধু এই সপ্তাহে', 
+                    'পরবর্তী 72 ঘন্টা'
+                ];
+                const timeLimits = currentLanguage === 'en' ? timeLimitsEn : timeLimitsBn;
                 return timeLimits[Math.floor(Math.random() * timeLimits.length)];
             }
             
@@ -1171,46 +1403,56 @@
             
             function getArea(description) {
                 if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return 'health and fitness';
+                    return currentLanguage === 'en' ? 'health and fitness' : 'স্বাস্থ্য এবং ফিটনেস';
                 } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return 'business productivity';
+                    return currentLanguage === 'en' ? 'business productivity' : 'ব্যবসায়িক উৎপাদনশীলতা';
                 } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return 'financial situation';
+                    return currentLanguage === 'en' ? 'financial situation' : 'আর্থিক অবস্থা';
                 } else {
-                    return 'lives';
+                    return currentLanguage === 'en' ? 'lives' : 'জীবন';
                 }
             }
             
             function getTimeFrame() {
-                const timeFrames = [
+                const timeFramesEn = [
                     '30 days', '2 weeks', '7 days', '90 days', 
                     'just 5 minutes a day'
                 ];
+                const timeFramesBn = [
+                    '30 দিন', '2 সপ্তাহ', '7 দিন', '90 দিন', 
+                    'দিনে মাত্র 5 মিনিট'
+                ];
+                const timeFrames = currentLanguage === 'en' ? timeFramesEn : timeFramesBn;
                 return timeFrames[Math.floor(Math.random() * timeFrames.length)];
             }
             
             function getBonus(description) {
                 if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return 'a personalized workout plan';
+                    return currentLanguage === 'en' ? 'a personalized workout plan' : 'একটি ব্যক্তিগতকৃত ওয়ার্কআউট প্ল্যান';
                 } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return 'a productivity toolkit';
+                    return currentLanguage === 'en' ? 'a productivity toolkit' : 'একটি উৎপাদনশীলতা টুলকিট';
                 } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return 'a financial planning guide';
+                    return currentLanguage === 'en' ? 'a financial planning guide' : 'একটি আর্থিক পরিকল্পনা গাইড';
                 } else {
-                    return 'an exclusive bonus';
+                    return currentLanguage === 'en' ? 'an exclusive bonus' : 'একটি একচেটিয়া বোনাস';
                 }
             }
             
             function getSpecialFeature(usp) {
-                if (!usp) return 'advanced features';
+                if (!usp) return currentLanguage === 'en' ? 'advanced features' : 'উন্নত বৈশিষ্ট্য';
                 return usp.split(',')[0] || usp;
             }
             
             function getAdditionalPerk() {
-                const perks = [
+                const perksEn = [
                     'priority support', 'lifetime updates', 'community access', 
                     'one-on-one consultation'
                 ];
+                const perksBn = [
+                    'অগ্রাধিকার সমর্থন', 'আজীবন আপডেট', 'কমিউনিটি অ্যাক্সেস', 
+                    'এক-এক পরামর্শ'
+                ];
+                const perks = currentLanguage === 'en' ? perksEn : perksBn;
                 return perks[Math.floor(Math.random() * perks.length)];
             }
             
