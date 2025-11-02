@@ -139,6 +139,42 @@
             text-align: center;
         }
         
+        .activation-link {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin: 10px 0;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background-color: #10b981;
+        }
+        
+        .toast.error {
+            background-color: #ef4444;
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -273,7 +309,7 @@
             <div class="bg-white rounded-xl p-6 card-shadow mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-slate-800">Recent Activity</h2>
-                    <button class="text-primary text-sm font-medium">View All</button>
+                    <button class="text-primary text-sm font-medium" id="view-all-activity">View All</button>
                 </div>
                 
                 <div class="space-y-4" id="recent-activity">
@@ -383,7 +419,7 @@
                     <div class="mb-6">
                         <label for="user-id" class="block text-base font-medium mb-2 text-slate-700">User ID</label>
                         <input type="text" id="user-id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter user ID (e.g., user_123456789)">
-                        <p class="text-sm text-slate-500 mt-1">Find user IDs in the Subscriptions section</p>
+                        <p class="text-sm text-slate-500 mt-1">Find user IDs in the Subscriptions section or ask user to check their browser console for their ID</p>
                     </div>
                     
                     <div class="mb-6">
@@ -392,20 +428,41 @@
                             <option value="1">1 Month</option>
                             <option value="3">3 Months</option>
                             <option value="6">6 Months</option>
-                            <option value="12">12 Months</option>
+                            <option value="12" selected>12 Months</option>
                             <option value="24">24 Months (2 Years)</option>
                             <option value="lifetime">Lifetime</option>
                         </select>
                     </div>
                     
                     <div class="mb-6">
-                        <label for="payment-amount" class="block text-base font-medium mb-2 text-slate-700">Payment Amount (Optional)</label>
-                        <input type="number" id="payment-amount" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter payment amount in USD">
+                        <label for="main-site-url" class="block text-base font-medium mb-2 text-slate-700">Main Website URL</label>
+                        <input type="url" id="main-site-url" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="https://your-main-website.com" value="">
+                        <p class="text-sm text-slate-500 mt-1">Enter the URL of your main Dopamine Offer Generator website</p>
                     </div>
                     
                     <div class="mb-6">
-                        <label for="notes" class="block text-base font-medium mb-2 text-slate-700">Notes (Optional)</label>
-                        <textarea id="notes" rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Add any notes about this subscription..."></textarea>
+                        <label class="block text-base font-medium mb-2 text-slate-700">Activation Method</label>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center">
+                                <input type="radio" name="activation-method" value="direct" class="mr-2" checked>
+                                <span>Direct Activation (No user action needed)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="activation-method" value="link">
+                                <span>Generate Activation Link</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="activation-link-section" class="hidden mb-6">
+                        <label class="block text-base font-medium mb-2 text-slate-700">Activation Link</label>
+                        <div class="activation-link bg-slate-50 border border-slate-200 rounded-lg p-3">
+                            <div id="generated-link" class="text-sm break-all mb-2"></div>
+                            <button type="button" id="copy-link" class="btn-primary text-sm">
+                                <i class="fas fa-copy mr-1"></i> Copy Link
+                            </button>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-1">Share this link with the user. When they visit it, premium will be activated automatically.</p>
                     </div>
                     
                     <div class="flex gap-4">
@@ -501,10 +558,10 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed top-4 right-4 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+    <div id="toast" class="toast hidden">
         <div class="flex items-center">
-            <i class="fas fa-check-circle text-green-400 mr-2"></i>
-            <span id="toast-message">Operation completed successfully</span>
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="toast-message">Success!</span>
         </div>
     </div>
 
@@ -526,8 +583,17 @@
             const saveSettingsBtn = document.getElementById('save-settings');
             const clearAllDataBtn = document.getElementById('clear-all-data');
             const resetSettingsBtn = document.getElementById('reset-settings');
+            const activationMethodRadios = document.querySelectorAll('input[name="activation-method"]');
+            const activationLinkSection = document.getElementById('activation-link-section');
+            const generatedLink = document.getElementById('generated-link');
+            const copyLinkBtn = document.getElementById('copy-link');
+            const mainSiteUrlInput = document.getElementById('main-site-url');
+            const viewAllActivityBtn = document.getElementById('view-all-activity');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
+            
+            // Unlock code for activation links
+            const UNLOCK_CODE = '778432';
             
             // Navigation
             sidebarLinks.forEach(link => {
@@ -549,9 +615,36 @@
                 });
             });
             
-            // Initialize dashboard
-            updateDashboardStats();
-            loadSubscriptionsTable();
+            // Activation method toggle
+            activationMethodRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'link') {
+                        activationLinkSection.classList.remove('hidden');
+                        generateActivationLink();
+                    } else {
+                        activationLinkSection.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Generate activation link when inputs change
+            document.getElementById('user-id').addEventListener('input', generateActivationLink);
+            document.getElementById('subscription-months').addEventListener('change', generateActivationLink);
+            mainSiteUrlInput.addEventListener('input', generateActivationLink);
+            
+            // Copy link button
+            copyLinkBtn.addEventListener('click', function() {
+                const link = generatedLink.textContent;
+                navigator.clipboard.writeText(link).then(() => {
+                    showToast('Activation link copied to clipboard');
+                });
+            });
+            
+            // Form submission
+            addSubscriptionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addSubscription();
+            });
             
             // Event Listeners
             refreshDataBtn.addEventListener('click', function() {
@@ -597,11 +690,6 @@
                 });
             });
             
-            addSubscriptionForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                addSubscription();
-            });
-            
             searchUsersInput.addEventListener('input', function() {
                 filterSubscriptions();
             });
@@ -624,6 +712,10 @@
                 if (confirm('Are you sure you want to reset all settings to default?')) {
                     resetSettings();
                 }
+            });
+            
+            viewAllActivityBtn.addEventListener('click', function() {
+                showAllActivity();
             });
             
             // Functions
@@ -829,68 +921,79 @@
                 });
             }
             
+            function generateActivationLink() {
+                const userId = document.getElementById('user-id').value;
+                const months = document.getElementById('subscription-months').value;
+                const mainSiteUrl = mainSiteUrlInput.value;
+                
+                if (userId && mainSiteUrl) {
+                    const activationLink = `${mainSiteUrl}?unlock=${UNLOCK_CODE}&user=${userId}&months=${months}`;
+                    generatedLink.textContent = activationLink;
+                } else {
+                    generatedLink.textContent = 'Please fill in User ID and Main Website URL';
+                }
+            }
+            
             function addSubscription() {
                 const userId = document.getElementById('user-id').value.trim();
                 const months = document.getElementById('subscription-months').value;
-                const amount = document.getElementById('payment-amount').value;
-                const notes = document.getElementById('notes').value;
+                const activationMethod = document.querySelector('input[name="activation-method"]:checked').value;
+                const mainSiteUrl = mainSiteUrlInput.value;
                 
                 if (!userId) {
                     alert('Please enter a valid User ID');
                     return;
                 }
                 
-                // Get existing subscriptions
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                
-                // Calculate expiry date
-                let expiryDate;
-                if (months === 'lifetime') {
-                    // Set expiry to 10 years from now (practically lifetime)
-                    expiryDate = new Date();
-                    expiryDate.setFullYear(expiryDate.getFullYear() + 10);
-                } else {
-                    expiryDate = new Date();
-                    expiryDate.setMonth(expiryDate.getMonth() + parseInt(months));
+                if (!mainSiteUrl) {
+                    alert('Please enter the Main Website URL');
+                    return;
                 }
                 
-                // Update subscription
-                subscriptions[userId] = {
-                    active: true,
-                    expiry: expiryDate.toISOString()
-                };
-                
-                // Save to localStorage
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                
-                // Record payment if amount provided
-                if (amount) {
-                    const payments = JSON.parse(localStorage.getItem('payments') || '{}');
-                    payments[userId] = {
-                        amount: parseFloat(amount),
-                        date: new Date().toISOString(),
-                        notes: notes
+                if (activationMethod === 'direct') {
+                    // Direct activation - we'll simulate this by updating localStorage
+                    const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                    
+                    // Calculate expiry date
+                    let expiryDate;
+                    if (months === 'lifetime') {
+                        expiryDate = new Date();
+                        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
+                    } else {
+                        expiryDate = new Date();
+                        expiryDate.setMonth(expiryDate.getMonth() + parseInt(months));
+                    }
+                    
+                    // Update subscription
+                    subscriptions[userId] = {
+                        active: true,
+                        expiry: expiryDate.toISOString()
                     };
-                    localStorage.setItem('payments', JSON.stringify(payments));
+                    
+                    // Save to localStorage
+                    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                    
+                    // Ensure user exists in usageCounts
+                    const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                    if (!usageCounts[userId]) {
+                        usageCounts[userId] = 0;
+                        localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
+                    }
+                    
+                    // Log activity
+                    logActivity('subscription_added', `Added ${months === 'lifetime' ? 'lifetime' : months + ' month'} subscription for ${userId}`);
+                    
+                    showToast(`Direct subscription added for ${userId}`);
+                } else {
+                    // Link method - just show success message
+                    showToast(`Activation link generated for ${userId}. Share it with the user.`);
+                    
+                    // Log activity
+                    logActivity('activation_link_generated', `Generated activation link for ${userId}`);
                 }
                 
-                // Ensure user exists in usageCounts
-                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                if (!usageCounts[userId]) {
-                    usageCounts[userId] = 0;
-                    localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
-                }
-                
-                // Log activity
-                logActivity('subscription_added', `Added ${months === 'lifetime' ? 'lifetime' : months + ' month'} subscription for ${userId}`);
-                
-                // Reset form and show success
-                document.getElementById('add-subscription-form').reset();
-                showToast(`Subscription added for ${userId}`);
-                
-                // Update UI
-                updateDashboardStats();
-                loadSubscriptionsTable();
+                // Reset form
+                addSubscriptionForm.reset();
                 
                 // Navigate back to subscriptions
                 sidebarLinks.forEach(l => l.classList.remove('active'));
@@ -901,6 +1004,10 @@
                         section.classList.remove('hidden');
                     }
                 });
+                
+                // Update UI
+                updateDashboardStats();
+                loadSubscriptionsTable();
             }
             
             function editSubscription(userId) {
@@ -1054,6 +1161,22 @@
                 showToast('Settings reset to default values');
             }
             
+            function showAllActivity() {
+                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
+                
+                if (activityLog.length === 0) {
+                    alert('No activity data available.');
+                    return;
+                }
+                
+                let activityText = "All Activity:\n\n";
+                activityLog.forEach(activity => {
+                    activityText += `${formatDate(activity.timestamp)} - ${activity.message}\n`;
+                });
+                
+                alert(activityText);
+            }
+            
             function logActivity(type, message) {
                 const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
                 
@@ -1071,13 +1194,13 @@
                 localStorage.setItem('activityLog', JSON.stringify(activityLog));
             }
             
-            function showToast(message) {
+            function showToast(message, type = 'success') {
                 toastMessage.textContent = message;
-                toast.classList.remove('translate-x-full');
+                toast.className = `toast ${type} show`;
                 
                 setTimeout(() => {
-                    toast.classList.add('translate-x-full');
-                }, 3000);
+                    toast.classList.remove('show');
+                }, 5000);
             }
             
             function formatDate(dateString) {
@@ -1085,7 +1208,9 @@
                 return date.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'short',
-                    day: 'numeric'
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                 });
             }
             
@@ -1106,7 +1231,9 @@
                 }
             }
             
-            // Initialize settings
+            // Initialize dashboard and settings
+            updateDashboardStats();
+            loadSubscriptionsTable();
             loadSettings();
         });
     </script>
