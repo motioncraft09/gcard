@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Subscription Management</title>
+    <title>Admin Dashboard - Dopamine Offer Generator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,507 +31,1083 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+        .sidebar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            transition: all 0.3s;
+        }
+        
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-            border-radius: 12px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
             transition: all 0.3s ease;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        .table-row {
+            transition: all 0.2s ease;
         }
         
         .table-row:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background-color: #f1f5f9;
         }
         
-        .status-active {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .active-subscription {
+            border-left: 4px solid #10b981;
         }
         
-        .status-expired {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .expired-subscription {
+            border-left: 4px solid #ef4444;
         }
         
-        .status-inactive {
-            background: rgba(148, 163, 184, 0.2);
-            color: #94a3b8;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .no-subscription {
+            border-left: 4px solid #6b7280;
+        }
+        
+        .btn-primary {
+            background-color: #7c3aed;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #6d28d9;
+        }
+        
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        
+        .sidebar-link {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            margin: 4px 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .link-text {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .sidebar-link {
+                justify-content: center;
+                padding: 16px 0;
+            }
+            
+            .sidebar-link i {
+                margin-right: 0;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen">
-    <!-- Login Screen -->
-    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="glass-card p-8 max-w-md w-full">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-white mb-2">Admin Access</h1>
-                <p class="text-slate-400">Enter your credentials to manage subscriptions</p>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-xl font-bold flex items-center">
+                <i class="fas fa-crown text-amber-400 mr-3"></i>
+                <span class="link-text">Admin Dashboard</span>
+            </h1>
+        </div>
+        
+        <div class="py-4">
+            <a href="#dashboard" class="sidebar-link active">
+                <i class="fas fa-chart-pie"></i>
+                <span class="link-text">Dashboard</span>
+            </a>
+            <a href="#subscriptions" class="sidebar-link">
+                <i class="fas fa-users"></i>
+                <span class="link-text">Subscriptions</span>
+            </a>
+            <a href="#add-subscription" class="sidebar-link">
+                <i class="fas fa-user-plus"></i>
+                <span class="link-text">Add Subscription</span>
+            </a>
+            <a href="#settings" class="sidebar-link">
+                <i class="fas fa-cog"></i>
+                <span class="link-text">Settings</span>
+            </a>
+        </div>
+        
+        <div class="absolute bottom-0 w-full p-4 border-t border-slate-700">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                    A
+                </div>
+                <div class="ml-3 link-text">
+                    <p class="font-medium">Admin User</p>
+                    <p class="text-sm text-slate-400">Super Admin</p>
+                </div>
             </div>
-            
-            <form id="login-form">
-                <div class="mb-6">
-                    <label for="username" class="block text-sm font-medium text-slate-300 mb-2">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="Enter username" required>
-                </div>
-                
-                <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-slate-300 mb-2">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="Enter password" required>
-                </div>
-                
-                <button type="submit" class="w-full py-3 btn-primary text-white font-medium rounded-lg">
-                    Sign In
-                </button>
-            </form>
-            
-            <p id="login-error" class="text-red-400 text-sm mt-4 text-center hidden">Invalid credentials. Please try again.</p>
         </div>
     </div>
     
-    <!-- Admin Dashboard -->
-    <div id="admin-dashboard" class="min-h-screen hidden">
-        <!-- Header -->
-        <header class="bg-slate-900 border-b border-slate-700 p-4">
-            <div class="container mx-auto flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-white">Subscription Manager</h1>
-                    <p class="text-slate-400">Admin Dashboard</p>
+    <!-- Main Content -->
+    <div class="main-content p-6">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
+                <p class="text-slate-600">Manage subscriptions for the Dopamine Offer Generator</p>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-500 text-sm">Total Users</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="total-users">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                            <i class="fas fa-users text-blue-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-4">All registered users</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-slate-300" id="admin-username"></span>
-                    <button id="logout-btn" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
-                        Logout
-                    </button>
+                
+                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-500 text-sm">Active Subscriptions</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="active-subscriptions">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-4">Currently active subscriptions</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-500 text-sm">Expired Subscriptions</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="expired-subscriptions">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                            <i class="fas fa-times-circle text-red-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-4">Subscriptions that have expired</p>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-500 text-sm">Revenue</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="revenue">$0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-purple-500 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-4">Total revenue from subscriptions</p>
                 </div>
             </div>
-        </header>
-        
-        <!-- Main Content -->
-        <main class="container mx-auto p-4">
-            <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="stat-card p-6 text-white">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-200 text-sm">Total Users</p>
-                            <h3 class="text-3xl font-bold mt-2" id="total-users">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                            <i class="fas fa-users text-xl"></i>
-                        </div>
-                    </div>
+            
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl p-6 card-shadow mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">Recent Activity</h2>
+                    <button class="text-primary text-sm font-medium">View All</button>
                 </div>
                 
-                <div class="stat-card p-6 text-white">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-200 text-sm">Active Subscriptions</p>
-                            <h3 class="text-3xl font-bold mt-2" id="active-subscriptions">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                            <i class="fas fa-crown text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6 text-white">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-200 text-sm">Expired Subscriptions</p>
-                            <h3 class="text-3xl font-bold mt-2" id="expired-subscriptions">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                            <i class="fas fa-clock text-xl"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="stat-card p-6 text-white">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-200 text-sm">Revenue</p>
-                            <h3 class="text-3xl font-bold mt-2" id="total-revenue">$0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                            <i class="fas fa-dollar-sign text-xl"></i>
-                        </div>
+                <div class="space-y-4" id="recent-activity">
+                    <!-- Activity items will be added here by JavaScript -->
+                    <div class="text-center py-8 text-slate-500">
+                        <i class="fas fa-history text-3xl mb-2"></i>
+                        <p>No recent activity</p>
                     </div>
                 </div>
             </div>
             
-            <!-- Actions -->
-            <div class="glass-card p-6 mb-8">
-                <h2 class="text-xl font-bold text-white mb-4">Subscription Actions</h2>
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-lg font-medium text-white mb-3">Add Subscription</h3>
-                        <div class="flex space-x-2">
-                            <input type="text" id="add-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
-                            <button id="add-subscription-btn" class="px-4 py-2 btn-primary text-white font-medium rounded-lg">
-                                Add 1 Month
-                            </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="refresh-data">
+                        <i class="fas fa-sync-alt text-primary text-xl mb-2"></i>
+                        <p class="font-medium">Refresh Data</p>
+                    </button>
+                    
+                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="export-data">
+                        <i class="fas fa-download text-green-500 text-xl mb-2"></i>
+                        <p class="font-medium">Export Data</p>
+                    </button>
+                    
+                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="clear-all">
+                        <i class="fas fa-trash-alt text-red-500 text-xl mb-2"></i>
+                        <p class="font-medium">Clear All Data</p>
+                    </button>
+                    
+                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="add-sample">
+                        <i class="fas fa-plus text-blue-500 text-xl mb-2"></i>
+                        <p class="font-medium">Add Sample Data</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Subscriptions Section -->
+        <section id="subscriptions" class="content-section hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Subscriptions</h1>
+                <p class="text-slate-600">Manage all user subscriptions</p>
+            </div>
+            
+            <!-- Filters and Search -->
+            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                        <div class="relative w-full md:w-64">
+                            <input type="text" id="search-users" placeholder="Search users..." class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <i class="fas fa-search absolute right-3 top-3 text-slate-400"></i>
                         </div>
-                        <p class="text-slate-400 text-sm mt-2">Add a 1-month subscription for the specified user</p>
+                        
+                        <select id="filter-status" class="w-full md:w-48 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="expired">Expired</option>
+                            <option value="none">No Subscription</option>
+                        </select>
                     </div>
                     
-                    <div>
-                        <h3 class="text-lg font-medium text-white mb-3">Remove Subscription</h3>
-                        <div class="flex space-x-2">
-                            <input type="text" id="remove-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
-                            <button id="remove-subscription-btn" class="px-4 py-2 btn-danger text-white font-medium rounded-lg">
-                                Remove
-                            </button>
-                        </div>
-                        <p class="text-slate-400 text-sm mt-2">Immediately remove subscription for the specified user</p>
-                    </div>
-                </div>
-                
-                <div class="mt-6">
-                    <h3 class="text-lg font-medium text-white mb-3">Check Subscription Status</h3>
-                    <div class="flex space-x-2">
-                        <input type="text" id="check-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
-                        <button id="check-status-btn" class="px-4 py-2 bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-600 transition-colors">
-                            Check Status
-                        </button>
-                    </div>
-                    <p id="status-result" class="text-slate-400 text-sm mt-2"></p>
+                    <button class="btn-primary w-full md:w-auto" id="add-subscription-btn">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Add Subscription
+                    </button>
                 </div>
             </div>
             
             <!-- Subscriptions Table -->
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-white">All Subscriptions</h2>
-                    <button id="refresh-btn" class="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors flex items-center">
-                        <i class="fas fa-sync-alt mr-2"></i>
-                        Refresh
-                    </button>
-                </div>
-                
+            <div class="bg-white rounded-xl card-shadow overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead>
-                            <tr class="border-b border-slate-700">
-                                <th class="text-left py-3 px-4 text-slate-400 font-medium">User ID</th>
-                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Status</th>
-                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Expiry Date</th>
-                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Days Left</th>
-                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Actions</th>
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">User ID</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Status</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Expiry Date</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Usage Count</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="subscriptions-table">
-                            <!-- Table rows will be populated by JavaScript -->
+                        <tbody id="subscriptions-table-body">
+                            <!-- Table rows will be added here by JavaScript -->
+                            <tr>
+                                <td colspan="5" class="py-8 text-center text-slate-500">
+                                    <i class="fas fa-users text-3xl mb-2"></i>
+                                    <p>No subscription data found</p>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <p id="no-subscriptions" class="text-center text-slate-500 py-8 hidden">No subscriptions found</p>
             </div>
-        </main>
+        </section>
+        
+        <!-- Add Subscription Section -->
+        <section id="add-subscription" class="content-section hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Add Subscription</h1>
+                <p class="text-slate-600">Manually add or extend a user subscription</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 card-shadow max-w-2xl">
+                <form id="add-subscription-form">
+                    <div class="mb-6">
+                        <label for="user-id" class="block text-base font-medium mb-2 text-slate-700">User ID</label>
+                        <input type="text" id="user-id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter user ID (e.g., user_123456789)">
+                        <p class="text-sm text-slate-500 mt-1">Find user IDs in the Subscriptions section</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="subscription-months" class="block text-base font-medium mb-2 text-slate-700">Subscription Duration</label>
+                        <select id="subscription-months" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="1">1 Month</option>
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">12 Months</option>
+                            <option value="24">24 Months (2 Years)</option>
+                            <option value="lifetime">Lifetime</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="payment-amount" class="block text-base font-medium mb-2 text-slate-700">Payment Amount (Optional)</label>
+                        <input type="number" id="payment-amount" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter payment amount in USD">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="notes" class="block text-base font-medium mb-2 text-slate-700">Notes (Optional)</label>
+                        <textarea id="notes" rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Add any notes about this subscription..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn-primary flex-1">
+                            <i class="fas fa-save mr-2"></i>
+                            Add Subscription
+                        </button>
+                        <button type="button" id="cancel-add" class="px-6 py-3 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Settings Section -->
+        <section id="settings" class="content-section hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Settings</h1>
+                <p class="text-slate-600">Configure admin dashboard settings</p>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 card-shadow max-w-2xl">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">General Settings</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
+                            <div>
+                                <p class="font-medium text-slate-800">Free Trial Uses</p>
+                                <p class="text-sm text-slate-500">Number of free uses before requiring subscription</p>
+                            </div>
+                            <input type="number" id="free-trial-uses" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3">
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
+                            <div>
+                                <p class="font-medium text-slate-800">Monthly Price</p>
+                                <p class="text-sm text-slate-500">Default monthly subscription price</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">$</span>
+                                <input type="number" id="monthly-price" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3">
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
+                            <div>
+                                <p class="font-medium text-slate-800">Unlock Code</p>
+                                <p class="text-sm text-slate-500">Code for manual premium activation</p>
+                            </div>
+                            <input type="text" id="unlock-code" class="w-32 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="778432">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800 mb-4">Danger Zone</h2>
+                    
+                    <div class="space-y-4 p-4 border border-red-200 rounded-lg bg-red-50">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-red-800">Clear All Data</p>
+                                <p class="text-sm text-red-600">Permanently delete all subscription data</p>
+                            </div>
+                            <button id="clear-all-data" class="btn-danger">
+                                <i class="fas fa-trash-alt mr-2"></i>
+                                Clear All
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-red-800">Reset to Default</p>
+                                <p class="text-sm text-red-600">Reset all settings to default values</p>
+                            </div>
+                            <button id="reset-settings" class="btn-danger">
+                                <i class="fas fa-undo mr-2"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button id="save-settings" class="btn-primary">
+                        <i class="fas fa-save mr-2"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </section>
     </div>
-    
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle text-green-400 mr-2"></i>
+            <span id="toast-message">Operation completed successfully</span>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Elements
-            const loginScreen = document.getElementById('login-screen');
-            const adminDashboard = document.getElementById('admin-dashboard');
-            const loginForm = document.getElementById('login-form');
-            const loginError = document.getElementById('login-error');
-            const logoutBtn = document.getElementById('logout-btn');
-            const adminUsername = document.getElementById('admin-username');
-            
-            // Stats elements
-            const totalUsers = document.getElementById('total-users');
-            const activeSubscriptions = document.getElementById('active-subscriptions');
-            const expiredSubscriptions = document.getElementById('expired-subscriptions');
-            const totalRevenue = document.getElementById('total-revenue');
-            
-            // Action elements
-            const addUserId = document.getElementById('add-user-id');
+            // DOM Elements
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const subscriptionsTableBody = document.getElementById('subscriptions-table-body');
+            const addSubscriptionForm = document.getElementById('add-subscription-form');
+            const searchUsersInput = document.getElementById('search-users');
+            const filterStatusSelect = document.getElementById('filter-status');
+            const refreshDataBtn = document.getElementById('refresh-data');
+            const exportDataBtn = document.getElementById('export-data');
+            const clearAllBtn = document.getElementById('clear-all');
+            const addSampleBtn = document.getElementById('add-sample');
             const addSubscriptionBtn = document.getElementById('add-subscription-btn');
-            const removeUserId = document.getElementById('remove-user-id');
-            const removeSubscriptionBtn = document.getElementById('remove-subscription-btn');
-            const checkUserId = document.getElementById('check-user-id');
-            const checkStatusBtn = document.getElementById('check-status-btn');
-            const statusResult = document.getElementById('status-result');
-            const refreshBtn = document.getElementById('refresh-btn');
+            const cancelAddBtn = document.getElementById('cancel-add');
+            const saveSettingsBtn = document.getElementById('save-settings');
+            const clearAllDataBtn = document.getElementById('clear-all-data');
+            const resetSettingsBtn = document.getElementById('reset-settings');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
             
-            // Table elements
-            const subscriptionsTable = document.getElementById('subscriptions-table');
-            const noSubscriptions = document.getElementById('no-subscriptions');
+            // Navigation
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active link
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    const target = this.getAttribute('href').substring(1);
+                    contentSections.forEach(section => {
+                        section.classList.add('hidden');
+                        if (section.id === target) {
+                            section.classList.remove('hidden');
+                        }
+                    });
+                });
+            });
             
-            // Admin credentials
-            const ADMIN_USERNAME = 'admin';
-            const ADMIN_PASSWORD = 'admin123';
+            // Initialize dashboard
+            updateDashboardStats();
+            loadSubscriptionsTable();
             
-            // Login functionality
-            loginForm.addEventListener('submit', function(e) {
+            // Event Listeners
+            refreshDataBtn.addEventListener('click', function() {
+                updateDashboardStats();
+                loadSubscriptionsTable();
+                showToast('Data refreshed successfully');
+            });
+            
+            exportDataBtn.addEventListener('click', function() {
+                exportData();
+            });
+            
+            clearAllBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                    clearAllData();
+                }
+            });
+            
+            addSampleBtn.addEventListener('click', function() {
+                addSampleData();
+            });
+            
+            addSubscriptionBtn.addEventListener('click', function() {
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('a[href="#add-subscription"]').classList.add('active');
+                contentSections.forEach(section => {
+                    section.classList.add('hidden');
+                    if (section.id === 'add-subscription') {
+                        section.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            cancelAddBtn.addEventListener('click', function() {
+                document.getElementById('add-subscription-form').reset();
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('a[href="#subscriptions"]').classList.add('active');
+                contentSections.forEach(section => {
+                    section.classList.add('hidden');
+                    if (section.id === 'subscriptions') {
+                        section.classList.remove('hidden');
+                    }
+                });
+            });
+            
+            addSubscriptionForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-                    // Successful login
-                    loginScreen.classList.add('hidden');
-                    adminDashboard.classList.remove('hidden');
-                    adminUsername.textContent = username;
-                    updateDashboard();
-                } else {
-                    // Failed login
-                    loginError.classList.remove('hidden');
+                addSubscription();
+            });
+            
+            searchUsersInput.addEventListener('input', function() {
+                filterSubscriptions();
+            });
+            
+            filterStatusSelect.addEventListener('change', function() {
+                filterSubscriptions();
+            });
+            
+            saveSettingsBtn.addEventListener('click', function() {
+                saveSettings();
+            });
+            
+            clearAllDataBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                    clearAllData();
                 }
             });
             
-            // Logout functionality
-            logoutBtn.addEventListener('click', function() {
-                adminDashboard.classList.add('hidden');
-                loginScreen.classList.remove('hidden');
-                loginForm.reset();
-                loginError.classList.add('hidden');
+            resetSettingsBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all settings to default?')) {
+                    resetSettings();
+                }
             });
             
-            // Subscription management functions
-            function getSubscriptions() {
-                return JSON.parse(localStorage.getItem('subscriptions') || '{}');
-            }
-            
-            function setSubscriptions(subscriptions) {
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-            }
-            
-            function setSubscriptionData(userId, active, months = 1) {
-                const subscriptions = getSubscriptions();
-                const expiry = new Date();
-                expiry.setMonth(expiry.getMonth() + months);
+            // Functions
+            function updateDashboardStats() {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
                 
-                subscriptions[userId] = {
-                    active: active,
-                    expiry: expiry.toISOString()
-                };
+                // Calculate stats
+                const totalUsers = Object.keys(usageCounts).length;
+                let activeSubscriptions = 0;
+                let expiredSubscriptions = 0;
+                let revenue = 0;
                 
-                setSubscriptions(subscriptions);
-                return subscriptions[userId];
-            }
-            
-            function removeSubscription(userId) {
-                const subscriptions = getSubscriptions();
-                delete subscriptions[userId];
-                setSubscriptions(subscriptions);
-            }
-            
-            function checkSubscriptionStatus(userId) {
-                const subscriptions = getSubscriptions();
-                const subscription = subscriptions[userId];
-                
-                if (!subscription || !subscription.active) {
-                    return { active: false, message: "No active subscription" };
-                }
-                
-                const now = new Date();
-                const expiry = new Date(subscription.expiry);
-                
-                if (now > expiry) {
-                    setSubscriptionData(userId, false);
-                    return { active: false, message: "Subscription expired" };
-                }
-                
-                const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-                return { 
-                    active: true, 
-                    message: `Active subscription, ${daysLeft} days remaining`,
-                    expiry: subscription.expiry
-                };
-            }
-            
-            // Update dashboard stats and table
-            function updateDashboard() {
-                const subscriptions = getSubscriptions();
-                const userIds = Object.keys(subscriptions);
-                
-                // Update stats
-                totalUsers.textContent = userIds.length;
-                
-                let activeCount = 0;
-                let expiredCount = 0;
-                const now = new Date();
-                
-                userIds.forEach(userId => {
+                Object.keys(subscriptions).forEach(userId => {
                     const subscription = subscriptions[userId];
                     if (subscription.active) {
                         const expiry = new Date(subscription.expiry);
-                        if (now > expiry) {
-                            expiredCount++;
+                        const now = new Date();
+                        if (now < expiry) {
+                            activeSubscriptions++;
                         } else {
-                            activeCount++;
+                            expiredSubscriptions++;
                         }
                     }
                 });
                 
-                activeSubscriptions.textContent = activeCount;
-                expiredSubscriptions.textContent = expiredCount;
-                totalRevenue.textContent = `$${activeCount * 3}`;
+                Object.values(payments).forEach(payment => {
+                    revenue += parseFloat(payment.amount || 0);
+                });
                 
-                // Update table
-                subscriptionsTable.innerHTML = '';
+                // Update UI
+                document.getElementById('total-users').textContent = totalUsers;
+                document.getElementById('active-subscriptions').textContent = activeSubscriptions;
+                document.getElementById('expired-subscriptions').textContent = expiredSubscriptions;
+                document.getElementById('revenue').textContent = `$${revenue.toFixed(2)}`;
                 
-                if (userIds.length === 0) {
-                    noSubscriptions.classList.remove('hidden');
-                } else {
-                    noSubscriptions.classList.add('hidden');
+                // Update recent activity
+                updateRecentActivity();
+            }
+            
+            function updateRecentActivity() {
+                const recentActivity = document.getElementById('recent-activity');
+                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
+                
+                if (activityLog.length === 0) {
+                    recentActivity.innerHTML = `
+                        <div class="text-center py-8 text-slate-500">
+                            <i class="fas fa-history text-3xl mb-2"></i>
+                            <p>No recent activity</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Show last 5 activities
+                const recentItems = activityLog.slice(-5).reverse();
+                recentActivity.innerHTML = '';
+                
+                recentItems.forEach(activity => {
+                    const activityEl = document.createElement('div');
+                    activityEl.className = 'flex items-center py-3 border-b border-slate-200 last:border-0';
                     
-                    userIds.forEach(userId => {
-                        const subscription = subscriptions[userId];
+                    let icon = 'fas fa-info-circle';
+                    let color = 'text-blue-500';
+                    
+                    if (activity.type === 'subscription_added') {
+                        icon = 'fas fa-user-plus';
+                        color = 'text-green-500';
+                    } else if (activity.type === 'subscription_removed') {
+                        icon = 'fas fa-user-times';
+                        color = 'text-red-500';
+                    } else if (activity.type === 'payment_received') {
+                        icon = 'fas fa-dollar-sign';
+                        color = 'text-amber-500';
+                    }
+                    
+                    activityEl.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mr-4">
+                            <i class="${icon} ${color}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-slate-800">${activity.message}</p>
+                            <p class="text-sm text-slate-500">${formatDate(activity.timestamp)}</p>
+                        </div>
+                    `;
+                    
+                    recentActivity.appendChild(activityEl);
+                });
+            }
+            
+            function loadSubscriptionsTable() {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                
+                if (Object.keys(usageCounts).length === 0) {
+                    subscriptionsTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-500">
+                                <i class="fas fa-users text-3xl mb-2"></i>
+                                <p>No subscription data found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                subscriptionsTableBody.innerHTML = '';
+                
+                Object.keys(usageCounts).forEach(userId => {
+                    const usageCount = usageCounts[userId];
+                    const subscription = subscriptions[userId] || { active: false, expiry: null };
+                    
+                    // Determine status
+                    let status = 'No Subscription';
+                    let statusClass = 'no-subscription';
+                    let expiryText = 'N/A';
+                    
+                    if (subscription.active) {
                         const expiry = new Date(subscription.expiry);
                         const now = new Date();
-                        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-                        const isExpired = now > expiry;
                         
-                        const row = document.createElement('tr');
-                        row.className = 'table-row border-b border-slate-800';
-                        
-                        let statusClass = 'status-inactive';
-                        let statusText = 'Inactive';
-                        
-                        if (subscription.active) {
-                            if (isExpired) {
-                                statusClass = 'status-expired';
-                                statusText = 'Expired';
-                            } else {
-                                statusClass = 'status-active';
-                                statusText = 'Active';
-                            }
+                        if (now < expiry) {
+                            status = 'Active';
+                            statusClass = 'active-subscription';
+                            expiryText = formatDate(expiry);
+                        } else {
+                            status = 'Expired';
+                            statusClass = 'expired-subscription';
+                            expiryText = formatDate(expiry);
                         }
-                        
-                        row.innerHTML = `
-                            <td class="py-3 px-4 text-white">${userId}</td>
-                            <td class="py-3 px-4">
-                                <span class="${statusClass}">
-                                    ${statusText}
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-slate-300">${expiry.toLocaleDateString()}</td>
-                            <td class="py-3 px-4 text-slate-300">${subscription.active && !isExpired ? daysLeft : '0'}</td>
-                            <td class="py-3 px-4">
-                                <button class="remove-user-btn px-3 py-1 bg-red-500/20 text-red-400 rounded text-sm hover:bg-red-500/30 transition-colors" data-user="${userId}">
-                                    Remove
-                                </button>
-                            </td>
-                        `;
-                        
-                        subscriptionsTable.appendChild(row);
-                    });
+                    }
                     
-                    // Add event listeners to remove buttons
-                    document.querySelectorAll('.remove-user-btn').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const userId = this.getAttribute('data-user');
-                            removeSubscription(userId);
-                            updateDashboard();
-                        });
+                    const row = document.createElement('tr');
+                    row.className = `table-row ${statusClass}`;
+                    row.innerHTML = `
+                        <td class="py-4 px-6 border-b border-slate-200">${userId}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                status === 'Active' ? 'bg-green-100 text-green-800' : 
+                                status === 'Expired' ? 'bg-red-100 text-red-800' : 
+                                'bg-slate-100 text-slate-800'
+                            }">
+                                ${status}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 border-b border-slate-200">${expiryText}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">${usageCount}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary-light edit-subscription" data-user="${userId}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 remove-subscription" data-user="${userId}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    subscriptionsTableBody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.edit-subscription').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user');
+                        editSubscription(userId);
                     });
+                });
+                
+                document.querySelectorAll('.remove-subscription').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user');
+                        removeSubscription(userId);
+                    });
+                });
+            }
+            
+            function filterSubscriptions() {
+                const searchTerm = searchUsersInput.value.toLowerCase();
+                const statusFilter = filterStatusSelect.value;
+                
+                const rows = subscriptionsTableBody.querySelectorAll('tr');
+                
+                rows.forEach(row => {
+                    if (row.cells.length < 5) return; // Skip the "no data" row
+                    
+                    const userId = row.cells[0].textContent.toLowerCase();
+                    const status = row.cells[1].textContent.toLowerCase();
+                    
+                    let matchesSearch = userId.includes(searchTerm);
+                    let matchesStatus = statusFilter === 'all' || 
+                                       (statusFilter === 'active' && status.includes('active')) ||
+                                       (statusFilter === 'expired' && status.includes('expired')) ||
+                                       (statusFilter === 'none' && status.includes('no subscription'));
+                    
+                    if (matchesSearch && matchesStatus) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            
+            function addSubscription() {
+                const userId = document.getElementById('user-id').value.trim();
+                const months = document.getElementById('subscription-months').value;
+                const amount = document.getElementById('payment-amount').value;
+                const notes = document.getElementById('notes').value;
+                
+                if (!userId) {
+                    alert('Please enter a valid User ID');
+                    return;
+                }
+                
+                // Get existing subscriptions
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                
+                // Calculate expiry date
+                let expiryDate;
+                if (months === 'lifetime') {
+                    // Set expiry to 10 years from now (practically lifetime)
+                    expiryDate = new Date();
+                    expiryDate.setFullYear(expiryDate.getFullYear() + 10);
+                } else {
+                    expiryDate = new Date();
+                    expiryDate.setMonth(expiryDate.getMonth() + parseInt(months));
+                }
+                
+                // Update subscription
+                subscriptions[userId] = {
+                    active: true,
+                    expiry: expiryDate.toISOString()
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                
+                // Record payment if amount provided
+                if (amount) {
+                    const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                    payments[userId] = {
+                        amount: parseFloat(amount),
+                        date: new Date().toISOString(),
+                        notes: notes
+                    };
+                    localStorage.setItem('payments', JSON.stringify(payments));
+                }
+                
+                // Ensure user exists in usageCounts
+                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                if (!usageCounts[userId]) {
+                    usageCounts[userId] = 0;
+                    localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
+                }
+                
+                // Log activity
+                logActivity('subscription_added', `Added ${months === 'lifetime' ? 'lifetime' : months + ' month'} subscription for ${userId}`);
+                
+                // Reset form and show success
+                document.getElementById('add-subscription-form').reset();
+                showToast(`Subscription added for ${userId}`);
+                
+                // Update UI
+                updateDashboardStats();
+                loadSubscriptionsTable();
+                
+                // Navigate back to subscriptions
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('a[href="#subscriptions"]').classList.add('active');
+                contentSections.forEach(section => {
+                    section.classList.add('hidden');
+                    if (section.id === 'subscriptions') {
+                        section.classList.remove('hidden');
+                    }
+                });
+            }
+            
+            function editSubscription(userId) {
+                // For simplicity, we'll just prefill the add subscription form
+                document.getElementById('user-id').value = userId;
+                
+                // Navigate to add subscription form
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                document.querySelector('a[href="#add-subscription"]').classList.add('active');
+                contentSections.forEach(section => {
+                    section.classList.add('hidden');
+                    if (section.id === 'add-subscription') {
+                        section.classList.remove('hidden');
+                    }
+                });
+                
+                showToast(`Editing subscription for ${userId}`);
+            }
+            
+            function removeSubscription(userId) {
+                if (confirm(`Are you sure you want to remove the subscription for ${userId}?`)) {
+                    const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                    delete subscriptions[userId];
+                    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                    
+                    // Log activity
+                    logActivity('subscription_removed', `Removed subscription for ${userId}`);
+                    
+                    showToast(`Subscription removed for ${userId}`);
+                    
+                    // Update UI
+                    updateDashboardStats();
+                    loadSubscriptionsTable();
                 }
             }
             
-            // Add subscription
-            addSubscriptionBtn.addEventListener('click', function() {
-                const userId = addUserId.value.trim();
+            function exportData() {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
                 
-                if (!userId) {
-                    alert('Please enter a User ID');
-                    return;
+                const data = {
+                    subscriptions: subscriptions,
+                    usageCounts: usageCounts,
+                    payments: payments,
+                    exportDate: new Date().toISOString()
+                };
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `dopamine-offers-data-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showToast('Data exported successfully');
+            }
+            
+            function clearAllData() {
+                localStorage.removeItem('subscriptions');
+                localStorage.removeItem('usageCounts');
+                localStorage.removeItem('payments');
+                localStorage.removeItem('activityLog');
+                
+                showToast('All data cleared successfully');
+                
+                // Update UI
+                updateDashboardStats();
+                loadSubscriptionsTable();
+            }
+            
+            function addSampleData() {
+                // Add some sample users with subscriptions
+                const sampleUsers = [
+                    { id: 'user_123456789', usage: 5, active: true, months: 3 },
+                    { id: 'user_987654321', usage: 2, active: false, months: 0 },
+                    { id: 'user_555555555', usage: 12, active: true, months: 6 },
+                    { id: 'user_111111111', usage: 0, active: false, months: 0 },
+                    { id: 'user_999999999', usage: 8, active: true, months: 1 }
+                ];
+                
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                
+                sampleUsers.forEach(user => {
+                    // Add usage count
+                    usageCounts[user.id] = user.usage;
+                    
+                    // Add subscription if active
+                    if (user.active) {
+                        const expiry = new Date();
+                        expiry.setMonth(expiry.getMonth() + user.months);
+                        
+                        subscriptions[user.id] = {
+                            active: true,
+                            expiry: expiry.toISOString()
+                        };
+                        
+                        // Add sample payment
+                        payments[user.id] = {
+                            amount: user.months * 3, // $3 per month
+                            date: new Date().toISOString(),
+                            notes: 'Sample payment data'
+                        };
+                    }
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
+                localStorage.setItem('payments', JSON.stringify(payments));
+                
+                // Log activity
+                logActivity('sample_data_added', 'Added sample data for testing');
+                
+                showToast('Sample data added successfully');
+                
+                // Update UI
+                updateDashboardStats();
+                loadSubscriptionsTable();
+            }
+            
+            function saveSettings() {
+                const freeTrialUses = document.getElementById('free-trial-uses').value;
+                const monthlyPrice = document.getElementById('monthly-price').value;
+                const unlockCode = document.getElementById('unlock-code').value;
+                
+                // In a real application, you would save these to a backend
+                // For this demo, we'll just save to localStorage
+                const settings = {
+                    freeTrialUses: freeTrialUses,
+                    monthlyPrice: monthlyPrice,
+                    unlockCode: unlockCode,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                localStorage.setItem('adminSettings', JSON.stringify(settings));
+                showToast('Settings saved successfully');
+            }
+            
+            function resetSettings() {
+                document.getElementById('free-trial-uses').value = 3;
+                document.getElementById('monthly-price').value = 3;
+                document.getElementById('unlock-code').value = '778432';
+                
+                showToast('Settings reset to default values');
+            }
+            
+            function logActivity(type, message) {
+                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
+                
+                activityLog.push({
+                    type: type,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Keep only last 50 activities
+                if (activityLog.length > 50) {
+                    activityLog.splice(0, activityLog.length - 50);
                 }
                 
-                setSubscriptionData(userId, true, 1);
-                addUserId.value = '';
-                updateDashboard();
-                
-                statusResult.textContent = `Subscription added for ${userId}`;
-                statusResult.className = 'text-green-400 text-sm mt-2';
-            });
+                localStorage.setItem('activityLog', JSON.stringify(activityLog));
+            }
             
-            // Remove subscription
-            removeSubscriptionBtn.addEventListener('click', function() {
-                const userId = removeUserId.value.trim();
-                
-                if (!userId) {
-                    alert('Please enter a User ID');
-                    return;
-                }
-                
-                removeSubscription(userId);
-                removeUserId.value = '';
-                updateDashboard();
-                
-                statusResult.textContent = `Subscription removed for ${userId}`;
-                statusResult.className = 'text-red-400 text-sm mt-2';
-            });
-            
-            // Check status
-            checkStatusBtn.addEventListener('click', function() {
-                const userId = checkUserId.value.trim();
-                
-                if (!userId) {
-                    alert('Please enter a User ID');
-                    return;
-                }
-                
-                const status = checkSubscriptionStatus(userId);
-                statusResult.textContent = status.message;
-                statusResult.className = `text-sm mt-2 ${status.active ? 'text-green-400' : 'text-red-400'}`;
-            });
-            
-            // Refresh dashboard
-            refreshBtn.addEventListener('click', function() {
-                updateDashboard();
-                statusResult.textContent = 'Dashboard refreshed';
-                statusResult.className = 'text-blue-400 text-sm mt-2';
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.remove('translate-x-full');
                 
                 setTimeout(() => {
-                    statusResult.textContent = '';
-                }, 2000);
-            });
+                    toast.classList.add('translate-x-full');
+                }, 3000);
+            }
+            
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+            
+            // Load settings on page load
+            function loadSettings() {
+                const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
+                
+                if (settings.freeTrialUses) {
+                    document.getElementById('free-trial-uses').value = settings.freeTrialUses;
+                }
+                
+                if (settings.monthlyPrice) {
+                    document.getElementById('monthly-price').value = settings.monthlyPrice;
+                }
+                
+                if (settings.unlockCode) {
+                    document.getElementById('unlock-code').value = settings.unlockCode;
+                }
+            }
+            
+            // Initialize settings
+            loadSettings();
         });
     </script>
 </body>
