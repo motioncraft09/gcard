@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Subscription Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#7c3aed',
+                        'primary-light': '#8b5cf6',
+                        'secondary': '#0ea5e9',
+                        'accent': '#f59e0b',
+                        'dark': '#0f172a',
+                        'darker': '#0a0f1c',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            border-radius: 12px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+        
+        .table-row:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .status-active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-expired {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-inactive {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card p-8 max-w-md w-full">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2">Admin Access</h1>
+                <p class="text-slate-400">Enter your credentials to manage subscriptions</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-6">
+                    <label for="username" class="block text-sm font-medium text-slate-300 mb-2">Username</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="Enter username" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-slate-300 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="Enter password" required>
+                </div>
+                
+                <button type="submit" class="w-full py-3 btn-primary text-white font-medium rounded-lg">
+                    Sign In
+                </button>
+            </form>
+            
+            <p id="login-error" class="text-red-400 text-sm mt-4 text-center hidden">Invalid credentials. Please try again.</p>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="min-h-screen hidden">
+        <!-- Header -->
+        <header class="bg-slate-900 border-b border-slate-700 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Subscription Manager</h1>
+                    <p class="text-slate-400">Admin Dashboard</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-slate-300" id="admin-username"></span>
+                    <button id="logout-btn" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="container mx-auto p-4">
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-200 text-sm">Total Users</p>
+                            <h3 class="text-3xl font-bold mt-2" id="total-users">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-200 text-sm">Active Subscriptions</p>
+                            <h3 class="text-3xl font-bold mt-2" id="active-subscriptions">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-crown text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-200 text-sm">Expired Subscriptions</p>
+                            <h3 class="text-3xl font-bold mt-2" id="expired-subscriptions">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-clock text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-slate-200 text-sm">Revenue</p>
+                            <h3 class="text-3xl font-bold mt-2" id="total-revenue">$0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="glass-card p-6 mb-8">
+                <h2 class="text-xl font-bold text-white mb-4">Subscription Actions</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-white mb-3">Add Subscription</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" id="add-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
+                            <button id="add-subscription-btn" class="px-4 py-2 btn-primary text-white font-medium rounded-lg">
+                                Add 1 Month
+                            </button>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-2">Add a 1-month subscription for the specified user</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-medium text-white mb-3">Remove Subscription</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" id="remove-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
+                            <button id="remove-subscription-btn" class="px-4 py-2 btn-danger text-white font-medium rounded-lg">
+                                Remove
+                            </button>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-2">Immediately remove subscription for the specified user</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium text-white mb-3">Check Subscription Status</h3>
+                    <div class="flex space-x-2">
+                        <input type="text" id="check-user-id" class="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white" placeholder="User ID">
+                        <button id="check-status-btn" class="px-4 py-2 bg-slate-700 text-white font-medium rounded-lg hover:bg-slate-600 transition-colors">
+                            Check Status
+                        </button>
+                    </div>
+                    <p id="status-result" class="text-slate-400 text-sm mt-2"></p>
+                </div>
+            </div>
+            
+            <!-- Subscriptions Table -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-white">All Subscriptions</h2>
+                    <button id="refresh-btn" class="px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors flex items-center">
+                        <i class="fas fa-sync-alt mr-2"></i>
+                        Refresh
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-slate-700">
+                                <th class="text-left py-3 px-4 text-slate-400 font-medium">User ID</th>
+                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Status</th>
+                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Expiry Date</th>
+                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Days Left</th>
+                                <th class="text-left py-3 px-4 text-slate-400 font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptions-table">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p id="no-subscriptions" class="text-center text-slate-500 py-8 hidden">No subscriptions found</p>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const loginScreen = document.getElementById('login-screen');
+            const adminDashboard = document.getElementById('admin-dashboard');
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            const logoutBtn = document.getElementById('logout-btn');
+            const adminUsername = document.getElementById('admin-username');
+            
+            // Stats elements
+            const totalUsers = document.getElementById('total-users');
+            const activeSubscriptions = document.getElementById('active-subscriptions');
+            const expiredSubscriptions = document.getElementById('expired-subscriptions');
+            const totalRevenue = document.getElementById('total-revenue');
+            
+            // Action elements
+            const addUserId = document.getElementById('add-user-id');
+            const addSubscriptionBtn = document.getElementById('add-subscription-btn');
+            const removeUserId = document.getElementById('remove-user-id');
+            const removeSubscriptionBtn = document.getElementById('remove-subscription-btn');
+            const checkUserId = document.getElementById('check-user-id');
+            const checkStatusBtn = document.getElementById('check-status-btn');
+            const statusResult = document.getElementById('status-result');
+            const refreshBtn = document.getElementById('refresh-btn');
+            
+            // Table elements
+            const subscriptionsTable = document.getElementById('subscriptions-table');
+            const noSubscriptions = document.getElementById('no-subscriptions');
+            
+            // Admin credentials
+            const ADMIN_USERNAME = 'admin';
+            const ADMIN_PASSWORD = 'admin123';
+            
+            // Login functionality
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                    // Successful login
+                    loginScreen.classList.add('hidden');
+                    adminDashboard.classList.remove('hidden');
+                    adminUsername.textContent = username;
+                    updateDashboard();
+                } else {
+                    // Failed login
+                    loginError.classList.remove('hidden');
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                adminDashboard.classList.add('hidden');
+                loginScreen.classList.remove('hidden');
+                loginForm.reset();
+                loginError.classList.add('hidden');
+            });
+            
+            // Subscription management functions
+            function getSubscriptions() {
+                return JSON.parse(localStorage.getItem('subscriptions') || '{}');
+            }
+            
+            function setSubscriptions(subscriptions) {
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+            }
+            
+            function setSubscriptionData(userId, active, months = 1) {
+                const subscriptions = getSubscriptions();
+                const expiry = new Date();
+                expiry.setMonth(expiry.getMonth() + months);
+                
+                subscriptions[userId] = {
+                    active: active,
+                    expiry: expiry.toISOString()
+                };
+                
+                setSubscriptions(subscriptions);
+                return subscriptions[userId];
+            }
+            
+            function removeSubscription(userId) {
+                const subscriptions = getSubscriptions();
+                delete subscriptions[userId];
+                setSubscriptions(subscriptions);
+            }
+            
+            function checkSubscriptionStatus(userId) {
+                const subscriptions = getSubscriptions();
+                const subscription = subscriptions[userId];
+                
+                if (!subscription || !subscription.active) {
+                    return { active: false, message: "No active subscription" };
+                }
+                
+                const now = new Date();
+                const expiry = new Date(subscription.expiry);
+                
+                if (now > expiry) {
+                    setSubscriptionData(userId, false);
+                    return { active: false, message: "Subscription expired" };
+                }
+                
+                const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                return { 
+                    active: true, 
+                    message: `Active subscription, ${daysLeft} days remaining`,
+                    expiry: subscription.expiry
+                };
+            }
+            
+            // Update dashboard stats and table
+            function updateDashboard() {
+                const subscriptions = getSubscriptions();
+                const userIds = Object.keys(subscriptions);
+                
+                // Update stats
+                totalUsers.textContent = userIds.length;
+                
+                let activeCount = 0;
+                let expiredCount = 0;
+                const now = new Date();
+                
+                userIds.forEach(userId => {
+                    const subscription = subscriptions[userId];
+                    if (subscription.active) {
+                        const expiry = new Date(subscription.expiry);
+                        if (now > expiry) {
+                            expiredCount++;
+                        } else {
+                            activeCount++;
+                        }
+                    }
+                });
+                
+                activeSubscriptions.textContent = activeCount;
+                expiredSubscriptions.textContent = expiredCount;
+                totalRevenue.textContent = `$${activeCount * 3}`;
+                
+                // Update table
+                subscriptionsTable.innerHTML = '';
+                
+                if (userIds.length === 0) {
+                    noSubscriptions.classList.remove('hidden');
+                } else {
+                    noSubscriptions.classList.add('hidden');
+                    
+                    userIds.forEach(userId => {
+                        const subscription = subscriptions[userId];
+                        const expiry = new Date(subscription.expiry);
+                        const now = new Date();
+                        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                        const isExpired = now > expiry;
+                        
+                        const row = document.createElement('tr');
+                        row.className = 'table-row border-b border-slate-800';
+                        
+                        let statusClass = 'status-inactive';
+                        let statusText = 'Inactive';
+                        
+                        if (subscription.active) {
+                            if (isExpired) {
+                                statusClass = 'status-expired';
+                                statusText = 'Expired';
+                            } else {
+                                statusClass = 'status-active';
+                                statusText = 'Active';
+                            }
+                        }
+                        
+                        row.innerHTML = `
+                            <td class="py-3 px-4 text-white">${userId}</td>
+                            <td class="py-3 px-4">
+                                <span class="${statusClass}">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-slate-300">${expiry.toLocaleDateString()}</td>
+                            <td class="py-3 px-4 text-slate-300">${subscription.active && !isExpired ? daysLeft : '0'}</td>
+                            <td class="py-3 px-4">
+                                <button class="remove-user-btn px-3 py-1 bg-red-500/20 text-red-400 rounded text-sm hover:bg-red-500/30 transition-colors" data-user="${userId}">
+                                    Remove
+                                </button>
+                            </td>
+                        `;
+                        
+                        subscriptionsTable.appendChild(row);
+                    });
+                    
+                    // Add event listeners to remove buttons
+                    document.querySelectorAll('.remove-user-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const userId = this.getAttribute('data-user');
+                            removeSubscription(userId);
+                            updateDashboard();
+                        });
+                    });
+                }
+            }
+            
+            // Add subscription
+            addSubscriptionBtn.addEventListener('click', function() {
+                const userId = addUserId.value.trim();
+                
+                if (!userId) {
+                    alert('Please enter a User ID');
+                    return;
+                }
+                
+                setSubscriptionData(userId, true, 1);
+                addUserId.value = '';
+                updateDashboard();
+                
+                statusResult.textContent = `Subscription added for ${userId}`;
+                statusResult.className = 'text-green-400 text-sm mt-2';
+            });
+            
+            // Remove subscription
+            removeSubscriptionBtn.addEventListener('click', function() {
+                const userId = removeUserId.value.trim();
+                
+                if (!userId) {
+                    alert('Please enter a User ID');
+                    return;
+                }
+                
+                removeSubscription(userId);
+                removeUserId.value = '';
+                updateDashboard();
+                
+                statusResult.textContent = `Subscription removed for ${userId}`;
+                statusResult.className = 'text-red-400 text-sm mt-2';
+            });
+            
+            // Check status
+            checkStatusBtn.addEventListener('click', function() {
+                const userId = checkUserId.value.trim();
+                
+                if (!userId) {
+                    alert('Please enter a User ID');
+                    return;
+                }
+                
+                const status = checkSubscriptionStatus(userId);
+                statusResult.textContent = status.message;
+                statusResult.className = `text-sm mt-2 ${status.active ? 'text-green-400' : 'text-red-400'}`;
+            });
+            
+            // Refresh dashboard
+            refreshBtn.addEventListener('click', function() {
+                updateDashboard();
+                statusResult.textContent = 'Dashboard refreshed';
+                statusResult.className = 'text-blue-400 text-sm mt-2';
+                
+                setTimeout(() => {
+                    statusResult.textContent = '';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
