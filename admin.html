@@ -175,6 +175,19 @@
             background-color: #ef4444;
         }
         
+        .unlock-code-display {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 10px 0;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #7c3aed;
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -221,6 +234,10 @@
             <a href="#add-subscription" class="sidebar-link">
                 <i class="fas fa-user-plus"></i>
                 <span class="link-text">Add Subscription</span>
+            </a>
+            <a href="#unlock-codes" class="sidebar-link">
+                <i class="fas fa-key"></i>
+                <span class="link-text">Unlock Codes</span>
             </a>
             <a href="#settings" class="sidebar-link">
                 <i class="fas fa-cog"></i>
@@ -390,13 +407,14 @@
                                 <th class="py-3 px-6 text-left text-slate-600 font-medium">Status</th>
                                 <th class="py-3 px-6 text-left text-slate-600 font-medium">Expiry Date</th>
                                 <th class="py-3 px-6 text-left text-slate-600 font-medium">Usage Count</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Unlock Code</th>
                                 <th class="py-3 px-6 text-left text-slate-600 font-medium">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="subscriptions-table-body">
                             <!-- Table rows will be added here by JavaScript -->
                             <tr>
-                                <td colspan="5" class="py-8 text-center text-slate-500">
+                                <td colspan="6" class="py-8 text-center text-slate-500">
                                     <i class="fas fa-users text-3xl mb-2"></i>
                                     <p>No subscription data found</p>
                                 </td>
@@ -435,6 +453,15 @@
                     </div>
                     
                     <div class="mb-6">
+                        <label for="payment-amount" class="block text-base font-medium mb-2 text-slate-700">Payment Amount</label>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-slate-600">$</span>
+                            <input type="number" id="payment-amount" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter payment amount" value="3" min="0" step="0.01">
+                        </div>
+                        <p class="text-sm text-slate-500 mt-1">Set the payment amount for this subscription</p>
+                    </div>
+                    
+                    <div class="mb-6">
                         <label for="main-site-url" class="block text-base font-medium mb-2 text-slate-700">Main Website URL</label>
                         <input type="url" id="main-site-url" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="https://your-main-website.com" value="">
                         <p class="text-sm text-slate-500 mt-1">Enter the URL of your main Dopamine Offer Generator website</p>
@@ -445,11 +472,15 @@
                         <div class="flex space-x-4">
                             <label class="flex items-center">
                                 <input type="radio" name="activation-method" value="direct" class="mr-2" checked>
-                                <span>Direct Activation (No user action needed)</span>
+                                <span>Direct Activation</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="radio" name="activation-method" value="link">
                                 <span>Generate Activation Link</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="activation-method" value="code">
+                                <span>Generate Unlock Code</span>
                             </label>
                         </div>
                     </div>
@@ -465,6 +496,17 @@
                         <p class="text-sm text-slate-500 mt-1">Share this link with the user. When they visit it, premium will be activated automatically.</p>
                     </div>
                     
+                    <div id="unlock-code-section" class="hidden mb-6">
+                        <label class="block text-base font-medium mb-2 text-slate-700">Unlock Code</label>
+                        <div class="unlock-code-display">
+                            <div id="generated-code" class="text-lg font-bold"></div>
+                        </div>
+                        <button type="button" id="copy-code" class="btn-primary w-full mt-2">
+                            <i class="fas fa-copy mr-1"></i> Copy Unlock Code
+                        </button>
+                        <p class="text-sm text-slate-500 mt-1">Share this code with the user. They can enter it on the main website to activate premium.</p>
+                    </div>
+                    
                     <div class="flex gap-4">
                         <button type="submit" class="btn-primary flex-1">
                             <i class="fas fa-save mr-2"></i>
@@ -475,6 +517,78 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </section>
+        
+        <!-- Unlock Codes Section -->
+        <section id="unlock-codes" class="content-section hidden">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Unlock Codes</h1>
+                <p class="text-slate-600">Manage all unlock codes for premium access</p>
+            </div>
+            
+            <!-- Generate New Code -->
+            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
+                <h2 class="text-xl font-bold text-slate-800 mb-4">Generate New Unlock Code</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label for="code-user-id" class="block text-sm font-medium mb-2 text-slate-700">User ID (Optional)</label>
+                        <input type="text" id="code-user-id" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Leave empty for any user">
+                    </div>
+                    
+                    <div>
+                        <label for="code-months" class="block text-sm font-medium mb-2 text-slate-700">Duration</label>
+                        <select id="code-months" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="1">1 Month</option>
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12" selected>12 Months</option>
+                            <option value="24">24 Months</option>
+                            <option value="lifetime">Lifetime</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="code-amount" class="block text-sm font-medium mb-2 text-slate-700">Price</label>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-slate-600">$</span>
+                            <input type="number" id="code-amount" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="generate-code-btn" class="btn-primary">
+                    <i class="fas fa-key mr-2"></i>
+                    Generate Unlock Code
+                </button>
+            </div>
+            
+            <!-- Unlock Codes Table -->
+            <div class="bg-white rounded-xl card-shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Unlock Code</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">User ID</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Duration</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Price</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Status</th>
+                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unlock-codes-table-body">
+                            <!-- Table rows will be added here by JavaScript -->
+                            <tr>
+                                <td colspan="6" class="py-8 text-center text-slate-500">
+                                    <i class="fas fa-key text-3xl mb-2"></i>
+                                    <p>No unlock codes found</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
         
@@ -500,21 +614,13 @@
                         
                         <div class="flex items-center justify-between py-3 border-b border-slate-200">
                             <div>
-                                <p class="font-medium text-slate-800">Monthly Price</p>
+                                <p class="font-medium text-slate-800">Default Monthly Price</p>
                                 <p class="text-sm text-slate-500">Default monthly subscription price</p>
                             </div>
                             <div class="flex items-center">
                                 <span class="mr-2">$</span>
-                                <input type="number" id="monthly-price" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3">
+                                <input type="number" id="monthly-price" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" step="0.01">
                             </div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
-                            <div>
-                                <p class="font-medium text-slate-800">Unlock Code</p>
-                                <p class="text-sm text-slate-500">Code for manual premium activation</p>
-                            </div>
-                            <input type="text" id="unlock-code" class="w-32 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="778432">
                         </div>
                     </div>
                 </div>
@@ -571,6 +677,7 @@
             const sidebarLinks = document.querySelectorAll('.sidebar-link');
             const contentSections = document.querySelectorAll('.content-section');
             const subscriptionsTableBody = document.getElementById('subscriptions-table-body');
+            const unlockCodesTableBody = document.getElementById('unlock-codes-table-body');
             const addSubscriptionForm = document.getElementById('add-subscription-form');
             const searchUsersInput = document.getElementById('search-users');
             const filterStatusSelect = document.getElementById('filter-status');
@@ -585,15 +692,16 @@
             const resetSettingsBtn = document.getElementById('reset-settings');
             const activationMethodRadios = document.querySelectorAll('input[name="activation-method"]');
             const activationLinkSection = document.getElementById('activation-link-section');
+            const unlockCodeSection = document.getElementById('unlock-code-section');
             const generatedLink = document.getElementById('generated-link');
+            const generatedCode = document.getElementById('generated-code');
             const copyLinkBtn = document.getElementById('copy-link');
+            const copyCodeBtn = document.getElementById('copy-code');
             const mainSiteUrlInput = document.getElementById('main-site-url');
             const viewAllActivityBtn = document.getElementById('view-all-activity');
+            const generateCodeBtn = document.getElementById('generate-code-btn');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
-            
-            // Unlock code for activation links
-            const UNLOCK_CODE = '778432';
             
             // Navigation
             sidebarLinks.forEach(link => {
@@ -612,17 +720,28 @@
                             section.classList.remove('hidden');
                         }
                     });
+                    
+                    // Load specific data for the section
+                    if (target === 'subscriptions') {
+                        loadSubscriptionsTable();
+                    } else if (target === 'unlock-codes') {
+                        loadUnlockCodesTable();
+                    }
                 });
             });
             
             // Activation method toggle
             activationMethodRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
+                    activationLinkSection.classList.add('hidden');
+                    unlockCodeSection.classList.add('hidden');
+                    
                     if (this.value === 'link') {
                         activationLinkSection.classList.remove('hidden');
                         generateActivationLink();
-                    } else {
-                        activationLinkSection.classList.add('hidden');
+                    } else if (this.value === 'code') {
+                        unlockCodeSection.classList.remove('hidden');
+                        generateUnlockCode();
                     }
                 });
             });
@@ -632,6 +751,10 @@
             document.getElementById('subscription-months').addEventListener('change', generateActivationLink);
             mainSiteUrlInput.addEventListener('input', generateActivationLink);
             
+            // Generate unlock code when inputs change
+            document.getElementById('user-id').addEventListener('input', generateUnlockCode);
+            document.getElementById('subscription-months').addEventListener('change', generateUnlockCode);
+            
             // Copy link button
             copyLinkBtn.addEventListener('click', function() {
                 const link = generatedLink.textContent;
@@ -640,10 +763,23 @@
                 });
             });
             
+            // Copy code button
+            copyCodeBtn.addEventListener('click', function() {
+                const code = generatedCode.textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast('Unlock code copied to clipboard');
+                });
+            });
+            
             // Form submission
             addSubscriptionForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 addSubscription();
+            });
+            
+            // Generate unlock code button
+            generateCodeBtn.addEventListener('click', function() {
+                generateStandaloneUnlockCode();
             });
             
             // Event Listeners
@@ -723,6 +859,7 @@
                 const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                 const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
                 const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
                 
                 // Calculate stats
                 const totalUsers = Object.keys(usageCounts).length;
@@ -791,6 +928,9 @@
                     } else if (activity.type === 'payment_received') {
                         icon = 'fas fa-dollar-sign';
                         color = 'text-amber-500';
+                    } else if (activity.type === 'unlock_code_generated') {
+                        icon = 'fas fa-key';
+                        color = 'text-purple-500';
                     }
                     
                     activityEl.innerHTML = `
@@ -810,11 +950,12 @@
             function loadSubscriptionsTable() {
                 const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                 const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
                 
                 if (Object.keys(usageCounts).length === 0) {
                     subscriptionsTableBody.innerHTML = `
                         <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-500">
+                            <td colspan="6" class="py-8 text-center text-slate-500">
                                 <i class="fas fa-users text-3xl mb-2"></i>
                                 <p>No subscription data found</p>
                             </td>
@@ -828,6 +969,14 @@
                 Object.keys(usageCounts).forEach(userId => {
                     const usageCount = usageCounts[userId];
                     const subscription = subscriptions[userId] || { active: false, expiry: null };
+                    
+                    // Find unlock code for this user
+                    let userUnlockCode = 'N/A';
+                    Object.keys(unlockCodes).forEach(code => {
+                        if (unlockCodes[code].userId === userId && unlockCodes[code].active) {
+                            userUnlockCode = code;
+                        }
+                    });
                     
                     // Determine status
                     let status = 'No Subscription';
@@ -864,6 +1013,7 @@
                         </td>
                         <td class="py-4 px-6 border-b border-slate-200">${expiryText}</td>
                         <td class="py-4 px-6 border-b border-slate-200">${usageCount}</td>
+                        <td class="py-4 px-6 border-b border-slate-200 font-mono">${userUnlockCode}</td>
                         <td class="py-4 px-6 border-b border-slate-200">
                             <div class="flex space-x-2">
                                 <button class="text-primary hover:text-primary-light edit-subscription" data-user="${userId}">
@@ -871,6 +1021,9 @@
                                 </button>
                                 <button class="text-red-500 hover:text-red-700 remove-subscription" data-user="${userId}">
                                     <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button class="text-purple-500 hover:text-purple-700 generate-code" data-user="${userId}">
+                                    <i class="fas fa-key"></i>
                                 </button>
                             </div>
                         </td>
@@ -893,6 +1046,80 @@
                         removeSubscription(userId);
                     });
                 });
+                
+                document.querySelectorAll('.generate-code').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user');
+                        generateUserUnlockCode(userId);
+                    });
+                });
+            }
+            
+            function loadUnlockCodesTable() {
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                
+                if (Object.keys(unlockCodes).length === 0) {
+                    unlockCodesTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-500">
+                                <i class="fas fa-key text-3xl mb-2"></i>
+                                <p>No unlock codes found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                unlockCodesTableBody.innerHTML = '';
+                
+                Object.keys(unlockCodes).forEach(code => {
+                    const codeData = unlockCodes[code];
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'table-row';
+                    row.innerHTML = `
+                        <td class="py-4 px-6 border-b border-slate-200 font-mono font-bold">${code}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">${codeData.userId || 'Any User'}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">${codeData.months === 'lifetime' ? 'Lifetime' : codeData.months + ' months'}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">$${codeData.amount || '0'}</td>
+                        <td class="py-4 px-6 border-b border-slate-200">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                                codeData.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                            }">
+                                ${codeData.active ? 'Active' : 'Used'}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 border-b border-slate-200">
+                            <div class="flex space-x-2">
+                                <button class="text-red-500 hover:text-red-700 deactivate-code" data-code="${code}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button class="text-blue-500 hover:text-blue-700 copy-code" data-code="${code}">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    unlockCodesTableBody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.deactivate-code').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const code = this.getAttribute('data-code');
+                        deactivateUnlockCode(code);
+                    });
+                });
+                
+                document.querySelectorAll('.copy-code').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const code = this.getAttribute('data-code');
+                        navigator.clipboard.writeText(code).then(() => {
+                            showToast('Unlock code copied to clipboard');
+                        });
+                    });
+                });
             }
             
             function filterSubscriptions() {
@@ -902,7 +1129,7 @@
                 const rows = subscriptionsTableBody.querySelectorAll('tr');
                 
                 rows.forEach(row => {
-                    if (row.cells.length < 5) return; // Skip the "no data" row
+                    if (row.cells.length < 6) return; // Skip the "no data" row
                     
                     const userId = row.cells[0].textContent.toLowerCase();
                     const status = row.cells[1].textContent.toLowerCase();
@@ -927,16 +1154,40 @@
                 const mainSiteUrl = mainSiteUrlInput.value;
                 
                 if (userId && mainSiteUrl) {
-                    const activationLink = `${mainSiteUrl}?unlock=${UNLOCK_CODE}&user=${userId}&months=${months}`;
+                    // Generate a unique unlock code for this activation
+                    const unlockCode = generateRandomCode();
+                    const activationLink = `${mainSiteUrl}?unlock=${unlockCode}&user=${userId}&months=${months}`;
                     generatedLink.textContent = activationLink;
                 } else {
                     generatedLink.textContent = 'Please fill in User ID and Main Website URL';
                 }
             }
             
+            function generateUnlockCode() {
+                const userId = document.getElementById('user-id').value;
+                const months = document.getElementById('subscription-months').value;
+                
+                if (userId) {
+                    const unlockCode = generateRandomCode();
+                    generatedCode.textContent = unlockCode;
+                } else {
+                    generatedCode.textContent = 'Please enter a User ID';
+                }
+            }
+            
+            function generateRandomCode() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let code = '';
+                for (let i = 0; i < 8; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return code;
+            }
+            
             function addSubscription() {
                 const userId = document.getElementById('user-id').value.trim();
                 const months = document.getElementById('subscription-months').value;
+                const amount = document.getElementById('payment-amount').value || '3';
                 const activationMethod = document.querySelector('input[name="activation-method"]:checked').value;
                 const mainSiteUrl = mainSiteUrlInput.value;
                 
@@ -951,7 +1202,7 @@
                 }
                 
                 if (activationMethod === 'direct') {
-                    // Direct activation - we'll simulate this by updating localStorage
+                    // Direct activation - update localStorage
                     const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                     
                     // Calculate expiry date
@@ -973,6 +1224,15 @@
                     // Save to localStorage
                     localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
                     
+                    // Record payment
+                    const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                    payments[userId] = {
+                        amount: parseFloat(amount),
+                        date: new Date().toISOString(),
+                        notes: 'Direct subscription'
+                    };
+                    localStorage.setItem('payments', JSON.stringify(payments));
+                    
                     // Ensure user exists in usageCounts
                     const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
                     if (!usageCounts[userId]) {
@@ -984,12 +1244,44 @@
                     logActivity('subscription_added', `Added ${months === 'lifetime' ? 'lifetime' : months + ' month'} subscription for ${userId}`);
                     
                     showToast(`Direct subscription added for ${userId}`);
-                } else {
-                    // Link method - just show success message
-                    showToast(`Activation link generated for ${userId}. Share it with the user.`);
+                } else if (activationMethod === 'link') {
+                    // Generate activation link with unique code
+                    const unlockCode = generateRandomCode();
+                    
+                    // Store the unlock code
+                    const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                    unlockCodes[unlockCode] = {
+                        active: true,
+                        userId: userId,
+                        months: months,
+                        amount: parseFloat(amount),
+                        createdAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
                     
                     // Log activity
-                    logActivity('activation_link_generated', `Generated activation link for ${userId}`);
+                    logActivity('unlock_code_generated', `Generated activation link for ${userId}`);
+                    
+                    showToast(`Activation link generated for ${userId}. Share it with the user.`);
+                } else if (activationMethod === 'code') {
+                    // Generate unlock code
+                    const unlockCode = generatedCode.textContent;
+                    
+                    // Store the unlock code
+                    const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                    unlockCodes[unlockCode] = {
+                        active: true,
+                        userId: userId,
+                        months: months,
+                        amount: parseFloat(amount),
+                        createdAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
+                    
+                    // Log activity
+                    logActivity('unlock_code_generated', `Generated unlock code for ${userId}`);
+                    
+                    showToast(`Unlock code generated for ${userId}. Share it with the user.`);
                 }
                 
                 // Reset form
@@ -1008,6 +1300,75 @@
                 // Update UI
                 updateDashboardStats();
                 loadSubscriptionsTable();
+            }
+            
+            function generateStandaloneUnlockCode() {
+                const userId = document.getElementById('code-user-id').value.trim();
+                const months = document.getElementById('code-months').value;
+                const amount = document.getElementById('code-amount').value || '3';
+                
+                const unlockCode = generateRandomCode();
+                
+                // Store the unlock code
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                unlockCodes[unlockCode] = {
+                    active: true,
+                    userId: userId || null, // null means any user can use it
+                    months: months,
+                    amount: parseFloat(amount),
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
+                
+                // Log activity
+                logActivity('unlock_code_generated', `Generated standalone unlock code: ${unlockCode}`);
+                
+                showToast(`Unlock code generated: ${unlockCode}`);
+                
+                // Reload the unlock codes table
+                loadUnlockCodesTable();
+            }
+            
+            function generateUserUnlockCode(userId) {
+                const months = '12'; // Default to 12 months
+                const amount = '3'; // Default amount
+                
+                const unlockCode = generateRandomCode();
+                
+                // Store the unlock code
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                unlockCodes[unlockCode] = {
+                    active: true,
+                    userId: userId,
+                    months: months,
+                    amount: parseFloat(amount),
+                    createdAt: new Date().toISOString()
+                };
+                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
+                
+                // Log activity
+                logActivity('unlock_code_generated', `Generated unlock code for ${userId}: ${unlockCode}`);
+                
+                showToast(`Unlock code generated for ${userId}: ${unlockCode}`);
+                
+                // Reload the subscriptions table
+                loadSubscriptionsTable();
+            }
+            
+            function deactivateUnlockCode(code) {
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
+                if (unlockCodes[code]) {
+                    unlockCodes[code].active = false;
+                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
+                    
+                    // Log activity
+                    logActivity('unlock_code_deactivated', `Deactivated unlock code: ${code}`);
+                    
+                    showToast(`Unlock code ${code} deactivated`);
+                    
+                    // Reload the unlock codes table
+                    loadUnlockCodesTable();
+                }
             }
             
             function editSubscription(userId) {
@@ -1048,11 +1409,13 @@
                 const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                 const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
                 const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
                 
                 const data = {
                     subscriptions: subscriptions,
                     usageCounts: usageCounts,
                     payments: payments,
+                    unlockCodes: unlockCodes,
                     exportDate: new Date().toISOString()
                 };
                 
@@ -1074,6 +1437,7 @@
                 localStorage.removeItem('subscriptions');
                 localStorage.removeItem('usageCounts');
                 localStorage.removeItem('payments');
+                localStorage.removeItem('unlockCodes');
                 localStorage.removeItem('activityLog');
                 
                 showToast('All data cleared successfully');
@@ -1081,6 +1445,7 @@
                 // Update UI
                 updateDashboardStats();
                 loadSubscriptionsTable();
+                loadUnlockCodesTable();
             }
             
             function addSampleData() {
@@ -1096,6 +1461,7 @@
                 const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                 const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
                 const payments = JSON.parse(localStorage.getItem('payments') || '{}');
+                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
                 
                 sampleUsers.forEach(user => {
                     // Add usage count
@@ -1117,13 +1483,38 @@
                             date: new Date().toISOString(),
                             notes: 'Sample payment data'
                         };
+                        
+                        // Add sample unlock code for some users
+                        if (Math.random() > 0.5) {
+                            const code = generateRandomCode();
+                            unlockCodes[code] = {
+                                active: true,
+                                userId: user.id,
+                                months: user.months,
+                                amount: user.months * 3,
+                                createdAt: new Date().toISOString()
+                            };
+                        }
                     }
                 });
+                
+                // Add some standalone unlock codes
+                for (let i = 0; i < 3; i++) {
+                    const code = generateRandomCode();
+                    unlockCodes[code] = {
+                        active: true,
+                        userId: null, // Available for any user
+                        months: 12,
+                        amount: 36,
+                        createdAt: new Date().toISOString()
+                    };
+                }
                 
                 // Save to localStorage
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
                 localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
                 localStorage.setItem('payments', JSON.stringify(payments));
+                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
                 
                 // Log activity
                 logActivity('sample_data_added', 'Added sample data for testing');
@@ -1133,19 +1524,18 @@
                 // Update UI
                 updateDashboardStats();
                 loadSubscriptionsTable();
+                loadUnlockCodesTable();
             }
             
             function saveSettings() {
                 const freeTrialUses = document.getElementById('free-trial-uses').value;
                 const monthlyPrice = document.getElementById('monthly-price').value;
-                const unlockCode = document.getElementById('unlock-code').value;
                 
                 // In a real application, you would save these to a backend
                 // For this demo, we'll just save to localStorage
                 const settings = {
                     freeTrialUses: freeTrialUses,
                     monthlyPrice: monthlyPrice,
-                    unlockCode: unlockCode,
                     lastUpdated: new Date().toISOString()
                 };
                 
@@ -1156,7 +1546,6 @@
             function resetSettings() {
                 document.getElementById('free-trial-uses').value = 3;
                 document.getElementById('monthly-price').value = 3;
-                document.getElementById('unlock-code').value = '778432';
                 
                 showToast('Settings reset to default values');
             }
@@ -1224,10 +1613,7 @@
                 
                 if (settings.monthlyPrice) {
                     document.getElementById('monthly-price').value = settings.monthlyPrice;
-                }
-                
-                if (settings.unlockCode) {
-                    document.getElementById('unlock-code').value = settings.unlockCode;
+                    document.getElementById('payment-amount').value = settings.monthlyPrice;
                 }
             }
             
