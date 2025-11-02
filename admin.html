@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Dopamine Offer Generator</title>
+    <title>Admin Panel - Subscription Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,119 +35,28 @@
             color: #1e293b;
         }
         
-        .sidebar {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            height: 100vh;
-            position: fixed;
-            width: 250px;
-            transition: all 0.3s;
-        }
-        
-        .main-content {
-            margin-left: 250px;
-            transition: all 0.3s;
-        }
-        
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         
-        .stat-card {
-            transition: all 0.3s ease;
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            border-color: #7c3aed;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .table-row {
-            transition: all 0.2s ease;
-        }
-        
-        .table-row:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .active-subscription {
-            border-left: 4px solid #10b981;
-        }
-        
-        .expired-subscription {
-            border-left: 4px solid #ef4444;
-        }
-        
-        .no-subscription {
-            border-left: 4px solid #6b7280;
-        }
-        
-        .btn-primary {
-            background-color: #7c3aed;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-primary:hover {
-            background-color: #6d28d9;
-        }
-        
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
-        
-        .btn-success {
+        .status-active {
             background-color: #10b981;
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.2s ease;
         }
         
-        .btn-success:hover {
-            background-color: #059669;
+        .status-expired {
+            background-color: #ef4444;
+            color: white;
         }
         
-        .sidebar-link {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            border-radius: 8px;
-            margin: 4px 12px;
-            transition: all 0.2s ease;
-        }
-        
-        .sidebar-link:hover, .sidebar-link.active {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .sidebar-link i {
-            margin-right: 12px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .activation-link {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            word-break: break-all;
-            margin: 10px 0;
-            border: 1px dashed rgba(255, 255, 255, 0.2);
+        .status-pending {
+            background-color: #f59e0b;
+            color: white;
         }
         
         .toast {
@@ -174,495 +83,9 @@
         .toast.error {
             background-color: #ef4444;
         }
-        
-        .unlock-code-display {
-            background: #f1f5f9;
-            border-radius: 8px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            text-align: center;
-            margin: 10px 0;
-            border: 1px solid #e2e8f0;
-            font-weight: 600;
-            color: #7c3aed;
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 70px;
-            }
-            
-            .sidebar .link-text {
-                display: none;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-            
-            .sidebar-link {
-                justify-content: center;
-                padding: 16px 0;
-            }
-            
-            .sidebar-link i {
-                margin-right: 0;
-            }
-        }
     </style>
 </head>
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="p-6 border-b border-slate-700">
-            <h1 class="text-xl font-bold flex items-center">
-                <i class="fas fa-crown text-amber-400 mr-3"></i>
-                <span class="link-text">Admin Dashboard</span>
-            </h1>
-        </div>
-        
-        <div class="py-4">
-            <a href="#dashboard" class="sidebar-link active">
-                <i class="fas fa-chart-pie"></i>
-                <span class="link-text">Dashboard</span>
-            </a>
-            <a href="#subscriptions" class="sidebar-link">
-                <i class="fas fa-users"></i>
-                <span class="link-text">Subscriptions</span>
-            </a>
-            <a href="#add-subscription" class="sidebar-link">
-                <i class="fas fa-user-plus"></i>
-                <span class="link-text">Add Subscription</span>
-            </a>
-            <a href="#unlock-codes" class="sidebar-link">
-                <i class="fas fa-key"></i>
-                <span class="link-text">Unlock Codes</span>
-            </a>
-            <a href="#settings" class="sidebar-link">
-                <i class="fas fa-cog"></i>
-                <span class="link-text">Settings</span>
-            </a>
-        </div>
-        
-        <div class="absolute bottom-0 w-full p-4 border-t border-slate-700">
-            <div class="flex items-center">
-                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-                    A
-                </div>
-                <div class="ml-3 link-text">
-                    <p class="font-medium">Admin User</p>
-                    <p class="text-sm text-slate-400">Super Admin</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Main Content -->
-    <div class="main-content p-6">
-        <!-- Dashboard Section -->
-        <section id="dashboard" class="content-section">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
-                <p class="text-slate-600">Manage subscriptions for the Dopamine Offer Generator</p>
-            </div>
-            
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-500 text-sm">Total Users</p>
-                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="total-users">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-                            <i class="fas fa-users text-blue-500 text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-500 mt-4">All registered users</p>
-                </div>
-                
-                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-500 text-sm">Active Subscriptions</p>
-                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="active-subscriptions">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                            <i class="fas fa-check-circle text-green-500 text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-500 mt-4">Currently active subscriptions</p>
-                </div>
-                
-                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-500 text-sm">Expired Subscriptions</p>
-                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="expired-subscriptions">0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                            <i class="fas fa-times-circle text-red-500 text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-500 mt-4">Subscriptions that have expired</p>
-                </div>
-                
-                <div class="bg-white rounded-xl p-6 card-shadow stat-card">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-slate-500 text-sm">Revenue</p>
-                            <h3 class="text-2xl font-bold text-slate-800 mt-2" id="revenue">$0</h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
-                            <i class="fas fa-dollar-sign text-purple-500 text-xl"></i>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-500 mt-4">Total revenue from subscriptions</p>
-                </div>
-            </div>
-            
-            <!-- Recent Activity -->
-            <div class="bg-white rounded-xl p-6 card-shadow mb-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-slate-800">Recent Activity</h2>
-                    <button class="text-primary text-sm font-medium" id="view-all-activity">View All</button>
-                </div>
-                
-                <div class="space-y-4" id="recent-activity">
-                    <!-- Activity items will be added here by JavaScript -->
-                    <div class="text-center py-8 text-slate-500">
-                        <i class="fas fa-history text-3xl mb-2"></i>
-                        <p>No recent activity</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="bg-white rounded-xl p-6 card-shadow">
-                <h2 class="text-xl font-bold text-slate-800 mb-6">Quick Actions</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="refresh-data">
-                        <i class="fas fa-sync-alt text-primary text-xl mb-2"></i>
-                        <p class="font-medium">Refresh Data</p>
-                    </button>
-                    
-                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="export-data">
-                        <i class="fas fa-download text-green-500 text-xl mb-2"></i>
-                        <p class="font-medium">Export Data</p>
-                    </button>
-                    
-                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="clear-all">
-                        <i class="fas fa-trash-alt text-red-500 text-xl mb-2"></i>
-                        <p class="font-medium">Clear All Data</p>
-                    </button>
-                    
-                    <button class="p-4 border border-slate-200 rounded-lg text-center hover:bg-slate-50 transition-colors" id="add-sample">
-                        <i class="fas fa-plus text-blue-500 text-xl mb-2"></i>
-                        <p class="font-medium">Add Sample Data</p>
-                    </button>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Subscriptions Section -->
-        <section id="subscriptions" class="content-section hidden">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Subscriptions</h1>
-                <p class="text-slate-600">Manage all user subscriptions</p>
-            </div>
-            
-            <!-- Filters and Search -->
-            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                        <div class="relative w-full md:w-64">
-                            <input type="text" id="search-users" placeholder="Search users..." class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <i class="fas fa-search absolute right-3 top-3 text-slate-400"></i>
-                        </div>
-                        
-                        <select id="filter-status" class="w-full md:w-48 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="expired">Expired</option>
-                            <option value="none">No Subscription</option>
-                        </select>
-                    </div>
-                    
-                    <button class="btn-primary w-full md:w-auto" id="add-subscription-btn">
-                        <i class="fas fa-user-plus mr-2"></i>
-                        Add Subscription
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Subscriptions Table -->
-            <div class="bg-white rounded-xl card-shadow overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">User ID</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Status</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Expiry Date</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Usage Count</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Unlock Code</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="subscriptions-table-body">
-                            <!-- Table rows will be added here by JavaScript -->
-                            <tr>
-                                <td colspan="6" class="py-8 text-center text-slate-500">
-                                    <i class="fas fa-users text-3xl mb-2"></i>
-                                    <p>No subscription data found</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Add Subscription Section -->
-        <section id="add-subscription" class="content-section hidden">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Add Subscription</h1>
-                <p class="text-slate-600">Manually add or extend a user subscription</p>
-            </div>
-            
-            <div class="bg-white rounded-xl p-6 card-shadow max-w-2xl">
-                <form id="add-subscription-form">
-                    <div class="mb-6">
-                        <label for="user-id" class="block text-base font-medium mb-2 text-slate-700">User ID</label>
-                        <input type="text" id="user-id" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter user ID (e.g., user_123456789)">
-                        <p class="text-sm text-slate-500 mt-1">Find user IDs in the Subscriptions section or ask user to check their browser console for their ID</p>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label for="subscription-months" class="block text-base font-medium mb-2 text-slate-700">Subscription Duration</label>
-                        <select id="subscription-months" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="1">1 Month</option>
-                            <option value="3">3 Months</option>
-                            <option value="6">6 Months</option>
-                            <option value="12" selected>12 Months</option>
-                            <option value="24">24 Months (2 Years)</option>
-                            <option value="lifetime">Lifetime</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label for="payment-amount" class="block text-base font-medium mb-2 text-slate-700">Payment Amount</label>
-                        <div class="flex items-center">
-                            <span class="mr-2 text-slate-600">$</span>
-                            <input type="number" id="payment-amount" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter payment amount" value="3" min="0" step="0.01">
-                        </div>
-                        <p class="text-sm text-slate-500 mt-1">Set the payment amount for this subscription</p>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label for="main-site-url" class="block text-base font-medium mb-2 text-slate-700">Main Website URL</label>
-                        <input type="url" id="main-site-url" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="https://your-main-website.com" value="">
-                        <p class="text-sm text-slate-500 mt-1">Enter the URL of your main Dopamine Offer Generator website</p>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-base font-medium mb-2 text-slate-700">Activation Method</label>
-                        <div class="flex space-x-4">
-                            <label class="flex items-center">
-                                <input type="radio" name="activation-method" value="direct" class="mr-2" checked>
-                                <span>Direct Activation</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="activation-method" value="link">
-                                <span>Generate Activation Link</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="activation-method" value="code">
-                                <span>Generate Unlock Code</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div id="activation-link-section" class="hidden mb-6">
-                        <label class="block text-base font-medium mb-2 text-slate-700">Activation Link</label>
-                        <div class="activation-link bg-slate-50 border border-slate-200 rounded-lg p-3">
-                            <div id="generated-link" class="text-sm break-all mb-2"></div>
-                            <button type="button" id="copy-link" class="btn-primary text-sm">
-                                <i class="fas fa-copy mr-1"></i> Copy Link
-                            </button>
-                        </div>
-                        <p class="text-sm text-slate-500 mt-1">Share this link with the user. When they visit it, premium will be activated automatically.</p>
-                    </div>
-                    
-                    <div id="unlock-code-section" class="hidden mb-6">
-                        <label class="block text-base font-medium mb-2 text-slate-700">Unlock Code</label>
-                        <div class="unlock-code-display">
-                            <div id="generated-code" class="text-lg font-bold"></div>
-                        </div>
-                        <button type="button" id="copy-code" class="btn-primary w-full mt-2">
-                            <i class="fas fa-copy mr-1"></i> Copy Unlock Code
-                        </button>
-                        <p class="text-sm text-slate-500 mt-1">Share this code with the user. They can enter it on the main website to activate premium.</p>
-                    </div>
-                    
-                    <div class="flex gap-4">
-                        <button type="submit" class="btn-primary flex-1">
-                            <i class="fas fa-save mr-2"></i>
-                            Add Subscription
-                        </button>
-                        <button type="button" id="cancel-add" class="px-6 py-3 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-        
-        <!-- Unlock Codes Section -->
-        <section id="unlock-codes" class="content-section hidden">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Unlock Codes</h1>
-                <p class="text-slate-600">Manage all unlock codes for premium access</p>
-            </div>
-            
-            <!-- Generate New Code -->
-            <div class="bg-white rounded-xl p-6 card-shadow mb-6">
-                <h2 class="text-xl font-bold text-slate-800 mb-4">Generate New Unlock Code</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label for="code-user-id" class="block text-sm font-medium mb-2 text-slate-700">User ID (Optional)</label>
-                        <input type="text" id="code-user-id" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Leave empty for any user">
-                    </div>
-                    
-                    <div>
-                        <label for="code-months" class="block text-sm font-medium mb-2 text-slate-700">Duration</label>
-                        <select id="code-months" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="1">1 Month</option>
-                            <option value="3">3 Months</option>
-                            <option value="6">6 Months</option>
-                            <option value="12" selected>12 Months</option>
-                            <option value="24">24 Months</option>
-                            <option value="lifetime">Lifetime</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="code-amount" class="block text-sm font-medium mb-2 text-slate-700">Price</label>
-                        <div class="flex items-center">
-                            <span class="mr-2 text-slate-600">$</span>
-                            <input type="number" id="code-amount" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" min="0" step="0.01">
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="generate-code-btn" class="btn-primary">
-                    <i class="fas fa-key mr-2"></i>
-                    Generate Unlock Code
-                </button>
-            </div>
-            
-            <!-- Unlock Codes Table -->
-            <div class="bg-white rounded-xl card-shadow overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Unlock Code</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">User ID</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Duration</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Price</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Status</th>
-                                <th class="py-3 px-6 text-left text-slate-600 font-medium">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="unlock-codes-table-body">
-                            <!-- Table rows will be added here by JavaScript -->
-                            <tr>
-                                <td colspan="6" class="py-8 text-center text-slate-500">
-                                    <i class="fas fa-key text-3xl mb-2"></i>
-                                    <p>No unlock codes found</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Settings Section -->
-        <section id="settings" class="content-section hidden">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Settings</h1>
-                <p class="text-slate-600">Configure admin dashboard settings</p>
-            </div>
-            
-            <div class="bg-white rounded-xl p-6 card-shadow max-w-2xl">
-                <div class="mb-6">
-                    <h2 class="text-xl font-bold text-slate-800 mb-4">General Settings</h2>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
-                            <div>
-                                <p class="font-medium text-slate-800">Free Trial Uses</p>
-                                <p class="text-sm text-slate-500">Number of free uses before requiring subscription</p>
-                            </div>
-                            <input type="number" id="free-trial-uses" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3">
-                        </div>
-                        
-                        <div class="flex items-center justify-between py-3 border-b border-slate-200">
-                            <div>
-                                <p class="font-medium text-slate-800">Default Monthly Price</p>
-                                <p class="text-sm text-slate-500">Default monthly subscription price</p>
-                            </div>
-                            <div class="flex items-center">
-                                <span class="mr-2">$</span>
-                                <input type="number" id="monthly-price" class="w-20 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" value="3" step="0.01">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-6">
-                    <h2 class="text-xl font-bold text-slate-800 mb-4">Danger Zone</h2>
-                    
-                    <div class="space-y-4 p-4 border border-red-200 rounded-lg bg-red-50">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium text-red-800">Clear All Data</p>
-                                <p class="text-sm text-red-600">Permanently delete all subscription data</p>
-                            </div>
-                            <button id="clear-all-data" class="btn-danger">
-                                <i class="fas fa-trash-alt mr-2"></i>
-                                Clear All
-                            </button>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-medium text-red-800">Reset to Default</p>
-                                <p class="text-sm text-red-600">Reset all settings to default values</p>
-                            </div>
-                            <button id="reset-settings" class="btn-danger">
-                                <i class="fas fa-undo mr-2"></i>
-                                Reset
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="flex justify-end">
-                    <button id="save-settings" class="btn-primary">
-                        <i class="fas fa-save mr-2"></i>
-                        Save Settings
-                    </button>
-                </div>
-            </div>
-        </section>
-    </div>
-
+<body class="min-h-screen font-inter">
     <!-- Toast Notification -->
     <div id="toast" class="toast hidden">
         <div class="flex items-center">
@@ -671,956 +94,639 @@
         </div>
     </div>
 
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Admin Panel</h1>
+                <p class="text-sm text-slate-500">Subscription Management</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-right">
+                    <p class="text-sm font-medium text-slate-800">Admin User</p>
+                    <p class="text-xs text-slate-500">Last login: <span id="last-login">Just now</span></p>
+                </div>
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
+                    A
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto py-8 px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Generate Codes -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h2 class="text-xl font-bold mb-6 text-slate-800">Generate Unlock Code</h2>
+                    
+                    <form id="generate-code-form" class="space-y-4">
+                        <div>
+                            <label for="user-id" class="block text-sm font-medium mb-2 text-slate-700">User ID</label>
+                            <input type="text" id="user-id" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter user ID or 'any' for generic code">
+                            <p class="text-xs text-slate-500 mt-1">Use 'any' to create a code that works for any user</p>
+                        </div>
+                        
+                        <div>
+                            <label for="months" class="block text-sm font-medium mb-2 text-slate-700">Subscription Duration</label>
+                            <select id="months" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800">
+                                <option value="1">1 Month</option>
+                                <option value="3" selected>3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">12 Months</option>
+                                <option value="24">24 Months</option>
+                                <option value="lifetime">Lifetime</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="custom-code" class="block text-sm font-medium mb-2 text-slate-700">Custom Code (Optional)</label>
+                            <input type="text" id="custom-code" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Leave empty for auto-generated code">
+                        </div>
+                        
+                        <button type="submit" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow">
+                            Generate Unlock Code
+                        </button>
+                    </form>
+                    
+                    <!-- Generated Code Display -->
+                    <div id="generated-code-section" class="mt-6 hidden">
+                        <h3 class="text-lg font-bold mb-3 text-slate-800">Generated Code</h3>
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-slate-700">Unlock Code:</span>
+                                <button id="copy-code" class="text-primary hover:text-primary-light">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                            </div>
+                            <p id="generated-code" class="font-mono text-lg font-bold text-slate-800"></p>
+                            
+                            <div class="mt-4">
+                                <p class="text-sm text-slate-700 mb-1">Activation URL:</p>
+                                <div class="flex">
+                                    <input type="text" id="activation-url" readonly class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-l-lg text-sm text-slate-800">
+                                    <button id="copy-url" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary-light">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
+                    <h2 class="text-xl font-bold mb-4 text-slate-800">Statistics</h2>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-primary" id="total-users">0</p>
+                            <p class="text-sm text-slate-600">Total Users</p>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-secondary" id="active-subscriptions">0</p>
+                            <p class="text-sm text-slate-600">Active Subscriptions</p>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-accent" id="codes-generated">0</p>
+                            <p class="text-sm text-slate-600">Codes Generated</p>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-green-500" id="revenue">$0</p>
+                            <p class="text-sm text-slate-600">Estimated Revenue</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - User Management -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <h2 class="text-xl font-bold text-slate-800">User Subscriptions</h2>
+                        
+                        <div class="flex space-x-2">
+                            <input type="text" id="search-users" placeholder="Search users..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800 text-sm">
+                            <button id="refresh-data" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-slate-700">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-50">
+                                <tr>
+                                    <th class="px-4 py-3">User ID</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3">Expiry Date</th>
+                                    <th class="px-4 py-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 text-center text-slate-500 text-sm" id="no-users-message">
+                        No users found. Users will appear here once they generate offers or activate premium.
+                    </div>
+                </div>
+                
+                <!-- Generated Codes List -->
+                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
+                    <h2 class="text-xl font-bold mb-6 text-slate-800">Generated Codes</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-slate-700">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-50">
+                                <tr>
+                                    <th class="px-4 py-3">Code</th>
+                                    <th class="px-4 py-3">User ID</th>
+                                    <th class="px-4 py-3">Duration</th>
+                                    <th class="px-4 py-3">Used</th>
+                                    <th class="px-4 py-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="codes-table-body">
+                                <!-- Codes will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 text-center text-slate-500 text-sm" id="no-codes-message">
+                        No codes generated yet. Generate your first code using the form on the left.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            const contentSections = document.querySelectorAll('.content-section');
-            const subscriptionsTableBody = document.getElementById('subscriptions-table-body');
-            const unlockCodesTableBody = document.getElementById('unlock-codes-table-body');
-            const addSubscriptionForm = document.getElementById('add-subscription-form');
-            const searchUsersInput = document.getElementById('search-users');
-            const filterStatusSelect = document.getElementById('filter-status');
-            const refreshDataBtn = document.getElementById('refresh-data');
-            const exportDataBtn = document.getElementById('export-data');
-            const clearAllBtn = document.getElementById('clear-all');
-            const addSampleBtn = document.getElementById('add-sample');
-            const addSubscriptionBtn = document.getElementById('add-subscription-btn');
-            const cancelAddBtn = document.getElementById('cancel-add');
-            const saveSettingsBtn = document.getElementById('save-settings');
-            const clearAllDataBtn = document.getElementById('clear-all-data');
-            const resetSettingsBtn = document.getElementById('reset-settings');
-            const activationMethodRadios = document.querySelectorAll('input[name="activation-method"]');
-            const activationLinkSection = document.getElementById('activation-link-section');
-            const unlockCodeSection = document.getElementById('unlock-code-section');
-            const generatedLink = document.getElementById('generated-link');
-            const generatedCode = document.getElementById('generated-code');
-            const copyLinkBtn = document.getElementById('copy-link');
+            const generateCodeForm = document.getElementById('generate-code-form');
+            const generatedCodeSection = document.getElementById('generated-code-section');
+            const generatedCodeElement = document.getElementById('generated-code');
+            const activationUrlElement = document.getElementById('activation-url');
             const copyCodeBtn = document.getElementById('copy-code');
-            const mainSiteUrlInput = document.getElementById('main-site-url');
-            const viewAllActivityBtn = document.getElementById('view-all-activity');
-            const generateCodeBtn = document.getElementById('generate-code-btn');
+            const copyUrlBtn = document.getElementById('copy-url');
+            const usersTableBody = document.getElementById('users-table-body');
+            const codesTableBody = document.getElementById('codes-table-body');
+            const noUsersMessage = document.getElementById('no-users-message');
+            const noCodesMessage = document.getElementById('no-codes-message');
+            const searchUsersInput = document.getElementById('search-users');
+            const refreshDataBtn = document.getElementById('refresh-data');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
             
-            // Navigation
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Update active link
-                    sidebarLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding section
-                    const target = this.getAttribute('href').substring(1);
-                    contentSections.forEach(section => {
-                        section.classList.add('hidden');
-                        if (section.id === target) {
-                            section.classList.remove('hidden');
-                        }
-                    });
-                    
-                    // Load specific data for the section
-                    if (target === 'subscriptions') {
-                        loadSubscriptionsTable();
-                    } else if (target === 'unlock-codes') {
-                        loadUnlockCodesTable();
-                    }
-                });
-            });
+            // Stats elements
+            const totalUsersElement = document.getElementById('total-users');
+            const activeSubscriptionsElement = document.getElementById('active-subscriptions');
+            const codesGeneratedElement = document.getElementById('codes-generated');
+            const revenueElement = document.getElementById('revenue');
             
-            // Activation method toggle
-            activationMethodRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    activationLinkSection.classList.add('hidden');
-                    unlockCodeSection.classList.add('hidden');
-                    
-                    if (this.value === 'link') {
-                        activationLinkSection.classList.remove('hidden');
-                        generateActivationLink();
-                    } else if (this.value === 'code') {
-                        unlockCodeSection.classList.remove('hidden');
-                        generateUnlockCode();
-                    }
-                });
-            });
-            
-            // Generate activation link when inputs change
-            document.getElementById('user-id').addEventListener('input', generateActivationLink);
-            document.getElementById('subscription-months').addEventListener('change', generateActivationLink);
-            mainSiteUrlInput.addEventListener('input', generateActivationLink);
-            
-            // Generate unlock code when inputs change
-            document.getElementById('user-id').addEventListener('input', generateUnlockCode);
-            document.getElementById('subscription-months').addEventListener('change', generateUnlockCode);
-            
-            // Copy link button
-            copyLinkBtn.addEventListener('click', function() {
-                const link = generatedLink.textContent;
-                navigator.clipboard.writeText(link).then(() => {
-                    showToast('Activation link copied to clipboard');
-                });
-            });
-            
-            // Copy code button
-            copyCodeBtn.addEventListener('click', function() {
-                const code = generatedCode.textContent;
-                navigator.clipboard.writeText(code).then(() => {
-                    showToast('Unlock code copied to clipboard');
-                });
-            });
-            
-            // Form submission
-            addSubscriptionForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                addSubscription();
-            });
-            
-            // Generate unlock code button
-            generateCodeBtn.addEventListener('click', function() {
-                generateStandaloneUnlockCode();
-            });
-            
-            // Event Listeners
-            refreshDataBtn.addEventListener('click', function() {
-                updateDashboardStats();
-                loadSubscriptionsTable();
-                showToast('Data refreshed successfully');
-            });
-            
-            exportDataBtn.addEventListener('click', function() {
-                exportData();
-            });
-            
-            clearAllBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-                    clearAllData();
-                }
-            });
-            
-            addSampleBtn.addEventListener('click', function() {
-                addSampleData();
-            });
-            
-            addSubscriptionBtn.addEventListener('click', function() {
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                document.querySelector('a[href="#add-subscription"]').classList.add('active');
-                contentSections.forEach(section => {
-                    section.classList.add('hidden');
-                    if (section.id === 'add-subscription') {
-                        section.classList.remove('hidden');
-                    }
-                });
-            });
-            
-            cancelAddBtn.addEventListener('click', function() {
-                document.getElementById('add-subscription-form').reset();
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                document.querySelector('a[href="#subscriptions"]').classList.add('active');
-                contentSections.forEach(section => {
-                    section.classList.add('hidden');
-                    if (section.id === 'subscriptions') {
-                        section.classList.remove('hidden');
-                    }
-                });
-            });
-            
-            searchUsersInput.addEventListener('input', function() {
-                filterSubscriptions();
-            });
-            
-            filterStatusSelect.addEventListener('change', function() {
-                filterSubscriptions();
-            });
-            
-            saveSettingsBtn.addEventListener('click', function() {
-                saveSettings();
-            });
-            
-            clearAllDataBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
-                    clearAllData();
-                }
-            });
-            
-            resetSettingsBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to reset all settings to default?')) {
-                    resetSettings();
-                }
-            });
-            
-            viewAllActivityBtn.addEventListener('click', function() {
-                showAllActivity();
-            });
-            
-            // Functions
-            function updateDashboardStats() {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                
-                // Calculate stats
-                const totalUsers = Object.keys(usageCounts).length;
-                let activeSubscriptions = 0;
-                let expiredSubscriptions = 0;
-                let revenue = 0;
-                
-                Object.keys(subscriptions).forEach(userId => {
-                    const subscription = subscriptions[userId];
-                    if (subscription.active) {
-                        const expiry = new Date(subscription.expiry);
-                        const now = new Date();
-                        if (now < expiry) {
-                            activeSubscriptions++;
-                        } else {
-                            expiredSubscriptions++;
-                        }
-                    }
-                });
-                
-                Object.values(payments).forEach(payment => {
-                    revenue += parseFloat(payment.amount || 0);
-                });
-                
-                // Update UI
-                document.getElementById('total-users').textContent = totalUsers;
-                document.getElementById('active-subscriptions').textContent = activeSubscriptions;
-                document.getElementById('expired-subscriptions').textContent = expiredSubscriptions;
-                document.getElementById('revenue').textContent = `$${revenue.toFixed(2)}`;
-                
-                // Update recent activity
-                updateRecentActivity();
-            }
-            
-            function updateRecentActivity() {
-                const recentActivity = document.getElementById('recent-activity');
-                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
-                
-                if (activityLog.length === 0) {
-                    recentActivity.innerHTML = `
-                        <div class="text-center py-8 text-slate-500">
-                            <i class="fas fa-history text-3xl mb-2"></i>
-                            <p>No recent activity</p>
-                        </div>
-                    `;
-                    return;
+            // Initialize admin data if not exists
+            function initializeAdminData() {
+                if (!localStorage.getItem('adminCodes')) {
+                    localStorage.setItem('adminCodes', JSON.stringify([]));
                 }
                 
-                // Show last 5 activities
-                const recentItems = activityLog.slice(-5).reverse();
-                recentActivity.innerHTML = '';
-                
-                recentItems.forEach(activity => {
-                    const activityEl = document.createElement('div');
-                    activityEl.className = 'flex items-center py-3 border-b border-slate-200 last:border-0';
-                    
-                    let icon = 'fas fa-info-circle';
-                    let color = 'text-blue-500';
-                    
-                    if (activity.type === 'subscription_added') {
-                        icon = 'fas fa-user-plus';
-                        color = 'text-green-500';
-                    } else if (activity.type === 'subscription_removed') {
-                        icon = 'fas fa-user-times';
-                        color = 'text-red-500';
-                    } else if (activity.type === 'payment_received') {
-                        icon = 'fas fa-dollar-sign';
-                        color = 'text-amber-500';
-                    } else if (activity.type === 'unlock_code_generated') {
-                        icon = 'fas fa-key';
-                        color = 'text-purple-500';
-                    }
-                    
-                    activityEl.innerHTML = `
-                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mr-4">
-                            <i class="${icon} ${color}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-medium text-slate-800">${activity.message}</p>
-                            <p class="text-sm text-slate-500">${formatDate(activity.timestamp)}</p>
-                        </div>
-                    `;
-                    
-                    recentActivity.appendChild(activityEl);
-                });
-            }
-            
-            function loadSubscriptionsTable() {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                
-                if (Object.keys(usageCounts).length === 0) {
-                    subscriptionsTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-500">
-                                <i class="fas fa-users text-3xl mb-2"></i>
-                                <p>No subscription data found</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
+                if (!localStorage.getItem('adminLastLogin')) {
+                    localStorage.setItem('adminLastLogin', new Date().toISOString());
                 }
                 
-                subscriptionsTableBody.innerHTML = '';
+                // Set last login display
+                const lastLogin = new Date(localStorage.getItem('adminLastLogin'));
+                document.getElementById('last-login').textContent = formatDate(lastLogin);
                 
-                Object.keys(usageCounts).forEach(userId => {
-                    const usageCount = usageCounts[userId];
-                    const subscription = subscriptions[userId] || { active: false, expiry: null };
-                    
-                    // Find unlock code for this user
-                    let userUnlockCode = 'N/A';
-                    Object.keys(unlockCodes).forEach(code => {
-                        if (unlockCodes[code].userId === userId && unlockCodes[code].active) {
-                            userUnlockCode = code;
-                        }
-                    });
-                    
-                    // Determine status
-                    let status = 'No Subscription';
-                    let statusClass = 'no-subscription';
-                    let expiryText = 'N/A';
-                    
-                    if (subscription.active) {
-                        const expiry = new Date(subscription.expiry);
-                        const now = new Date();
-                        
-                        if (now < expiry) {
-                            status = 'Active';
-                            statusClass = 'active-subscription';
-                            expiryText = formatDate(expiry);
-                        } else {
-                            status = 'Expired';
-                            statusClass = 'expired-subscription';
-                            expiryText = formatDate(expiry);
-                        }
-                    }
-                    
-                    const row = document.createElement('tr');
-                    row.className = `table-row ${statusClass}`;
-                    row.innerHTML = `
-                        <td class="py-4 px-6 border-b border-slate-200">${userId}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                status === 'Active' ? 'bg-green-100 text-green-800' : 
-                                status === 'Expired' ? 'bg-red-100 text-red-800' : 
-                                'bg-slate-100 text-slate-800'
-                            }">
-                                ${status}
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 border-b border-slate-200">${expiryText}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">${usageCount}</td>
-                        <td class="py-4 px-6 border-b border-slate-200 font-mono">${userUnlockCode}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">
-                            <div class="flex space-x-2">
-                                <button class="text-primary hover:text-primary-light edit-subscription" data-user="${userId}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="text-red-500 hover:text-red-700 remove-subscription" data-user="${userId}">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                <button class="text-purple-500 hover:text-purple-700 generate-code" data-user="${userId}">
-                                    <i class="fas fa-key"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    subscriptionsTableBody.appendChild(row);
-                });
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.edit-subscription').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user');
-                        editSubscription(userId);
-                    });
-                });
-                
-                document.querySelectorAll('.remove-subscription').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user');
-                        removeSubscription(userId);
-                    });
-                });
-                
-                document.querySelectorAll('.generate-code').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user');
-                        generateUserUnlockCode(userId);
-                    });
-                });
+                // Update last login time
+                localStorage.setItem('adminLastLogin', new Date().toISOString());
             }
             
-            function loadUnlockCodesTable() {
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                
-                if (Object.keys(unlockCodes).length === 0) {
-                    unlockCodesTableBody.innerHTML = `
-                        <tr>
-                            <td colspan="6" class="py-8 text-center text-slate-500">
-                                <i class="fas fa-key text-3xl mb-2"></i>
-                                <p>No unlock codes found</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-                
-                unlockCodesTableBody.innerHTML = '';
-                
-                Object.keys(unlockCodes).forEach(code => {
-                    const codeData = unlockCodes[code];
-                    
-                    const row = document.createElement('tr');
-                    row.className = 'table-row';
-                    row.innerHTML = `
-                        <td class="py-4 px-6 border-b border-slate-200 font-mono font-bold">${code}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">${codeData.userId || 'Any User'}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">${codeData.months === 'lifetime' ? 'Lifetime' : codeData.months + ' months'}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">$${codeData.amount || '0'}</td>
-                        <td class="py-4 px-6 border-b border-slate-200">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                codeData.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                            }">
-                                ${codeData.active ? 'Active' : 'Used'}
-                            </span>
-                        </td>
-                        <td class="py-4 px-6 border-b border-slate-200">
-                            <div class="flex space-x-2">
-                                <button class="text-red-500 hover:text-red-700 deactivate-code" data-code="${code}">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                                <button class="text-blue-500 hover:text-blue-700 copy-code" data-code="${code}">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    unlockCodesTableBody.appendChild(row);
-                });
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.deactivate-code').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const code = this.getAttribute('data-code');
-                        deactivateUnlockCode(code);
-                    });
-                });
-                
-                document.querySelectorAll('.copy-code').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const code = this.getAttribute('data-code');
-                        navigator.clipboard.writeText(code).then(() => {
-                            showToast('Unlock code copied to clipboard');
-                        });
-                    });
-                });
+            // Format date for display
+            function formatDate(date) {
+                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             }
             
-            function filterSubscriptions() {
-                const searchTerm = searchUsersInput.value.toLowerCase();
-                const statusFilter = filterStatusSelect.value;
-                
-                const rows = subscriptionsTableBody.querySelectorAll('tr');
-                
-                rows.forEach(row => {
-                    if (row.cells.length < 6) return; // Skip the "no data" row
-                    
-                    const userId = row.cells[0].textContent.toLowerCase();
-                    const status = row.cells[1].textContent.toLowerCase();
-                    
-                    let matchesSearch = userId.includes(searchTerm);
-                    let matchesStatus = statusFilter === 'all' || 
-                                       (statusFilter === 'active' && status.includes('active')) ||
-                                       (statusFilter === 'expired' && status.includes('expired')) ||
-                                       (statusFilter === 'none' && status.includes('no subscription'));
-                    
-                    if (matchesSearch && matchesStatus) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-            
-            function generateActivationLink() {
-                const userId = document.getElementById('user-id').value;
-                const months = document.getElementById('subscription-months').value;
-                const mainSiteUrl = mainSiteUrlInput.value;
-                
-                if (userId && mainSiteUrl) {
-                    // Generate a unique unlock code for this activation
-                    const unlockCode = generateRandomCode();
-                    const activationLink = `${mainSiteUrl}?unlock=${unlockCode}&user=${userId}&months=${months}`;
-                    generatedLink.textContent = activationLink;
-                } else {
-                    generatedLink.textContent = 'Please fill in User ID and Main Website URL';
-                }
-            }
-            
-            function generateUnlockCode() {
-                const userId = document.getElementById('user-id').value;
-                const months = document.getElementById('subscription-months').value;
-                
-                if (userId) {
-                    const unlockCode = generateRandomCode();
-                    generatedCode.textContent = unlockCode;
-                } else {
-                    generatedCode.textContent = 'Please enter a User ID';
-                }
-            }
-            
-            function generateRandomCode() {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let code = '';
-                for (let i = 0; i < 8; i++) {
-                    code += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                return code;
-            }
-            
-            function addSubscription() {
-                const userId = document.getElementById('user-id').value.trim();
-                const months = document.getElementById('subscription-months').value;
-                const amount = document.getElementById('payment-amount').value || '3';
-                const activationMethod = document.querySelector('input[name="activation-method"]:checked').value;
-                const mainSiteUrl = mainSiteUrlInput.value;
-                
-                if (!userId) {
-                    alert('Please enter a valid User ID');
-                    return;
-                }
-                
-                if (!mainSiteUrl) {
-                    alert('Please enter the Main Website URL');
-                    return;
-                }
-                
-                if (activationMethod === 'direct') {
-                    // Direct activation - update localStorage
-                    const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                    
-                    // Calculate expiry date
-                    let expiryDate;
-                    if (months === 'lifetime') {
-                        expiryDate = new Date();
-                        expiryDate.setFullYear(expiryDate.getFullYear() + 10);
-                    } else {
-                        expiryDate = new Date();
-                        expiryDate.setMonth(expiryDate.getMonth() + parseInt(months));
-                    }
-                    
-                    // Update subscription
-                    subscriptions[userId] = {
-                        active: true,
-                        expiry: expiryDate.toISOString()
-                    };
-                    
-                    // Save to localStorage
-                    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                    
-                    // Record payment
-                    const payments = JSON.parse(localStorage.getItem('payments') || '{}');
-                    payments[userId] = {
-                        amount: parseFloat(amount),
-                        date: new Date().toISOString(),
-                        notes: 'Direct subscription'
-                    };
-                    localStorage.setItem('payments', JSON.stringify(payments));
-                    
-                    // Ensure user exists in usageCounts
-                    const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                    if (!usageCounts[userId]) {
-                        usageCounts[userId] = 0;
-                        localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
-                    }
-                    
-                    // Log activity
-                    logActivity('subscription_added', `Added ${months === 'lifetime' ? 'lifetime' : months + ' month'} subscription for ${userId}`);
-                    
-                    showToast(`Direct subscription added for ${userId}`);
-                } else if (activationMethod === 'link') {
-                    // Generate activation link with unique code
-                    const unlockCode = generateRandomCode();
-                    
-                    // Store the unlock code
-                    const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                    unlockCodes[unlockCode] = {
-                        active: true,
-                        userId: userId,
-                        months: months,
-                        amount: parseFloat(amount),
-                        createdAt: new Date().toISOString()
-                    };
-                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                    
-                    // Log activity
-                    logActivity('unlock_code_generated', `Generated activation link for ${userId}`);
-                    
-                    showToast(`Activation link generated for ${userId}. Share it with the user.`);
-                } else if (activationMethod === 'code') {
-                    // Generate unlock code
-                    const unlockCode = generatedCode.textContent;
-                    
-                    // Store the unlock code
-                    const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                    unlockCodes[unlockCode] = {
-                        active: true,
-                        userId: userId,
-                        months: months,
-                        amount: parseFloat(amount),
-                        createdAt: new Date().toISOString()
-                    };
-                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                    
-                    // Log activity
-                    logActivity('unlock_code_generated', `Generated unlock code for ${userId}`);
-                    
-                    showToast(`Unlock code generated for ${userId}. Share it with the user.`);
-                }
-                
-                // Reset form
-                addSubscriptionForm.reset();
-                
-                // Navigate back to subscriptions
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                document.querySelector('a[href="#subscriptions"]').classList.add('active');
-                contentSections.forEach(section => {
-                    section.classList.add('hidden');
-                    if (section.id === 'subscriptions') {
-                        section.classList.remove('hidden');
-                    }
-                });
-                
-                // Update UI
-                updateDashboardStats();
-                loadSubscriptionsTable();
-            }
-            
-            function generateStandaloneUnlockCode() {
-                const userId = document.getElementById('code-user-id').value.trim();
-                const months = document.getElementById('code-months').value;
-                const amount = document.getElementById('code-amount').value || '3';
-                
-                const unlockCode = generateRandomCode();
-                
-                // Store the unlock code
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                unlockCodes[unlockCode] = {
-                    active: true,
-                    userId: userId || null, // null means any user can use it
-                    months: months,
-                    amount: parseFloat(amount),
-                    createdAt: new Date().toISOString()
-                };
-                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                
-                // Log activity
-                logActivity('unlock_code_generated', `Generated standalone unlock code: ${unlockCode}`);
-                
-                showToast(`Unlock code generated: ${unlockCode}`);
-                
-                // Reload the unlock codes table
-                loadUnlockCodesTable();
-            }
-            
-            function generateUserUnlockCode(userId) {
-                const months = '12'; // Default to 12 months
-                const amount = '3'; // Default amount
-                
-                const unlockCode = generateRandomCode();
-                
-                // Store the unlock code
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                unlockCodes[unlockCode] = {
-                    active: true,
-                    userId: userId,
-                    months: months,
-                    amount: parseFloat(amount),
-                    createdAt: new Date().toISOString()
-                };
-                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                
-                // Log activity
-                logActivity('unlock_code_generated', `Generated unlock code for ${userId}: ${unlockCode}`);
-                
-                showToast(`Unlock code generated for ${userId}: ${unlockCode}`);
-                
-                // Reload the subscriptions table
-                loadSubscriptionsTable();
-            }
-            
-            function deactivateUnlockCode(code) {
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                if (unlockCodes[code]) {
-                    unlockCodes[code].active = false;
-                    localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                    
-                    // Log activity
-                    logActivity('unlock_code_deactivated', `Deactivated unlock code: ${code}`);
-                    
-                    showToast(`Unlock code ${code} deactivated`);
-                    
-                    // Reload the unlock codes table
-                    loadUnlockCodesTable();
-                }
-            }
-            
-            function editSubscription(userId) {
-                // For simplicity, we'll just prefill the add subscription form
-                document.getElementById('user-id').value = userId;
-                
-                // Navigate to add subscription form
-                sidebarLinks.forEach(l => l.classList.remove('active'));
-                document.querySelector('a[href="#add-subscription"]').classList.add('active');
-                contentSections.forEach(section => {
-                    section.classList.add('hidden');
-                    if (section.id === 'add-subscription') {
-                        section.classList.remove('hidden');
-                    }
-                });
-                
-                showToast(`Editing subscription for ${userId}`);
-            }
-            
-            function removeSubscription(userId) {
-                if (confirm(`Are you sure you want to remove the subscription for ${userId}?`)) {
-                    const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                    delete subscriptions[userId];
-                    localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                    
-                    // Log activity
-                    logActivity('subscription_removed', `Removed subscription for ${userId}`);
-                    
-                    showToast(`Subscription removed for ${userId}`);
-                    
-                    // Update UI
-                    updateDashboardStats();
-                    loadSubscriptionsTable();
-                }
-            }
-            
-            function exportData() {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                
-                const data = {
-                    subscriptions: subscriptions,
-                    usageCounts: usageCounts,
-                    payments: payments,
-                    unlockCodes: unlockCodes,
-                    exportDate: new Date().toISOString()
-                };
-                
-                const dataStr = JSON.stringify(data, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `dopamine-offers-data-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                showToast('Data exported successfully');
-            }
-            
-            function clearAllData() {
-                localStorage.removeItem('subscriptions');
-                localStorage.removeItem('usageCounts');
-                localStorage.removeItem('payments');
-                localStorage.removeItem('unlockCodes');
-                localStorage.removeItem('activityLog');
-                
-                showToast('All data cleared successfully');
-                
-                // Update UI
-                updateDashboardStats();
-                loadSubscriptionsTable();
-                loadUnlockCodesTable();
-            }
-            
-            function addSampleData() {
-                // Add some sample users with subscriptions
-                const sampleUsers = [
-                    { id: 'user_123456789', usage: 5, active: true, months: 3 },
-                    { id: 'user_987654321', usage: 2, active: false, months: 0 },
-                    { id: 'user_555555555', usage: 12, active: true, months: 6 },
-                    { id: 'user_111111111', usage: 0, active: false, months: 0 },
-                    { id: 'user_999999999', usage: 8, active: true, months: 1 }
-                ];
-                
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const usageCounts = JSON.parse(localStorage.getItem('usageCounts') || '{}');
-                const payments = JSON.parse(localStorage.getItem('payments') || '{}');
-                const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '{}');
-                
-                sampleUsers.forEach(user => {
-                    // Add usage count
-                    usageCounts[user.id] = user.usage;
-                    
-                    // Add subscription if active
-                    if (user.active) {
-                        const expiry = new Date();
-                        expiry.setMonth(expiry.getMonth() + user.months);
-                        
-                        subscriptions[user.id] = {
-                            active: true,
-                            expiry: expiry.toISOString()
-                        };
-                        
-                        // Add sample payment
-                        payments[user.id] = {
-                            amount: user.months * 3, // $3 per month
-                            date: new Date().toISOString(),
-                            notes: 'Sample payment data'
-                        };
-                        
-                        // Add sample unlock code for some users
-                        if (Math.random() > 0.5) {
-                            const code = generateRandomCode();
-                            unlockCodes[code] = {
-                                active: true,
-                                userId: user.id,
-                                months: user.months,
-                                amount: user.months * 3,
-                                createdAt: new Date().toISOString()
-                            };
-                        }
-                    }
-                });
-                
-                // Add some standalone unlock codes
-                for (let i = 0; i < 3; i++) {
-                    const code = generateRandomCode();
-                    unlockCodes[code] = {
-                        active: true,
-                        userId: null, // Available for any user
-                        months: 12,
-                        amount: 36,
-                        createdAt: new Date().toISOString()
-                    };
-                }
-                
-                // Save to localStorage
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
-                localStorage.setItem('payments', JSON.stringify(payments));
-                localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
-                
-                // Log activity
-                logActivity('sample_data_added', 'Added sample data for testing');
-                
-                showToast('Sample data added successfully');
-                
-                // Update UI
-                updateDashboardStats();
-                loadSubscriptionsTable();
-                loadUnlockCodesTable();
-            }
-            
-            function saveSettings() {
-                const freeTrialUses = document.getElementById('free-trial-uses').value;
-                const monthlyPrice = document.getElementById('monthly-price').value;
-                
-                // In a real application, you would save these to a backend
-                // For this demo, we'll just save to localStorage
-                const settings = {
-                    freeTrialUses: freeTrialUses,
-                    monthlyPrice: monthlyPrice,
-                    lastUpdated: new Date().toISOString()
-                };
-                
-                localStorage.setItem('adminSettings', JSON.stringify(settings));
-                showToast('Settings saved successfully');
-            }
-            
-            function resetSettings() {
-                document.getElementById('free-trial-uses').value = 3;
-                document.getElementById('monthly-price').value = 3;
-                
-                showToast('Settings reset to default values');
-            }
-            
-            function showAllActivity() {
-                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
-                
-                if (activityLog.length === 0) {
-                    alert('No activity data available.');
-                    return;
-                }
-                
-                let activityText = "All Activity:\n\n";
-                activityLog.forEach(activity => {
-                    activityText += `${formatDate(activity.timestamp)} - ${activity.message}\n`;
-                });
-                
-                alert(activityText);
-            }
-            
-            function logActivity(type, message) {
-                const activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
-                
-                activityLog.push({
-                    type: type,
-                    message: message,
-                    timestamp: new Date().toISOString()
-                });
-                
-                // Keep only last 50 activities
-                if (activityLog.length > 50) {
-                    activityLog.splice(0, activityLog.length - 50);
-                }
-                
-                localStorage.setItem('activityLog', JSON.stringify(activityLog));
-            }
-            
+            // Show toast notification
             function showToast(message, type = 'success') {
                 toastMessage.textContent = message;
                 toast.className = `toast ${type} show`;
                 
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 5000);
+                }, 3000);
             }
             
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+            // Generate a random code
+            function generateRandomCode() {
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+            
+            // Get all users from localStorage
+            function getAllUsers() {
+                const users = [];
+                
+                // Get users with subscriptions
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                Object.keys(subscriptions).forEach(userId => {
+                    users.push({
+                        id: userId,
+                        subscription: subscriptions[userId]
+                    });
+                });
+                
+                // Get users with usage data but no subscription
+                const usageCount = localStorage.getItem('usageCount');
+                const visitorId = localStorage.getItem('visitorId');
+                
+                if (visitorId && !subscriptions[visitorId]) {
+                    users.push({
+                        id: visitorId,
+                        subscription: { active: false, expiry: null }
+                    });
+                }
+                
+                return users;
+            }
+            
+            // Get all generated codes
+            function getGeneratedCodes() {
+                return JSON.parse(localStorage.getItem('adminCodes') || '[]');
+            }
+            
+            // Save a generated code
+            function saveGeneratedCode(code, userId, months, used = false) {
+                const codes = getGeneratedCodes();
+                
+                codes.push({
+                    code: code,
+                    userId: userId,
+                    months: months,
+                    used: used,
+                    createdAt: new Date().toISOString()
+                });
+                
+                localStorage.setItem('adminCodes', JSON.stringify(codes));
+            }
+            
+            // Update statistics
+            function updateStatistics() {
+                const users = getAllUsers();
+                const codes = getGeneratedCodes();
+                
+                // Total users
+                totalUsersElement.textContent = users.length;
+                
+                // Active subscriptions
+                const activeSubs = users.filter(user => {
+                    if (!user.subscription.active) return false;
+                    
+                    if (user.subscription.expiry) {
+                        return new Date(user.subscription.expiry) > new Date();
+                    }
+                    
+                    return true;
+                }).length;
+                
+                activeSubscriptionsElement.textContent = activeSubs;
+                
+                // Codes generated
+                codesGeneratedElement.textContent = codes.length;
+                
+                // Estimated revenue (assuming $3/month)
+                let revenue = 0;
+                users.forEach(user => {
+                    if (user.subscription.active && user.subscription.expiry) {
+                        const months = getSubscriptionMonths(user.subscription);
+                        revenue += months * 3;
+                    }
+                });
+                
+                revenueElement.textContent = `$${revenue}`;
+            }
+            
+            // Get subscription months from expiry date
+            function getSubscriptionMonths(subscription) {
+                if (!subscription.expiry) return 0;
+                
+                const now = new Date();
+                const expiry = new Date(subscription.expiry);
+                const diffTime = Math.abs(expiry - now);
+                const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+                
+                return diffMonths;
+            }
+            
+            // Render users table
+            function renderUsersTable(searchTerm = '') {
+                const users = getAllUsers();
+                const filteredUsers = users.filter(user => 
+                    user.id.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                
+                usersTableBody.innerHTML = '';
+                
+                if (filteredUsers.length === 0) {
+                    noUsersMessage.classList.remove('hidden');
+                    return;
+                }
+                
+                noUsersMessage.classList.add('hidden');
+                
+                filteredUsers.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-slate-50';
+                    
+                    const status = user.subscription.active ? 
+                        (user.subscription.expiry && new Date(user.subscription.expiry) < new Date() ? 'expired' : 'active') : 
+                        'inactive';
+                    
+                    const statusText = status === 'active' ? 'Active' : 
+                                     status === 'expired' ? 'Expired' : 'Inactive';
+                    
+                    const statusClass = status === 'active' ? 'status-active' : 
+                                      status === 'expired' ? 'status-expired' : 'bg-slate-100 text-slate-700';
+                    
+                    const expiryDate = user.subscription.expiry ? 
+                        formatDate(new Date(user.subscription.expiry)) : 
+                        'N/A';
+                    
+                    row.innerHTML = `
+                        <td class="px-4 py-3 font-mono text-xs">${user.id}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">${expiryDate}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary-light edit-user" data-user="${user.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-user" data-user="${user.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    usersTableBody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.edit-user').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user');
+                        editUser(userId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-user').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user');
+                        deleteUser(userId);
+                    });
                 });
             }
             
-            // Load settings on page load
-            function loadSettings() {
-                const settings = JSON.parse(localStorage.getItem('adminSettings') || '{}');
+            // Render codes table
+            function renderCodesTable() {
+                const codes = getGeneratedCodes();
+                codesTableBody.innerHTML = '';
                 
-                if (settings.freeTrialUses) {
-                    document.getElementById('free-trial-uses').value = settings.freeTrialUses;
+                if (codes.length === 0) {
+                    noCodesMessage.classList.remove('hidden');
+                    return;
                 }
                 
-                if (settings.monthlyPrice) {
-                    document.getElementById('monthly-price').value = settings.monthlyPrice;
-                    document.getElementById('payment-amount').value = settings.monthlyPrice;
-                }
+                noCodesMessage.classList.add('hidden');
+                
+                // Sort codes by creation date (newest first)
+                codes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                codes.forEach(code => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-slate-50';
+                    
+                    const usedStatus = code.used ? 'Yes' : 'No';
+                    const usedClass = code.used ? 'status-active' : 'bg-slate-100 text-slate-700';
+                    
+                    row.innerHTML = `
+                        <td class="px-4 py-3 font-mono font-bold">${code.code}</td>
+                        <td class="px-4 py-3 font-mono text-xs">${code.userId}</td>
+                        <td class="px-4 py-3">${code.months === 'lifetime' ? 'Lifetime' : `${code.months} months`}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${usedClass}">
+                                ${usedStatus}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex space-x-2">
+                                <button class="text-primary hover:text-primary-light copy-code-row" data-code="${code.code}">
+                                    <i class="far fa-copy"></i>
+                                </button>
+                                <button class="text-red-500 hover:text-red-700 delete-code" data-code="${code.code}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    codesTableBody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.copy-code-row').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const code = this.getAttribute('data-code');
+                        navigator.clipboard.writeText(code).then(() => {
+                            showToast('Code copied to clipboard!');
+                        });
+                    });
+                });
+                
+                document.querySelectorAll('.delete-code').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const code = this.getAttribute('data-code');
+                        deleteCode(code);
+                    });
+                });
             }
             
-            // Initialize dashboard and settings
-            updateDashboardStats();
-            loadSubscriptionsTable();
-            loadSettings();
+            // Edit user subscription
+            function editUser(userId) {
+                const users = getAllUsers();
+                const user = users.find(u => u.id === userId);
+                
+                if (!user) return;
+                
+                const newMonths = prompt('Enter new subscription duration in months (or "lifetime" for permanent access):', 
+                    user.subscription.expiry ? getSubscriptionMonths(user.subscription) : '12');
+                
+                if (newMonths === null) return;
+                
+                let months = parseInt(newMonths);
+                let isLifetime = newMonths.toLowerCase() === 'lifetime';
+                
+                if (isNaN(months) && !isLifetime) {
+                    showToast('Invalid duration entered', 'error');
+                    return;
+                }
+                
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                
+                if (isLifetime) {
+                    subscriptions[userId] = {
+                        active: true,
+                        expiry: null
+                    };
+                } else {
+                    const expiry = new Date();
+                    expiry.setMonth(expiry.getMonth() + months);
+                    
+                    subscriptions[userId] = {
+                        active: true,
+                        expiry: expiry.toISOString()
+                    };
+                }
+                
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                
+                showToast(`Subscription updated for user ${userId}`);
+                renderUsersTable();
+                updateStatistics();
+            }
+            
+            // Delete user
+            function deleteUser(userId) {
+                if (!confirm(`Are you sure you want to delete user ${userId}? This will remove their subscription data.`)) {
+                    return;
+                }
+                
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                delete subscriptions[userId];
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                
+                // Also remove usage count if this is the current visitor
+                const visitorId = localStorage.getItem('visitorId');
+                if (visitorId === userId) {
+                    localStorage.removeItem('usageCount');
+                }
+                
+                showToast(`User ${userId} deleted`);
+                renderUsersTable();
+                updateStatistics();
+            }
+            
+            // Delete code
+            function deleteCode(code) {
+                if (!confirm(`Are you sure you want to delete code ${code}?`)) {
+                    return;
+                }
+                
+                const codes = getGeneratedCodes();
+                const updatedCodes = codes.filter(c => c.code !== code);
+                localStorage.setItem('adminCodes', JSON.stringify(updatedCodes));
+                
+                showToast(`Code ${code} deleted`);
+                renderCodesTable();
+                updateStatistics();
+            }
+            
+            // Generate code form submission
+            generateCodeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const userId = document.getElementById('user-id').value.trim();
+                const months = document.getElementById('months').value;
+                const customCode = document.getElementById('custom-code').value.trim();
+                
+                if (!userId) {
+                    showToast('Please enter a User ID', 'error');
+                    return;
+                }
+                
+                // Generate code
+                const code = customCode || generateRandomCode();
+                
+                // Save the code
+                saveGeneratedCode(code, userId, months);
+                
+                // Generate activation URL
+                const baseUrl = window.location.origin + window.location.pathname;
+                const urlParams = new URLSearchParams();
+                urlParams.set('unlock', code);
+                
+                if (userId !== 'any') {
+                    urlParams.set('user', userId);
+                }
+                
+                if (months !== 'lifetime') {
+                    urlParams.set('months', months);
+                }
+                
+                const activationUrl = `${baseUrl.replace('admin.html', 'index.html')}?${urlParams.toString()}`;
+                
+                // Display the generated code and URL
+                generatedCodeElement.textContent = code;
+                activationUrlElement.value = activationUrl;
+                generatedCodeSection.classList.remove('hidden');
+                
+                showToast('Unlock code generated successfully!');
+                
+                // Reset form
+                document.getElementById('user-id').value = '';
+                document.getElementById('custom-code').value = '';
+                
+                // Update tables and statistics
+                renderCodesTable();
+                updateStatistics();
+                
+                // Scroll to the generated code section
+                generatedCodeSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Copy code to clipboard
+            copyCodeBtn.addEventListener('click', function() {
+                const code = generatedCodeElement.textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast('Code copied to clipboard!');
+                });
+            });
+            
+            // Copy URL to clipboard
+            copyUrlBtn.addEventListener('click', function() {
+                const url = activationUrlElement.value;
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('Activation URL copied to clipboard!');
+                });
+            });
+            
+            // Search users
+            searchUsersInput.addEventListener('input', function() {
+                renderUsersTable(this.value);
+            });
+            
+            // Refresh data
+            refreshDataBtn.addEventListener('click', function() {
+                renderUsersTable();
+                renderCodesTable();
+                updateStatistics();
+                showToast('Data refreshed');
+            });
+            
+            // Initialize the admin panel
+            initializeAdminData();
+            renderUsersTable();
+            renderCodesTable();
+            updateStatistics();
         });
     </script>
 </body>
