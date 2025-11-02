@@ -342,9 +342,7 @@
                 });
                 
                 // Get users with usage data but no subscription
-                const usageCount = localStorage.getItem('usageCount');
                 const visitorId = localStorage.getItem('visitorId');
-                
                 if (visitorId && !subscriptions[visitorId]) {
                     users.push({
                         id: visitorId,
@@ -373,6 +371,7 @@
                 });
                 
                 localStorage.setItem('adminCodes', JSON.stringify(codes));
+                return codes;
             }
             
             // Update statistics
@@ -401,10 +400,9 @@
                 
                 // Estimated revenue (assuming $3/month)
                 let revenue = 0;
-                users.forEach(user => {
-                    if (user.subscription.active && user.subscription.expiry) {
-                        const months = getSubscriptionMonths(user.subscription);
-                        revenue += months * 3;
+                codes.forEach(code => {
+                    if (code.used && code.months !== 'lifetime') {
+                        revenue += parseInt(code.months) * 3;
                     }
                 });
                 
@@ -517,10 +515,11 @@
                     
                     const usedStatus = code.used ? 'Yes' : 'No';
                     const usedClass = code.used ? 'status-active' : 'bg-slate-100 text-slate-700';
+                    const usedBy = code.usedBy ? `<br><small>Used by: ${code.usedBy}</small>` : '';
                     
                     row.innerHTML = `
                         <td class="px-4 py-3 font-mono font-bold">${code.code}</td>
-                        <td class="px-4 py-3 font-mono text-xs">${code.userId}</td>
+                        <td class="px-4 py-3 font-mono text-xs">${code.userId}${usedBy}</td>
                         <td class="px-4 py-3">${code.months === 'lifetime' ? 'Lifetime' : `${code.months} months`}</td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-1 rounded-full text-xs font-medium ${usedClass}">
@@ -613,12 +612,6 @@
                 const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
                 delete subscriptions[userId];
                 localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                
-                // Also remove usage count if this is the current visitor
-                const visitorId = localStorage.getItem('visitorId');
-                if (visitorId === userId) {
-                    localStorage.removeItem('usageCount');
-                }
                 
                 showToast(`User ${userId} deleted`);
                 renderUsersTable();
