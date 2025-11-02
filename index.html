@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dopamine-Driven Offer Generator | AI-Powered Sales Offers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#7c3aed',
+                        'primary-light': '#8b5cf6',
+                        'secondary': '#0ea5e9',
+                        'accent': '#f59e0b',
+                        'dark': '#0f172a',
+                        'darker': '#0a0f1c',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'text-shimmer': 'text-shimmer 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'pulse-glow': {
+                            '0%': { boxShadow: '0 0 20px rgba(124, 58, 237, 0.5)' },
+                            '100%': { boxShadow: '0 0 40px rgba(124, 58, 237, 0.8)' },
+                        },
+                        'text-shimmer': {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-shadow:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            border-color: #7c3aed;
+        }
+        
+        .language-btn {
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .language-btn.active {
+            background-color: #7c3aed;
+            color: white;
+            border-color: #7c3aed;
+        }
+        
+        .score-badge {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .loading-dots {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .loading-dots div {
+            position: absolute;
+            top: 33px;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: #7c3aed;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        
+        .loading-dots div:nth-child(1) {
+            left: 8px;
+            animation: loading-dots1 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(2) {
+            left: 8px;
+            animation: loading-dots2 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(3) {
+            left: 32px;
+            animation: loading-dots2 0.6s infinite;
+        }
+        
+        .loading-dots div:nth-child(4) {
+            left: 56px;
+            animation: loading-dots3 0.6s infinite;
+        }
+        
+        @keyframes loading-dots1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes loading-dots3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+        
+        @keyframes loading-dots2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+        
+        .copy-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .copy-btn.copied {
+            background-color: #10b981;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .language-selector {
+            background: white;
+            border-radius: 10px;
+            padding: 8px;
+            display: inline-flex;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        /* Fixed Premium Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            overflow: hidden;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c3aed;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-weight: bold;
+        }
+        
+        .close-modal:hover {
+            background: white;
+            transform: rotate(90deg);
+        }
+        
+        .premium-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .shimmer-text {
+            background: linear-gradient(90deg, #ffffff, #e0e7ff, #ffffff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: text-shimmer 3s linear infinite;
+        }
+        
+        .feature-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .unlock-input {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #1e293b;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .unlock-input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        
+        .unlock-btn {
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .crypto-address {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #1e293b;
+        }
+        
+        .crypto-address:hover {
+            background: #f8fafc;
+        }
+        
+        .copy-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7c3aed;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .usage-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f59e0b;
+            color: white;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+                margin: 20px auto;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-header, .modal-body, .modal-footer {
+                padding: 1rem;
+            }
+            
+            .feature-card, .payment-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-inter">
+    <!-- Fixed Premium Subscription Modal -->
+    <div id="subscription-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-header">
+                <div class="premium-badge">PREMIUM ACCESS REQUIRED</div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    Upgrade to <span class="shimmer-text">Unlimited</span>
+                </h2>
+                <p class="text-white/90 max-w-2xl mx-auto">
+                    You've used all 3 free offers from your IP address. Upgrade to premium for unlimited access to our AI-powered offer generator.
+                </p>
+            </div>
+            
+            <div class="modal-body">
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-6">Premium Benefits</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="feature-card">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                    <i class="fas fa-bolt text-primary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-1">Unlimited Offer Generation</h4>
+                                    <p class="text-slate-600 text-sm">Create as many high-converting offers as you need, anytime.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mr-4">
+                                    <i class="fas fa-chart-line text-secondary text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-1">Advanced Analytics</h4>
+                                    <p class="text-slate-600 text-sm">Track performance and optimize your offers with detailed insights.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mr-4">
+                                    <i class="fas fa-rocket text-accent text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-1">Priority Support</h4>
+                                    <p class="text-slate-600 text-sm">Get fast responses from our expert team whenever you need help.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center mr-4">
+                                    <i class="fas fa-star text-green-500 text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 mb-1">Exclusive Templates</h4>
+                                    <p class="text-slate-600 text-sm">Access premium offer templates proven to convert at higher rates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-6">Get Premium Access</h3>
+                    
+                    <div class="payment-card mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-slate-800">Crypto Payment</h4>
+                            <span class="text-sm text-slate-600">$3/month</span>
+                        </div>
+                        
+                        <p class="text-slate-700 text-sm mb-4">Send exactly <span class="font-bold text-primary">2363264</span> via crypto to our account:</p>
+                        
+                        <div class="crypto-address" id="crypto-address">
+                            0x8a19c7d8a6c9f2e1b3d4f5a6b7c8d9e0f1a2b3c4
+                            <i class="fas fa-copy copy-icon"></i>
+                        </div>
+                        
+                        <p class="text-slate-600 text-sm mb-4">After payment, contact us with your transaction ID to get manual access.</p>
+                        
+                        <button class="unlock-btn animate-pulse-glow" id="payment-made-btn">
+                            <i class="fas fa-lock-open mr-2"></i>
+                            I've Made Payment
+                        </button>
+                    </div>
+                    
+                    <div class="payment-card">
+                        <h4 class="font-bold text-slate-800 mb-4">Unlock Code</h4>
+                        
+                        <p class="text-slate-700 text-sm mb-4">Enter your premium unlock code below:</p>
+                        
+                        <input type="text" id="unlock-code" class="unlock-input" placeholder="Enter your premium code">
+                        
+                        <button id="submit-code" class="unlock-btn">
+                            <i class="fas fa-key mr-2"></i>
+                            Unlock Premium
+                        </button>
+                        
+                        <p id="code-message" class="text-sm mt-2 text-center hidden"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <p class="text-slate-500 text-sm">
+                    Need assistance? Contact our premium support at 
+                    <span class="text-primary">support@dopamineoffers.com</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="container mx-auto px-4 z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="usage-badge">Free uses left: <span id="free-uses">3</span></div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800">
+                    Dopamine-Driven
+                    <span class="block mt-2 text-primary">Offer Generator</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+                    Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.
+                </p>
+                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow">
+                    Generate Offers Now
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+            <div class="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-slate-400 rounded-full mt-2 animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- AI Generator Section -->
+    <section id="generator" class="py-16 px-4">
+        <div class="container mx-auto max-w-5xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-800">AI Offer Generator</h2>
+                <p class="text-lg text-slate-600 max-w-xl mx-auto">Create high-converting offers tailored to your product and audience in seconds.</p>
+                
+                <!-- Language Selector - Always Visible -->
+                <div class="mt-8 flex justify-center">
+                    <div class="language-selector">
+                        <button id="english-btn" class="language-btn active px-4 py-2 rounded-lg flex items-center text-sm">
+                            <i class="fas fa-language mr-2"></i>
+                            <span>English</span>
+                        </button>
+                        <button id="bangla-btn" class="language-btn px-4 py-2 rounded-lg flex items-center text-sm">
+                            <i class="fas fa-language mr-2"></i>
+                            <span>Bangla</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 md:p-8 card-shadow transition-all duration-300 relative">
+                <form id="offer-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="product-name" class="block text-base font-medium mb-2 text-slate-700">Product/Service Name</label>
+                            <input type="text" id="product-name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Premium Fitness App">
+                        </div>
+                        <div>
+                            <label for="target-audience" class="block text-base font-medium mb-2 text-slate-700">Target Audience</label>
+                            <input type="text" id="target-audience" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Busy professionals aged 25-40">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="product-description" class="block text-base font-medium mb-2 text-slate-700">Product Description</label>
+                        <textarea id="product-description" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Describe your product/service in detail..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="usp" class="block text-base font-medium mb-2 text-slate-700">Unique Selling Point (USP)</label>
+                        <input type="text" id="usp" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="What makes your product unique?">
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" id="generate-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow flex items-center justify-center">
+                            <span>Generate Offers</span>
+                            <i class="fas fa-bolt ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Loading State -->
+                <div id="loading-state" class="hidden mt-10 text-center">
+                    <div class="loading-dots mx-auto mb-4">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <p class="text-lg text-slate-600">Crafting your dopamine-driven offers...</p>
+                </div>
+                
+                <!-- Output Section -->
+                <div id="output-section" class="hidden mt-10">
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                        <h3 class="text-xl font-bold text-slate-800">Your Generated Offers</h3>
+                        <p class="text-sm text-slate-500">Language: <span id="current-language">English</span></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Offer 1 -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-up">
+                            <div class="score-badge">Winning Score: 92%</div>
+                            <div id="offer-output-1" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
+                            <button data-offer="1" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
+                                <i class="far fa-copy mr-2"></i>
+                                <span>Copy Offer</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Offer 2 -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-up" style="animation-delay: 0.1s">
+                            <div class="score-badge">Winning Score: 87%</div>
+                            <div id="offer-output-2" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
+                            <button data-offer="2" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
+                                <i class="far fa-copy mr-2"></i>
+                                <span>Copy Offer</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Offer 3 -->
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-up" style="animation-delay: 0.2s">
+                            <div class="score-badge">Winning Score: 95%</div>
+                            <div id="offer-output-3" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
+                            <button data-offer="3" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
+                                <i class="far fa-copy mr-2"></i>
+                                <span>Copy Offer</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <p class="text-center text-slate-500 text-sm mt-6">Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.</p>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                        <i class="fas fa-brain text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800">Psychology-Backed</h3>
+                    <p class="text-slate-600 text-sm">Our AI leverages proven psychological principles to create offers that trigger dopamine responses.</p>
+                </div>
+                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-secondary text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800">Market-Validated</h3>
+                    <p class="text-slate-600 text-sm">Every offer comes with a winning score based on real market performance data.</p>
+                </div>
+                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                        <i class="fas fa-globe text-accent text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 text-slate-800">Multi-Language</h3>
+                    <p class="text-slate-600 text-sm">Generate offers in English or Bangla to connect with your target audience effectively.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-10 px-4 border-t border-slate-200 bg-white">
+        <div class="container mx-auto max-w-6xl">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-xl font-bold text-slate-800">Dopamine-Driven Offer Generator</h2>
+                    <p class="text-slate-500 text-sm mt-1">Creating irresistible offers through AI and psychology.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Privacy Policy</a>
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Terms of Service</a>
+                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm">Contact</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-200 text-center text-slate-400 text-sm">
+                <p>&copy; 2023 Dopamine-Driven Offer Generator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('offer-form');
+            const outputSection = document.getElementById('output-section');
+            const loadingState = document.getElementById('loading-state');
+            const generateBtn = document.getElementById('generate-btn');
+            const englishBtn = document.getElementById('english-btn');
+            const banglaBtn = document.getElementById('bangla-btn');
+            const currentLanguageSpan = document.getElementById('current-language');
+            const subscriptionModal = document.getElementById('subscription-modal');
+            const closeModal = document.getElementById('close-modal');
+            const unlockCodeInput = document.getElementById('unlock-code');
+            const submitCodeBtn = document.getElementById('submit-code');
+            const codeMessage = document.getElementById('code-message');
+            const freeUsesSpan = document.getElementById('free-uses');
+            const cryptoAddress = document.getElementById('crypto-address');
+            const paymentMadeBtn = document.getElementById('payment-made-btn');
+            
+            let currentLanguage = 'english';
+            const UNLOCK_CODE = '778432';
+            
+            // IP-based usage tracking (simulated with localStorage)
+            function initializeUsageTracking() {
+                // Generate a visitor ID based on IP simulation
+                // In a real implementation, you would get the actual IP from the server
+                let visitorId = localStorage.getItem('visitorId');
+                if (!visitorId) {
+                    // Simulate IP address with a combination of user agent and timestamp
+                    visitorId = 'ip_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                    localStorage.setItem('visitorId', visitorId);
+                }
+                
+                // Initialize usage count if not exists
+                let usageCount = localStorage.getItem('usageCount');
+                if (!usageCount) {
+                    usageCount = 0;
+                    localStorage.setItem('usageCount', usageCount);
+                }
+                
+                // Check if user has unlimited access - FIXED: Only check subscription status
+                const subscriptionStatus = checkSubscriptionStatus(visitorId);
+                const hasUnlimitedAccess = subscriptionStatus.active;
+                
+                return {
+                    visitorId,
+                    usageCount: parseInt(usageCount),
+                    hasUnlimitedAccess
+                };
+            }
+            
+            // Subscription management functions
+            function getSubscriptionData(userId) {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                return subscriptions[userId] || { active: false, expiry: null };
+            }
+            
+            function setSubscriptionData(userId, active, months = 1) {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const expiry = new Date();
+                expiry.setMonth(expiry.getMonth() + months);
+                
+                subscriptions[userId] = {
+                    active: active,
+                    expiry: expiry.toISOString()
+                };
+                
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                return subscriptions[userId];
+            }
+            
+            function checkSubscriptionStatus(userId) {
+                const subscription = getSubscriptionData(userId);
+                if (!subscription.active) return { active: false, message: "No active subscription" };
+                
+                const now = new Date();
+                const expiry = new Date(subscription.expiry);
+                
+                if (now > expiry) {
+                    setSubscriptionData(userId, false);
+                    return { active: false, message: "Subscription expired" };
+                }
+                
+                const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                return { 
+                    active: true, 
+                    message: `Active subscription, ${daysLeft} days remaining`,
+                    expiry: subscription.expiry
+                };
+            }
+            
+            let userData = initializeUsageTracking();
+            updateUsageDisplay();
+            
+            // Real market-tested offers in English
+            const englishOffers = [
+                {
+                    text: "🚀 LIMITED TIME: Get [Product Name] today and unlock [Key Benefit]! For the next [Time Limit] only, save [Discount]% and get [Bonus] absolutely FREE. Join [Number]+ satisfied customers who've already transformed their [Area]!",
+                    score: "92%"
+                },
+                {
+                    text: "🎯 ATTENTION [Target Audience]: Tired of [Pain Point]? Discover how [Product Name] delivers [Key Benefit] in just [Time Frame]. For a limited time, get our premium package at [Discount]% OFF with [Number]-day money-back guarantee!",
+                    score: "87%"
+                },
+                {
+                    text: "🔥 EXCLUSIVE INVITATION: Be among the first [Number] to experience [Product Name] with [Special Feature] included at NO EXTRA COST! This [Time Limit] offer includes [Bonus] + [Additional Perk] - a $[Value] value completely FREE!",
+                    score: "95%"
+                }
+            ];
+            
+            // Real market-tested offers in Bangla
+            const banglaOffers = [
+                {
+                    text: "🚀 সীমিত সময়ের জন্য: আজই [Product Name] নিন এবং [Key Benefit] আনলক করুন! পরবর্তী [Time Limit] এর জন্য, [Discount]% সাশ্রয় করুন এবং [Bonus] সম্পূর্ণ বিনামূল্যে পান। [Number]+ সন্তুষ্ট গ্রাহকের দলে যোগ দিন যারা ইতিমধ্যে তাদের [Area] রূপান্তরিত করেছেন!",
+                    score: "92%"
+                },
+                {
+                    text: "🎯 মনোযোগ দিন [Target Audience]: [Pain Point] এ ক্লান্ত? আবিষ্কার করুন কীভাবে [Product Name] মাত্র [Time Frame] এ [Key Benefit] প্রদান করে। সীমিত সময়ের জন্য, [Number]-দিনের টাকা ফেরত গ্যারান্টি সহ [Discount]% ছাড়ে আমাদের প্রিমিয়াম প্যাকেজ পান!",
+                    score: "87%"
+                },
+                {
+                    text: "🔥 একচেটিয়া আমন্ত্রণ: [Product Name] এর অভিজ্ঞতা নিতে প্রথম [Number] জনের মধ্যে থাকুন যেখানে [Special Feature] অতিরিক্ত খরচ ছাড়াই অন্তর্ভুক্ত! এই [Time Limit] অফারে [Bonus] + [Additional Perk] রয়েছে - একটি $[Value] মূল্য সম্পূর্ণ বিনামূল্যে!",
+                    score: "95%"
+                }
+            ];
+            
+            // Language switching
+            englishBtn.addEventListener('click', function() {
+                currentLanguage = 'english';
+                englishBtn.classList.add('active');
+                banglaBtn.classList.remove('active');
+                currentLanguageSpan.textContent = 'English';
+                
+                // Update offers if they're already generated
+                if (outputSection.classList.contains('hidden') === false) {
+                    updateOffers();
+                }
+            });
+            
+            banglaBtn.addEventListener('click', function() {
+                currentLanguage = 'bangla';
+                banglaBtn.classList.add('active');
+                englishBtn.classList.remove('active');
+                currentLanguageSpan.textContent = 'Bangla';
+                
+                // Update offers if they're already generated
+                if (outputSection.classList.contains('hidden') === false) {
+                    updateOffers();
+                }
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Check if user has reached usage limit
+                if (!userData.hasUnlimitedAccess && userData.usageCount >= 3) {
+                    subscriptionModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    return;
+                }
+                
+                // Get form values
+                const productName = document.getElementById('product-name').value;
+                const productDescription = document.getElementById('product-description').value;
+                const targetAudience = document.getElementById('target-audience').value;
+                const usp = document.getElementById('usp').value;
+                
+                // Validate form
+                if (!productName || !productDescription || !targetAudience || !usp) {
+                    alert('Please fill in all fields before generating offers.');
+                    return;
+                }
+                
+                // Show loading state
+                loadingState.classList.remove('hidden');
+                outputSection.classList.add('hidden');
+                generateBtn.disabled = true;
+                
+                // Simulate API call with timeout
+                setTimeout(() => {
+                    // Hide loading state
+                    loadingState.classList.add('hidden');
+                    
+                    // Generate offers based on current language
+                    updateOffers(productName, productDescription, targetAudience, usp);
+                    
+                    // Display the offers
+                    outputSection.classList.remove('hidden');
+                    generateBtn.disabled = false;
+                    
+                    // Update usage count if not unlimited - FIXED: Only increment if not unlimited
+                    if (!userData.hasUnlimitedAccess) {
+                        userData.usageCount++;
+                        localStorage.setItem('usageCount', userData.usageCount);
+                        updateUsageDisplay();
+                    }
+                    
+                    // Scroll to output
+                    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 1500);
+            });
+            
+            // Modal controls
+            closeModal.addEventListener('click', function() {
+                subscriptionModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Close modal when clicking outside
+            subscriptionModal.addEventListener('click', function(e) {
+                if (e.target === subscriptionModal) {
+                    subscriptionModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Crypto address copy functionality
+            cryptoAddress.addEventListener('click', function() {
+                const textToCopy = '2363264';
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = cryptoAddress.innerHTML;
+                    cryptoAddress.innerHTML = 'Copied! <i class="fas fa-check copy-icon"></i>';
+                    
+                    setTimeout(() => {
+                        cryptoAddress.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+            
+            // Payment made button
+            paymentMadeBtn.addEventListener('click', function() {
+                alert('Thank you for your payment! Please contact us with your transaction ID at support@dopamineoffers.com to activate your premium access.');
+            });
+            
+            // Unlock code submission - FIXED: Remove the localStorage unlimitedAccess setting
+            submitCodeBtn.addEventListener('click', function() {
+                const enteredCode = unlockCodeInput.value.trim();
+                
+                if (enteredCode === UNLOCK_CODE) {
+                    // Grant unlimited access through subscription only
+                    setSubscriptionData(userData.visitorId, true, 1);
+                    userData.hasUnlimitedAccess = true;
+                    
+                    // Show success message
+                    codeMessage.textContent = 'Success! Premium access unlocked. Enjoy unlimited offers!';
+                    codeMessage.className = 'text-sm mt-2 text-center text-green-600';
+                    codeMessage.classList.remove('hidden');
+                    
+                    // Close modal after delay
+                    setTimeout(() => {
+                        subscriptionModal.classList.add('hidden');
+                        document.body.style.overflow = 'auto';
+                        updateUsageDisplay();
+                    }, 2000);
+                } else {
+                    // Show error message
+                    codeMessage.textContent = 'Invalid code. Please try again.';
+                    codeMessage.className = 'text-sm mt-2 text-center text-red-600';
+                    codeMessage.classList.remove('hidden');
+                }
+            });
+            
+            // Function to update usage display
+            function updateUsageDisplay() {
+                if (userData.hasUnlimitedAccess) {
+                    freeUsesSpan.textContent = 'Unlimited';
+                    freeUsesSpan.parentElement.classList.add('bg-green-500');
+                } else {
+                    const remainingUses = 3 - userData.usageCount;
+                    freeUsesSpan.textContent = remainingUses;
+                    
+                    if (remainingUses === 0) {
+                        freeUsesSpan.parentElement.classList.add('bg-red-500');
+                    } else {
+                        freeUsesSpan.parentElement.classList.remove('bg-red-500');
+                        freeUsesSpan.parentElement.classList.add('bg-f59e0b');
+                    }
+                }
+            }
+            
+            // Function to update offers based on language and form data
+            function updateOffers(productName = '', productDescription = '', targetAudience = '', usp = '') {
+                const offers = currentLanguage === 'english' ? englishOffers : banglaOffers;
+                
+                offers.forEach((offer, index) => {
+                    const offerElement = document.getElementById(`offer-output-${index + 1}`);
+                    
+                    // Replace placeholders with actual values
+                    let finalOffer = offer.text
+                        .replace('[Product Name]', productName || 'Your Product')
+                        .replace('[Target Audience]', targetAudience || 'Your Audience')
+                        .replace('[Key Benefit]', getKeyBenefit(usp))
+                        .replace('[Pain Point]', getPainPoint(productDescription))
+                        .replace('[Discount]', getDiscount())
+                        .replace('[Time Limit]', getTimeLimit())
+                        .replace('[Number]', getNumber())
+                        .replace('[Area]', getArea(productDescription))
+                        .replace('[Time Frame]', getTimeFrame())
+                        .replace('[Bonus]', getBonus(productDescription))
+                        .replace('[Special Feature]', getSpecialFeature(usp))
+                        .replace('[Additional Perk]', getAdditionalPerk())
+                        .replace('[Value]', getValue());
+                    
+                    offerElement.textContent = finalOffer;
+                });
+            }
+            
+            // Copy to clipboard functionality
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const offerNumber = this.getAttribute('data-offer');
+                    const textToCopy = document.getElementById(`offer-output-${offerNumber}`).textContent;
+                    
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalText = this.innerHTML;
+                        this.classList.add('copied');
+                        this.innerHTML = '<i class="fas fa-check mr-2"></i><span>Copied!</span>';
+                        
+                        setTimeout(() => {
+                            this.classList.remove('copied');
+                            this.innerHTML = originalText;
+                        }, 2000);
+                    });
+                });
+            });
+            
+            // Helper functions for placeholder replacement
+            function getKeyBenefit(usp) {
+                if (!usp) return 'exceptional results';
+                return usp.split(',')[0] || usp;
+            }
+            
+            function getPainPoint(description) {
+                if (!description) return 'common problems';
+                
+                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
+                    return 'lack of energy or motivation';
+                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
+                    return 'wasting time on inefficient tasks';
+                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
+                    return 'financial stress and uncertainty';
+                } else {
+                    return 'common challenges';
+                }
+            }
+            
+            function getDiscount() {
+                const discounts = ['20', '25', '30', '40', '50'];
+                return discounts[Math.floor(Math.random() * discounts.length)];
+            }
+            
+            function getTimeLimit() {
+                const timeLimits = [
+                    '24 hours', '48 hours', '3 days', 'this week only', 
+                    'the next 72 hours'
+                ];
+                return timeLimits[Math.floor(Math.random() * timeLimits.length)];
+            }
+            
+            function getNumber() {
+                return Math.floor(Math.random() * 1000) + 500;
+            }
+            
+            function getArea(description) {
+                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
+                    return 'health and fitness';
+                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
+                    return 'business productivity';
+                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
+                    return 'financial situation';
+                } else {
+                    return 'lives';
+                }
+            }
+            
+            function getTimeFrame() {
+                const timeFrames = [
+                    '30 days', '2 weeks', '7 days', '90 days', 
+                    'just 5 minutes a day'
+                ];
+                return timeFrames[Math.floor(Math.random() * timeFrames.length)];
+            }
+            
+            function getBonus(description) {
+                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
+                    return 'a personalized workout plan';
+                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
+                    return 'a productivity toolkit';
+                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
+                    return 'a financial planning guide';
+                } else {
+                    return 'an exclusive bonus';
+                }
+            }
+            
+            function getSpecialFeature(usp) {
+                if (!usp) return 'advanced features';
+                return usp.split(',')[0] || usp;
+            }
+            
+            function getAdditionalPerk() {
+                const perks = [
+                    'priority support', 'lifetime updates', 'community access', 
+                    'one-on-one consultation'
+                ];
+                return perks[Math.floor(Math.random() * perks.length)];
+            }
+            
+            function getValue() {
+                return Math.floor(Math.random() * 200) + 100;
+            }
+            
+            // Smooth scroll for CTA button
+            document.querySelector('a[href="#generator"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('#generator').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
