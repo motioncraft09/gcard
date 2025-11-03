@@ -1290,7 +1290,7 @@
         function initializeSampleData() {
             if (getUnlockCodes().length === 0) {
                 const sampleCodes = [
-                    { code: 'OFFER123', type: 'premium', used: true, usedBy: '192.168.1.1', created: new Date(Date.now() - 86400000).toISOString() },
+                    { code: 'OFFER123', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
                     { code: 'AI2023', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
                     { code: 'UNLIMITED', type: 'lifetime', used: false, usedBy: null, created: new Date().toISOString() }
                 ];
