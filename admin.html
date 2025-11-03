@@ -499,6 +499,41 @@
             color: var(--gray);
         }
 
+        /* Code Link */
+        .code-link {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-link-text {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--success);
+        }
+
+        .copy-btn {
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(108, 99, 255, 0.3);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .main-content {
@@ -543,6 +578,12 @@
             
             .login-box {
                 padding: 30px 25px;
+            }
+            
+            .code-link {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
             }
         }
 
@@ -604,6 +645,10 @@
                         <i class="fas fa-user-shield"></i>
                         Administrator
                     </div>
+                    <a href="index.html" class="logout-btn" id="main-site-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        Main Site
+                    </a>
                     <a href="#" class="logout-btn" id="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
@@ -741,7 +786,13 @@
                         
                         <div id="generated-codes" style="margin-top: 30px; display: none;">
                             <h3 style="margin-bottom: 15px;">Generated Codes</h3>
-                            <div class="table-container">
+                            <p style="margin-bottom: 15px; color: var(--gray);">Share these links with users to automatically unlock premium access:</p>
+                            
+                            <div id="code-links-container">
+                                <!-- Code links will be inserted here -->
+                            </div>
+                            
+                            <div class="table-container" style="margin-top: 20px;">
                                 <table>
                                     <thead>
                                         <tr>
@@ -845,7 +896,7 @@
     </div>
 
     <script>
-        // Admin credentials (in a real application, this would be handled server-side)
+        // Admin credentials
         const ADMIN_CREDENTIALS = {
             username: "admin",
             password: "admin123"
@@ -856,6 +907,7 @@
         const adminDashboard = document.getElementById('admin-dashboard');
         const loginForm = document.getElementById('login-form');
         const logoutBtn = document.getElementById('logout-btn');
+        const mainSiteBtn = document.getElementById('main-site-btn');
         const navLinks = document.querySelectorAll('.nav-link');
         const contentSections = document.querySelectorAll('.content-section');
         const codeTypeSelect = document.getElementById('code-type');
@@ -863,6 +915,7 @@
         const generateForm = document.getElementById('generate-form');
         const generateAlert = document.getElementById('generate-alert');
         const generatedCodes = document.getElementById('generated-codes');
+        const codeLinksContainer = document.getElementById('code-links-container');
         const codesList = document.getElementById('codes-list');
         const settingsForm = document.getElementById('settings-form');
 
@@ -1062,12 +1115,12 @@
             // Save codes to localStorage
             const existingCodes = getUnlockCodes();
             const updatedCodes = [...existingCodes, ...newCodes];
-            localStorage.setItem('unlock_codes', JSON.stringify(updatedCodes));
+            localStorage.setItem('valid_unlock_codes', JSON.stringify(updatedCodes));
             
             // Show success message
             showAlert('Codes generated successfully!', 'success');
             
-            // Display generated codes
+            // Display generated codes with shareable links
             displayGeneratedCodes(newCodes);
             
             // Update dashboard
@@ -1077,9 +1130,28 @@
 
         function displayGeneratedCodes(codes) {
             generatedCodes.style.display = 'block';
+            codeLinksContainer.innerHTML = '';
             codesList.innerHTML = '';
             
+            // Get the current domain to create proper links
+            const currentDomain = window.location.origin;
+            const mainSiteURL = `${currentDomain}/index.html`;
+            
             codes.forEach(code => {
+                // Create shareable link
+                const shareableLink = `${mainSiteURL}?unlock_code=${code.code}`;
+                
+                const linkElement = document.createElement('div');
+                linkElement.className = 'code-link';
+                linkElement.innerHTML = `
+                    <div class="code-link-text">${shareableLink}</div>
+                    <button class="copy-btn" onclick="copyToClipboard('${shareableLink}')">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
+                `;
+                codeLinksContainer.appendChild(linkElement);
+                
+                // Add to table
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${code.code}</td>
@@ -1095,11 +1167,20 @@
             });
         }
 
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                showAlert('Link copied to clipboard!', 'success');
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+                showAlert('Failed to copy link', 'error');
+            });
+        }
+
         function deleteCode(code) {
             if (confirm(`Are you sure you want to delete code "${code}"?`)) {
                 const codes = getUnlockCodes();
                 const updatedCodes = codes.filter(c => c.code !== code);
-                localStorage.setItem('unlock_codes', JSON.stringify(updatedCodes));
+                localStorage.setItem('valid_unlock_codes', JSON.stringify(updatedCodes));
                 
                 showAlert('Code deleted successfully!', 'success');
                 loadDashboardData();
@@ -1112,6 +1193,15 @@
                     );
                     if (row) {
                         row.remove();
+                    }
+                    
+                    // Remove from links container
+                    const links = Array.from(codeLinksContainer.querySelectorAll('.code-link'));
+                    const linkToRemove = links.find(link => 
+                        link.querySelector('.code-link-text').textContent.includes(code)
+                    );
+                    if (linkToRemove) {
+                        linkToRemove.remove();
                     }
                 }
             }
@@ -1167,7 +1257,7 @@
         }
 
         function getUnlockCodes() {
-            const codes = localStorage.getItem('unlock_codes');
+            const codes = localStorage.getItem('valid_unlock_codes');
             return codes ? JSON.parse(codes) : [];
         }
 
@@ -1204,7 +1294,7 @@
                     { code: 'AI2023', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
                     { code: 'UNLIMITED', type: 'lifetime', used: false, usedBy: null, created: new Date().toISOString() }
                 ];
-                localStorage.setItem('unlock_codes', JSON.stringify(sampleCodes));
+                localStorage.setItem('valid_unlock_codes', JSON.stringify(sampleCodes));
             }
             
             if (getRecentActivity().length === 0) {
