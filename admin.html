@@ -3,872 +3,1231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Subscription Management</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Global Offer AI - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#7c3aed',
-                        'primary-light': '#8b5cf6',
-                        'secondary': '#0ea5e9',
-                        'accent': '#f59e0b',
-                        'dark': '#0f172a',
-                        'darker': '#0a0f1c',
-                    },
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    }
-                }
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5752D4;
+            --secondary: #00B4D8;
+            --accent: #FF6B6B;
+            --success: #4CC9F0;
+            --warning: #F9C74F;
+            --dark: #121826;
+            --darker: #0A0F1C;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-dark: rgba(0, 0, 0, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 15, 28, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, var(--warning), #f8961e);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(249, 199, 79, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            min-height: calc(100vh - 100px);
+            margin-top: 40px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-right: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--light);
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(108, 99, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+        }
+
+        .content-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: var(--light);
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--gray);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        /* Form Styles */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: var(--primary);
+        }
+
+        input, select, textarea {
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #2a9d8f);
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.4);
+            background: linear-gradient(135deg, #2a9d8f, var(--success));
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent), #e63946);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #e63946, var(--accent));
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(76, 201, 240, 0.2);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-success {
+            background: rgba(76, 201, 240, 0.2);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            border-left: 4px solid var(--accent);
+            color: var(--accent);
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 50px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .login-subtitle {
+            font-size: 1rem;
+            margin-bottom: 40px;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+            
+            .nav-item {
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
+            
+            .nav-link {
+                white-space: nowrap;
             }
         }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .login-box {
+                padding: 30px 25px;
+            }
         }
-        
-        .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        .input-focus:focus {
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-            border-color: #7c3aed;
-        }
-        
-        .status-active {
-            background-color: #10b981;
-            color: white;
-        }
-        
-        .status-expired {
-            background-color: #ef4444;
-            color: white;
-        }
-        
-        .status-pending {
-            background-color: #f59e0b;
-            color: white;
-        }
-        
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 10000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-        }
-        
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast.success {
-            background-color: #10b981;
-        }
-        
-        .toast.error {
-            background-color: #ef4444;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-            border-radius: 5px;
-            transition: width 0.5s ease;
+
+        @media (max-width: 576px) {
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .admin-info {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen font-inter">
-    <!-- Toast Notification -->
-    <div id="toast" class="toast hidden">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span id="toast-message">Success!</span>
+<body>
+    <!-- Login Page (shown by default) -->
+    <div id="login-page" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-robot"></i>
+                Global Offer AI
+            </div>
+            <h1 class="login-title">Admin Panel</h1>
+            <p class="login-subtitle">Enter your credentials to access the admin dashboard</p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" placeholder="Enter admin username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Enter admin password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 py-4 px-6">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Admin Panel</h1>
-                <p class="text-sm text-slate-500">Subscription Management</p>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="text-right">
-                    <p class="text-sm font-medium text-slate-800">Admin User</p>
-                    <p class="text-xs text-slate-500">Last login: <span id="last-login">Just now</span></p>
+    <!-- Admin Dashboard (hidden by default) -->
+    <div id="admin-dashboard" style="display: none;">
+        <header>
+            <div class="container header-container">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-robot"></i>
+                        Global Offer AI
+                    </div>
                 </div>
-                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
-                    A
+                <div class="admin-info">
+                    <div class="admin-badge">
+                        <i class="fas fa-user-shield"></i>
+                        Administrator
+                    </div>
+                    <a href="#" class="logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto py-8 px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column - Generate Codes & Budget -->
-            <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl p-6 card-shadow">
-                    <h2 class="text-xl font-bold mb-6 text-slate-800">Generate Unlock Code</h2>
-                    
-                    <form id="generate-code-form" class="space-y-4">
-                        <div>
-                            <label for="user-id" class="block text-sm font-medium mb-2 text-slate-700">User ID</label>
-                            <input type="text" id="user-id" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter user ID or 'any' for generic code">
-                            <p class="text-xs text-slate-500 mt-1">Use 'any' to create a code that works for any user</p>
-                        </div>
-                        
-                        <div>
-                            <label for="months" class="block text-sm font-medium mb-2 text-slate-700">Subscription Duration</label>
-                            <select id="months" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800">
-                                <option value="1">1 Month</option>
-                                <option value="3" selected>3 Months</option>
-                                <option value="6">6 Months</option>
-                                <option value="12">12 Months</option>
-                                <option value="24">24 Months</option>
-                                <option value="lifetime">Lifetime</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label for="custom-code" class="block text-sm font-medium mb-2 text-slate-700">Custom Code (Optional)</label>
-                            <input type="text" id="custom-code" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Leave empty for auto-generated code">
-                        </div>
-                        
-                        <button type="submit" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow">
-                            Generate Unlock Code
-                        </button>
-                    </form>
-                    
-                    <!-- Generated Code Display -->
-                    <div id="generated-code-section" class="mt-6 hidden">
-                        <h3 class="text-lg font-bold mb-3 text-slate-800">Generated Code</h3>
-                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium text-slate-700">Unlock Code:</span>
-                                <button id="copy-code" class="text-primary hover:text-primary-light">
-                                    <i class="far fa-copy"></i>
-                                </button>
-                            </div>
-                            <p id="generated-code" class="font-mono text-lg font-bold text-slate-800"></p>
-                            
-                            <div class="mt-4">
-                                <p class="text-sm text-slate-700 mb-1">Activation URL:</p>
-                                <div class="flex">
-                                    <input type="text" id="activation-url" readonly class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-l-lg text-sm text-slate-800">
-                                    <button id="copy-url" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary-light">
-                                        <i class="far fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Budget Section -->
-                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
-                    <h2 class="text-xl font-bold mb-4 text-slate-800">Budget & Revenue</h2>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-slate-50 rounded-lg p-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium text-slate-700">Total Revenue</span>
-                                <span class="text-lg font-bold text-green-500" id="total-revenue">$0</span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <div class="flex justify-between text-sm text-slate-600 mb-1">
-                                    <span>Budget Goal</span>
-                                    <span id="budget-goal-text">$1000</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div id="budget-progress" class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <div class="text-right text-xs text-slate-500 mt-1">
-                                    <span id="budget-percentage">0%</span> of goal
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-slate-50 rounded-lg p-4">
-                            <h3 class="text-sm font-medium text-slate-700 mb-2">Set Budget Goal</h3>
-                            <div class="flex space-x-2">
-                                <input type="number" id="budget-goal" class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter amount">
-                                <button id="set-budget" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light">
-                                    Set
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-slate-50 rounded-lg p-4">
-                            <h3 class="text-sm font-medium text-slate-700 mb-2">Add Manual Revenue</h3>
-                            <div class="flex space-x-2">
-                                <input type="number" id="manual-revenue" class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter amount">
-                                <button id="add-revenue" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-                                    Add
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Stats -->
-                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
-                    <h2 class="text-xl font-bold mb-4 text-slate-800">Statistics</h2>
-                    
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-slate-50 rounded-lg p-4 text-center">
-                            <p class="text-2xl font-bold text-primary" id="total-users">0</p>
-                            <p class="text-sm text-slate-600">Total Users</p>
-                        </div>
-                        
-                        <div class="bg-slate-50 rounded-lg p-4 text-center">
-                            <p class="text-2xl font-bold text-secondary" id="active-subscriptions">0</p>
-                            <p class="text-sm text-slate-600">Active Subscriptions</p>
-                        </div>
-                        
-                        <div class="bg-slate-50 rounded-lg p-4 text-center">
-                            <p class="text-2xl font-bold text-accent" id="codes-generated">0</p>
-                            <p class="text-sm text-slate-600">Codes Generated</p>
-                        </div>
-                        
-                        <div class="bg-slate-50 rounded-lg p-4 text-center">
-                            <p class="text-2xl font-bold text-purple-500" id="codes-used">0</p>
-                            <p class="text-sm text-slate-600">Codes Used</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right Column - User Management -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl p-6 card-shadow">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                        <h2 class="text-xl font-bold text-slate-800">User Subscriptions</h2>
-                        
-                        <div class="flex space-x-2">
-                            <input type="text" id="search-users" placeholder="Search users..." class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800 text-sm">
-                            <button id="refresh-data" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            <a href="index.html" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors flex items-center">
-                                <i class="fas fa-external-link-alt mr-2"></i>
-                                Main Site
+        <div class="container">
+            <div class="main-content">
+                <div class="sidebar">
+                    <h2 class="sidebar-title">Admin Panel</h2>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
                             </a>
-                        </div>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-slate-700">
-                            <thead class="text-xs text-slate-500 uppercase bg-slate-50">
-                                <tr>
-                                    <th class="px-4 py-3">User ID</th>
-                                    <th class="px-4 py-3">Status</th>
-                                    <th class="px-4 py-3">Expiry Date</th>
-                                    <th class="px-4 py-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table-body">
-                                <!-- Users will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="mt-4 text-center text-slate-500 text-sm" id="no-users-message">
-                        No users found. Users will appear here once they generate offers or activate premium.
-                    </div>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="generate-codes">
+                                <i class="fas fa-key"></i>
+                                Generate Codes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="manage-codes">
+                                <i class="fas fa-list"></i>
+                                Manage Codes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="user-activity">
+                                <i class="fas fa-users"></i>
+                                User Activity
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-section="settings">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                
-                <!-- Generated Codes List -->
-                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
-                    <h2 class="text-xl font-bold mb-6 text-slate-800">Generated Codes</h2>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left text-slate-700">
-                            <thead class="text-xs text-slate-500 uppercase bg-slate-50">
-                                <tr>
-                                    <th class="px-4 py-3">Code</th>
-                                    <th class="px-4 py-3">User ID</th>
-                                    <th class="px-4 py-3">Duration</th>
-                                    <th class="px-4 py-3">Used</th>
-                                    <th class="px-4 py-3">Value</th>
-                                    <th class="px-4 py-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="codes-table-body">
-                                <!-- Codes will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="mt-4 text-center text-slate-500 text-sm" id="no-codes-message">
-                        No codes generated yet. Generate your first code using the form on the left.
-                    </div>
+
+                <div class="content-area">
+                    <!-- Dashboard Section -->
+                    <section id="dashboard" class="content-section active">
+                        <h2 class="section-title">Dashboard Overview</h2>
+                        <p class="section-subtitle">Monitor your Global Offer AI platform performance</p>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <div class="stat-value" id="total-codes">0</div>
+                                <div class="stat-label">Total Codes Generated</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-value" id="used-codes">0</div>
+                                <div class="stat-label">Codes Used</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-value" id="total-users">0</div>
+                                <div class="stat-label">Total Users</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="stat-value" id="total-revenue">$0</div>
+                                <div class="stat-label">Total Revenue</div>
+                            </div>
+                        </div>
+                        
+                        <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>User IP</th>
+                                        <th>Action</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activity">
+                                    <!-- Activity rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Generate Codes Section -->
+                    <section id="generate-codes" class="content-section">
+                        <h2 class="section-title">Generate Unlock Codes</h2>
+                        <p class="section-subtitle">Create new unlock codes for users</p>
+                        
+                        <div id="generate-alert"></div>
+                        
+                        <form id="generate-form">
+                            <div class="form-group">
+                                <label for="code-type"><i class="fas fa-tag"></i> Code Type</label>
+                                <select id="code-type" required>
+                                    <option value="premium">Premium (1 Month)</option>
+                                    <option value="extended">Extended (3 Months)</option>
+                                    <option value="lifetime">Lifetime Access</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="code-amount"><i class="fas fa-hashtag"></i> Number of Codes</label>
+                                <input type="number" id="code-amount" min="1" max="100" value="1" required>
+                            </div>
+                            
+                            <div class="form-group" id="custom-code-group" style="display: none;">
+                                <label for="custom-code"><i class="fas fa-pen"></i> Custom Code Pattern</label>
+                                <input type="text" id="custom-code" placeholder="e.g., OFFER2023">
+                                <small style="margin-top: 5px; color: var(--gray);">Leave empty for auto-generation</small>
+                            </div>
+                            
+                            <button type="submit" class="btn">
+                                <i class="fas fa-plus-circle"></i> Generate Codes
+                            </button>
+                        </form>
+                        
+                        <div id="generated-codes" style="margin-top: 30px; display: none;">
+                            <h3 style="margin-bottom: 15px;">Generated Codes</h3>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="codes-list">
+                                        <!-- Generated codes will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Manage Codes Section -->
+                    <section id="manage-codes" class="content-section">
+                        <h2 class="section-title">Manage Unlock Codes</h2>
+                        <p class="section-subtitle">View, edit, and manage all unlock codes</p>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Used By</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-codes">
+                                    <!-- All codes will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- User Activity Section -->
+                    <section id="user-activity" class="content-section">
+                        <h2 class="section-title">User Activity</h2>
+                        <p class="section-subtitle">Monitor user interactions with the platform</p>
+                        
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>User IP</th>
+                                        <th>Action</th>
+                                        <th>Product</th>
+                                        <th>Country</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-activity-list">
+                                    <!-- User activity rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Settings Section -->
+                    <section id="settings" class="content-section">
+                        <h2 class="section-title">Admin Settings</h2>
+                        <p class="section-subtitle">Configure your Global Offer AI admin panel</p>
+                        
+                        <form id="settings-form">
+                            <div class="form-group">
+                                <label for="admin-username"><i class="fas fa-user"></i> Admin Username</label>
+                                <input type="text" id="admin-username" placeholder="Enter new admin username">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="admin-password"><i class="fas fa-lock"></i> Admin Password</label>
+                                <input type="password" id="admin-password" placeholder="Enter new admin password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="free-generations"><i class="fas fa-bolt"></i> Free Generations</label>
+                                <input type="number" id="free-generations" min="1" max="20" value="5">
+                                <small style="margin-top: 5px; color: var(--gray);">Number of free offer generations per user</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="premium-price"><i class="fas fa-dollar-sign"></i> Premium Price</label>
+                                <input type="number" id="premium-price" min="1" step="0.01" value="1.00">
+                                <small style="margin-top: 5px; color: var(--gray);">Price for premium unlock (in USD)</small>
+                            </div>
+                            
+                            <button type="submit" class="btn">
+                                <i class="fas fa-save"></i> Save Settings
+                            </button>
+                        </form>
+                    </section>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
+        // Admin credentials (in a real application, this would be handled server-side)
+        const ADMIN_CREDENTIALS = {
+            username: "admin",
+            password: "admin123"
+        };
+
+        // DOM Elements
+        const loginPage = document.getElementById('login-page');
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const loginForm = document.getElementById('login-form');
+        const logoutBtn = document.getElementById('logout-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const codeTypeSelect = document.getElementById('code-type');
+        const customCodeGroup = document.getElementById('custom-code-group');
+        const generateForm = document.getElementById('generate-form');
+        const generateAlert = document.getElementById('generate-alert');
+        const generatedCodes = document.getElementById('generated-codes');
+        const codesList = document.getElementById('codes-list');
+        const settingsForm = document.getElementById('settings-form');
+
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            const generateCodeForm = document.getElementById('generate-code-form');
-            const generatedCodeSection = document.getElementById('generated-code-section');
-            const generatedCodeElement = document.getElementById('generated-code');
-            const activationUrlElement = document.getElementById('activation-url');
-            const copyCodeBtn = document.getElementById('copy-code');
-            const copyUrlBtn = document.getElementById('copy-url');
-            const usersTableBody = document.getElementById('users-table-body');
-            const codesTableBody = document.getElementById('codes-table-body');
-            const noUsersMessage = document.getElementById('no-users-message');
-            const noCodesMessage = document.getElementById('no-codes-message');
-            const searchUsersInput = document.getElementById('search-users');
-            const refreshDataBtn = document.getElementById('refresh-data');
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            // Budget elements
-            const totalRevenueElement = document.getElementById('total-revenue');
-            const budgetGoalElement = document.getElementById('budget-goal');
-            const budgetGoalTextElement = document.getElementById('budget-goal-text');
-            const budgetProgressElement = document.getElementById('budget-progress');
-            const budgetPercentageElement = document.getElementById('budget-percentage');
-            const setBudgetBtn = document.getElementById('set-budget');
-            const manualRevenueInput = document.getElementById('manual-revenue');
-            const addRevenueBtn = document.getElementById('add-revenue');
-            
-            // Stats elements
-            const totalUsersElement = document.getElementById('total-users');
-            const activeSubscriptionsElement = document.getElementById('active-subscriptions');
-            const codesGeneratedElement = document.getElementById('codes-generated');
-            const codesUsedElement = document.getElementById('codes-used');
-            
-            // Initialize admin data if not exists
-            function initializeAdminData() {
-                if (!localStorage.getItem('adminCodes')) {
-                    localStorage.setItem('adminCodes', JSON.stringify([]));
-                }
-                
-                if (!localStorage.getItem('adminBudget')) {
-                    localStorage.setItem('adminBudget', JSON.stringify({
-                        total: 0,
-                        goal: 1000
-                    }));
-                }
-                
-                if (!localStorage.getItem('adminLastLogin')) {
-                    localStorage.setItem('adminLastLogin', new Date().toISOString());
-                }
-                
-                // Set last login display
-                const lastLogin = new Date(localStorage.getItem('adminLastLogin'));
-                document.getElementById('last-login').textContent = formatDate(lastLogin);
-                
-                // Update last login time
-                localStorage.setItem('adminLastLogin', new Date().toISOString());
+            // Check if admin is already logged in
+            const isLoggedIn = localStorage.getItem('admin_logged_in');
+            if (isLoggedIn === 'true') {
+                showAdminDashboard();
             }
-            
-            // Format date for display
-            function formatDate(date) {
-                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            }
-            
-            // Show toast notification
-            function showToast(message, type = 'success') {
-                toastMessage.textContent = message;
-                toast.className = `toast ${type} show`;
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Generate a random code
-            function generateRandomCode() {
-                return Math.floor(100000 + Math.random() * 900000).toString();
-            }
-            
-            // Get all users from localStorage
-            function getAllUsers() {
-                const users = [];
-                
-                // Get users with subscriptions
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                Object.keys(subscriptions).forEach(userId => {
-                    users.push({
-                        id: userId,
-                        subscription: subscriptions[userId]
-                    });
-                });
-                
-                // Get users with usage data but no subscription
-                const visitorId = localStorage.getItem('visitorId');
-                if (visitorId && !subscriptions[visitorId]) {
-                    users.push({
-                        id: visitorId,
-                        subscription: { active: false, expiry: null }
-                    });
-                }
-                
-                return users;
-            }
-            
-            // Get all generated codes
-            function getGeneratedCodes() {
-                return JSON.parse(localStorage.getItem('adminCodes') || '[]');
-            }
-            
-            // Save a generated code
-            function saveGeneratedCode(code, userId, months, used = false) {
-                const codes = getGeneratedCodes();
-                
-                codes.push({
-                    code: code,
-                    userId: userId,
-                    months: months,
-                    used: used,
-                    createdAt: new Date().toISOString()
-                });
-                
-                localStorage.setItem('adminCodes', JSON.stringify(codes));
-            }
-            
-            // Update budget display
-            function updateBudgetDisplay() {
-                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
-                
-                // Update total revenue
-                totalRevenueElement.textContent = `$${budget.total}`;
-                
-                // Update budget goal text
-                budgetGoalTextElement.textContent = `$${budget.goal}`;
-                
-                // Update budget progress
-                const percentage = Math.min((budget.total / budget.goal) * 100, 100);
-                budgetProgressElement.style.width = `${percentage}%`;
-                budgetPercentageElement.textContent = `${Math.round(percentage)}%`;
-                
-                // Set budget goal input value
-                budgetGoalElement.value = budget.goal;
-            }
-            
-            // Update statistics
-            function updateStatistics() {
-                const users = getAllUsers();
-                const codes = getGeneratedCodes();
-                
-                // Total users
-                totalUsersElement.textContent = users.length;
-                
-                // Active subscriptions
-                const activeSubs = users.filter(user => {
-                    if (!user.subscription.active) return false;
-                    
-                    if (user.subscription.expiry) {
-                        return new Date(user.subscription.expiry) > new Date();
-                    }
-                    
-                    return true;
-                }).length;
-                
-                activeSubscriptionsElement.textContent = activeSubs;
-                
-                // Codes generated
-                codesGeneratedElement.textContent = codes.length;
-                
-                // Codes used
-                const usedCodes = codes.filter(code => code.used).length;
-                codesUsedElement.textContent = usedCodes;
-            }
-            
-            // Get subscription months from expiry date
-            function getSubscriptionMonths(subscription) {
-                if (!subscription.expiry) return 0;
-                
-                const now = new Date();
-                const expiry = new Date(subscription.expiry);
-                const diffTime = Math.abs(expiry - now);
-                const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
-                
-                return diffMonths;
-            }
-            
-            // Render users table
-            function renderUsersTable(searchTerm = '') {
-                const users = getAllUsers();
-                const filteredUsers = users.filter(user => 
-                    user.id.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                
-                usersTableBody.innerHTML = '';
-                
-                if (filteredUsers.length === 0) {
-                    noUsersMessage.classList.remove('hidden');
-                    return;
-                }
-                
-                noUsersMessage.classList.add('hidden');
-                
-                filteredUsers.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.className = 'bg-white border-b hover:bg-slate-50';
-                    
-                    const status = user.subscription.active ? 
-                        (user.subscription.expiry && new Date(user.subscription.expiry) < new Date() ? 'expired' : 'active') : 
-                        'inactive';
-                    
-                    const statusText = status === 'active' ? 'Active' : 
-                                     status === 'expired' ? 'Expired' : 'Inactive';
-                    
-                    const statusClass = status === 'active' ? 'status-active' : 
-                                      status === 'expired' ? 'status-expired' : 'bg-slate-100 text-slate-700';
-                    
-                    const expiryDate = user.subscription.expiry ? 
-                        formatDate(new Date(user.subscription.expiry)) : 
-                        'N/A';
-                    
-                    row.innerHTML = `
-                        <td class="px-4 py-3 font-mono text-xs">${user.id}</td>
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">
-                                ${statusText}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">${expiryDate}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex space-x-2">
-                                <button class="text-primary hover:text-primary-light edit-user" data-user="${user.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="text-red-500 hover:text-red-700 delete-user" data-user="${user.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    usersTableBody.appendChild(row);
-                });
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.edit-user').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user');
-                        editUser(userId);
-                    });
-                });
-                
-                document.querySelectorAll('.delete-user').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-user');
-                        deleteUser(userId);
-                    });
-                });
-            }
-            
-            // Render codes table
-            function renderCodesTable() {
-                const codes = getGeneratedCodes();
-                codesTableBody.innerHTML = '';
-                
-                if (codes.length === 0) {
-                    noCodesMessage.classList.remove('hidden');
-                    return;
-                }
-                
-                noCodesMessage.classList.add('hidden');
-                
-                // Sort codes by creation date (newest first)
-                codes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                codes.forEach(code => {
-                    const row = document.createElement('tr');
-                    row.className = 'bg-white border-b hover:bg-slate-50';
-                    
-                    const usedStatus = code.used ? 'Yes' : 'No';
-                    const usedClass = code.used ? 'status-active' : 'bg-slate-100 text-slate-700';
-                    
-                    // Calculate value
-                    let value = 0;
-                    if (code.months === 'lifetime') {
-                        value = 100; // $100 for lifetime
-                    } else {
-                        value = parseInt(code.months) * 3; // $3 per month
-                    }
-                    
-                    row.innerHTML = `
-                        <td class="px-4 py-3 font-mono font-bold">${code.code}</td>
-                        <td class="px-4 py-3 font-mono text-xs">${code.userId}</td>
-                        <td class="px-4 py-3">${code.months === 'lifetime' ? 'Lifetime' : `${code.months} months`}</td>
-                        <td class="px-4 py-3">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${usedClass}">
-                                ${usedStatus}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 font-bold">$${value}</td>
-                        <td class="px-4 py-3">
-                            <div class="flex space-x-2">
-                                <button class="text-primary hover:text-primary-light copy-code-row" data-code="${code.code}">
-                                    <i class="far fa-copy"></i>
-                                </button>
-                                <button class="text-red-500 hover:text-red-700 delete-code" data-code="${code.code}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    codesTableBody.appendChild(row);
-                });
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.copy-code-row').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const code = this.getAttribute('data-code');
-                        navigator.clipboard.writeText(code).then(() => {
-                            showToast('Code copied to clipboard!');
-                        });
-                    });
-                });
-                
-                document.querySelectorAll('.delete-code').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const code = this.getAttribute('data-code');
-                        deleteCode(code);
-                    });
-                });
-            }
-            
-            // Edit user subscription
-            function editUser(userId) {
-                const users = getAllUsers();
-                const user = users.find(u => u.id === userId);
-                
-                if (!user) return;
-                
-                const newMonths = prompt('Enter new subscription duration in months (or "lifetime" for permanent access):', 
-                    user.subscription.expiry ? getSubscriptionMonths(user.subscription) : '12');
-                
-                if (newMonths === null) return;
-                
-                let months = parseInt(newMonths);
-                let isLifetime = newMonths.toLowerCase() === 'lifetime';
-                
-                if (isNaN(months) && !isLifetime) {
-                    showToast('Invalid duration entered', 'error');
-                    return;
-                }
-                
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                
-                if (isLifetime) {
-                    subscriptions[userId] = {
-                        active: true,
-                        expiry: null
-                    };
-                } else {
-                    const expiry = new Date();
-                    expiry.setMonth(expiry.getMonth() + months);
-                    
-                    subscriptions[userId] = {
-                        active: true,
-                        expiry: expiry.toISOString()
-                    };
-                }
-                
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                
-                showToast(`Subscription updated for user ${userId}`);
-                renderUsersTable();
-                updateStatistics();
-            }
-            
-            // Delete user
-            function deleteUser(userId) {
-                if (!confirm(`Are you sure you want to delete user ${userId}? This will remove their subscription data.`)) {
-                    return;
-                }
-                
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                delete subscriptions[userId];
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                
-                // Also remove usage count if this is the current visitor
-                const visitorId = localStorage.getItem('visitorId');
-                if (visitorId === userId) {
-                    localStorage.removeItem('usageCount');
-                }
-                
-                showToast(`User ${userId} deleted`);
-                renderUsersTable();
-                updateStatistics();
-            }
-            
-            // Delete code
-            function deleteCode(code) {
-                if (!confirm(`Are you sure you want to delete code ${code}?`)) {
-                    return;
-                }
-                
-                const codes = getGeneratedCodes();
-                const updatedCodes = codes.filter(c => c.code !== code);
-                localStorage.setItem('adminCodes', JSON.stringify(updatedCodes));
-                
-                showToast(`Code ${code} deleted`);
-                renderCodesTable();
-                updateStatistics();
-            }
-            
-            // Generate code form submission
-            generateCodeForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const userId = document.getElementById('user-id').value.trim();
-                const months = document.getElementById('months').value;
-                const customCode = document.getElementById('custom-code').value.trim();
-                
-                if (!userId) {
-                    showToast('Please enter a User ID', 'error');
-                    return;
-                }
-                
-                // Generate code
-                const code = customCode || generateRandomCode();
-                
-                // Save the code
-                saveGeneratedCode(code, userId, months);
-                
-                // Generate activation URL
-                const baseUrl = window.location.origin + window.location.pathname;
-                const urlParams = new URLSearchParams();
-                urlParams.set('unlock', code);
-                
-                if (userId !== 'any') {
-                    urlParams.set('user', userId);
-                }
-                
-                if (months !== 'lifetime') {
-                    urlParams.set('months', months);
-                }
-                
-                const activationUrl = `${baseUrl.replace('admin.html', 'index.html')}?${urlParams.toString()}`;
-                
-                // Display the generated code and URL
-                generatedCodeElement.textContent = code;
-                activationUrlElement.value = activationUrl;
-                generatedCodeSection.classList.remove('hidden');
-                
-                showToast('Unlock code generated successfully!');
-                
-                // Reset form
-                document.getElementById('user-id').value = '';
-                document.getElementById('custom-code').value = '';
-                
-                // Update tables and statistics
-                renderCodesTable();
-                updateStatistics();
-                
-                // Scroll to the generated code section
-                generatedCodeSection.scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // Copy code to clipboard
-            copyCodeBtn.addEventListener('click', function() {
-                const code = generatedCodeElement.textContent;
-                navigator.clipboard.writeText(code).then(() => {
-                    showToast('Code copied to clipboard!');
-                });
-            });
-            
-            // Copy URL to clipboard
-            copyUrlBtn.addEventListener('click', function() {
-                const url = activationUrlElement.value;
-                navigator.clipboard.writeText(url).then(() => {
-                    showToast('Activation URL copied to clipboard!');
-                });
-            });
-            
-            // Set budget goal
-            setBudgetBtn.addEventListener('click', function() {
-                const goal = parseInt(budgetGoalElement.value);
-                
-                if (isNaN(goal) || goal <= 0) {
-                    showToast('Please enter a valid budget goal', 'error');
-                    return;
-                }
-                
-                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
-                budget.goal = goal;
-                localStorage.setItem('adminBudget', JSON.stringify(budget));
-                
-                updateBudgetDisplay();
-                showToast('Budget goal updated successfully!');
-            });
-            
-            // Add manual revenue
-            addRevenueBtn.addEventListener('click', function() {
-                const amount = parseInt(manualRevenueInput.value);
-                
-                if (isNaN(amount) || amount <= 0) {
-                    showToast('Please enter a valid amount', 'error');
-                    return;
-                }
-                
-                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
-                budget.total += amount;
-                localStorage.setItem('adminBudget', JSON.stringify(budget));
-                
-                updateBudgetDisplay();
-                showToast(`$${amount} added to revenue!`);
-                
-                // Clear input
-                manualRevenueInput.value = '';
-            });
-            
-            // Search users
-            searchUsersInput.addEventListener('input', function() {
-                renderUsersTable(this.value);
-            });
-            
-            // Refresh data
-            refreshDataBtn.addEventListener('click', function() {
-                renderUsersTable();
-                renderCodesTable();
-                updateStatistics();
-                updateBudgetDisplay();
-                showToast('Data refreshed');
-            });
-            
-            // Initialize the admin panel
-            initializeAdminData();
-            renderUsersTable();
-            renderCodesTable();
-            updateStatistics();
-            updateBudgetDisplay();
+
+            // Set up event listeners
+            setupEventListeners();
+            loadDashboardData();
+            loadAllCodes();
+            loadUserActivity();
         });
+
+        // Functions
+        function setupEventListeners() {
+            // Login form
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                    localStorage.setItem('admin_logged_in', 'true');
+                    showAdminDashboard();
+                } else {
+                    alert('Invalid credentials! Please try again.');
+                }
+            });
+
+            // Logout button
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('admin_logged_in');
+                showLoginPage();
+            });
+
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all content sections
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    
+                    // Show the selected section
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+
+            // Code type change
+            codeTypeSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customCodeGroup.style.display = 'block';
+                } else {
+                    customCodeGroup.style.display = 'none';
+                }
+            });
+
+            // Generate codes form
+            generateForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                generateUnlockCodes();
+            });
+
+            // Settings form
+            settingsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveSettings();
+            });
+        }
+
+        function showLoginPage() {
+            loginPage.style.display = 'flex';
+            adminDashboard.style.display = 'none';
+        }
+
+        function showAdminDashboard() {
+            loginPage.style.display = 'none';
+            adminDashboard.style.display = 'block';
+        }
+
+        function loadDashboardData() {
+            // Load codes data
+            const codes = getUnlockCodes();
+            const totalCodes = codes.length;
+            const usedCodes = codes.filter(code => code.used).length;
+            
+            document.getElementById('total-codes').textContent = totalCodes;
+            document.getElementById('used-codes').textContent = usedCodes;
+            
+            // Load user data
+            const users = getUsers();
+            document.getElementById('total-users').textContent = users.length;
+            
+            // Load revenue data
+            const transactions = getTransactions();
+            const totalRevenue = transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
+            document.getElementById('total-revenue').textContent = `$${totalRevenue.toFixed(2)}`;
+            
+            // Load recent activity
+            const activity = getRecentActivity();
+            const activityTable = document.getElementById('recent-activity');
+            activityTable.innerHTML = '';
+            
+            activity.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(item.date)}</td>
+                    <td>${item.userIP}</td>
+                    <td>${item.action}</td>
+                    <td>${item.details}</td>
+                `;
+                activityTable.appendChild(row);
+            });
+        }
+
+        function loadAllCodes() {
+            const codes = getUnlockCodes();
+            const tableBody = document.getElementById('all-codes');
+            tableBody.innerHTML = '';
+            
+            codes.forEach(code => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${code.code}</td>
+                    <td>${code.type}</td>
+                    <td><span class="status-badge ${code.used ? 'status-inactive' : 'status-active'}">${code.used ? 'Used' : 'Active'}</span></td>
+                    <td>${code.usedBy || 'N/A'}</td>
+                    <td>${formatDate(code.created)}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn btn-danger" onclick="deleteCode('${code.code}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function loadUserActivity() {
+            const activity = getUserActivity();
+            const tableBody = document.getElementById('user-activity-list');
+            tableBody.innerHTML = '';
+            
+            activity.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(item.date)}</td>
+                    <td>${item.userIP}</td>
+                    <td>${item.action}</td>
+                    <td>${item.product || 'N/A'}</td>
+                    <td>${item.country || 'N/A'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function generateUnlockCodes() {
+            const codeType = codeTypeSelect.value;
+            const amount = parseInt(document.getElementById('code-amount').value);
+            const customCode = document.getElementById('custom-code').value;
+            
+            const newCodes = [];
+            
+            for (let i = 0; i < amount; i++) {
+                let code;
+                
+                if (codeType === 'custom' && customCode) {
+                    code = customCode + (i > 0 ? `_${i}` : '');
+                } else {
+                    code = generateRandomCode();
+                }
+                
+                const codeData = {
+                    code: code,
+                    type: codeType,
+                    used: false,
+                    usedBy: null,
+                    created: new Date().toISOString()
+                };
+                
+                newCodes.push(codeData);
+            }
+            
+            // Save codes to localStorage
+            const existingCodes = getUnlockCodes();
+            const updatedCodes = [...existingCodes, ...newCodes];
+            localStorage.setItem('unlock_codes', JSON.stringify(updatedCodes));
+            
+            // Show success message
+            showAlert('Codes generated successfully!', 'success');
+            
+            // Display generated codes
+            displayGeneratedCodes(newCodes);
+            
+            // Update dashboard
+            loadDashboardData();
+            loadAllCodes();
+        }
+
+        function displayGeneratedCodes(codes) {
+            generatedCodes.style.display = 'block';
+            codesList.innerHTML = '';
+            
+            codes.forEach(code => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${code.code}</td>
+                    <td>${code.type}</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td class="action-buttons">
+                        <button class="action-btn btn-danger" onclick="deleteCode('${code.code}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                codesList.appendChild(row);
+            });
+        }
+
+        function deleteCode(code) {
+            if (confirm(`Are you sure you want to delete code "${code}"?`)) {
+                const codes = getUnlockCodes();
+                const updatedCodes = codes.filter(c => c.code !== code);
+                localStorage.setItem('unlock_codes', JSON.stringify(updatedCodes));
+                
+                showAlert('Code deleted successfully!', 'success');
+                loadDashboardData();
+                loadAllCodes();
+                
+                // Also update the generated codes list if it's visible
+                if (generatedCodes.style.display !== 'none') {
+                    const row = Array.from(codesList.querySelectorAll('tr')).find(tr => 
+                        tr.querySelector('td:first-child').textContent === code
+                    );
+                    if (row) {
+                        row.remove();
+                    }
+                }
+            }
+        }
+
+        function saveSettings() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            const freeGenerations = document.getElementById('free-generations').value;
+            const premiumPrice = document.getElementById('premium-price').value;
+            
+            if (username) {
+                ADMIN_CREDENTIALS.username = username;
+            }
+            
+            if (password) {
+                ADMIN_CREDENTIALS.password = password;
+            }
+            
+            // Save settings to localStorage
+            const settings = {
+                freeGenerations: parseInt(freeGenerations),
+                premiumPrice: parseFloat(premiumPrice)
+            };
+            
+            localStorage.setItem('admin_settings', JSON.stringify(settings));
+            
+            showAlert('Settings saved successfully!', 'success');
+        }
+
+        function showAlert(message, type) {
+            generateAlert.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                generateAlert.innerHTML = '';
+            }, 5000);
+        }
+
+        // Helper functions
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function getUnlockCodes() {
+            const codes = localStorage.getItem('unlock_codes');
+            return codes ? JSON.parse(codes) : [];
+        }
+
+        function getUsers() {
+            const users = localStorage.getItem('users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function getTransactions() {
+            const transactions = localStorage.getItem('transactions');
+            return transactions ? JSON.parse(transactions) : [];
+        }
+
+        function getRecentActivity() {
+            const activity = localStorage.getItem('admin_activity');
+            return activity ? JSON.parse(activity) : [];
+        }
+
+        function getUserActivity() {
+            const activity = localStorage.getItem('user_activity');
+            return activity ? JSON.parse(activity) : [];
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // For testing purposes - add some sample data if none exists
+        function initializeSampleData() {
+            if (getUnlockCodes().length === 0) {
+                const sampleCodes = [
+                    { code: 'OFFER123', type: 'premium', used: true, usedBy: '192.168.1.1', created: new Date(Date.now() - 86400000).toISOString() },
+                    { code: 'AI2023', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
+                    { code: 'UNLIMITED', type: 'lifetime', used: false, usedBy: null, created: new Date().toISOString() }
+                ];
+                localStorage.setItem('unlock_codes', JSON.stringify(sampleCodes));
+            }
+            
+            if (getRecentActivity().length === 0) {
+                const sampleActivity = [
+                    { date: new Date(Date.now() - 3600000).toISOString(), userIP: '192.168.1.1', action: 'Code Generation', details: 'Generated 3 premium codes' },
+                    { date: new Date(Date.now() - 7200000).toISOString(), userIP: '192.168.1.5', action: 'Offer Generation', details: 'Generated offers for product "Smart Watch"' },
+                    { date: new Date(Date.now() - 10800000).toISOString(), userIP: '192.168.1.10', action: 'Premium Activation', details: 'Activated premium with code OFFER123' }
+                ];
+                localStorage.setItem('admin_activity', JSON.stringify(sampleActivity));
+            }
+            
+            if (getUserActivity().length === 0) {
+                const sampleUserActivity = [
+                    { date: new Date(Date.now() - 3600000).toISOString(), userIP: '192.168.1.1', action: 'Offer Generation', product: 'Smart Watch', country: 'US' },
+                    { date: new Date(Date.now() - 7200000).toISOString(), userIP: '192.168.1.5', action: 'Offer Generation', product: 'Wireless Earbuds', country: 'GB' },
+                    { date: new Date(Date.now() - 10800000).toISOString(), userIP: '192.168.1.10', action: 'Premium Activation', product: null, country: null }
+                ];
+                localStorage.setItem('user_activity', JSON.stringify(sampleUserActivity));
+            }
+        }
+
+        // Initialize sample data on first load
+        initializeSampleData();
     </script>
 </body>
 </html>
