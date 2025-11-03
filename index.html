@@ -27,6 +27,9 @@
                     animation: {
                         'fade-in': 'fadeIn 0.5s ease-in-out',
                         'slide-up': 'slideUp 0.5s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
+                        'slide-in-right': 'slideInRight 0.5s ease-out',
                     }
                 }
             }
@@ -152,6 +155,23 @@
             display: inline-flex;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
             border: 1px solid #e2e8f0;
+        }
+        
+        /* New Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.8); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         /* Fixed Modal Styles - Scrollable and Responsive */
@@ -364,6 +384,40 @@
             background-color: #ef4444;
         }
 
+        /* Enhanced Hero Section */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element-2 {
+            animation: float 8s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        
+        .floating-element-3 {
+            animation: float 10s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .modal-overlay {
@@ -417,6 +471,10 @@
                 right: 0;
                 margin-bottom: 1rem;
                 display: inline-block;
+            }
+            
+            .floating-element {
+                display: none;
             }
         }
 
@@ -575,18 +633,24 @@
     </div>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden hero-section">
+    <section class="hero-section">
+        <!-- Floating Background Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full floating-element"></div>
+        <div class="absolute top-40 right-20 w-16 h-16 bg-secondary/10 rounded-full floating-element-2"></div>
+        <div class="absolute bottom-40 left-20 w-24 h-24 bg-accent/10 rounded-full floating-element-3"></div>
+        <div class="absolute bottom-20 right-10 w-12 h-12 bg-primary/10 rounded-full floating-element"></div>
+        
         <div class="container mx-auto px-4 z-10">
-            <div class="max-w-4xl mx-auto text-center">
-                <div class="usage-badge"><span id="free-uses-text">Free uses left:</span> <span id="free-uses">3</span></div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800">
+            <div class="max-w-4xl mx-auto text-center hero-content">
+                <div class="usage-badge"><span id="free-uses-text">Free uses left:</span> <span id="free-uses">5</span></div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800 floating-element">
                     <span id="hero-title-1">Dopamine-Driven</span>
                     <span class="block mt-2 text-primary" id="hero-title-2">Offer Generator</span>
                 </h1>
                 <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto" id="hero-description">
                     Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.
                 </p>
-                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow" id="cta-button">
+                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow pulse-glow" id="cta-button">
                     Generate Offers Now
                 </a>
             </div>
@@ -646,7 +710,7 @@
                     </div>
                     
                     <div class="pt-4">
-                        <button type="submit" id="generate-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow flex items-center justify-center">
+                        <button type="submit" id="generate-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow flex items-center justify-center pulse-glow">
                             <span id="generate-btn-text">Generate Offers</span>
                             <i class="fas fa-bolt ml-2"></i>
                         </button>
@@ -673,7 +737,7 @@
                     
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Offer 1 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right">
                             <div class="score-badge"><span id="score-1-text">Winning Score:</span> 92%</div>
                             <div id="offer-output-1" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="1" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
@@ -683,7 +747,7 @@
                         </div>
                         
                         <!-- Offer 2 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right" style="animation-delay: 0.1s">
                             <div class="score-badge"><span id="score-2-text">Winning Score:</span> 87%</div>
                             <div id="offer-output-2" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="2" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
@@ -693,7 +757,7 @@
                         </div>
                         
                         <!-- Offer 3 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300">
+                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right" style="animation-delay: 0.2s">
                             <div class="score-badge"><span id="score-3-text">Winning Score:</span> 95%</div>
                             <div id="offer-output-3" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
                             <button data-offer="3" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
@@ -757,7 +821,7 @@
     </footer>
     
     <script>
-        // Translation data
+        // Enhanced Translation data with better Bangla
         const translations = {
             en: {
                 // Hero Section
@@ -891,6 +955,127 @@
             }
         };
 
+        // Enhanced IP-based usage tracking
+        function initializeUsageTracking() {
+            let visitorId = localStorage.getItem('visitorId');
+            let ipAddress = localStorage.getItem('userIP');
+            
+            if (!visitorId) {
+                visitorId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                localStorage.setItem('visitorId', visitorId);
+            }
+            
+            // Get user IP for tracking
+            if (!ipAddress) {
+                // Using a free IP API to get user's IP
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        ipAddress = data.ip;
+                        localStorage.setItem('userIP', ipAddress);
+                        initializeIPBasedUsage(ipAddress);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching IP:', error);
+                        // Fallback to device-based tracking
+                        initializeDeviceBasedUsage(visitorId);
+                    });
+            } else {
+                initializeIPBasedUsage(ipAddress);
+            }
+            
+            // Check subscription status
+            const subscriptionData = getSubscriptionData(visitorId);
+            const hasUnlimitedAccess = subscriptionData.active;
+            
+            return {
+                visitorId,
+                ipAddress,
+                hasUnlimitedAccess
+            };
+        }
+        
+        function initializeIPBasedUsage(ipAddress) {
+            let ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
+            
+            if (!ipUsage[ipAddress]) {
+                ipUsage[ipAddress] = {
+                    count: 0,
+                    firstUsed: new Date().toISOString()
+                };
+            }
+            
+            localStorage.setItem('ipUsage', JSON.stringify(ipUsage));
+            return ipUsage[ipAddress];
+        }
+        
+        function initializeDeviceBasedUsage(visitorId) {
+            let usageCount = localStorage.getItem('usageCount');
+            if (!usageCount) {
+                usageCount = 0;
+                localStorage.setItem('usageCount', usageCount);
+            }
+            return parseInt(usageCount);
+        }
+        
+        function getRemainingFreeUses(userData) {
+            if (userData.hasUnlimitedAccess) {
+                return 'Unlimited';
+            }
+            
+            if (userData.ipAddress) {
+                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
+                const ipData = ipUsage[userData.ipAddress];
+                return Math.max(0, 5 - (ipData ? ipData.count : 0));
+            } else {
+                // Fallback to device-based tracking
+                const usageCount = localStorage.getItem('usageCount') || 0;
+                return Math.max(0, 5 - parseInt(usageCount));
+            }
+        }
+        
+        function incrementUsage(userData) {
+            if (userData.hasUnlimitedAccess) {
+                return;
+            }
+            
+            if (userData.ipAddress) {
+                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
+                if (ipUsage[userData.ipAddress]) {
+                    ipUsage[userData.ipAddress].count++;
+                    ipUsage[userData.ipAddress].lastUsed = new Date().toISOString();
+                } else {
+                    ipUsage[userData.ipAddress] = {
+                        count: 1,
+                        firstUsed: new Date().toISOString(),
+                        lastUsed: new Date().toISOString()
+                    };
+                }
+                localStorage.setItem('ipUsage', JSON.stringify(ipUsage));
+            } else {
+                // Fallback to device-based tracking
+                let usageCount = localStorage.getItem('usageCount') || 0;
+                usageCount = parseInt(usageCount) + 1;
+                localStorage.setItem('usageCount', usageCount);
+            }
+        }
+        
+        function hasReachedUsageLimit(userData) {
+            if (userData.hasUnlimitedAccess) {
+                return false;
+            }
+            
+            if (userData.ipAddress) {
+                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
+                const ipData = ipUsage[userData.ipAddress];
+                return ipData && ipData.count >= 5;
+            } else {
+                // Fallback to device-based tracking
+                const usageCount = localStorage.getItem('usageCount') || 0;
+                return parseInt(usageCount) >= 5;
+            }
+        }
+        
         // Check for URL parameters on page load
         function checkURLForUnlockCode() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1000,53 +1185,9 @@
             const paymentMadeBtn = document.getElementById('payment-made-btn');
             
             let currentLanguage = 'en';
-            
-            // Initialize usage tracking
-            function initializeUsageTracking() {
-                let visitorId = localStorage.getItem('visitorId');
-                if (!visitorId) {
-                    visitorId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-                    localStorage.setItem('visitorId', visitorId);
-                }
-                
-                let usageCount = localStorage.getItem('usageCount');
-                if (!usageCount) {
-                    usageCount = 0;
-                    localStorage.setItem('usageCount', usageCount);
-                }
-                
-                // Check subscription status
-                const subscriptionData = getSubscriptionData(visitorId);
-                const hasUnlimitedAccess = subscriptionData.active;
-                
-                return {
-                    visitorId,
-                    usageCount: parseInt(usageCount),
-                    hasUnlimitedAccess
-                };
-            }
-            
-            // Subscription management functions
-            function getSubscriptionData(userId) {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                return subscriptions[userId] || { active: false, expiry: null };
-            }
-            
-            function setSubscriptionData(userId, active, months = 1) {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const expiry = new Date();
-                expiry.setMonth(expiry.getMonth() + months);
-                
-                subscriptions[userId] = {
-                    active: active,
-                    expiry: expiry.toISOString()
-                };
-                
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                return subscriptions[userId];
-            }
-            
             let userData = initializeUsageTracking();
+            
+            // Update usage display on page load
             updateUsageDisplay();
             
             // Real market-tested offers in English
@@ -1128,7 +1269,7 @@
                 e.preventDefault();
                 
                 // Check if user has reached usage limit
-                if (!userData.hasUnlimitedAccess && userData.usageCount >= 3) {
+                if (hasReachedUsageLimit(userData)) {
                     subscriptionModal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
                     return;
@@ -1165,12 +1306,9 @@
                     outputSection.classList.remove('hidden');
                     generateBtn.disabled = false;
                     
-                    // Update usage count if not unlimited
-                    if (!userData.hasUnlimitedAccess) {
-                        userData.usageCount++;
-                        localStorage.setItem('usageCount', userData.usageCount);
-                        updateUsageDisplay();
-                    }
+                    // Update usage count
+                    incrementUsage(userData);
+                    updateUsageDisplay();
                     
                     // Scroll to output
                     outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1297,11 +1435,12 @@
             
             // Function to update usage display
             function updateUsageDisplay() {
-                if (userData.hasUnlimitedAccess) {
+                const remainingUses = getRemainingFreeUses(userData);
+                
+                if (remainingUses === 'Unlimited') {
                     freeUsesSpan.textContent = currentLanguage === 'en' ? 'Unlimited' : 'সীমাহীন';
                     freeUsesSpan.parentElement.classList.add('bg-green-500');
                 } else {
-                    const remainingUses = 3 - userData.usageCount;
                     freeUsesSpan.textContent = remainingUses;
                     
                     if (remainingUses === 0) {
@@ -1458,6 +1597,26 @@
             
             function getValue() {
                 return Math.floor(Math.random() * 200) + 100;
+            }
+            
+            // Subscription management functions
+            function getSubscriptionData(userId) {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                return subscriptions[userId] || { active: false, expiry: null };
+            }
+            
+            function setSubscriptionData(userId, active, months = 1) {
+                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
+                const expiry = new Date();
+                expiry.setMonth(expiry.getMonth() + months);
+                
+                subscriptions[userId] = {
+                    active: active,
+                    expiry: expiry.toISOString()
+                };
+                
+                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+                return subscriptions[userId];
             }
             
             // Smooth scroll for CTA button
