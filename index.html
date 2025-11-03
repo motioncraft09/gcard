@@ -906,6 +906,19 @@
             color: var(--accent);
         }
 
+        /* Language Badge */
+        .language-badge {
+            display: inline-block;
+            background: rgba(0, 180, 216, 0.2);
+            color: var(--secondary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            border: 1px solid rgba(0, 180, 216, 0.3);
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .hero h1 {
@@ -1144,7 +1157,9 @@
     </div>
 
     <!-- Admin Link -->
-   
+    <a href="admin.html" class="admin-link">
+        <i class="fas fa-user-shield"></i> Admin Panel
+    </a>
 
     <script>
         // Configuration
@@ -1166,6 +1181,405 @@
             AU: { language: "English", currency: "AUD", symbol: "A$" },
             CA: { language: "English", currency: "CAD", symbol: "C$" },
             BD: { language: "Bengali", currency: "BDT", symbol: "৳" }
+        };
+
+        // Multi-language content
+        const multiLanguageContent = {
+            // English
+            English: {
+                offerTitles: [
+                    "Limited Time Exclusive Offer",
+                    "Premium Bundle Deal",
+                    "Early Bird Special",
+                    "Flash Sale Discount",
+                    "Members-Only Pricing",
+                    "Buy One Get One Free",
+                    "Seasonal Promotion",
+                    "New Customer Welcome Deal",
+                    "Limited Stock Clearance",
+                    "VIP Access Package"
+                ],
+                analysisPointsList: [
+                    "Taps into scarcity mindset creating urgency",
+                    "Appeals to value-conscious consumers",
+                    "Builds brand loyalty through exclusive access",
+                    "Encourages immediate purchase decisions",
+                    "Targets specific customer pain points effectively",
+                    "Leverages social proof and FOMO (Fear Of Missing Out)",
+                    "Optimized for mobile conversion rates",
+                    "Aligns with current market trends and demand"
+                ],
+                adCopies: [
+                    "Don't miss this exclusive opportunity! Limited time offer for our premium product.",
+                    "Transform your experience with our special bundle. Act now before it's gone!",
+                    "Be the first to enjoy our revolutionary product at an unbeatable price.",
+                    "Flash sale! Get amazing discounts on our top-rated products for a limited time.",
+                    "Join our elite members club and unlock special pricing and benefits today."
+                ],
+                metricLabels: {
+                    ctr: "Click-Through Rate",
+                    conversion: "Conversion Rate",
+                    revenue: "Projected Revenue"
+                },
+                tierNames: {
+                    basic: "Basic",
+                    standard: "Standard",
+                    premium: "Premium"
+                },
+                confidenceLabel: "AI Confidence Score"
+            },
+            
+            // German
+            German: {
+                offerTitles: [
+                    "Exklusivangebot für kurze Zeit",
+                    "Premium-Paketangebot",
+                    "Frühbucher-Angebot",
+                    "Flash-Sale-Rabatt",
+                    "Nur für Mitglieder",
+                    "Kauf eins, bekomm eins gratis",
+                    "Saisonale Aktion",
+                    "Willkommensangebot für Neukunden",
+                    "Limited Stock Clearance",
+                    "VIP-Zugangspaket"
+                ],
+                analysisPointsList: [
+                    "Spricht die Knappheitsmentalität an und schafft Dringlichkeit",
+                    "Spricht preisbewusste Verbraucher an",
+                    "Baut Markenloyalität durch exklusiven Zugang auf",
+                    "Fördert sofortige Kaufentscheidungen",
+                    "Zielt effektiv auf spezifische Kundenprobleme ab",
+                    "Nutzt Social Proof und FOMO (Fear Of Missing Out)",
+                    "Optimiert für mobile Conversion-Rates",
+                    "Stimmt mit aktuellen Markttrends und -nachfrage überein"
+                ],
+                adCopies: [
+                    "Verpassen Sie nicht diese exklusive Gelegenheit! Zeitlich begrenztes Angebot für unser Premium-Produkt.",
+                    "Verwandeln Sie Ihr Erlebnis mit unserem Sonderpaket. Handeln Sie jetzt, bevor es weg ist!",
+                    "Seien Sie der Erste, der unser revolutionäres Produkt zu einem unschlagbaren Preis genießt.",
+                    "Flash-Sale! Erhalten Sie erstaunliche Rabatte auf unsere hoch bewerteten Produkte für kurze Zeit.",
+                    "Treten Sie unserem exklusiven Mitgliederclub bei und schalten Sie noch heute Sonderpreise und Vorteile frei."
+                ],
+                metricLabels: {
+                    ctr: "Klickrate",
+                    conversion: "Konversionsrate",
+                    revenue: "Projizierter Umsatz"
+                },
+                tierNames: {
+                    basic: "Basis",
+                    standard: "Standard",
+                    premium: "Premium"
+                },
+                confidenceLabel: "KI-Konfidenz-Score"
+            },
+            
+            // French
+            French: {
+                offerTitles: [
+                    "Offre exclusive limitée dans le temps",
+                    "Offre groupée premium",
+                    "Offre early bird",
+                    "Remise flash sale",
+                    "Tarification réservée aux membres",
+                    "Achetez un produit, obtenez-en un gratuit",
+                    "Promotion saisonnière",
+                    "Offre de bienvenue nouveau client",
+                    "Liquidation stock limité",
+                    "Forfait accès VIP"
+                ],
+                analysisPointsList: [
+                    "Touche à la mentalité de rareté créant de l'urgence",
+                    "Attire les consommateurs soucieux de la valeur",
+                    "Fidélise la marque grâce à un accès exclusif",
+                    "Encourage les décisions d'achat immédiates",
+                    "Cible efficacement les points douloureux spécifiques des clients",
+                    "Tire parti de la preuve sociale et de la FOMO (Fear Of Missing Out)",
+                    "Optimisé pour les taux de conversion mobiles",
+                    "S'aligne sur les tendances et la demande actuelles du marché"
+                ],
+                adCopies: [
+                    "Ne manquez pas cette opportunité exclusive ! Offre limitée dans le temps pour notre produit premium.",
+                    "Transformez votre expérience avec notre pack spécial. Agissez maintenant avant qu'il ne soit trop tard !",
+                    "Soyez le premier à profiter de notre produit révolutionnaire à un prix imbattable.",
+                    "Vente flash ! Obtenez des remises incroyables sur nos produits les mieux notés pour une durée limitée.",
+                    "Rejoignez notre club d'élite et débloquez des tarifs et avantages spéciaux dès aujourd'hui."
+                ],
+                metricLabels: {
+                    ctr: "Taux de clics",
+                    conversion: "Taux de conversion",
+                    revenue: "Revenu projeté"
+                },
+                tierNames: {
+                    basic: "Basique",
+                    standard: "Standard",
+                    premium: "Premium"
+                },
+                confidenceLabel: "Score de confiance IA"
+            },
+            
+            // Spanish
+            Spanish: {
+                offerTitles: [
+                    "Oferta exclusiva por tiempo limitado",
+                    "Oferta de paquete premium",
+                    "Oferta de early bird",
+                    "Descuento de venta flash",
+                    "Precios solo para miembros",
+                    "Compra uno y recibe otro gratis",
+                    "Promoción de temporada",
+                    "Oferta de bienvenida para nuevos clientes",
+                    "Liquidación de stock limitado",
+                    "Paquete de acceso VIP"
+                ],
+                analysisPointsList: [
+                    "Aprovecha la mentalidad de escasez creando urgencia",
+                    "Atrae a consumidores conscientes del valor",
+                    "Construye lealtad a la marca a través del acceso exclusivo",
+                    "Fomenta decisiones de compra inmediatas",
+                    "Se enfoca efectivamente en puntos problemáticos específicos del cliente",
+                    "Aprovecha la prueba social y el FOMO (Fear Of Missing Out)",
+                    "Optimizado para tasas de conversión móviles",
+                    "Se alinea con las tendencias y demandas actuales del mercado"
+                ],
+                adCopies: [
+                    "¡No te pierdas esta oportunidad exclusiva! Oferta por tiempo limitado para nuestro producto premium.",
+                    "Transforma tu experiencia con nuestro paquete especial. ¡Actúa ahora antes de que se agote!",
+                    "Sé el primero en disfrutar de nuestro producto revolucionario a un precio imbatible.",
+                    "¡Venta flash! Obtén descuentos increíbles en nuestros productos mejor valorados por tiempo limitado.",
+                    "Únete a nuestro club de élite y desbloquea precios y beneficios especiales hoy mismo."
+                ],
+                metricLabels: {
+                    ctr: "Tasa de clics",
+                    conversion: "Tasa de conversión",
+                    revenue: "Ingresos proyectados"
+                },
+                tierNames: {
+                    basic: "Básico",
+                    standard: "Estándar",
+                    premium: "Premium"
+                },
+                confidenceLabel: "Puntuación de confianza de IA"
+            },
+            
+            // Japanese
+            Japanese: {
+                offerTitles: [
+                    "期間限定特別オファー",
+                    "プレミアムバンドルセール",
+                    "早期割引特典",
+                    "フラッシュセール割引",
+                    "会員限定価格",
+                    "1つ購入で1つ無料",
+                    "季節限定プロモーション",
+                    "新規顧客歓迎特典",
+                    "在庫限りセール",
+                    "VIPアクセスポッケージ"
+                ],
+                analysisPointsList: [
+                    "希少性マインドセットを活用して緊急性を創出",
+                    "価格意識の高い消費者にアピール",
+                    "限定アクセスによるブランドロイヤルティの構築",
+                    "即座の購入決定を促進",
+                    "特定の顧客の悩みに効果的に対応",
+                    "ソーシャルプルーフとFOMOを活用",
+                    "モバイル変換率向けに最適化",
+                    "現在の市場トレンドと需要に適合"
+                ],
+                adCopies: [
+                    "この限定機会をお見逃しなく！プレミアム製品の期間限定オファーです。",
+                    "特別バンドルで体験を変えましょう。なくなる前に今すぐ行動を！",
+                    "画期的な製品を破格の価格でお楽しみいただけます。",
+                    "フラッシュセール！高評価製品が期間限定で驚きの割引価格に。",
+                    "エリート会員クラブに参加して、特別価格と特典を今すぐ解放しましょう。"
+                ],
+                metricLabels: {
+                    ctr: "クリック率",
+                    conversion: "コンバージョン率",
+                    revenue: "予想収益"
+                },
+                tierNames: {
+                    basic: "ベーシック",
+                    standard: "スタンダード",
+                    premium: "プレミアム"
+                },
+                confidenceLabel: "AI信頼度スコア"
+            },
+            
+            // Korean
+            Korean: {
+                offerTitles: [
+                    "한정 시간 특별 오퍼",
+                    "프리미엄 번들 딜",
+                    "얼리버드 특별 할인",
+                    "플래시 세일 할인",
+                    "회원 전용 가격",
+                    "1+1 행사",
+                    "시즌별 프로모션",
+                    "신규 고객 환영 혜택",
+                    "한정 수량 클리어런스",
+                    "VIP 액세스 패키지"
+                ],
+                analysisPointsList: [
+                    "희소성 마인드셋을 활용하여 긴급성 창출",
+                    "가치 중심 소비자에게 어필",
+                    "독점 액세스를 통한 브랜드 충성도 구축",
+                    "즉각적인 구매 결정 장려",
+                    "특정 고객 페인 포인트에 효과적으로 대응",
+                    "소셜 증명과 FOMO 활용",
+                    "모바일 전환율에 최적화",
+                    "현재 시장 트렌드와 수요에 부합"
+                ],
+                adCopies: [
+                    "이 독점 기회를 놓치지 마세요! 프리미엄 제품에 대한 한정 시간 오퍼입니다.",
+                    "특별 번들로 경험을 변화시키세요. 품절 전에 지금行动하세요!",
+                    "우리의 혁신적인 제품을 무적의 가격으로 가장 먼저 즐기세요.",
+                    "플래시 세일! 최고 평점 제품에 대한 놀라운 할인을 한정 시간 동안 받으세요.",
+                    "엘리트 회원 클럽에 가입하고 특별 가격과 혜택을 오늘 바로 잠금 해제하세요."
+                ],
+                metricLabels: {
+                    ctr: "클릭률",
+                    conversion: "전환율",
+                    revenue: "예상 수익"
+                },
+                tierNames: {
+                    basic: "베이직",
+                    standard: "스탠다드",
+                    premium: "프리미엄"
+                },
+                confidenceLabel: "AI 신뢰도 점수"
+            },
+            
+            // Portuguese (Brazil)
+            Portuguese: {
+                offerTitles: [
+                    "Oferta Exclusiva por Tempo Limitado",
+                    "Pacote Premium",
+                    "Oferta Early Bird",
+                    "Desconto de Liquidação Relâmpago",
+                    "Preços Exclusivos para Membros",
+                    "Compre 1 e Leve 2",
+                    "Promoção Sazonal",
+                    "Oferta de Boas-Vindas para Novos Clientes",
+                    "Liquidação de Estoque Limitado",
+                    "Pacote de Acesso VIP"
+                ],
+                analysisPointsList: [
+                    "Explora a mentalidade de escassez criando urgência",
+                    "Atrai consumidores conscientes do valor",
+                    "Constrói lealdade à marca através de acesso exclusivo",
+                    "Incentiva decisões de compra imediatas",
+                    "Segmenta efetivamente pontos problemáticos específicos do cliente",
+                    "Aproveita a prova social e o FOMO (Fear Of Missing Out)",
+                    "Otimizado para taxas de conversão móveis",
+                    "Alinha-se com as tendências e demandas atuais do mercado"
+                ],
+                adCopies: [
+                    "Não perca esta oportunidade exclusiva! Oferta por tempo limitado para nosso produto premium.",
+                    "Transforme sua experiência com nosso pacote especial. Aja agora antes que acabe!",
+                    "Seja o primeiro a desfrutar do nosso produto revolucionário por um preço imbatível.",
+                    "Liquidação relâmpago! Obtenha descontos incríveis em nossos produtos mais bem avaliados por tempo limitado.",
+                    "Junte-se ao nosso clube de elite e desbloqueie preços e benefícios especiais hoje mesmo."
+                ],
+                metricLabels: {
+                    ctr: "Taxa de Cliques",
+                    conversion: "Taxa de Conversão",
+                    revenue: "Receita Projetada"
+                },
+                tierNames: {
+                    basic: "Básico",
+                    standard: "Padrão",
+                    premium: "Premium"
+                },
+                confidenceLabel: "Pontuação de Confiança da IA"
+            },
+            
+            // Hindi
+            Hindi: {
+                offerTitles: [
+                    "सीमित समय विशेष ऑफर",
+                    "प्रीमियम बंडल डील",
+                    "अर्ली बर्ड स्पेशल",
+                    "फ्लैश सेल छूट",
+                    "केवल सदस्यों के लिए मूल्य",
+                    "एक खरीदें एक मुफ्त पाएं",
+                    "मौसमी प्रचार",
+                    "नए ग्राहक स्वागत ऑफर",
+                    "सीमित स्टॉक क्लीयरेंस",
+                    "वीआईपी एक्सेस पैकेज"
+                ],
+                analysisPointsList: [
+                    "तात्कालिकता पैदा करके कमी की मानसिकता का उपयोग करता है",
+                    "मूल्य-सचेत उपभोक्ताओं को आकर्षित करता है",
+                    "विशेष पहुंच के माध्यम से ब्रांड वफादारी बनाता है",
+                    "तत्काल खरीद निर्णयों को प्रोत्साहित करता है",
+                    "विशिष्ट ग्राहक दर्द बिंदुओं को प्रभावी ढंग से लक्षित करता है",
+                    "सोशल प्रूफ और FOMO (Fear Of Missing Out) का लाभ उठाता है",
+                    "मोबाइल रूपांतरण दरों के लिए अनुकूलित",
+                    "वर्तमान बाजार रुझानों और मांग के साथ संरेखित"
+                ],
+                adCopies: [
+                    "यह विशेष अवसर मत छोड़ें! हमारे प्रीमियम उत्पाद के लिए सीमित समय का ऑफर।",
+                    "हमारे विशेष बंडल के साथ अपने अनुभव को बदलें। खत्म होने से पहले अभी कार्रवाई करें!",
+                    "अनूठी कीमत पर हमारे क्रांतिकारी उत्पाद का आनंद लेने वाले पहले व्यक्ति बनें।",
+                    "फ्लैश सेल! सीमित समय के लिए हमारे शीर्ष-रेटेड उत्पादों पर अद्भुत छूट प्राप्त करें।",
+                    "हमारे अभिजात वर्ग के सदस्य क्लब में शामिल हों और आज ही विशेष मूल्य और लाभ अनलॉक करें।"
+                ],
+                metricLabels: {
+                    ctr: "क्लिक-थ्रू दर",
+                    conversion: "रूपांतरण दर",
+                    revenue: "अनुमानित राजस्व"
+                },
+                tierNames: {
+                    basic: "बेसिक",
+                    standard: "स्टैंडर्ड",
+                    premium: "प्रीमियम"
+                },
+                confidenceLabel: "एआई आत्मविश्वास स्कोर"
+            },
+            
+            // Bengali
+            Bengali: {
+                offerTitles: [
+                    "সীমিত সময় এক্সক্লুসিভ অফার",
+                    "প্রিমিয়াম বান্ডিল ডিল",
+                    "আর্লি বার্ড স্পেশাল",
+                    "ফ্ল্যাশ সেল ডিসকাউন্ট",
+                    "শুধুমাত্র সদস্যদের জন্য মূল্য",
+                    "একটি কিনলে একটি বিনামূল্যে পান",
+                    "মৌসুমী প্রচার",
+                    "নতুন গ্রাহক স্বাগতম অফার",
+                    "সীমিত স্টক ক্লিয়ারেন্স",
+                    "ভিআইপি অ্যাক্সেস প্যাকেজ"
+                ],
+                analysisPointsList: [
+                    "জরুরিতা তৈরি করে স্বল্পতার মানসিকতা কাজে লাগায়",
+                    "মূল্য-সচেতন ভোক্তাদের আকর্ষণ করে",
+                    "এক্সক্লুসিভ অ্যাক্সেসের মাধ্যমে ব্র্যান্ড লয়্যাল্টি গড়ে তোলে",
+                    "তাৎক্ষণিক ক্রয় সিদ্ধান্তকে উত্সাহিত করে",
+                    "নির্দিষ্ট গ্রাহকের ব্যথার পয়েন্টগুলিকে কার্যকরভাবে টার্গেট করে",
+                    "সামাজিক প্রমাণ এবং FOMO (Fear Of Missing Out) কাজে লাগায়",
+                    "মোবাইল কনভার্শন রেটের জন্য অপ্টিমাইজড",
+                    "বর্তমান বাজার ট্রেন্ড এবং চাহিদার সাথে সামঞ্জস্যপূর্ণ"
+                ],
+                adCopies: [
+                    "এই এক্সক্লুসিভ সুযোগ মিস করবেন না! আমাদের প্রিমিয়াম পণ্যের জন্য সীমিত সময়ের অফার।",
+                    "আমাদের বিশেষ বান্ডিল দিয়ে আপনার অভিজ্ঞতা রূপান্তর করুন। শেষ হওয়ার আগে এখনই কাজ করুন!",
+                    "একটি অপরাজেয় দামে আমাদের বিপ্লবী পণ্য উপভোগ করার প্রথম ব্যক্তি হন।",
+                    "ফ্ল্যাশ সেল! সীমিত সময়ের জন্য আমাদের শীর্ষ-রেটেড পণ্যগুলিতে আশ্চর্যজনক ছাড় পান।",
+                    "আমাদের এলিট মেম্বার ক্লাবে যোগ দিন এবং আজই বিশেষ মূল্য এবং সুবিধা আনলক করুন।"
+                ],
+                metricLabels: {
+                    ctr: "ক্লিক-থ্রু রেট",
+                    conversion: "কনভার্শন রেট",
+                    revenue: "অনুমানিক আয়"
+                },
+                tierNames: {
+                    basic: "বেসিক",
+                    standard: "স্ট্যান্ডার্ড",
+                    premium: "প্রিমিয়াম"
+                },
+                confidenceLabel: "এআই কনফিডেন্স স্কোর"
+            }
         };
 
         // DOM Elements
@@ -1484,6 +1898,9 @@
             const countryCode = countrySelect.value;
             const price = parseFloat(document.getElementById('price').value);
 
+            // Get language-specific content
+            const content = multiLanguageContent[currentLanguage] || multiLanguageContent.English;
+            
             // Generate 10 offer cards
             for (let i = 0; i < 10; i++) {
                 const offerCard = document.createElement('div');
@@ -1491,8 +1908,8 @@
                 offerCard.style.animationDelay = `${i * 0.1}s`;
 
                 // Generate random offer data
-                const title = getRandomElement(offerTitles);
-                const analysisPoints = getRandomElements(analysisPointsList, 3);
+                const title = getRandomElement(content.offerTitles);
+                const analysisPoints = getRandomElements(content.analysisPointsList, 3);
                 const ctr = (Math.random() * 10 + 2).toFixed(1);
                 const conversion = (Math.random() * 5 + 1).toFixed(1);
                 const revenue = Math.floor(Math.random() * 5000 + 1000);
@@ -1500,45 +1917,48 @@
                 const basicPrice = (basePrice * 0.7).toFixed(2);
                 const standardPrice = basePrice.toFixed(2);
                 const premiumPrice = (basePrice * 1.5).toFixed(2);
-                const adCopy = getRandomElement(adCopies);
+                const adCopy = getRandomElement(content.adCopies);
                 const confidence = Math.floor(Math.random() * 30 + 70);
 
                 offerCard.innerHTML = `
-                    <h3 class="offer-title"><i class="fas fa-bullseye"></i> ${title}</h3>
+                    <h3 class="offer-title">
+                        <i class="fas fa-bullseye"></i> ${title}
+                        <span class="language-badge">${currentLanguage}</span>
+                    </h3>
                     <ul class="analysis-list">
                         ${analysisPoints.map(point => `<li>${point}</li>`).join('')}
                     </ul>
                     <div class="performance-metrics">
                         <div class="metric">
                             <div class="metric-value">${ctr}%</div>
-                            <div class="metric-label">Click-Through Rate</div>
+                            <div class="metric-label">${content.metricLabels.ctr}</div>
                         </div>
                         <div class="metric">
                             <div class="metric-value">${conversion}%</div>
-                            <div class="metric-label">Conversion Rate</div>
+                            <div class="metric-label">${content.metricLabels.conversion}</div>
                         </div>
                         <div class="metric">
                             <div class="metric-value">${formatCurrency(revenue, currentCurrency, currentCurrencySymbol)}</div>
-                            <div class="metric-label">Projected Revenue</div>
+                            <div class="metric-label">${content.metricLabels.revenue}</div>
                         </div>
                     </div>
                     <div class="price-tiers">
                         <div class="tier">
-                            <div class="tier-name">Basic</div>
+                            <div class="tier-name">${content.tierNames.basic}</div>
                             <div class="tier-price">${formatCurrency(basicPrice, currentCurrency, currentCurrencySymbol)}</div>
                         </div>
                         <div class="tier">
-                            <div class="tier-name">Standard</div>
+                            <div class="tier-name">${content.tierNames.standard}</div>
                             <div class="tier-price">${formatCurrency(standardPrice, currentCurrency, currentCurrencySymbol)}</div>
                         </div>
                         <div class="tier">
-                            <div class="tier-name">Premium</div>
+                            <div class="tier-name">${content.tierNames.premium}</div>
                             <div class="tier-price">${formatCurrency(premiumPrice, currentCurrency, currentCurrencySymbol)}</div>
                         </div>
                     </div>
                     <div class="ad-copy">${adCopy}</div>
                     <div class="confidence-score">
-                        <span>AI Confidence Score</span>
+                        <span>${content.confidenceLabel}</span>
                         <div class="confidence-bar">
                             <div class="confidence-fill" style="width: ${confidence}%"></div>
                         </div>
@@ -1549,39 +1969,6 @@
                 offersContainer.appendChild(offerCard);
             }
         }
-
-        // Dummy data for offers
-        const offerTitles = [
-            "Limited Time Exclusive Offer",
-            "Premium Bundle Deal",
-            "Early Bird Special",
-            "Flash Sale Discount",
-            "Members-Only Pricing",
-            "Buy One Get One Free",
-            "Seasonal Promotion",
-            "New Customer Welcome Deal",
-            "Limited Stock Clearance",
-            "VIP Access Package"
-        ];
-
-        const analysisPointsList = [
-            "Taps into scarcity mindset creating urgency",
-            "Appeals to value-conscious consumers",
-            "Builds brand loyalty through exclusive access",
-            "Encourages immediate purchase decisions",
-            "Targets specific customer pain points effectively",
-            "Leverages social proof and FOMO (Fear Of Missing Out)",
-            "Optimized for mobile conversion rates",
-            "Aligns with current market trends and demand"
-        ];
-
-        const adCopies = [
-            "Don't miss this exclusive opportunity! Limited time offer for our premium product.",
-            "Transform your experience with our special bundle. Act now before it's gone!",
-            "Be the first to enjoy our revolutionary product at an unbeatable price.",
-            "Flash sale! Get amazing discounts on our top-rated products for a limited time.",
-            "Join our elite members club and unlock special pricing and benefits today."
-        ];
 
         function getRandomElement(array) {
             return array[Math.floor(Math.random() * array.length)];
