@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Offer AI - Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #6C63FF;
             --primary-dark: #5752D4;
+            --primary-glow: rgba(108, 99, 255, 0.4);
             --secondary: #00B4D8;
             --accent: #FF6B6B;
             --success: #4CC9F0;
             --warning: #F9C74F;
-            --dark: #121826;
-            --darker: #0A0F1C;
+            --dark: #0A0F1C;
+            --darker: #050811;
             --light: #F8F9FA;
             --gray: #6C757D;
             --glass: rgba(255, 255, 255, 0.08);
-            --glass-dark: rgba(0, 0, 0, 0.2);
+            --glass-dark: rgba(0, 0, 0, 0.3);
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            --border-radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 20px;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -33,11 +34,26 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #121826 100%);
             color: var(--light);
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(76, 201, 240, 0.05) 0%, transparent 50%);
+            z-index: -1;
         }
 
         .container {
@@ -48,12 +64,12 @@
 
         /* Header Styles */
         header {
-            background: rgba(10, 15, 28, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 15, 28, 0.7);
+            backdrop-filter: blur(20px);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             padding: 15px 0;
             transition: var(--transition);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -73,7 +89,7 @@
 
         .logo {
             font-size: 2.2rem;
-            font-weight: 800;
+            font-weight: 900;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -81,10 +97,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 0 20px var(--primary-glow);
         }
 
         .logo i {
             font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
         }
 
         .admin-info {
@@ -96,25 +114,25 @@
         .admin-badge {
             background: linear-gradient(135deg, var(--warning), #f8961e);
             color: white;
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(249, 199, 79, 0.3);
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(249, 199, 79, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logout-btn {
             background: rgba(255, 107, 107, 0.2);
             color: var(--accent);
-            padding: 12px 20px;
+            padding: 12px 25px;
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
             transition: var(--transition);
             border: 1px solid rgba(255, 107, 107, 0.3);
@@ -123,6 +141,7 @@
         .logout-btn:hover {
             background: rgba(255, 107, 107, 0.3);
             transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
         /* Main Content */
@@ -134,22 +153,35 @@
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius);
             padding: 30px;
             margin-right: 30px;
             box-shadow: var(--shadow);
             border: 1px solid rgba(255, 255, 255, 0.05);
             height: fit-content;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .sidebar-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 30px;
             color: var(--light);
-            font-weight: 700;
+            font-weight: 800;
             text-align: center;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -167,26 +199,43 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 15px 20px;
-            border-radius: 12px;
+            padding: 18px 20px;
+            border-radius: 15px;
             color: var(--light);
             text-decoration: none;
             transition: var(--transition);
-            font-weight: 500;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.1), transparent);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
         }
 
         .nav-link:hover {
             background: rgba(108, 99, 255, 0.2);
-            transform: translateX(5px);
+            transform: translateX(10px);
         }
 
         .nav-link.active {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
         }
 
         .nav-link i {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             width: 24px;
             text-align: center;
         }
@@ -198,19 +247,32 @@
 
         .content-section {
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius);
-            padding: 40px;
+            padding: 50px;
             margin-bottom: 40px;
             box-shadow: var(--shadow);
             border: 1px solid rgba(255, 255, 255, 0.05);
             display: none;
             animation: fadeIn 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .content-section.active {
@@ -218,122 +280,162 @@
         }
 
         .section-title {
-            font-size: 2.2rem;
+            font-size: 2.8rem;
             margin-bottom: 30px;
             color: var(--light);
-            font-weight: 700;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .section-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: var(--gray);
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Dashboard Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            gap: 30px;
+            margin-bottom: 50px;
         }
 
         .stat-card {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: var(--border-radius);
-            padding: 30px;
+            padding: 35px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             transition: var(--transition);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
         .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            margin-bottom: 20px;
             color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary-glow));
         }
 
         .stat-value {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 900;
             margin-bottom: 10px;
             color: var(--light);
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
         }
 
         .stat-label {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--gray);
+            font-weight: 500;
         }
 
         /* Form Styles */
         .form-group {
             display: flex;
             flex-direction: column;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         label {
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-weight: 700;
+            margin-bottom: 12px;
             color: var(--light);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 1.1rem;
         }
 
         label i {
             color: var(--primary);
+            font-size: 1.2rem;
         }
 
         input, select, textarea {
-            padding: 15px 20px;
+            padding: 18px 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
             transition: var(--transition);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             color: var(--light);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
         }
 
         textarea {
-            min-height: 120px;
+            min-height: 140px;
             resize: vertical;
         }
 
         .btn {
-            padding: 16px 35px;
+            padding: 18px 35px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-size: 1.1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+            gap: 12px;
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.6);
             background: linear-gradient(135deg, var(--primary-dark), var(--primary));
         }
 
@@ -343,21 +445,21 @@
 
         .btn-success {
             background: linear-gradient(135deg, var(--success), #2a9d8f);
-            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.4);
         }
 
         .btn-success:hover {
-            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.4);
+            box-shadow: 0 12px 30px rgba(76, 201, 240, 0.6);
             background: linear-gradient(135deg, #2a9d8f, var(--success));
         }
 
         .btn-danger {
             background: linear-gradient(135deg, var(--accent), #e63946);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
         .btn-danger:hover {
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.6);
             background: linear-gradient(135deg, #e63946, var(--accent));
         }
 
@@ -365,48 +467,51 @@
         .table-container {
             overflow-x: auto;
             border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
         }
 
         th, td {
-            padding: 15px 20px;
+            padding: 20px 25px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         th {
-            background: rgba(0, 0, 0, 0.3);
-            font-weight: 600;
+            background: rgba(0, 0, 0, 0.4);
+            font-weight: 700;
             color: var(--primary);
+            font-size: 1.1rem;
         }
 
         tr:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .status-badge {
             display: inline-block;
-            padding: 5px 12px;
+            padding: 8px 15px;
             border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 700;
         }
 
         .status-active {
             background: rgba(76, 201, 240, 0.2);
             color: var(--success);
+            border: 1px solid rgba(76, 201, 240, 0.3);
         }
 
         .status-inactive {
             background: rgba(255, 107, 107, 0.2);
             color: var(--accent);
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
 
         .action-buttons {
@@ -415,40 +520,42 @@
         }
 
         .action-btn {
-            padding: 8px 12px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-weight: 600;
         }
 
         .action-btn i {
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         /* Alert Styles */
         .alert {
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
             gap: 15px;
+            backdrop-filter: blur(10px);
         }
 
         .alert-success {
             background: rgba(76, 201, 240, 0.2);
-            border-left: 4px solid var(--success);
+            border-left: 5px solid var(--success);
             color: var(--success);
         }
 
         .alert-error {
             background: rgba(255, 107, 107, 0.2);
-            border-left: 4px solid var(--accent);
+            border-left: 5px solid var(--accent);
             color: var(--accent);
         }
 
@@ -463,19 +570,32 @@
 
         .login-box {
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius);
-            padding: 50px;
+            padding: 60px;
             width: 100%;
             max-width: 500px;
             box-shadow: var(--shadow);
             border: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
         }
 
         .login-logo {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 2.8rem;
+            font-weight: 900;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
@@ -483,28 +603,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 30px;
+            text-shadow: 0 0 20px var(--primary-glow);
         }
 
         .login-title {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
             color: var(--light);
+            font-weight: 800;
         }
 
         .login-subtitle {
-            font-size: 1rem;
-            margin-bottom: 40px;
-            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Code Link */
         .code-link {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -515,27 +637,37 @@
             font-family: monospace;
             font-size: 1.1rem;
             color: var(--success);
+            font-weight: 600;
         }
 
         .copy-btn {
             background: rgba(108, 99, 255, 0.2);
             color: var(--primary);
             border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-weight: 600;
         }
 
         .copy-btn:hover {
             background: rgba(108, 99, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Subscription Name */
+        .subscription-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
         }
 
         /* Responsive */
-        @media (max-width: 992px) {
+        @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
             }
@@ -562,10 +694,20 @@
             }
         }
 
+        @media (max-width: 992px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
             }
             
             .stats-grid {
@@ -573,17 +715,21 @@
             }
             
             .content-section {
-                padding: 25px;
+                padding: 40px 30px;
             }
             
             .login-box {
-                padding: 30px 25px;
+                padding: 40px 30px;
             }
             
             .code-link {
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
                 text-align: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
             }
         }
 
@@ -592,13 +738,17 @@
                 font-size: 1.8rem;
             }
             
-            .action-buttons {
-                flex-direction: column;
+            .content-section {
+                padding: 30px 20px;
             }
             
             .admin-info {
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
+            }
+            
+            th, td {
+                padding: 15px 20px;
             }
         }
     </style>
@@ -732,7 +882,7 @@
                             </div>
                         </div>
                         
-                        <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+                        <h3 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--light);">Recent Activity</h3>
                         <div class="table-container">
                             <table>
                                 <thead>
@@ -753,13 +903,18 @@
                     <!-- Generate Codes Section -->
                     <section id="generate-codes" class="content-section">
                         <h2 class="section-title">Generate Unlock Codes</h2>
-                        <p class="section-subtitle">Create new unlock codes for users</p>
+                        <p class="section-subtitle">Create new unlock codes for users with subscription names</p>
                         
                         <div id="generate-alert"></div>
                         
                         <form id="generate-form">
                             <div class="form-group">
-                                <label for="code-type"><i class="fas fa-tag"></i> Code Type</label>
+                                <label for="subscription-name"><i class="fas fa-tag"></i> Subscription Name</label>
+                                <input type="text" id="subscription-name" placeholder="e.g., Premium Monthly, Annual Plan" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="code-type"><i class="fas fa-cube"></i> Code Type</label>
                                 <select id="code-type" required>
                                     <option value="premium">Premium (1 Month)</option>
                                     <option value="extended">Extended (3 Months)</option>
@@ -784,19 +939,20 @@
                             </button>
                         </form>
                         
-                        <div id="generated-codes" style="margin-top: 30px; display: none;">
-                            <h3 style="margin-bottom: 15px;">Generated Codes</h3>
-                            <p style="margin-bottom: 15px; color: var(--gray);">Share these links with users to automatically unlock premium access:</p>
+                        <div id="generated-codes" style="margin-top: 40px; display: none;">
+                            <h3 style="margin-bottom: 20px; font-size: 1.8rem; color: var(--light);">Generated Codes</h3>
+                            <p style="margin-bottom: 20px; color: var(--gray);">Share these links with users to automatically unlock premium access:</p>
                             
                             <div id="code-links-container">
                                 <!-- Code links will be inserted here -->
                             </div>
                             
-                            <div class="table-container" style="margin-top: 20px;">
+                            <div class="table-container" style="margin-top: 30px;">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th>Code</th>
+                                            <th>Subscription</th>
                                             <th>Type</th>
                                             <th>Status</th>
                                             <th>Actions</th>
@@ -820,6 +976,7 @@
                                 <thead>
                                     <tr>
                                         <th>Code</th>
+                                        <th>Subscription</th>
                                         <th>Type</th>
                                         <th>Status</th>
                                         <th>Used By</th>
@@ -1053,6 +1210,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${code.code}</td>
+                    <td><span class="subscription-name">${code.subscriptionName || 'N/A'}</span></td>
                     <td>${code.type}</td>
                     <td><span class="status-badge ${code.used ? 'status-inactive' : 'status-active'}">${code.used ? 'Used' : 'Active'}</span></td>
                     <td>${code.usedBy || 'N/A'}</td>
@@ -1086,6 +1244,7 @@
         }
 
         function generateUnlockCodes() {
+            const subscriptionName = document.getElementById('subscription-name').value;
             const codeType = codeTypeSelect.value;
             const amount = parseInt(document.getElementById('code-amount').value);
             const customCode = document.getElementById('custom-code').value;
@@ -1103,6 +1262,7 @@
                 
                 const codeData = {
                     code: code,
+                    subscriptionName: subscriptionName,
                     type: codeType,
                     used: false,
                     usedBy: null,
@@ -1155,6 +1315,7 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${code.code}</td>
+                    <td><span class="subscription-name">${code.subscriptionName}</span></td>
                     <td>${code.type}</td>
                     <td><span class="status-badge status-active">Active</span></td>
                     <td class="action-buttons">
@@ -1177,12 +1338,22 @@
         }
 
         function deleteCode(code) {
-            if (confirm(`Are you sure you want to delete code "${code}"?`)) {
+            if (confirm(`Are you sure you want to delete code "${code}"? This will revoke access for any user using this code.`)) {
                 const codes = getUnlockCodes();
                 const updatedCodes = codes.filter(c => c.code !== code);
                 localStorage.setItem('valid_unlock_codes', JSON.stringify(updatedCodes));
                 
-                showAlert('Code deleted successfully!', 'success');
+                // Revoke premium access for users with this code
+                const users = getUsers();
+                users.forEach(user => {
+                    if (user.activeSubscriptionCode === code) {
+                        user.premiumUnlocked = false;
+                        user.activeSubscriptionCode = null;
+                    }
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                showAlert('Code deleted successfully! Access revoked for users with this code.', 'success');
                 loadDashboardData();
                 loadAllCodes();
                 
@@ -1290,9 +1461,9 @@
         function initializeSampleData() {
             if (getUnlockCodes().length === 0) {
                 const sampleCodes = [
-                    { code: 'OFFER123', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
-                    { code: 'AI2023', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
-                    { code: 'UNLIMITED', type: 'lifetime', used: false, usedBy: null, created: new Date().toISOString() }
+                    { code: 'OFFER123', subscriptionName: 'Premium Monthly', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
+                    { code: 'AI2023', subscriptionName: 'Annual Plan', type: 'premium', used: false, usedBy: null, created: new Date().toISOString() },
+                    { code: 'UNLIMITED', subscriptionName: 'Lifetime Access', type: 'lifetime', used: false, usedBy: null, created: new Date().toISOString() }
                 ];
                 localStorage.setItem('valid_unlock_codes', JSON.stringify(sampleCodes));
             }
