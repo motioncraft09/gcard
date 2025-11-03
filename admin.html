@@ -83,6 +83,20 @@
         .toast.error {
             background-color: #ef4444;
         }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body class="min-h-screen font-inter">
@@ -116,7 +130,7 @@
     <!-- Main Content -->
     <main class="container mx-auto py-8 px-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column - Generate Codes -->
+            <!-- Left Column - Generate Codes & Budget -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-xl p-6 card-shadow">
                     <h2 class="text-xl font-bold mb-6 text-slate-800">Generate Unlock Code</h2>
@@ -175,6 +189,53 @@
                     </div>
                 </div>
                 
+                <!-- Budget Section -->
+                <div class="bg-white rounded-xl p-6 card-shadow mt-6">
+                    <h2 class="text-xl font-bold mb-4 text-slate-800">Budget & Revenue</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-medium text-slate-700">Total Revenue</span>
+                                <span class="text-lg font-bold text-green-500" id="total-revenue">$0</span>
+                            </div>
+                            
+                            <div class="mt-2">
+                                <div class="flex justify-between text-sm text-slate-600 mb-1">
+                                    <span>Budget Goal</span>
+                                    <span id="budget-goal-text">$1000</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="budget-progress" class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <div class="text-right text-xs text-slate-500 mt-1">
+                                    <span id="budget-percentage">0%</span> of goal
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-lg p-4">
+                            <h3 class="text-sm font-medium text-slate-700 mb-2">Set Budget Goal</h3>
+                            <div class="flex space-x-2">
+                                <input type="number" id="budget-goal" class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter amount">
+                                <button id="set-budget" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-light">
+                                    Set
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-50 rounded-lg p-4">
+                            <h3 class="text-sm font-medium text-slate-700 mb-2">Add Manual Revenue</h3>
+                            <div class="flex space-x-2">
+                                <input type="number" id="manual-revenue" class="flex-grow px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Enter amount">
+                                <button id="add-revenue" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Stats -->
                 <div class="bg-white rounded-xl p-6 card-shadow mt-6">
                     <h2 class="text-xl font-bold mb-4 text-slate-800">Statistics</h2>
@@ -196,8 +257,8 @@
                         </div>
                         
                         <div class="bg-slate-50 rounded-lg p-4 text-center">
-                            <p class="text-2xl font-bold text-green-500" id="revenue">$0</p>
-                            <p class="text-sm text-slate-600">Estimated Revenue</p>
+                            <p class="text-2xl font-bold text-purple-500" id="codes-used">0</p>
+                            <p class="text-sm text-slate-600">Codes Used</p>
                         </div>
                     </div>
                 </div>
@@ -214,6 +275,10 @@
                             <button id="refresh-data" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
+                            <a href="index.html" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-light transition-colors flex items-center">
+                                <i class="fas fa-external-link-alt mr-2"></i>
+                                Main Site
+                            </a>
                         </div>
                     </div>
                     
@@ -250,6 +315,7 @@
                                     <th class="px-4 py-3">User ID</th>
                                     <th class="px-4 py-3">Duration</th>
                                     <th class="px-4 py-3">Used</th>
+                                    <th class="px-4 py-3">Value</th>
                                     <th class="px-4 py-3">Actions</th>
                                 </tr>
                             </thead>
@@ -284,16 +350,33 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
             
+            // Budget elements
+            const totalRevenueElement = document.getElementById('total-revenue');
+            const budgetGoalElement = document.getElementById('budget-goal');
+            const budgetGoalTextElement = document.getElementById('budget-goal-text');
+            const budgetProgressElement = document.getElementById('budget-progress');
+            const budgetPercentageElement = document.getElementById('budget-percentage');
+            const setBudgetBtn = document.getElementById('set-budget');
+            const manualRevenueInput = document.getElementById('manual-revenue');
+            const addRevenueBtn = document.getElementById('add-revenue');
+            
             // Stats elements
             const totalUsersElement = document.getElementById('total-users');
             const activeSubscriptionsElement = document.getElementById('active-subscriptions');
             const codesGeneratedElement = document.getElementById('codes-generated');
-            const revenueElement = document.getElementById('revenue');
+            const codesUsedElement = document.getElementById('codes-used');
             
             // Initialize admin data if not exists
             function initializeAdminData() {
                 if (!localStorage.getItem('adminCodes')) {
                     localStorage.setItem('adminCodes', JSON.stringify([]));
+                }
+                
+                if (!localStorage.getItem('adminBudget')) {
+                    localStorage.setItem('adminBudget', JSON.stringify({
+                        total: 0,
+                        goal: 1000
+                    }));
                 }
                 
                 if (!localStorage.getItem('adminLastLogin')) {
@@ -342,9 +425,7 @@
                 });
                 
                 // Get users with usage data but no subscription
-                const usageCount = localStorage.getItem('usageCount');
                 const visitorId = localStorage.getItem('visitorId');
-                
                 if (visitorId && !subscriptions[visitorId]) {
                     users.push({
                         id: visitorId,
@@ -375,6 +456,25 @@
                 localStorage.setItem('adminCodes', JSON.stringify(codes));
             }
             
+            // Update budget display
+            function updateBudgetDisplay() {
+                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
+                
+                // Update total revenue
+                totalRevenueElement.textContent = `$${budget.total}`;
+                
+                // Update budget goal text
+                budgetGoalTextElement.textContent = `$${budget.goal}`;
+                
+                // Update budget progress
+                const percentage = Math.min((budget.total / budget.goal) * 100, 100);
+                budgetProgressElement.style.width = `${percentage}%`;
+                budgetPercentageElement.textContent = `${Math.round(percentage)}%`;
+                
+                // Set budget goal input value
+                budgetGoalElement.value = budget.goal;
+            }
+            
             // Update statistics
             function updateStatistics() {
                 const users = getAllUsers();
@@ -399,16 +499,9 @@
                 // Codes generated
                 codesGeneratedElement.textContent = codes.length;
                 
-                // Estimated revenue (assuming $3/month)
-                let revenue = 0;
-                users.forEach(user => {
-                    if (user.subscription.active && user.subscription.expiry) {
-                        const months = getSubscriptionMonths(user.subscription);
-                        revenue += months * 3;
-                    }
-                });
-                
-                revenueElement.textContent = `$${revenue}`;
+                // Codes used
+                const usedCodes = codes.filter(code => code.used).length;
+                codesUsedElement.textContent = usedCodes;
             }
             
             // Get subscription months from expiry date
@@ -518,6 +611,14 @@
                     const usedStatus = code.used ? 'Yes' : 'No';
                     const usedClass = code.used ? 'status-active' : 'bg-slate-100 text-slate-700';
                     
+                    // Calculate value
+                    let value = 0;
+                    if (code.months === 'lifetime') {
+                        value = 100; // $100 for lifetime
+                    } else {
+                        value = parseInt(code.months) * 3; // $3 per month
+                    }
+                    
                     row.innerHTML = `
                         <td class="px-4 py-3 font-mono font-bold">${code.code}</td>
                         <td class="px-4 py-3 font-mono text-xs">${code.userId}</td>
@@ -527,6 +628,7 @@
                                 ${usedStatus}
                             </span>
                         </td>
+                        <td class="px-4 py-3 font-bold">$${value}</td>
                         <td class="px-4 py-3">
                             <div class="flex space-x-2">
                                 <button class="text-primary hover:text-primary-light copy-code-row" data-code="${code.code}">
@@ -709,6 +811,43 @@
                 });
             });
             
+            // Set budget goal
+            setBudgetBtn.addEventListener('click', function() {
+                const goal = parseInt(budgetGoalElement.value);
+                
+                if (isNaN(goal) || goal <= 0) {
+                    showToast('Please enter a valid budget goal', 'error');
+                    return;
+                }
+                
+                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
+                budget.goal = goal;
+                localStorage.setItem('adminBudget', JSON.stringify(budget));
+                
+                updateBudgetDisplay();
+                showToast('Budget goal updated successfully!');
+            });
+            
+            // Add manual revenue
+            addRevenueBtn.addEventListener('click', function() {
+                const amount = parseInt(manualRevenueInput.value);
+                
+                if (isNaN(amount) || amount <= 0) {
+                    showToast('Please enter a valid amount', 'error');
+                    return;
+                }
+                
+                const budget = JSON.parse(localStorage.getItem('adminBudget') || '{"total": 0, "goal": 1000}');
+                budget.total += amount;
+                localStorage.setItem('adminBudget', JSON.stringify(budget));
+                
+                updateBudgetDisplay();
+                showToast(`$${amount} added to revenue!`);
+                
+                // Clear input
+                manualRevenueInput.value = '';
+            });
+            
             // Search users
             searchUsersInput.addEventListener('input', function() {
                 renderUsersTable(this.value);
@@ -719,6 +858,7 @@
                 renderUsersTable();
                 renderCodesTable();
                 updateStatistics();
+                updateBudgetDisplay();
                 showToast('Data refreshed');
             });
             
@@ -727,6 +867,7 @@
             renderUsersTable();
             renderCodesTable();
             updateStatistics();
+            updateBudgetDisplay();
         });
     </script>
 </body>
