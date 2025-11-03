@@ -3,178 +3,508 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dopamine-Driven Offer Generator | AI-Powered Sales Offers</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Global Offer AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#7c3aed',
-                        'primary-light': '#8b5cf6',
-                        'secondary': '#0ea5e9',
-                        'accent': '#f59e0b',
-                        'dark': '#0f172a',
-                        'darker': '#0a0f1c',
-                    },
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite alternate',
-                        'slide-in-right': 'slideInRight 0.5s ease-out',
-                    }
-                }
-            }
-        }
-    </script>
     <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5752D4;
+            --secondary: #00B4D8;
+            --accent: #FF6B6B;
+            --success: #4CC9F0;
+            --warning: #F9C74F;
+            --dark: #121826;
+            --darker: #0A0F1C;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-dark: rgba(0, 0, 0, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1e293b;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
             overflow-x: hidden;
         }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        
-        .card-shadow {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        /* Header Styles */
+        header {
+            background: rgba(10, 15, 28, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 15px 0;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        .card-shadow:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .input-focus:focus {
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-            border-color: #7c3aed;
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        
-        .language-btn {
-            transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .language-btn.active {
-            background-color: #7c3aed;
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .credit-status {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            border-color: #7c3aed;
-        }
-        
-        .score-badge {
-            position: absolute;
-            top: -12px;
-            right: 16px;
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.75rem;
+            padding: 12px 20px;
+            border-radius: 50px;
             font-weight: 600;
-            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(108, 99, 255, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3); }
+        }
+
+        .credit-status:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 60px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 1px solid rgba(108, 99, 255, 0.3);
+        }
+
+        /* Form Styles */
+        .form-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: var(--primary);
+        }
+
+        input, select, textarea {
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--light);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        
-        .loading-dots {
-            display: inline-block;
-            position: relative;
-            width: 80px;
-            height: 80px;
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
         }
-        
-        .loading-dots div {
-            position: absolute;
-            top: 33px;
-            width: 13px;
-            height: 13px;
-            border-radius: 50%;
-            background: #7c3aed;
-            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
-        
-        .loading-dots div:nth-child(1) {
-            left: 8px;
-            animation: loading-dots1 0.6s infinite;
-        }
-        
-        .loading-dots div:nth-child(2) {
-            left: 8px;
-            animation: loading-dots2 0.6s infinite;
-        }
-        
-        .loading-dots div:nth-child(3) {
-            left: 32px;
-            animation: loading-dots2 0.6s infinite;
-        }
-        
-        .loading-dots div:nth-child(4) {
-            left: 56px;
-            animation: loading-dots3 0.6s infinite;
-        }
-        
-        @keyframes loading-dots1 {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes loading-dots3 {
-            0% { transform: scale(1); }
-            100% { transform: scale(0); }
-        }
-        
-        @keyframes loading-dots2 {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(24px, 0); }
-        }
-        
-        .copy-btn {
-            transition: all 0.2s ease;
-        }
-        
-        .copy-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .copy-btn.copied {
-            background-color: #10b981;
-        }
-        
-        .language-selector {
-            background: white;
-            border-radius: 10px;
-            padding: 8px;
+
+        .btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
             display: inline-flex;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
-        
-        /* New Animations */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
         }
-        
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.5); }
-            100% { box-shadow: 0 0 20px rgba(124, 58, 237, 0.8); }
+
+        .btn:active {
+            transform: translateY(0);
         }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        
-        /* Fixed Modal Styles - Scrollable and Responsive */
+
+        .generate-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Loading Animation */
+        .loading-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            margin: 30px 0;
+            background: var(--glass);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(108, 99, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Output Section */
+        .output-section {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            text-align: center;
+            color: var(--light);
+            font-weight: 700;
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .offer-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            animation: cardAppear 0.5s ease forwards;
+            opacity: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .offer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        .offer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .offer-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .offer-title i {
+            color: var(--primary);
+        }
+
+        .analysis-list {
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .analysis-list li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .analysis-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+
+        .performance-metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric {
+            text-align: center;
+            flex: 1;
+        }
+
+        .metric-value {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .price-tiers {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .tier {
+            text-align: center;
+            flex: 1;
+            padding: 15px 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tier:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .tier-name {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .tier-price {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--light);
+        }
+
+        .ad-copy {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-style: italic;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .ad-copy::before {
+            content: '"';
+            font-size: 3rem;
+            color: rgba(108, 99, 255, 0.2);
+            position: absolute;
+            top: 5px;
+            left: 10px;
+        }
+
+        .confidence-score {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .confidence-bar {
+            flex: 1;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0 20px;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #2a9d8f);
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -182,1454 +512,747 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.8);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
             padding: 20px;
-            overflow-y: auto;
         }
-        
-        .modal-content {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 900px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            position: relative;
+
+        .modal {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            border-radius: var(--border-radius);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
             max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
-            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalFadeIn 0.4s ease;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            flex-shrink: 0;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             overflow-y: auto;
-            flex-grow: 1;
+            overflow-x: hidden;
         }
-        
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-            flex-shrink: 0;
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
-        
-        .close-modal {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        .modal-text {
+            margin-bottom: 30px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .payment-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .payment-details h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 10;
+            gap: 10px;
         }
-        
-        .close-modal:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .premium-badge {
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1.25rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        
-        .payment-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1.25rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1rem;
-        }
-        
-        .unlock-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 12px 16px;
-            color: white;
-            width: 100%;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        .unlock-input:focus {
-            outline: none;
-            border-color: #7c3aed;
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
-        }
-        
-        .unlock-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .unlock-btn {
-            background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 600;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        .unlock-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
-        }
-        
-        .crypto-address {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-family: monospace;
+
+        .payment-details p {
+            margin-bottom: 10px;
             font-size: 0.9rem;
-            text-align: center;
-            margin: 1rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: white;
-            word-break: break-all;
-        }
-        
-        .crypto-address:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        
-        .copy-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7c3aed;
-        }
-        
-        .usage-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #f59e0b;
-            color: white;
-            border-radius: 20px;
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            z-index: 10000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-        }
-        
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast.success {
-            background-color: #10b981;
-        }
-        
-        .toast.error {
-            background-color: #ef4444;
         }
 
-        /* Enhanced Hero Section */
-        .hero-section {
-            position: relative;
-            min-height: 100vh;
+        .unlock-process {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .unlock-process h3 {
+            margin-bottom: 15px;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .unlock-process ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .unlock-process li {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--light);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            gap: 10px;
         }
-        
-        .hero-content {
-            position: relative;
-            z-index: 10;
+
+        .send-transaction-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
         }
-        
-        .floating-element {
-            animation: float 6s ease-in-out infinite;
+
+        .send-transaction-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
         }
-        
-        .floating-element-2 {
-            animation: float 8s ease-in-out infinite;
-            animation-delay: 1s;
+
+        .unlock-btn {
+            background: linear-gradient(135deg, var(--success), #2a9d8f);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
         }
-        
-        .floating-element-3 {
-            animation: float 10s ease-in-out infinite;
-            animation-delay: 2s;
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 201, 240, 0.4);
+            background: linear-gradient(135deg, #2a9d8f, var(--success));
         }
-        
-        .pulse-glow {
-            animation: pulseGlow 2s ease-in-out infinite alternate;
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
         }
-        
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            .modal-overlay {
-                padding: 10px;
-                align-items: flex-start;
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
             }
             
-            .modal-content {
-                max-height: 95vh;
-                border-radius: 12px;
-            }
-            
-            .modal-header {
-                padding: 1rem;
-            }
-            
-            .modal-body {
-                padding: 1rem;
-            }
-            
-            .modal-footer {
-                padding: 0.75rem 1rem;
-            }
-            
-            .modal-body .grid-cols-1 {
-                gap: 1rem;
-            }
-            
-            .feature-card, .payment-card {
-                padding: 1rem;
-            }
-            
-            .close-modal {
-                top: 12px;
-                right: 12px;
-                width: 32px;
-                height: 32px;
-            }
-            
-            .hero-section h1 {
-                font-size: 2rem !important;
-            }
-            
-            .hero-section p {
-                font-size: 1rem !important;
-            }
-            
-            .usage-badge {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin-bottom: 1rem;
-                display: inline-block;
-            }
-            
-            .floating-element {
-                display: none;
+            .offers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             }
         }
 
-        @media (max-width: 480px) {
-            .modal-content {
-                max-height: 98vh;
-            }
-            
-            .modal-header h2 {
-                font-size: 1.5rem !important;
-            }
-            
-            .feature-card .flex.items-start {
+        @media (max-width: 768px) {
+            .header-container {
                 flex-direction: column;
-                text-align: center;
+                gap: 15px;
             }
             
-            .feature-card .mr-4 {
-                margin-right: 0;
-                margin-bottom: 0.75rem;
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-metrics, .price-tiers {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .metric, .tier {
+                margin: 0;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .modal {
+                padding: 30px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .form-section {
+                padding: 25px;
+            }
+            
+            .hero {
+                padding: 50px 0 30px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen font-inter">
-    <!-- Ultra Premium Subscription Modal -->
-    <div id="subscription-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button id="close-modal" class="close-modal">
-                <i class="fas fa-times"></i>
-            </button>
-            
-            <div class="modal-header">
-                <div class="premium-badge">PREMIUM ACCESS</div>
-                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4" id="modal-title">
-                    Unlock Unlimited Power
-                </h2>
-                <p class="text-slate-300 text-sm md:text-base" id="modal-description">
-                    You've exhausted your free trial. Upgrade to premium for unlimited access to our AI-powered offer generator.
-                </p>
-            </div>
-            
-            <div class="modal-body">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-4" id="benefits-title">Premium Benefits</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="feature-card">
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-4">
-                                        <i class="fas fa-bolt text-purple-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-white mb-1" id="benefit-1-title">Unlimited Offer Generation</h4>
-                                        <p class="text-slate-400 text-sm" id="benefit-1-desc">Create as many high-converting offers as you need, anytime.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-card">
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
-                                        <i class="fas fa-chart-line text-blue-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-white mb-1" id="benefit-2-title">Advanced Analytics</h4>
-                                        <p class="text-slate-400 text-sm" id="benefit-2-desc">Track performance and optimize your offers with detailed insights.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-card">
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mr-4">
-                                        <i class="fas fa-rocket text-amber-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-white mb-1" id="benefit-3-title">Priority Support</h4>
-                                        <p class="text-slate-400 text-sm" id="benefit-3-desc">Get fast responses from our expert team whenever you need help.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="feature-card">
-                                <div class="flex items-start">
-                                    <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-4">
-                                        <i class="fas fa-star text-green-400"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-white mb-1" id="benefit-4-title">Exclusive Templates</h4>
-                                        <p class="text-slate-400 text-sm" id="benefit-4-desc">Access premium offer templates proven to convert at higher rates.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-4" id="get-premium-title">Get Premium Access</h3>
-                        
-                        <div class="payment-card">
-                            <div class="flex justify-between items-center mb-4">
-                                <h4 class="font-bold text-white" id="crypto-title">Crypto Payment</h4>
-                                <span class="text-sm text-slate-400">$3/month</span>
-                            </div>
-                            
-                            <p class="text-slate-300 text-sm mb-4" id="crypto-desc">Send exactly <span class="font-bold text-white">2363264</span> via crypto to our account:</p>
-                            
-                            <div class="crypto-address" id="crypto-address">
-                                0x8a19c7d8a6c9f2e1b3d4f5a6b7c8d9e0f1a2b3c4
-                                <i class="fas fa-copy copy-icon"></i>
-                            </div>
-                            
-                            <p class="text-slate-400 text-sm mb-4" id="crypto-note">After payment, contact us with your transaction ID to get manual access.</p>
-                            
-                            <button class="unlock-btn" id="payment-made-btn">
-                                <i class="fas fa-lock-open mr-2"></i>
-                                <span id="payment-btn-text">I've Made Payment</span>
-                            </button>
-                        </div>
-                        
-                        <div class="payment-card">
-                            <h4 class="font-bold text-white mb-4" id="unlock-code-title">Unlock Code</h4>
-                            
-                            <p class="text-slate-300 text-sm mb-4" id="unlock-code-desc">Enter your premium unlock code below:</p>
-                            
-                            <input type="text" id="unlock-code-input" class="unlock-input" placeholder="Enter your premium code">
-                            
-                            <button id="submit-code" class="unlock-btn">
-                                <i class="fas fa-key mr-2"></i>
-                                <span id="unlock-btn-text">Unlock Premium</span>
-                            </button>
-                            
-                            <p id="code-message" class="text-sm mt-2 text-center hidden"></p>
-                        </div>
-                    </div>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    Global Offer AI
                 </div>
             </div>
+            <div class="credit-status" id="credit-status">
+                <i class="fas fa-coins"></i>
+                <span id="credit-text">Loading credits...</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <div class="ai-badge">
+                <i class="fas fa-brain"></i> POWERED BY ADVANCED AI
+            </div>
+            <h1>Generate High-Converting Offers For Any Market</h1>
+            <p>Enter your product details, select a target country, and our AI will generate localized, high-performing offers in seconds.</p>
+        </section>
+
+        <section class="form-section">
+            <form id="offer-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="product-name"><i class="fas fa-box"></i> Product Name</label>
+                        <input type="text" id="product-name" placeholder="Enter product name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product-description"><i class="fas fa-align-left"></i> Product Description</label>
+                        <textarea id="product-description" placeholder="Describe your product" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="price"><i class="fas fa-tag"></i> Price (<span id="price-currency">USD</span>)</label>
+                        <input type="number" id="price" placeholder="0.00" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country"><i class="fas fa-flag"></i> Country</label>
+                        <select id="country" required>
+                            <option value="">Select a country</option>
+                            <option value="US">United States</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="ES">Spain</option>
+                            <option value="IT">Italy</option>
+                            <option value="JP">Japan</option>
+                            <option value="KR">South Korea</option>
+                            <option value="BR">Brazil</option>
+                            <option value="MX">Mexico</option>
+                            <option value="IN">India</option>
+                            <option value="AU">Australia</option>
+                            <option value="CA">Canada</option>
+                            <option value="BD">Bangladesh</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="language"><i class="fas fa-language"></i> Language</label>
+                        <input type="text" id="language" placeholder="Auto-detected" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="currency"><i class="fas fa-money-bill-wave"></i> Currency</label>
+                        <input type="text" id="currency" placeholder="Auto-detected" readonly>
+                    </div>
+                </div>
+                <div class="generate-btn-container">
+                    <button type="submit" class="btn" id="generate-btn">
+                        <i class="fas fa-bolt"></i> Generate AI Offers
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <div class="loading-container" id="loading-container">
+            <div class="loading-spinner"></div>
+            <p>AI is generating high-converting offers for your target market...</p>
+        </div>
+
+        <section class="output-section" id="output-section">
+            <h2 class="section-title">Your AI-Generated Offers</h2>
+            <div class="offers-grid" id="offers-container">
+                <!-- Offer cards will be inserted here -->
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2023 Global Offer AI. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="limit-modal">
+        <div class="modal">
+            <h2 class="modal-title">Free Limit Reached</h2>
+            <p class="modal-text">You've used your 5 free offer generations. Unlock unlimited access for just $1.</p>
             
-            <div class="modal-footer">
-                <p class="text-slate-400 text-sm">
-                    <span id="support-text">Need assistance? Contact our premium support at</span>
-                    <span class="text-purple-400">support@dopamineoffers.com</span>
-                </p>
+            <div class="payment-details">
+                <h3><i class="fas fa-coins"></i> Crypto Payment</h3>
+                <p><strong>Crypto Account:</strong> 12345</p>
+                <p><strong>Amount:</strong> $1 (or equivalent crypto)</p>
+                <p><strong>Duration:</strong> 1 Month Unlimited Access</p>
+                <p>Send payment to the crypto account above and enter your transaction ID below.</p>
+            </div>
+            
+            <div class="unlock-process">
+                <h3><i class="fas fa-unlock"></i> Unlock Process</h3>
+                <ol>
+                    <li>Send $1 to Crypto Account: 12345</li>
+                    <li>Enter your transaction ID and click "Send Transaction ID"</li>
+                    <li>We will manually verify your payment</li>
+                    <li>You will receive an unlock code via email</li>
+                    <li>Enter the unlock code and click "Unlock" to activate unlimited access</li>
+                </ol>
+                <p><strong>Note:</strong> Manual verification may take up to 24 hours.</p>
+            </div>
+            
+            <input type="text" class="modal-input" id="transaction-id" placeholder="Enter your transaction ID">
+            <div class="modal-buttons">
+                <button class="modal-btn send-transaction-btn" id="send-transaction-btn">
+                    <i class="fas fa-paper-plane"></i> Send Transaction ID
+                </button>
+                <button class="modal-btn unlock-btn" id="unlock-btn">
+                    <i class="fas fa-key"></i> Unlock with Code
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast hidden">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            <span id="toast-message">Success!</span>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <!-- Floating Background Elements -->
-        <div class="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full floating-element"></div>
-        <div class="absolute top-40 right-20 w-16 h-16 bg-secondary/10 rounded-full floating-element-2"></div>
-        <div class="absolute bottom-40 left-20 w-24 h-24 bg-accent/10 rounded-full floating-element-3"></div>
-        <div class="absolute bottom-20 right-10 w-12 h-12 bg-primary/10 rounded-full floating-element"></div>
-        
-        <div class="container mx-auto px-4 z-10">
-            <div class="max-w-4xl mx-auto text-center hero-content">
-                <div class="usage-badge"><span id="free-uses-text">Free uses left:</span> <span id="free-uses">5</span></div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800 floating-element">
-                    <span id="hero-title-1">Dopamine-Driven</span>
-                    <span class="block mt-2 text-primary" id="hero-title-2">Offer Generator</span>
-                </h1>
-                <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto" id="hero-description">
-                    Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.
-                </p>
-                <a href="#generator" class="inline-block px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow pulse-glow" id="cta-button">
-                    Generate Offers Now
-                </a>
-            </div>
-        </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
-            <div class="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center">
-                <div class="w-1 h-3 bg-slate-400 rounded-full mt-2 animate-bounce"></div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- AI Generator Section -->
-    <section id="generator" class="py-16 px-4">
-        <div class="container mx-auto max-w-5xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-slate-800" id="generator-title">AI Offer Generator</h2>
-                <p class="text-lg text-slate-600 max-w-xl mx-auto" id="generator-description">Create high-converting offers tailored to your product and audience in seconds.</p>
-                
-                <!-- Language Selector - Always Visible -->
-                <div class="mt-8 flex justify-center">
-                    <div class="language-selector">
-                        <button id="english-btn" class="language-btn active px-4 py-2 rounded-lg flex items-center text-sm">
-                            <i class="fas fa-language mr-2"></i>
-                            <span>English</span>
-                        </button>
-                        <button id="bangla-btn" class="language-btn px-4 py-2 rounded-lg flex items-center text-sm">
-                            <i class="fas fa-language mr-2"></i>
-                            <span>Bangla</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl p-6 md:p-8 card-shadow transition-all duration-300 relative">
-                <form id="offer-form" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="product-name" class="block text-base font-medium mb-2 text-slate-700" id="product-label">Product/Service Name</label>
-                            <input type="text" id="product-name" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Premium Fitness App">
-                        </div>
-                        <div>
-                            <label for="target-audience" class="block text-base font-medium mb-2 text-slate-700" id="audience-label">Target Audience</label>
-                            <input type="text" id="target-audience" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="e.g., Busy professionals aged 25-40">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label for="product-description" class="block text-base font-medium mb-2 text-slate-700" id="description-label">Product Description</label>
-                        <textarea id="product-description" required rows="3" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="Describe your product/service in detail..."></textarea>
-                    </div>
-                    
-                    <div>
-                        <label for="usp" class="block text-base font-medium mb-2 text-slate-700" id="usp-label">Unique Selling Point (USP)</label>
-                        <input type="text" id="usp" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none input-focus text-slate-800" placeholder="What makes your product unique?">
-                    </div>
-                    
-                    <div class="pt-4">
-                        <button type="submit" id="generate-btn" class="w-full py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-light transition-colors duration-300 card-shadow flex items-center justify-center pulse-glow">
-                            <span id="generate-btn-text">Generate Offers</span>
-                            <i class="fas fa-bolt ml-2"></i>
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Loading State -->
-                <div id="loading-state" class="hidden mt-10 text-center">
-                    <div class="loading-dots mx-auto mb-4">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <p class="text-lg text-slate-600" id="loading-text">Crafting your dopamine-driven offers...</p>
-                </div>
-                
-                <!-- Output Section -->
-                <div id="output-section" class="hidden mt-10">
-                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                        <h3 class="text-xl font-bold text-slate-800" id="output-title">Your Generated Offers</h3>
-                        <p class="text-sm text-slate-500"><span id="language-text">Language:</span> <span id="current-language">English</span></p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Offer 1 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right">
-                            <div class="score-badge"><span id="score-1-text">Winning Score:</span> 92%</div>
-                            <div id="offer-output-1" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
-                            <button data-offer="1" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
-                                <i class="far fa-copy mr-2"></i>
-                                <span id="copy-btn-text-1">Copy Offer</span>
-                            </button>
-                        </div>
-                        
-                        <!-- Offer 2 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right" style="animation-delay: 0.1s">
-                            <div class="score-badge"><span id="score-2-text">Winning Score:</span> 87%</div>
-                            <div id="offer-output-2" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
-                            <button data-offer="2" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
-                                <i class="far fa-copy mr-2"></i>
-                                <span id="copy-btn-text-2">Copy Offer</span>
-                            </button>
-                        </div>
-                        
-                        <!-- Offer 3 -->
-                        <div class="bg-white border border-slate-200 rounded-xl p-5 relative card-shadow transition-all duration-300 slide-in-right" style="animation-delay: 0.2s">
-                            <div class="score-badge"><span id="score-3-text">Winning Score:</span> 95%</div>
-                            <div id="offer-output-3" class="text-base mb-6 text-slate-700 min-h-[120px]"></div>
-                            <button data-offer="3" class="copy-btn w-full bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg flex items-center justify-center text-sm">
-                                <i class="far fa-copy mr-2"></i>
-                                <span id="copy-btn-text-3">Copy Offer</span>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <p class="text-center text-slate-500 text-sm mt-6" id="output-note">
-                        Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Features -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
-                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                        <i class="fas fa-brain text-primary text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-1-title">Psychology-Backed</h3>
-                    <p class="text-slate-600 text-sm" id="feature-1-desc">Our AI leverages proven psychological principles to create offers that trigger dopamine responses.</p>
-                </div>
-                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
-                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-secondary/10 flex items-center justify-center">
-                        <i class="fas fa-chart-line text-secondary text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-2-title">Market-Validated</h3>
-                    <p class="text-slate-600 text-sm" id="feature-2-desc">Every offer comes with a winning score based on real market performance data.</p>
-                </div>
-                <div class="text-center p-6 bg-white rounded-xl border border-slate-200 card-shadow transition-all duration-300 hover:translate-y-[-5px]">
-                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
-                        <i class="fas fa-globe text-accent text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold mb-2 text-slate-800" id="feature-3-title">Multi-Language</h3>
-                    <p class="text-slate-600 text-sm" id="feature-3-desc">Generate offers in English or Bangla to connect with your target audience effectively.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer class="py-10 px-4 border-t border-slate-200 bg-white">
-        <div class="container mx-auto max-w-6xl">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <h2 class="text-xl font-bold text-slate-800" id="footer-title">Dopamine-Driven Offer Generator</h2>
-                    <p class="text-slate-500 text-sm mt-1" id="footer-tagline">Creating irresistible offers through AI and psychology.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="privacy-link">Privacy Policy</a>
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="terms-link">Terms of Service</a>
-                    <a href="#" class="text-slate-500 hover:text-primary transition-colors text-sm" id="contact-link">Contact</a>
-                </div>
-            </div>
-            <div class="mt-8 pt-6 border-t border-slate-200 text-center text-slate-400 text-sm">
-                <p id="copyright">&copy; 2023 Dopamine-Driven Offer Generator. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-    
     <script>
-        // Enhanced Translation data with better Bangla
-        const translations = {
-            en: {
-                // Hero Section
-                "hero-title-1": "Dopamine-Driven",
-                "hero-title-2": "Offer Generator",
-                "hero-description": "Transform your product into irresistible offers with AI-powered, psychology-backed copy that converts.",
-                "cta-button": "Generate Offers Now",
-                "free-uses-text": "Free uses left:",
-                
-                // Generator Section
-                "generator-title": "AI Offer Generator",
-                "generator-description": "Create high-converting offers tailored to your product and audience in seconds.",
-                "product-label": "Product/Service Name",
-                "audience-label": "Target Audience",
-                "description-label": "Product Description",
-                "usp-label": "Unique Selling Point (USP)",
-                "generate-btn-text": "Generate Offers",
-                "loading-text": "Crafting your dopamine-driven offers...",
-                "output-title": "Your Generated Offers",
-                "language-text": "Language:",
-                "score-1-text": "Winning Score:",
-                "score-2-text": "Winning Score:",
-                "score-3-text": "Winning Score:",
-                "copy-btn-text-1": "Copy Offer",
-                "copy-btn-text-2": "Copy Offer",
-                "copy-btn-text-3": "Copy Offer",
-                "output-note": "Each offer is designed with psychological triggers to maximize conversions. Winning scores are based on market performance data.",
-                
-                // Features
-                "feature-1-title": "Psychology-Backed",
-                "feature-1-desc": "Our AI leverages proven psychological principles to create offers that trigger dopamine responses.",
-                "feature-2-title": "Market-Validated",
-                "feature-2-desc": "Every offer comes with a winning score based on real market performance data.",
-                "feature-3-title": "Multi-Language",
-                "feature-3-desc": "Generate offers in English or Bangla to connect with your target audience effectively.",
-                
-                // Modal
-                "modal-title": "Unlock Unlimited Power",
-                "modal-description": "You've exhausted your free trial. Upgrade to premium for unlimited access to our AI-powered offer generator.",
-                "benefits-title": "Premium Benefits",
-                "benefit-1-title": "Unlimited Offer Generation",
-                "benefit-1-desc": "Create as many high-converting offers as you need, anytime.",
-                "benefit-2-title": "Advanced Analytics",
-                "benefit-2-desc": "Track performance and optimize your offers with detailed insights.",
-                "benefit-3-title": "Priority Support",
-                "benefit-3-desc": "Get fast responses from our expert team whenever you need help.",
-                "benefit-4-title": "Exclusive Templates",
-                "benefit-4-desc": "Access premium offer templates proven to convert at higher rates.",
-                "get-premium-title": "Get Premium Access",
-                "crypto-title": "Crypto Payment",
-                "crypto-desc": "Send exactly",
-                "crypto-note": "After payment, contact us with your transaction ID to get manual access.",
-                "payment-btn-text": "I've Made Payment",
-                "unlock-code-title": "Unlock Code",
-                "unlock-code-desc": "Enter your premium unlock code below:",
-                "unlock-btn-text": "Unlock Premium",
-                "support-text": "Need assistance? Contact our premium support at",
-                
-                // Footer
-                "footer-title": "Dopamine-Driven Offer Generator",
-                "footer-tagline": "Creating irresistible offers through AI and psychology.",
-                "privacy-link": "Privacy Policy",
-                "terms-link": "Terms of Service",
-                "contact-link": "Contact",
-                "copyright": "© 2023 Dopamine-Driven Offer Generator. All rights reserved."
-            },
-            bn: {
-                // Hero Section
-                "hero-title-1": "ডোপামিন-চালিত",
-                "hero-title-2": "অফার জেনারেটর",
-                "hero-description": "AI-চালিত, মনোবিজ্ঞান-ভিত্তিক কপি দিয়ে আপনার পণ্যকে অপ্রতিরোধ্য অফারে রূপান্তর করুন যা রূপান্তরিত করে।",
-                "cta-button": "এখনই অফার তৈরি করুন",
-                "free-uses-text": "বিনামূল্যে ব্যবহার বাকি:",
-                
-                // Generator Section
-                "generator-title": "AI অফার জেনারেটর",
-                "generator-description": "সেকেন্ডের মধ্যে আপনার পণ্য এবং শ্রোতাদের জন্য উপযুক্ত উচ্চ-রূপান্তর অফার তৈরি করুন।",
-                "product-label": "পণ্য/সেবার নাম",
-                "audience-label": "লক্ষ্য শ্রোতা",
-                "description-label": "পণ্যের বিবরণ",
-                "usp-label": "অনন্য বিক্রয় পয়েন্ট (USP)",
-                "generate-btn-text": "অফার তৈরি করুন",
-                "loading-text": "আপনার ডোপামিন-চালিত অফার তৈরি করা হচ্ছে...",
-                "output-title": "আপনার তৈরি অফারসমূহ",
-                "language-text": "ভাষা:",
-                "score-1-text": "জয়ের স্কোর:",
-                "score-2-text": "জয়ের স্কোর:",
-                "score-3-text": "জয়ের স্কোর:",
-                "copy-btn-text-1": "অফার কপি করুন",
-                "copy-btn-text-2": "অফার কপি করুন",
-                "copy-btn-text-3": "অফার কপি করুন",
-                "output-note": "প্রতিটি অফার রূপান্তর সর্বাধিক করতে মনস্তাত্ত্বিক ট্রিগার দিয়ে ডিজাইন করা হয়েছে। জয়ের স্কোর বাজারের পারফরম্যান্স ডেটার উপর ভিত্তি করে।",
-                
-                // Features
-                "feature-1-title": "মনোবিজ্ঞান-ভিত্তিক",
-                "feature-1-desc": "আমাদের AI প্রমাণিত মনস্তাত্ত্বিক নীতিগুলি ব্যবহার করে যা ডোপামিন প্রতিক্রিয়া ট্রিগার করে এমন অফার তৈরি করে।",
-                "feature-2-title": "বাজার-যাচাইকৃত",
-                "feature-2-desc": "প্রতিটি অফার আসল বাজার পারফরম্যান্স ডেটার উপর ভিত্তি করে একটি জয়ের স্কোর নিয়ে আসে।",
-                "feature-3-title": "বহুভাষিক",
-                "feature-3-desc": "আপনার লক্ষ্য শ্রোতাদের সাথে কার্যকরভাবে সংযোগ করতে ইংরেজি বা বাংলায় অফার তৈরি করুন।",
-                
-                // Modal
-                "modal-title": "সীমাহীন শক্তি আনলক করুন",
-                "modal-description": "আপনি আপনার বিনামূল্যে ট্রায়াল শেষ করেছেন। আমাদের AI-চালিত অফার জেনারেটরে সীমাহীন অ্যাক্সেসের জন্য প্রিমিয়ামে আপগ্রেড করুন।",
-                "benefits-title": "প্রিমিয়াম সুবিধা",
-                "benefit-1-title": "সীমাহীন অফার জেনারেশন",
-                "benefit-1-desc": "আপনার প্রয়োজন মতো যতগুলি উচ্চ-রূপান্তর অফার তৈরি করুন, যেকোনো সময়।",
-                "benefit-2-title": "উন্নত বিশ্লেষণ",
-                "benefit-2-desc": "বিস্তারিত অন্তর্দৃষ্টি দিয়ে পারফরম্যান্স ট্র্যাক করুন এবং আপনার অফারগুলি অপ্টিমাইজ করুন।",
-                "benefit-3-title": "অগ্রাধিকার সমর্থন",
-                "benefit-3-desc": "আপনার যখনই সাহায্যের প্রয়োজন হবে আমাদের বিশেষজ্ঞ দল থেকে দ্রুত প্রতিক্রিয়া পান।",
-                "benefit-4-title": "একচেটিয়া টেমপ্লেট",
-                "benefit-4-desc": "উচ্চতর হারে রূপান্তরিত হওয়া প্রমাণিত প্রিমিয়াম অফার টেমপ্লেটে অ্যাক্সেস পান।",
-                "get-premium-title": "প্রিমিয়াম অ্যাক্সেস পান",
-                "crypto-title": "ক্রিপ্টো পেমেন্ট",
-                "crypto-desc": "ঠিক পাঠান",
-                "crypto-note": "পেমেন্টের পরে, ম্যানুয়াল অ্যাক্সেস পেতে আপনার লেনদেন আইডি নিয়ে আমাদের সাথে যোগাযোগ করুন।",
-                "payment-btn-text": "আমি পেমেন্ট করেছি",
-                "unlock-code-title": "আনলক কোড",
-                "unlock-code-desc": "নিচে আপনার প্রিমিয়াম আনলক কোড লিখুন:",
-                "unlock-btn-text": "প্রিমিয়াম আনলক করুন",
-                "support-text": "সাহায্য প্রয়োজন? আমাদের প্রিমিয়াম সাপোর্টে যোগাযোগ করুন",
-                
-                // Footer
-                "footer-title": "ডোপামিন-চালিত অফার জেনারেটর",
-                "footer-tagline": "AI এবং মনোবিজ্ঞানের মাধ্যমে অপ্রতিরোধ্য অফার তৈরি করা।",
-                "privacy-link": "গোপনীয়তা নীতি",
-                "terms-link": "সেবার শর্তাবলী",
-                "contact-link": "যোগাযোগ",
-                "copyright": "© 2023 ডোপামিন-চালিত অফার জেনারেটর। সমস্ত অধিকার সংরক্ষিত।"
-            }
+        // Configuration
+        const PREMIUM_CODES = ["OFFER123", "AI2023", "UNLIMITED", "BANGLADESH", "CRYPTO1"];
+        const MAX_FREE_GENERATIONS = 5;
+
+        // Country to language and currency mapping
+        const countryData = {
+            US: { language: "English", currency: "USD", symbol: "$" },
+            GB: { language: "English", currency: "GBP", symbol: "£" },
+            DE: { language: "German", currency: "EUR", symbol: "€" },
+            FR: { language: "French", currency: "EUR", symbol: "€" },
+            ES: { language: "Spanish", currency: "EUR", symbol: "€" },
+            IT: { language: "Italian", currency: "EUR", symbol: "€" },
+            JP: { language: "Japanese", currency: "JPY", symbol: "¥" },
+            KR: { language: "Korean", currency: "KRW", symbol: "₩" },
+            BR: { language: "Portuguese", currency: "BRL", symbol: "R$" },
+            MX: { language: "Spanish", currency: "MXN", symbol: "$" },
+            IN: { language: "Hindi", currency: "INR", symbol: "₹" },
+            AU: { language: "English", currency: "AUD", symbol: "A$" },
+            CA: { language: "English", currency: "CAD", symbol: "C$" },
+            BD: { language: "Bengali", currency: "BDT", symbol: "৳" }
         };
 
-        // Enhanced IP-based usage tracking
-        function initializeUsageTracking() {
-            let visitorId = localStorage.getItem('visitorId');
-            let ipAddress = localStorage.getItem('userIP');
-            
-            if (!visitorId) {
-                visitorId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-                localStorage.setItem('visitorId', visitorId);
-            }
-            
-            // Get user IP for tracking
-            if (!ipAddress) {
-                // Using a free IP API to get user's IP
-                fetch('https://api.ipify.org?format=json')
-                    .then(response => response.json())
-                    .then(data => {
-                        ipAddress = data.ip;
-                        localStorage.setItem('userIP', ipAddress);
-                        initializeIPBasedUsage(ipAddress);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching IP:', error);
-                        // Fallback to device-based tracking
-                        initializeDeviceBasedUsage(visitorId);
-                    });
-            } else {
-                initializeIPBasedUsage(ipAddress);
-            }
-            
-            // Check subscription status
-            const subscriptionData = getSubscriptionData(visitorId);
-            const hasUnlimitedAccess = subscriptionData.active;
-            
-            return {
-                visitorId,
-                ipAddress,
-                hasUnlimitedAccess
-            };
-        }
-        
-        function initializeIPBasedUsage(ipAddress) {
-            let ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
-            
-            if (!ipUsage[ipAddress]) {
-                ipUsage[ipAddress] = {
-                    count: 0,
-                    firstUsed: new Date().toISOString()
-                };
-            }
-            
-            localStorage.setItem('ipUsage', JSON.stringify(ipUsage));
-            return ipUsage[ipAddress];
-        }
-        
-        function initializeDeviceBasedUsage(visitorId) {
-            let usageCount = localStorage.getItem('usageCount');
-            if (!usageCount) {
-                usageCount = 0;
-                localStorage.setItem('usageCount', usageCount);
-            }
-            return parseInt(usageCount);
-        }
-        
-        function getRemainingFreeUses(userData) {
-            if (userData.hasUnlimitedAccess) {
-                return 'Unlimited';
-            }
-            
-            if (userData.ipAddress) {
-                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
-                const ipData = ipUsage[userData.ipAddress];
-                return Math.max(0, 5 - (ipData ? ipData.count : 0));
-            } else {
-                // Fallback to device-based tracking
-                const usageCount = localStorage.getItem('usageCount') || 0;
-                return Math.max(0, 5 - parseInt(usageCount));
-            }
-        }
-        
-        function incrementUsage(userData) {
-            if (userData.hasUnlimitedAccess) {
-                return;
-            }
-            
-            if (userData.ipAddress) {
-                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
-                if (ipUsage[userData.ipAddress]) {
-                    ipUsage[userData.ipAddress].count++;
-                    ipUsage[userData.ipAddress].lastUsed = new Date().toISOString();
-                } else {
-                    ipUsage[userData.ipAddress] = {
-                        count: 1,
-                        firstUsed: new Date().toISOString(),
-                        lastUsed: new Date().toISOString()
-                    };
-                }
-                localStorage.setItem('ipUsage', JSON.stringify(ipUsage));
-            } else {
-                // Fallback to device-based tracking
-                let usageCount = localStorage.getItem('usageCount') || 0;
-                usageCount = parseInt(usageCount) + 1;
-                localStorage.setItem('usageCount', usageCount);
-            }
-        }
-        
-        function hasReachedUsageLimit(userData) {
-            if (userData.hasUnlimitedAccess) {
-                return false;
-            }
-            
-            if (userData.ipAddress) {
-                const ipUsage = JSON.parse(localStorage.getItem('ipUsage') || '{}');
-                const ipData = ipUsage[userData.ipAddress];
-                return ipData && ipData.count >= 5;
-            } else {
-                // Fallback to device-based tracking
-                const usageCount = localStorage.getItem('usageCount') || 0;
-                return parseInt(usageCount) >= 5;
-            }
-        }
-        
-        // Check for URL parameters on page load
-        function checkURLForUnlockCode() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const unlockCode = urlParams.get('unlock');
-            const userId = urlParams.get('user');
-            const months = urlParams.get('months') || 12;
-            
-            if (unlockCode) {
-                // Check if this is a valid admin-generated code
-                const adminCodes = JSON.parse(localStorage.getItem('adminCodes') || '[]');
-                const codeData = adminCodes.find(code => code.code === unlockCode);
-                
-                if (codeData) {
-                    // Get current user data
-                    const userData = initializeUsageTracking();
-                    
-                    // Check if code is for this user or any user
-                    if (codeData.userId === 'any' || codeData.userId === userData.visitorId || !codeData.userId) {
-                        // Check if code is already used
-                        if (!codeData.used) {
-                            // Mark code as used
-                            codeData.used = true;
-                            codeData.usedAt = new Date().toISOString();
-                            codeData.usedBy = userData.visitorId;
-                            localStorage.setItem('adminCodes', JSON.stringify(adminCodes));
-                            
-                            // Grant premium access
-                            const subscriptionMonths = codeData.months === 'lifetime' ? 1200 : parseInt(codeData.months || months);
-                            setSubscriptionData(userData.visitorId, true, subscriptionMonths);
-                            
-                            // Show success message
-                            showToast('Premium access activated successfully!', 'success');
-                            
-                            // Update usage display
-                            updateUsageDisplay();
-                            
-                            // Remove the unlock parameters from URL without refreshing
-                            removeUnlockParamsFromURL();
-                        } else {
-                            showToast('This code has already been used.', 'error');
-                        }
-                    } else {
-                        showToast('This code is not valid for your account.', 'error');
-                    }
-                } else if (unlockCode === '778432') {
-                    // Fallback to the original hardcoded code for backward compatibility
-                    const userData = initializeUsageTracking();
-                    
-                    // If specific user ID is provided, verify it matches
-                    if (!userId || userId === userData.visitorId) {
-                        // Grant premium access
-                        setSubscriptionData(userData.visitorId, true, parseInt(months));
-                        
-                        // Show success message
-                        showToast('Premium access activated successfully!', 'success');
-                        
-                        // Update usage display
-                        updateUsageDisplay();
-                        
-                        // Remove the unlock parameters from URL without refreshing
-                        removeUnlockParamsFromURL();
-                    } else {
-                        showToast('User ID does not match. Please use the correct activation link.', 'error');
-                    }
-                } else {
-                    showToast('Invalid activation code in URL.', 'error');
-                }
-            }
-        }
-        
-        function removeUnlockParamsFromURL() {
-            const url = new URL(window.location);
-            url.searchParams.delete('unlock');
-            url.searchParams.delete('user');
-            url.searchParams.delete('months');
-            window.history.replaceState({}, '', url);
-        }
-        
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            
-            toastMessage.textContent = message;
-            toast.className = `toast ${type} show`;
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 5000);
-        }
-        
-        // Initialize when page loads
+        // DOM Elements
+        const offerForm = document.getElementById('offer-form');
+        const countrySelect = document.getElementById('country');
+        const languageInput = document.getElementById('language');
+        const currencyInput = document.getElementById('currency');
+        const priceCurrency = document.getElementById('price-currency');
+        const generateBtn = document.getElementById('generate-btn');
+        const loadingContainer = document.getElementById('loading-container');
+        const outputSection = document.getElementById('output-section');
+        const offersContainer = document.getElementById('offers-container');
+        const limitModal = document.getElementById('limit-modal');
+        const transactionIdInput = document.getElementById('transaction-id');
+        const sendTransactionBtn = document.getElementById('send-transaction-btn');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const creditStatus = document.getElementById('credit-status');
+        const creditText = document.getElementById('credit-text');
+
+        // State
+        let userIP = '';
+        let usageCount = 0;
+        let isPremium = false;
+        let currentCurrency = 'USD';
+        let currentCurrencySymbol = '$';
+        let currentLanguage = 'English';
+        let unlockCodeInput;
+
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('offer-form');
-            const outputSection = document.getElementById('output-section');
-            const loadingState = document.getElementById('loading-state');
-            const generateBtn = document.getElementById('generate-btn');
-            const englishBtn = document.getElementById('english-btn');
-            const banglaBtn = document.getElementById('bangla-btn');
-            const currentLanguageSpan = document.getElementById('current-language');
-            const subscriptionModal = document.getElementById('subscription-modal');
-            const closeModal = document.getElementById('close-modal');
-            const unlockCodeInput = document.getElementById('unlock-code-input');
-            const submitCodeBtn = document.getElementById('submit-code');
-            const codeMessage = document.getElementById('code-message');
-            const freeUsesSpan = document.getElementById('free-uses');
-            const cryptoAddress = document.getElementById('crypto-address');
-            const paymentMadeBtn = document.getElementById('payment-made-btn');
-            
-            let currentLanguage = 'en';
-            let userData = initializeUsageTracking();
-            
-            // Update usage display on page load
-            updateUsageDisplay();
-            
-            // Real market-tested offers in English
-            const englishOffers = [
-                {
-                    text: "🚀 LIMITED TIME: Get [Product Name] today and unlock [Key Benefit]! For the next [Time Limit] only, save [Discount]% and get [Bonus] absolutely FREE. Join [Number]+ satisfied customers who've already transformed their [Area]!",
-                    score: "92%"
-                },
-                {
-                    text: "🎯 ATTENTION [Target Audience]: Tired of [Pain Point]? Discover how [Product Name] delivers [Key Benefit] in just [Time Frame]. For a limited time, get our premium package at [Discount]% OFF with [Number]-day money-back guarantee!",
-                    score: "87%"
-                },
-                {
-                    text: "🔥 EXCLUSIVE INVITATION: Be among the first [Number] to experience [Product Name] with [Special Feature] included at NO EXTRA COST! This [Time Limit] offer includes [Bonus] + [Additional Perk] - a $[Value] value completely FREE!",
-                    score: "95%"
-                }
-            ];
-            
-            // Real market-tested offers in Bangla
-            const banglaOffers = [
-                {
-                    text: "🚀 সীমিত সময়ের জন্য: আজই [Product Name] নিন এবং [Key Benefit] আনলক করুন! পরবর্তী [Time Limit] এর জন্য, [Discount]% সাশ্রয় করুন এবং [Bonus] সম্পূর্ণ বিনামূল্যে পান। [Number]+ সন্তুষ্ট গ্রাহকের দলে যোগ দিন যারা ইতিমধ্যে তাদের [Area] রূপান্তরিত করেছেন!",
-                    score: "92%"
-                },
-                {
-                    text: "🎯 মনোযোগ দিন [Target Audience]: [Pain Point] এ ক্লান্ত? আবিষ্কার করুন কীভাবে [Product Name] মাত্র [Time Frame] এ [Key Benefit] প্রদান করে। সীমিত সময়ের জন্য, [Number]-দিনের টাকা ফেরত গ্যারান্টি সহ [Discount]% ছাড়ে আমাদের প্রিমিয়াম প্যাকেজ পান!",
-                    score: "87%"
-                },
-                {
-                    text: "🔥 একচেটিয়া আমন্ত্রণ: [Product Name] এর অভিজ্ঞতা নিতে প্রথম [Number] জনের মধ্যে থাকুন যেখানে [Special Feature] অতিরিক্ত খরচ ছাড়াই অন্তর্ভুক্ত! এই [Time Limit] অফারে [Bonus] + [Additional Perk] রয়েছে - একটি $[Value] মূল্য সম্পূর্ণ বিনামূল্যে!",
-                    score: "95%"
-                }
-            ];
-            
-            // Translation function
-            function translatePage(language) {
-                const elements = document.querySelectorAll('[id]');
-                elements.forEach(element => {
-                    const key = element.id;
-                    if (translations[language] && translations[language][key]) {
-                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                            element.placeholder = translations[language][key];
-                        } else {
-                            element.textContent = translations[language][key];
-                        }
-                    }
-                });
-                
-                // Update current language display
-                currentLanguageSpan.textContent = language === 'en' ? 'English' : 'Bangla';
+            initializeApp();
+            setupEventListeners();
+        });
+
+        // Functions
+        async function initializeApp() {
+            // Get user IP
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                userIP = data.ip;
+            } catch (error) {
+                console.error('Failed to get IP:', error);
+                // Fallback to a mock IP for demo purposes
+                userIP = '192.168.1.1';
             }
-            
-            // Language switching
-            englishBtn.addEventListener('click', function() {
-                currentLanguage = 'en';
-                englishBtn.classList.add('active');
-                banglaBtn.classList.remove('active');
-                translatePage('en');
-                
-                // Update offers if they're already generated
-                if (outputSection.classList.contains('hidden') === false) {
-                    updateOffers();
+
+            // Load usage data from localStorage
+            const storedUsage = localStorage.getItem(`usage_${userIP}`);
+            if (storedUsage) {
+                usageCount = parseInt(storedUsage);
+            }
+
+            // Check premium status
+            const premiumStatus = localStorage.getItem('premium_unlocked');
+            if (premiumStatus === 'true') {
+                isPremium = true;
+            }
+
+            updateCreditStatus();
+            updateGenerateButtonState();
+        }
+
+        function setupEventListeners() {
+            // Country change event
+            countrySelect.addEventListener('change', function() {
+                const countryCode = this.value;
+                if (countryCode && countryData[countryCode]) {
+                    languageInput.value = countryData[countryCode].language;
+                    currencyInput.value = countryData[countryCode].currency;
+                    currentCurrency = countryData[countryCode].currency;
+                    currentCurrencySymbol = countryData[countryCode].symbol;
+                    currentLanguage = countryData[countryCode].language;
+                    priceCurrency.textContent = countryData[countryCode].currency;
+                } else {
+                    languageInput.value = '';
+                    currencyInput.value = '';
+                    currentCurrency = 'USD';
+                    currentCurrencySymbol = '$';
+                    currentLanguage = 'English';
+                    priceCurrency.textContent = 'USD';
                 }
             });
-            
-            banglaBtn.addEventListener('click', function() {
-                currentLanguage = 'bn';
-                banglaBtn.classList.add('active');
-                englishBtn.classList.remove('active');
-                translatePage('bn');
-                
-                // Update offers if they're already generated
-                if (outputSection.classList.contains('hidden') === false) {
-                    updateOffers();
-                }
-            });
-            
-            form.addEventListener('submit', function(e) {
+
+            // Form submission
+            offerForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                generateOffers();
+            });
+
+            // Send transaction button
+            sendTransactionBtn.addEventListener('click', function() {
+                const transactionId = transactionIdInput.value.trim();
                 
-                // Check if user has reached usage limit
-                if (hasReachedUsageLimit(userData)) {
-                    subscriptionModal.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
+                if (!transactionId) {
+                    alert('Please enter your transaction ID');
                     return;
                 }
                 
-                // Get form values
-                const productName = document.getElementById('product-name').value;
-                const productDescription = document.getElementById('product-description').value;
-                const targetAudience = document.getElementById('target-audience').value;
-                const usp = document.getElementById('usp').value;
+                // Store transaction ID
+                localStorage.setItem('transaction_id', transactionId);
                 
-                // Validate form
-                if (!productName || !productDescription || !targetAudience || !usp) {
-                    alert(currentLanguage === 'en' 
-                        ? 'Please fill in all fields before generating offers.'
-                        : 'অফার তৈরি করার আগে সমস্ত ফিল্ড পূরণ করুন।');
+                // Show unlock code input
+                showUnlockCodeInput();
+                
+                alert('Transaction ID submitted! We will verify your payment and send you an unlock code via email within 24 hours.');
+            });
+
+            // Unlock button
+            unlockBtn.addEventListener('click', function() {
+                if (!unlockCodeInput) {
+                    alert('Please submit your transaction ID first');
                     return;
                 }
                 
-                // Show loading state
-                loadingState.classList.remove('hidden');
-                outputSection.classList.add('hidden');
-                generateBtn.disabled = true;
-                
-                // Simulate API call with timeout
-                setTimeout(() => {
-                    // Hide loading state
-                    loadingState.classList.add('hidden');
-                    
-                    // Generate offers based on current language
-                    updateOffers(productName, productDescription, targetAudience, usp);
-                    
-                    // Display the offers
-                    outputSection.classList.remove('hidden');
-                    generateBtn.disabled = false;
-                    
-                    // Update usage count
-                    incrementUsage(userData);
-                    updateUsageDisplay();
-                    
-                    // Scroll to output
-                    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 1500);
-            });
-            
-            // Modal controls
-            closeModal.addEventListener('click', function() {
-                subscriptionModal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            });
-            
-            // Close modal when clicking outside
-            subscriptionModal.addEventListener('click', function(e) {
-                if (e.target === subscriptionModal) {
-                    subscriptionModal.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            // Crypto address copy functionality
-            cryptoAddress.addEventListener('click', function() {
-                const textToCopy = '2363264';
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    const originalText = cryptoAddress.innerHTML;
-                    cryptoAddress.innerHTML = (currentLanguage === 'en' ? 'Copied!' : 'কপি হয়েছে!') + ' <i class="fas fa-check copy-icon"></i>';
-                    
-                    setTimeout(() => {
-                        cryptoAddress.innerHTML = originalText;
-                    }, 2000);
-                });
-            });
-            
-            // Payment made button
-            paymentMadeBtn.addEventListener('click', function() {
-                alert(currentLanguage === 'en'
-                    ? 'Thank you for your payment! Please contact us with your transaction ID at support@dopamineoffers.com to activate your premium access.'
-                    : 'আপনার পেমেন্টের জন্য ধন্যবাদ! আপনার প্রিমিয়াম অ্যাক্সেস সক্রিয় করতে support@dopamineoffers.com এ আপনার লেনদেন আইডি নিয়ে আমাদের সাথে যোগাযোগ করুন।');
-            });
-            
-            // Unlock code submission
-            submitCodeBtn.addEventListener('click', function() {
                 const enteredCode = unlockCodeInput.value.trim();
                 
-                // Check admin codes first
-                const adminCodes = JSON.parse(localStorage.getItem('adminCodes') || '[]');
-                const codeData = adminCodes.find(code => code.code === enteredCode);
+                if (!enteredCode) {
+                    alert('Please enter your unlock code');
+                    return;
+                }
                 
-                if (codeData) {
-                    // Check if code is already used
-                    if (!codeData.used) {
-                        // Mark code as used
-                        codeData.used = true;
-                        codeData.usedAt = new Date().toISOString();
-                        codeData.usedBy = userData.visitorId;
-                        localStorage.setItem('adminCodes', JSON.stringify(adminCodes));
-                        
-                        // Grant premium access
-                        const subscriptionMonths = codeData.months === 'lifetime' ? 1200 : parseInt(codeData.months || 12);
-                        setSubscriptionData(userData.visitorId, true, subscriptionMonths);
-                        userData.hasUnlimitedAccess = true;
-                        
-                        // Show success message
-                        codeMessage.textContent = currentLanguage === 'en'
-                            ? `Success! Premium access unlocked for ${codeData.months === 'lifetime' ? 'lifetime' : codeData.months + ' months'}!`
-                            : `সফল! প্রিমিয়াম অ্যাক্সেস আনলক করা হয়েছে ${codeData.months === 'lifetime' ? 'আজীবনের জন্য' : codeData.months + ' মাসের জন্য'}!`;
-                        codeMessage.className = 'text-sm mt-2 text-center text-green-400';
-                        codeMessage.classList.remove('hidden');
-                        
-                        // Update usage display
-                        updateUsageDisplay();
-                        
-                        // Close modal after delay
-                        setTimeout(() => {
-                            subscriptionModal.classList.add('hidden');
-                            document.body.style.overflow = 'auto';
-                        }, 2000);
-                    } else {
-                        // Show error message
-                        codeMessage.textContent = currentLanguage === 'en'
-                            ? 'This code has already been used.'
-                            : 'এই কোডটি ইতিমধ্যে ব্যবহার করা হয়েছে।';
-                        codeMessage.className = 'text-sm mt-2 text-center text-red-400';
-                        codeMessage.classList.remove('hidden');
-                    }
-                } else if (enteredCode === '778432') {
-                    // Fallback to original code
-                    const userData = initializeUsageTracking();
-                    setSubscriptionData(userData.visitorId, true, 12);
-                    userData.hasUnlimitedAccess = true;
-                    
-                    // Show success message
-                    codeMessage.textContent = currentLanguage === 'en'
-                        ? 'Success! Premium access unlocked for 12 months!'
-                        : 'সফল! প্রিমিয়াম অ্যাক্সেস 12 মাসের জন্য আনলক করা হয়েছে!';
-                    codeMessage.className = 'text-sm mt-2 text-center text-green-400';
-                    codeMessage.classList.remove('hidden');
-                    
-                    // Update usage display
-                    updateUsageDisplay();
-                    
-                    // Close modal after delay
-                    setTimeout(() => {
-                        subscriptionModal.classList.add('hidden');
-                        document.body.style.overflow = 'auto';
-                    }, 2000);
+                if (PREMIUM_CODES.includes(enteredCode)) {
+                    isPremium = true;
+                    localStorage.setItem('premium_unlocked', 'true');
+                    limitModal.style.display = 'none';
+                    updateCreditStatus();
+                    updateGenerateButtonState();
+                    alert('Premium access unlocked! Enjoy unlimited offer generations for 1 month.');
                 } else {
-                    // Show error message
-                    codeMessage.textContent = currentLanguage === 'en'
-                        ? 'Invalid code. Please try again.'
-                        : 'অবৈধ কোড। আবার চেষ্টা করুন।';
-                    codeMessage.className = 'text-sm mt-2 text-center text-red-400';
-                    codeMessage.classList.remove('hidden');
+                    alert('Invalid unlock code. Please try again or contact support.');
                 }
             });
+        }
+
+        function showUnlockCodeInput() {
+            // Remove transaction ID input and send button
+            transactionIdInput.style.display = 'none';
+            sendTransactionBtn.style.display = 'none';
             
-            // Also allow form submission with Enter key
-            unlockCodeInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    submitCodeBtn.click();
-                }
-            });
+            // Create unlock code input
+            unlockCodeInput = document.createElement('input');
+            unlockCodeInput.type = 'text';
+            unlockCodeInput.className = 'modal-input';
+            unlockCodeInput.placeholder = 'Enter unlock code';
+            unlockCodeInput.id = 'unlock-code';
             
-            // Function to update usage display
-            function updateUsageDisplay() {
-                const remainingUses = getRemainingFreeUses(userData);
-                
-                if (remainingUses === 'Unlimited') {
-                    freeUsesSpan.textContent = currentLanguage === 'en' ? 'Unlimited' : 'সীমাহীন';
-                    freeUsesSpan.parentElement.classList.add('bg-green-500');
-                } else {
-                    freeUsesSpan.textContent = remainingUses;
-                    
-                    if (remainingUses === 0) {
-                        freeUsesSpan.parentElement.classList.add('bg-red-500');
-                    } else {
-                        freeUsesSpan.parentElement.classList.remove('bg-red-500');
-                    }
-                }
-            }
+            // Insert after the transaction ID input
+            transactionIdInput.parentNode.insertBefore(unlockCodeInput, transactionIdInput.nextSibling);
             
-            // Function to update offers based on language and form data
-            function updateOffers(productName = '', productDescription = '', targetAudience = '', usp = '') {
-                const offers = currentLanguage === 'en' ? englishOffers : banglaOffers;
-                
-                offers.forEach((offer, index) => {
-                    const offerElement = document.getElementById(`offer-output-${index + 1}`);
-                    
-                    // Replace placeholders with actual values
-                    let finalOffer = offer.text
-                        .replace('[Product Name]', productName || (currentLanguage === 'en' ? 'Your Product' : 'আপনার পণ্য'))
-                        .replace('[Target Audience]', targetAudience || (currentLanguage === 'en' ? 'Your Audience' : 'আপনার শ্রোতা'))
-                        .replace('[Key Benefit]', getKeyBenefit(usp))
-                        .replace('[Pain Point]', getPainPoint(productDescription))
-                        .replace('[Discount]', getDiscount())
-                        .replace('[Time Limit]', getTimeLimit())
-                        .replace('[Number]', getNumber())
-                        .replace('[Area]', getArea(productDescription))
-                        .replace('[Time Frame]', getTimeFrame())
-                        .replace('[Bonus]', getBonus(productDescription))
-                        .replace('[Special Feature]', getSpecialFeature(usp))
-                        .replace('[Additional Perk]', getAdditionalPerk())
-                        .replace('[Value]', getValue());
-                    
-                    offerElement.textContent = finalOffer;
-                });
-            }
-            
-            // Copy to clipboard functionality
-            document.querySelectorAll('.copy-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const offerNumber = this.getAttribute('data-offer');
-                    const textToCopy = document.getElementById(`offer-output-${offerNumber}`).textContent;
-                    
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        const originalText = this.innerHTML;
-                        this.classList.add('copied');
-                        this.innerHTML = '<i class="fas fa-check mr-2"></i><span>' + 
-                            (currentLanguage === 'en' ? 'Copied!' : 'কপি হয়েছে!') + '</span>';
-                        
-                        setTimeout(() => {
-                            this.classList.remove('copied');
-                            this.innerHTML = originalText;
-                        }, 2000);
-                    });
-                });
-            });
-            
-            // Helper functions for placeholder replacement
-            function getKeyBenefit(usp) {
-                if (!usp) return currentLanguage === 'en' ? 'exceptional results' : 'ব্যতিক্রমী ফলাফল';
-                return usp.split(',')[0] || usp;
-            }
-            
-            function getPainPoint(description) {
-                if (!description) return currentLanguage === 'en' ? 'common problems' : 'সাধারণ সমস্যা';
-                
-                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return currentLanguage === 'en' ? 'lack of energy or motivation' : 'শক্তি বা অনুপ্রেরণার অভাব';
-                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return currentLanguage === 'en' ? 'wasting time on inefficient tasks' : 'অদক্ষ কাজে সময় নষ্ট করা';
-                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return currentLanguage === 'en' ? 'financial stress and uncertainty' : 'আর্থিক চাপ এবং অনিশ্চয়তা';
-                } else {
-                    return currentLanguage === 'en' ? 'common challenges' : 'সাধারণ চ্যালেঞ্জ';
+            // Change unlock button text
+            unlockBtn.innerHTML = '<i class="fas fa-unlock"></i> Activate Unlimited Access';
+        }
+
+        function updateCreditStatus() {
+            const remaining = MAX_FREE_GENERATIONS - usageCount;
+            if (isPremium) {
+                creditText.textContent = 'Premium User (Unlimited)';
+                creditStatus.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+                creditStatus.style.color = '#333';
+            } else {
+                creditText.textContent = `${remaining} Free Generations Left`;
+                if (remaining <= 1) {
+                    creditStatus.style.background = 'linear-gradient(135deg, #FF6B6B, #EE5A24)';
                 }
             }
-            
-            function getDiscount() {
-                const discounts = ['20', '25', '30', '40', '50'];
-                return discounts[Math.floor(Math.random() * discounts.length)];
+        }
+
+        function updateGenerateButtonState() {
+            if (usageCount >= MAX_FREE_GENERATIONS && !isPremium) {
+                generateBtn.disabled = false; // Keep it enabled to show subscription popup
+                generateBtn.innerHTML = '<i class="fas fa-lock"></i> Upgrade to Generate';
+            } else {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate AI Offers';
             }
-            
-            function getTimeLimit() {
-                const timeLimitsEn = [
-                    '24 hours', '48 hours', '3 days', 'this week only', 
-                    'the next 72 hours'
-                ];
-                const timeLimitsBn = [
-                    '24 ঘন্টা', '48 ঘন্টা', '3 দিন', 'শুধু এই সপ্তাহে', 
-                    'পরবর্তী 72 ঘন্টা'
-                ];
-                const timeLimits = currentLanguage === 'en' ? timeLimitsEn : timeLimitsBn;
-                return timeLimits[Math.floor(Math.random() * timeLimits.length)];
+        }
+
+        function generateOffers() {
+            // Check if user has reached the limit
+            if (usageCount >= MAX_FREE_GENERATIONS && !isPremium) {
+                console.log("Showing subscription popup - usageCount:", usageCount, "isPremium:", isPremium);
+                limitModal.style.display = 'flex';
+                return;
             }
-            
-            function getNumber() {
-                return Math.floor(Math.random() * 1000) + 500;
+
+            // Show loading animation
+            loadingContainer.style.display = 'flex';
+            outputSection.style.display = 'none';
+
+            // Increment usage count
+            if (!isPremium) {
+                usageCount++;
+                localStorage.setItem(`usage_${userIP}`, usageCount.toString());
+                updateCreditStatus();
+                updateGenerateButtonState();
             }
-            
-            function getArea(description) {
-                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return currentLanguage === 'en' ? 'health and fitness' : 'স্বাস্থ্য এবং ফিটনেস';
-                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return currentLanguage === 'en' ? 'business productivity' : 'ব্যবসায়িক উৎপাদনশীলতা';
-                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return currentLanguage === 'en' ? 'financial situation' : 'আর্থিক অবস্থা';
-                } else {
-                    return currentLanguage === 'en' ? 'lives' : 'জীবন';
-                }
-            }
-            
-            function getTimeFrame() {
-                const timeFramesEn = [
-                    '30 days', '2 weeks', '7 days', '90 days', 
-                    'just 5 minutes a day'
-                ];
-                const timeFramesBn = [
-                    '30 দিন', '2 সপ্তাহ', '7 দিন', '90 দিন', 
-                    'দিনে মাত্র 5 মিনিট'
-                ];
-                const timeFrames = currentLanguage === 'en' ? timeFramesEn : timeFramesBn;
-                return timeFrames[Math.floor(Math.random() * timeFrames.length)];
-            }
-            
-            function getBonus(description) {
-                if (description.toLowerCase().includes('fitness') || description.toLowerCase().includes('health')) {
-                    return currentLanguage === 'en' ? 'a personalized workout plan' : 'একটি ব্যক্তিগতকৃত ওয়ার্কআউট প্ল্যান';
-                } else if (description.toLowerCase().includes('business') || description.toLowerCase().includes('productivity')) {
-                    return currentLanguage === 'en' ? 'a productivity toolkit' : 'একটি উৎপাদনশীলতা টুলকিট';
-                } else if (description.toLowerCase().includes('finance') || description.toLowerCase().includes('money')) {
-                    return currentLanguage === 'en' ? 'a financial planning guide' : 'একটি আর্থিক পরিকল্পনা গাইড';
-                } else {
-                    return currentLanguage === 'en' ? 'an exclusive bonus' : 'একটি একচেটিয়া বোনাস';
-                }
-            }
-            
-            function getSpecialFeature(usp) {
-                if (!usp) return currentLanguage === 'en' ? 'advanced features' : 'উন্নত বৈশিষ্ট্য';
-                return usp.split(',')[0] || usp;
-            }
-            
-            function getAdditionalPerk() {
-                const perksEn = [
-                    'priority support', 'lifetime updates', 'community access', 
-                    'one-on-one consultation'
-                ];
-                const perksBn = [
-                    'অগ্রাধিকার সমর্থন', 'আজীবন আপডেট', 'কমিউনিটি অ্যাক্সেস', 
-                    'এক-এক পরামর্শ'
-                ];
-                const perks = currentLanguage === 'en' ? perksEn : perksBn;
-                return perks[Math.floor(Math.random() * perks.length)];
-            }
-            
-            function getValue() {
-                return Math.floor(Math.random() * 200) + 100;
-            }
-            
-            // Subscription management functions
-            function getSubscriptionData(userId) {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                return subscriptions[userId] || { active: false, expiry: null };
-            }
-            
-            function setSubscriptionData(userId, active, months = 1) {
-                const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '{}');
-                const expiry = new Date();
-                expiry.setMonth(expiry.getMonth() + months);
+
+            // Simulate API call with setTimeout
+            setTimeout(() => {
+                createOfferCards();
+                loadingContainer.style.display = 'none';
+                outputSection.style.display = 'block';
                 
-                subscriptions[userId] = {
-                    active: active,
-                    expiry: expiry.toISOString()
-                };
-                
-                localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
-                return subscriptions[userId];
+                // Scroll to results
+                outputSection.scrollIntoView({ behavior: 'smooth' });
+            }, 2500);
+        }
+
+        function createOfferCards() {
+            // Clear previous offers
+            offersContainer.innerHTML = '';
+
+            const productName = document.getElementById('product-name').value;
+            const countryCode = countrySelect.value;
+            const price = parseFloat(document.getElementById('price').value);
+
+            // Generate 10 offer cards
+            for (let i = 0; i < 10; i++) {
+                const offerCard = document.createElement('div');
+                offerCard.className = 'offer-card';
+                offerCard.style.animationDelay = `${i * 0.1}s`;
+
+                // Generate random offer data
+                const title = getRandomElement(offerTitles);
+                const analysisPoints = getRandomElements(analysisPointsList, 3);
+                const ctr = (Math.random() * 10 + 2).toFixed(1);
+                const conversion = (Math.random() * 5 + 1).toFixed(1);
+                const revenue = Math.floor(Math.random() * 5000 + 1000);
+                const basePrice = price || 100;
+                const basicPrice = (basePrice * 0.7).toFixed(2);
+                const standardPrice = basePrice.toFixed(2);
+                const premiumPrice = (basePrice * 1.5).toFixed(2);
+                const adCopy = getRandomElement(adCopies);
+                const confidence = Math.floor(Math.random() * 30 + 70);
+
+                offerCard.innerHTML = `
+                    <h3 class="offer-title"><i class="fas fa-bullseye"></i> ${title}</h3>
+                    <ul class="analysis-list">
+                        ${analysisPoints.map(point => `<li>${point}</li>`).join('')}
+                    </ul>
+                    <div class="performance-metrics">
+                        <div class="metric">
+                            <div class="metric-value">${ctr}%</div>
+                            <div class="metric-label">Click-Through Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${conversion}%</div>
+                            <div class="metric-label">Conversion Rate</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">${formatCurrency(revenue, currentCurrency, currentCurrencySymbol)}</div>
+                            <div class="metric-label">Projected Revenue</div>
+                        </div>
+                    </div>
+                    <div class="price-tiers">
+                        <div class="tier">
+                            <div class="tier-name">Basic</div>
+                            <div class="tier-price">${formatCurrency(basicPrice, currentCurrency, currentCurrencySymbol)}</div>
+                        </div>
+                        <div class="tier">
+                            <div class="tier-name">Standard</div>
+                            <div class="tier-price">${formatCurrency(standardPrice, currentCurrency, currentCurrencySymbol)}</div>
+                        </div>
+                        <div class="tier">
+                            <div class="tier-name">Premium</div>
+                            <div class="tier-price">${formatCurrency(premiumPrice, currentCurrency, currentCurrencySymbol)}</div>
+                        </div>
+                    </div>
+                    <div class="ad-copy">${adCopy}</div>
+                    <div class="confidence-score">
+                        <span>AI Confidence Score</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${confidence}%"></div>
+                        </div>
+                        <span>${confidence}%</span>
+                    </div>
+                `;
+
+                offersContainer.appendChild(offerCard);
             }
-            
-            // Smooth scroll for CTA button
-            document.querySelector('a[href="#generator"]').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('#generator').scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Check for URL unlock code on page load
-            checkURLForUnlockCode();
-        });
+        }
+
+        // Dummy data for offers
+        const offerTitles = [
+            "Limited Time Exclusive Offer",
+            "Premium Bundle Deal",
+            "Early Bird Special",
+            "Flash Sale Discount",
+            "Members-Only Pricing",
+            "Buy One Get One Free",
+            "Seasonal Promotion",
+            "New Customer Welcome Deal",
+            "Limited Stock Clearance",
+            "VIP Access Package"
+        ];
+
+        const analysisPointsList = [
+            "Taps into scarcity mindset creating urgency",
+            "Appeals to value-conscious consumers",
+            "Builds brand loyalty through exclusive access",
+            "Encourages immediate purchase decisions",
+            "Targets specific customer pain points effectively",
+            "Leverages social proof and FOMO (Fear Of Missing Out)",
+            "Optimized for mobile conversion rates",
+            "Aligns with current market trends and demand"
+        ];
+
+        const adCopies = [
+            "Don't miss this exclusive opportunity! Limited time offer for our premium product.",
+            "Transform your experience with our special bundle. Act now before it's gone!",
+            "Be the first to enjoy our revolutionary product at an unbeatable price.",
+            "Flash sale! Get amazing discounts on our top-rated products for a limited time.",
+            "Join our elite members club and unlock special pricing and benefits today."
+        ];
+
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function getRandomElements(array, count) {
+            const shuffled = [...array].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function formatCurrency(amount, currency, symbol) {
+            // Simple currency formatting for demo
+            const formatters = {
+                USD: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }),
+                GBP: new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }),
+                EUR: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
+                JPY: new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }),
+                KRW: new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }),
+                BRL: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
+                MXN: new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }),
+                INR: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }),
+                AUD: new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }),
+                CAD: new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }),
+                BDT: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT' })
+            };
+
+            if (formatters[currency]) {
+                return formatters[currency].format(amount);
+            }
+
+            // Fallback formatting
+            return `${symbol} ${parseFloat(amount).toFixed(2)}`;
+        }
+
+        // Test function to force show the modal (for testing)
+        function testSubscriptionPopup() {
+            usageCount = 5;
+            localStorage.setItem(`usage_${userIP}`, usageCount.toString());
+            updateCreditStatus();
+            updateGenerateButtonState();
+            console.log("Test: Showing subscription popup");
+            limitModal.style.display = 'flex';
+        }
     </script>
 </body>
 </html>
