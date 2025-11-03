@@ -673,6 +673,52 @@
             margin-top: 40px;
         }
 
+        /* Admin Link */
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(108, 99, 255, 0.2);
+            color: var(--primary);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            z-index: 100;
+        }
+
+        .admin-link:hover {
+            background: rgba(108, 99, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-success {
+            background: rgba(76, 201, 240, 0.2);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            border-left: 4px solid var(--accent);
+            color: var(--accent);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .hero h1 {
@@ -874,9 +920,13 @@
         </div>
     </div>
 
+    <!-- Admin Link -->
+    <a href="admin.html" class="admin-link">
+        <i class="fas fa-user-shield"></i> Admin Panel
+    </a>
+
     <script>
         // Configuration
-        const PREMIUM_CODES = ["OFFER123", "AI2023", "UNLIMITED", "BANGLADESH", "CRYPTO1"];
         const MAX_FREE_GENERATIONS = 5;
 
         // Country to language and currency mapping
@@ -927,6 +977,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
             setupEventListeners();
+            checkURLForUnlockCode();
         });
 
         // Functions
@@ -1017,17 +1068,51 @@
                     return;
                 }
                 
-                if (PREMIUM_CODES.includes(enteredCode)) {
-                    isPremium = true;
-                    localStorage.setItem('premium_unlocked', 'true');
-                    limitModal.style.display = 'none';
-                    updateCreditStatus();
-                    updateGenerateButtonState();
-                    alert('Premium access unlocked! Enjoy unlimited offer generations for 1 month.');
-                } else {
-                    alert('Invalid unlock code. Please try again or contact support.');
-                }
+                // Validate the unlock code
+                validateUnlockCode(enteredCode);
             });
+        }
+
+        function checkURLForUnlockCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const unlockCode = urlParams.get('unlock_code');
+            
+            if (unlockCode) {
+                // Automatically validate the code from URL
+                validateUnlockCode(unlockCode);
+                
+                // Remove the parameter from URL without reloading
+                const url = new URL(window.location);
+                url.searchParams.delete('unlock_code');
+                window.history.replaceState({}, '', url);
+            }
+        }
+
+        function validateUnlockCode(enteredCode) {
+            // Get valid codes from localStorage (set by admin)
+            const validCodes = JSON.parse(localStorage.getItem('valid_unlock_codes') || '[]');
+            console.log('Valid codes from storage:', validCodes);
+            console.log('Entered code:', enteredCode);
+            
+            const codeData = validCodes.find(code => code.code === enteredCode && !code.used);
+            
+            if (codeData) {
+                // Mark code as used
+                codeData.used = true;
+                codeData.usedBy = userIP;
+                codeData.usedAt = new Date().toISOString();
+                localStorage.setItem('valid_unlock_codes', JSON.stringify(validCodes));
+                
+                // Activate premium
+                isPremium = true;
+                localStorage.setItem('premium_unlocked', 'true');
+                limitModal.style.display = 'none';
+                updateCreditStatus();
+                updateGenerateButtonState();
+                alert('Premium access unlocked! Enjoy unlimited offer generations.');
+            } else {
+                alert('Invalid unlock code. Please try again or contact support.');
+            }
         }
 
         function showUnlockCodeInput() {
