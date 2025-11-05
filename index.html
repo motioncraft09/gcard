@@ -1213,7 +1213,21 @@ function updateLimits() {
 unlockBtn.addEventListener("click", () => {
     const enteredCode = transactionIdInput.value.trim();
     const validCodes = JSON.parse(localStorage.getItem("validCodes") || "[]");
-    if(validCodes.includes(enteredCode)){
+   if(validCodes.includes(enteredCode)){
+    isPremium = true;
+    localStorage.setItem("premiumUser", "true");
+
+    // REMOVE USED CODE (One-Time Use)
+    const updated = validCodes.filter(c => c !== enteredCode);
+    localStorage.setItem("validCodes", JSON.stringify(updated));
+
+    limitModal.style.display = 'none';
+    updateLimits();
+    alert("✅ Premium Unlocked for this user.\n🔓 Code Disabled.");
+} else {
+    alert("❌ Invalid or Already Used Code.");
+}
+
         isPremium = true;
         localStorage.setItem("premiumUser","true");
         limitModal.style.display = 'none';
