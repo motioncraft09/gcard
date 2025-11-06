@@ -867,6 +867,40 @@
                 display: none !important;
             }
         }
+
+        /* Performance optimizations */
+        .card, .btn, .tab, .toggle-option, .file-upload-area {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+
+        /* Admin link */
+        .admin-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s var(--ease);
+        }
+
+        .admin-link:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+        
+        /* Disabled state */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn:disabled:hover {
+            transform: none !important;
+            box-shadow: var(--shadow) !important;
+        }
     </style>
 </head>
 <body>
@@ -916,13 +950,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">Slipzy</div>
-            <!-- WhatsApp button for direct contact -->
-            <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20want%20to%20get%20unlimited%20subscription" class="btn whatsapp-btn" style="width: auto; padding: 10px 20px;" target="_blank">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
-                </svg>
-                Get Unlimited Access
-            </a>
+           
         </div>
 
         <!-- Main App -->
@@ -1353,6 +1381,13 @@ note: sig req"></textarea>
         }
         
         async function generateUltraFingerprint() {
+            // Try to get existing fingerprint first
+            const existingFingerprint = localStorage.getItem('slipzyFingerprint');
+            if (existingFingerprint) {
+                userFingerprint = existingFingerprint;
+                return;
+            }
+            
             // Create a multi-layered fingerprint that's extremely difficult to bypass
             const components = [];
             
@@ -1389,27 +1424,35 @@ note: sig req"></textarea>
             components.push(canvasData);
             
             // 5. Audio fingerprinting
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const analyser = audioContext.createAnalyser();
-            oscillator.connect(analyser);
-            analyser.connect(audioContext.destination);
-            oscillator.start(0);
-            const audioData = new Uint8Array(analyser.frequencyBinCount);
-            analyser.getByteFrequencyData(audioData);
-            oscillator.stop();
-            components.push(Array.from(audioData).join(','));
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const analyser = audioContext.createAnalyser();
+                oscillator.connect(analyser);
+                analyser.connect(audioContext.destination);
+                oscillator.start(0);
+                const audioData = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(audioData);
+                oscillator.stop();
+                components.push(Array.from(audioData).join(','));
+            } catch (e) {
+                components.push('audio_failed');
+            }
             
             // 6. WebGL fingerprinting
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            if (gl) {
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                if (debugInfo) {
-                    components.push(gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL));
-                    components.push(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
+            try {
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    if (debugInfo) {
+                        components.push(gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL));
+                        components.push(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
+                    }
+                    components.push(gl.getParameter(gl.VERSION));
+                    components.push(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
                 }
-                components.push(gl.getParameter(gl.VERSION));
-                components.push(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
+            } catch (e) {
+                components.push('webgl_failed');
             }
             
             // 7. Fonts detection
@@ -1477,14 +1520,17 @@ note: sig req"></textarea>
             if (isUnlocked) {
                 usageInfo.innerHTML = '<span class="success">✨ Premium: Unlimited Slips Available</span>';
                 upgradePanel.classList.add('hidden');
+                generateBtn.disabled = false;
             } else {
                 const remaining = MAX_FREE_SLIPS - usageCount;
                 if (remaining > 0) {
                     usageInfo.innerHTML = `<span>Free slips remaining: <strong>${remaining}/${MAX_FREE_SLIPS}</strong></span>`;
                     upgradePanel.classList.add('hidden');
+                    generateBtn.disabled = false;
                 } else {
                     usageInfo.innerHTML = '<span class="warning">Free limit reached. Upgrade required.</span>';
                     upgradePanel.classList.remove('hidden');
+                    generateBtn.disabled = true;
                 }
             }
         }
@@ -1660,6 +1706,7 @@ note: sig req"></textarea>
             const isUnlocked = checkUnlockStatus();
             if (!isUnlocked && usageCount >= MAX_FREE_SLIPS) {
                 alert('Free limit reached. Please upgrade to generate more slips.');
+                paymentPopup.style.display = 'flex';
                 return;
             }
             
