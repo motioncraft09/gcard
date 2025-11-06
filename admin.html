@@ -1,83 +1,482 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Admin Panel - User Unlock Codes</title>
-<style>
-body { font-family: Arial, sans-serif; background: #f5f6f7; margin: 0; padding: 0; }
-#loginBox { text-align:center; padding-top:100px; }
-.container { max-width: 550px; margin: 50px auto; background: #fff; padding: 25px;
-  border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);}
-input,button { width:100%; padding:12px; margin-top:10px; border-radius:8px; border:1px solid #ccc; font-size:15px; }
-button { background:#007bff; color:#fff; border:none; cursor:pointer; }
-button:hover { opacity:0.9; }
-.code-list { list-style:none; padding:0; margin-top:20px; }
-.code-item { background:#eee; padding:10px; border-radius:6px; margin-bottom:8px; display:flex;
-  justify-content:space-between; align-items:center; }
-.delete-btn { background:red; color:#fff; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slipzy Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8B85FF;
+            --primary-dark: #554FD8;
+            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
+            --primary-gradient-hover: linear-gradient(135deg, #554FD8 0%, #6C63FF 100%);
+            --text: #1D1D1F;
+            --text-light: #86868B;
+            --text-lighter: #AEAEB2;
+            --bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --card-bg-hover: #FBFBFD;
+            --border: #F2F2F7;
+            --border-hover: #E5E5EA;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 32px 96px rgba(0, 0, 0, 0.16);
+            --spacing-xs: 0.75rem;
+            --spacing-sm: 1.25rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 3rem;
+            --spacing-xl: 5rem;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-synthesis: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s var(--ease);
+        }
+
+        .back-link:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-md);
+            transition: all 0.5s var(--ease);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(40px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--border-hover);
+            background: var(--card-bg-hover);
+            transform: translateY(-8px);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            letter-spacing: -0.01em;
+        }
+
+        /* Admin Panel */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .admin-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm);
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-ip {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-size: 0.8rem;
+        }
+
+        .delete-btn {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #D70015;
+        }
+
+        .generate-section {
+            margin-top: var(--spacing-lg);
+        }
+
+        .input-with-icon {
+            position: relative;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 12px 12px 12px 44px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s var(--ease);
+            background: var(--bg);
+        }
+
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 14px 24px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.01em;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: var(--primary-gradient-hover);
+        }
+
+        /* Success, Warning, Error states */
+        .success {
+            color: #34C759;
+        }
+
+        .warning {
+            color: #FF9500;
+        }
+
+        .error {
+            color: #FF3B30;
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 767px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Slipzy Admin</div>
+            <a href="index.html" class="back-link">Back to Main Site</a>
+        </div>
 
-<div id="loginBox">
-  <h2>Admin Login</h2>
-  <input type="password" id="adminPass" placeholder="Enter Admin Password">
-  <button onclick="adminLogin()">Login</button>
-</div>
+        <!-- Admin Panel -->
+        <div id="admin-panel">
+            <div class="admin-header">
+                <h2 class="admin-title">Admin Panel</h2>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title">User Management</h3>
+                <div class="user-list" id="user-list">
+                    <!-- Users will be populated here -->
+                </div>
+                
+                <div class="generate-section">
+                    <h3 class="card-title">Generate Unlock Code</h3>
+                    <p style="margin-bottom: var(--spacing-sm); color: var(--text-light);">Generate unlock codes manually and provide them to users</p>
+                    <button id="generate-code" class="btn">Generate New Unlock Code</button>
+                    <div id="generated-code" class="hidden" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(52, 199, 89, 0.1); border-radius: var(--radius-sm); border: 1px solid rgba(52, 199, 89, 0.2);">
+                        <span class="success">Unlock Code: <span id="code-value"></span></span>
+                    </div>
+                </div>
 
-<div id="panel" class="container" style="display:none;">
-  <h2>🔐 User Unlock Code Manager</h2>
+                <div class="generate-section">
+                    <h3 class="card-title">Active Unlock Codes</h3>
+                    <div id="codes-list" class="user-list">
+                        <!-- Codes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <input type="text" id="newCode" placeholder="Enter a new unlock code">
-  <button onclick="addCode()">Add Code</button>
-
-  <h3>Active Unlock Codes:</h3>
-  <ul id="codeList" class="code-list"></ul>
-</div>
-
-<script>
-function adminLogin(){
-  const pass = document.getElementById("adminPass").value;
-  if(pass === "admin123"){ // <-- চাইলে এখানে তোমার নিজের password বসাতে পারো
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("panel").style.display = "block";
-    loadCodes();
-  } else {
-    alert("❌ Wrong Password");
-  }
-}
-
-function loadCodes(){
-  let codes = JSON.parse(localStorage.getItem("validCodes") || "[]");
-  const list = document.getElementById("codeList");
-  list.innerHTML = "";
-  codes.forEach((code, index)=>{
-    list.innerHTML += `
-      <li class="code-item">
-        ${code}
-        <button class="delete-btn" onclick="deleteCode(${index})">Delete</button>
-      </li>
-    `;
-  });
-}
-
-function addCode(){
-  let code = document.getElementById("newCode").value.trim();
-  if(!code) return;
-  let codes = JSON.parse(localStorage.getItem("validCodes") || "[]");
-  codes.push(code);
-  localStorage.setItem("validCodes", JSON.stringify(codes));
-  document.getElementById("newCode").value = "";
-  loadCodes();
-}
-
-function deleteCode(index){
-  let codes = JSON.parse(localStorage.getItem("validCodes") || "[]");
-  codes.splice(index, 1);
-  localStorage.setItem("validCodes", JSON.stringify(codes));
-  loadCodes();
-}
-</script>
-
+    <script>
+        // DOM elements
+        const userList = document.getElementById('user-list');
+        const generateCodeBtn = document.getElementById('generate-code');
+        const generatedCode = document.getElementById('generated-code');
+        const codeValue = document.getElementById('code-value');
+        const codesList = document.getElementById('codes-list');
+        
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUserList();
+            updateCodesList();
+            
+            // Generate code button
+            generateCodeBtn.addEventListener('click', generateUnlockCode);
+        });
+        
+        function updateUserList() {
+            const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
+            
+            userList.innerHTML = '';
+            
+            if (unlockedUsers.length === 0) {
+                userList.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: var(--spacing-md);">No premium users found</p>';
+                return;
+            }
+            
+            unlockedUsers.forEach(ip => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                
+                const userInfo = document.createElement('div');
+                userInfo.className = 'user-info';
+                
+                const userIp = document.createElement('div');
+                userIp.className = 'user-ip';
+                userIp.textContent = ip;
+                
+                const userStatus = document.createElement('div');
+                userStatus.className = 'user-status';
+                userStatus.textContent = 'Premium User';
+                
+                userInfo.appendChild(userIp);
+                userInfo.appendChild(userStatus);
+                
+                const userActions = document.createElement('div');
+                userActions.className = 'user-actions';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'action-btn delete-btn';
+                deleteBtn.textContent = 'Revoke Access';
+                deleteBtn.addEventListener('click', () => revokeUserAccess(ip));
+                
+                userActions.appendChild(deleteBtn);
+                
+                userItem.appendChild(userInfo);
+                userItem.appendChild(userActions);
+                
+                userList.appendChild(userItem);
+            });
+        }
+        
+        function updateCodesList() {
+            const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
+            
+            codesList.innerHTML = '';
+            
+            if (unlockCodes.length === 0) {
+                codesList.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: var(--spacing-md);">No active unlock codes</p>';
+                return;
+            }
+            
+            unlockCodes.forEach(codeObj => {
+                const codeItem = document.createElement('div');
+                codeItem.className = 'user-item';
+                
+                const codeInfo = document.createElement('div');
+                codeInfo.className = 'user-info';
+                
+                const codeText = document.createElement('div');
+                codeText.className = 'user-ip';
+                codeText.textContent = codeObj.code;
+                
+                const codeDate = document.createElement('div');
+                codeDate.className = 'user-status';
+                codeDate.textContent = `Generated: ${new Date(codeObj.generated).toLocaleDateString()}`;
+                
+                codeInfo.appendChild(codeText);
+                codeInfo.appendChild(codeDate);
+                
+                const codeActions = document.createElement('div');
+                codeActions.className = 'user-actions';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'action-btn delete-btn';
+                deleteBtn.textContent = 'Delete Code';
+                deleteBtn.addEventListener('click', () => deleteUnlockCode(codeObj.code));
+                
+                codeActions.appendChild(deleteBtn);
+                
+                codeItem.appendChild(codeInfo);
+                codeItem.appendChild(codeActions);
+                
+                codesList.appendChild(codeItem);
+            });
+        }
+        
+        function generateUnlockCode() {
+            // Generate unique code
+            const code = `SLIPZY-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+            
+            // Store the code
+            const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
+            unlockCodes.push({ code, generated: new Date().toISOString() });
+            localStorage.setItem('unlockCodes', JSON.stringify(unlockCodes));
+            
+            // Show the generated code
+            codeValue.textContent = code;
+            generatedCode.classList.remove('hidden');
+            
+            // Update codes list
+            updateCodesList();
+        }
+        
+        function deleteUnlockCode(code) {
+            // Remove from unlock codes
+            const unlockCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
+            const updatedCodes = unlockCodes.filter(c => c.code !== code);
+            localStorage.setItem('unlockCodes', JSON.stringify(updatedCodes));
+            
+            // Update codes list
+            updateCodesList();
+        }
+        
+        function revokeUserAccess(ip) {
+            // Remove from unlocked users
+            const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
+            const updatedUsers = unlockedUsers.filter(userIp => userIp !== ip);
+            localStorage.setItem('unlockedUsers', JSON.stringify(updatedUsers));
+            
+            // Remove usage data
+            localStorage.removeItem(`slipUsage_${ip}`);
+            
+            // Update user list
+            updateUserList();
+        }
+    </script>
 </body>
 </html>
