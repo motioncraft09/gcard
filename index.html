@@ -3,1863 +3,2059 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Offer AI | Multi-Language Offer Generator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Slipzy • Premium Packaging Slips</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6C63FF;
-            --primary-dark: #5752D4;
-            --primary-glow: rgba(108, 99, 255, 0.4);
-            --secondary: #00B4D8;
-            --accent: #FF6B6B;
-            --success: #4CC9F0;
-            --warning: #F9C74F;
-            --dark: #0A0F1C;
-            --darker: #050811;
-            --light: #F8F9FA;
-            --gray: #6C757D;
-            --glass: rgba(255, 255, 255, 0.08);
-            --glass-dark: rgba(0, 0, 0, 0.3);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            --border-radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --primary-light: #8B85FF;
+            --primary-dark: #554FD8;
+            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
+            --primary-gradient-hover: linear-gradient(135deg, #554FD8 0%, #6C63FF 100%);
+            --text: #1D1D1F;
+            --text-light: #86868B;
+            --text-lighter: #AEAEB2;
+            --bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --card-bg-hover: #FBFBFD;
+            --border: #F2F2F7;
+            --border-hover: #E5E5EA;
+            --radius: 20px;
+            --radius-sm: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 32px 96px rgba(0, 0, 0, 0.16);
+            --spacing-xs: 0.75rem;
+            --spacing-sm: 1.25rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 3rem;
+            --spacing-xl: 5rem;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         html {
             scroll-behavior: smooth;
-            font-size: 16px;
         }
 
         body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #121826 100%);
-            color: var(--light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
             min-height: 100vh;
             overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(76, 201, 240, 0.05) 0%, transparent 50%);
-            z-index: -1;
-        }
-
-        .floating-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: var(--primary-glow);
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(100px) rotate(360deg); opacity: 0; }
+            font-synthesis: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 16px;
-            width: 100%;
+            padding: 0 var(--spacing-md);
         }
 
-        header {
-            background: rgba(10, 15, 28, 0.7);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 12px 0;
-            transition: var(--transition);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .header-container {
+        /* Header */
+        .header {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
             justify-content: space-between;
-        }
-
-        @media (min-width: 576px) {
-            .header-container {
-                flex-direction: row;
-            }
-        }
-
-        .logo-container {
-            display: flex;
             align-items: center;
-            gap: 12px;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: var(--spacing-lg);
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary-gradient);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 0 20px var(--primary-glow);
         }
 
-        .logo i {
-            font-size: 1.7rem;
-            filter: drop-shadow(0 0 10px var(--primary-glow));
-        }
-
-        .credit-status {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 10px 16px;
-            border-radius: 50px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
-            transition: var(--transition);
-            animation: pulse-glow 2s infinite;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            font-size: 0.9rem;
-            min-height: 44px;
-        }
-
-        .credit-status::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: var(--transition);
-        }
-
-        .credit-status:hover::before {
-            left: 100%;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(108, 99, 255, 0.7); }
-            100% { box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4); }
-        }
-
+        /* Hero Section */
         .hero {
-            padding: 100px 0 60px;
             text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
+            padding: var(--spacing-lg) 0;
             position: relative;
-        }
-
-        @media (min-width: 576px) {
-            .hero {
-                padding: 120px 0 80px;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .hero {
-                padding: 150px 0 100px;
-            }
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1200px;
+            height: 1200px;
+            background: radial-gradient(circle, rgba(108, 99, 255, 0.04) 0%, rgba(108, 99, 255, 0) 70%);
             z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: rgba(108, 99, 255, 0.08);
+            color: var(--primary);
+            padding: 10px 18px;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            animation: fadeInUp 0.6s var(--ease) 0.2s both;
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            backdrop-filter: blur(20px);
         }
 
         .hero h1 {
-            font-size: 2.2rem;
+            font-size: clamp(2.25rem, 6vw, 4rem);
             font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--success));
+            margin-bottom: var(--spacing-sm);
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-light) 100%);
             -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
-            color: transparent;
+            animation: fadeInUp 0.6s var(--ease) 0.3s both;
             line-height: 1.1;
-            text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
-            animation: text-shimmer 3s infinite;
-        }
-
-        @media (min-width: 576px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .hero h1 {
-                font-size: 3.5rem;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .hero h1 {
-                font-size: 4rem;
-            }
-        }
-
-        @keyframes text-shimmer {
-            0% { background-position: -100% 0; }
-            100% { background-position: 200% 0; }
+            letter-spacing: -0.02em;
+            padding: 0 var(--spacing-sm);
         }
 
         .hero p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
-            font-weight: 300;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+            animation: fadeInUp 0.6s var(--ease) 0.4s both;
+            font-weight: 400;
+            line-height: 1.5;
+            padding: 0 var(--spacing-sm);
         }
 
-        @media (min-width: 576px) {
-            .hero p {
-                font-size: 1.2rem;
-            }
-        }
-
-        .ai-badge {
-            display: inline-block;
-            background: rgba(108, 99, 255, 0.2);
-            color: var(--primary);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            border: 1px solid rgba(108, 99, 255, 0.3);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            animation: float-badge 4s ease-in-out infinite;
-        }
-
-        @keyframes float-badge {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .form-section {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            margin-bottom: 40px;
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: var(--transition);
-            animation: slideUp 0.8s ease-out;
+            padding: var(--spacing-md);
+            transition: all 0.5s var(--ease);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(40px);
             position: relative;
             overflow: hidden;
         }
 
-        @media (min-width: 576px) {
-            .form-section {
-                padding: 40px 30px;
-            }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--border-hover);
+            background: var(--card-bg-hover);
+            transform: translateY(-8px);
         }
 
-        .form-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        @media (min-width: 576px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .form-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--light);
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-md);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1rem;
+            gap: var(--spacing-xs);
+            letter-spacing: -0.01em;
         }
 
-        label i {
-            color: var(--primary);
-            font-size: 1.1rem;
+        /* Input Section */
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
         }
 
-        input, select, textarea {
-            padding: 16px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: var(--transition);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--light);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            min-height: 52px;
+        .tabs {
+            display: flex;
+            background: var(--border);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            margin-bottom: var(--spacing-md);
+            gap: 4px;
+            flex-wrap: wrap;
         }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            transition: all 0.4s var(--ease);
+            text-align: center;
+            color: var(--text-light);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background: var(--bg);
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s var(--ease);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .file-upload-area:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2), 0 8px 25px rgba(0, 0, 0, 0.2);
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(108, 99, 255, 0.02);
             transform: translateY(-2px);
         }
 
-        textarea {
-            min-height: 120px;
-            resize: vertical;
+        .file-upload-area i {
+            font-size: 2.5rem;
+            color: var(--text-lighter);
+            margin-bottom: var(--spacing-sm);
+            transition: all 0.4s var(--ease);
+            display: block;
         }
 
+        .file-input {
+            display: none;
+        }
+
+        .file-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin-top: var(--spacing-sm);
+        }
+
+        .file-type-badge {
+            background: rgba(108, 99, 255, 0.08);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+
+        /* Text Areas */
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.4s var(--ease);
+            background: var(--bg);
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .setting-label {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .toggle-group {
+            display: flex;
+            background: var(--border);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            gap: 4px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .toggle-option.active {
+            background: var(--bg);
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 12px 12px 12px 44px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s var(--ease);
+            background: var(--bg);
+        }
+
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* Buttons */
         .btn {
-            padding: 16px 32px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            border-radius: var(--radius);
+            padding: 14px 24px;
+            font-size: 1.125rem;
             font-weight: 700;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.4s var(--ease);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            gap: var(--spacing-xs);
             position: relative;
             overflow: hidden;
-            min-height: 52px;
+            letter-spacing: -0.01em;
             width: 100%;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: var(--transition);
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.6);
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            box-shadow: var(--shadow-lg);
+            background: var(--primary-gradient-hover);
         }
 
-        .btn:active {
-            transform: translateY(0);
+        .btn-large {
+            padding: 16px 24px;
+            font-size: 1.25rem;
+            border-radius: var(--radius);
         }
 
-        .btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-full {
+            width: 100%;
         }
 
-        .btn i {
-            font-size: 1.2rem;
+        /* Features Panel */
+        .features-panel {
+            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
         }
 
-        .generate-btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .loading-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            margin: 30px 0;
-            background: var(--glass);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            animation: fadeIn 0.5s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .loading-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success));
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(108, 99, 255, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1.5s linear infinite;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .output-section {
-            display: none;
-            animation: fadeIn 0.8s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 40px;
-            text-align: center;
-            color: var(--light);
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        @media (min-width: 768px) {
-            .section-title {
-                font-size: 2.5rem;
-            }
-        }
-
-        .offers-grid {
+        .features-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 30px;
-            margin-bottom: 60px;
+            gap: var(--spacing-sm);
         }
 
-        @media (min-width: 768px) {
-            .offers-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(108, 99, 255, 0.1);
         }
 
-        @media (min-width: 992px) {
-            .offers-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--primary-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
-        @media (min-width: 1200px) {
-            .offers-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        /* Preview Section */
+        .preview-section {
+            margin-top: var(--spacing-lg);
         }
 
-        @media (min-width: 1600px) {
-            .offers-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+        .preview-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: white;
         }
 
-        .offer-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius);
-            padding: 30px 20px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            animation: cardAppear 0.6s ease forwards;
-            opacity: 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .preview-header h3 {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .preview-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .slip-preview {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .preview-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-sm);
+            gap: var(--spacing-sm);
+        }
+
+        .preview-nav {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .preview-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .preview-btn:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        .preview-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Usage Section */
+        .usage-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .usage-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: rgba(108, 99, 255, 0.04);
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+            transition: all 0.4s var(--ease);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+
+        .upgrade-panel {
+            padding: var(--spacing-md);
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFECB3 100%);
+            border-radius: var(--radius);
+            border: 1px solid #FFD54F;
+            animation: pulse 2s infinite;
             position: relative;
             overflow: hidden;
         }
 
-        @media (min-width: 768px) {
-            .offer-card {
-                padding: 40px 30px;
-            }
+        .code-input {
+            padding: var(--spacing-md);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: var(--spacing-sm);
+            transition: all 0.3s var(--ease);
+            background: var(--bg);
+            position: relative;
         }
 
-        .offer-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
         }
 
-        .offer-card::after {
-            content: '';
-            position: absolute;
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: var(--spacing-lg) 0;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+        }
+
+        /* Popup Overlay */
+        .popup-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(108, 99, 255, 0.05), transparent);
-            opacity: 0;
-            transition: var(--transition);
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: var(--spacing-md);
         }
 
-        .offer-card:hover::after {
-            opacity: 1;
+        .popup-content {
+            background: white;
+            border-radius: var(--radius);
+            padding: var(--spacing-lg);
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
         }
 
-        @keyframes cardAppear {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
         }
 
-        .offer-title {
-            font-size: 1.4rem;
+        .popup-title {
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 20px;
-            color: var(--light);
+            margin-bottom: var(--spacing-md);
+            color: var(--text);
+        }
+
+        .payment-info {
+            background: rgba(108, 99, 255, 0.05);
+            padding: var(--spacing-md);
+            border-radius: var(--radius);
+            margin-bottom: var(--spacing-md);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+
+        .payment-step {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .offer-title i {
-            color: var(--primary);
-            font-size: 1.5rem;
-        }
-
-        .analysis-list {
-            margin-bottom: 25px;
-            padding-left: 20px;
-        }
-
-        .analysis-list li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-left: 10px;
-        }
-
-        .analysis-list li::before {
-            content: '✓';
-            color: var(--success);
-            font-weight: bold;
-            position: absolute;
-            left: -20px;
-            font-size: 1.1rem;
-        }
-
-        .performance-metrics {
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-sm);
         }
 
-        @media (min-width: 576px) {
-            .performance-metrics {
-                flex-direction: row;
+        .whatsapp-btn:hover {
+            background: #128C7E;
+        }
+
+        /* Print Button */
+        .print-btn {
+            background: #34C759;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #2CA24D;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .metric {
-            text-align: center;
-            flex: 1;
-        }
-
-        .metric-value {
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
-        }
-
-        .metric-label {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-top: 5px;
-            font-weight: 500;
-        }
-
-        .price-tiers {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        @media (min-width: 576px) {
-            .price-tiers {
-                flex-direction: row;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
 
-        .tier {
-            text-align: center;
-            flex: 1;
-            padding: 16px 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .tier-name {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .tier-price {
-            font-weight: 800;
-            font-size: 1.2rem;
-            color: var(--light);
-        }
-
-        .ad-copy {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            font-style: italic;
-            border-left: 4px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        .ad-copy::before {
-            content: '"';
-            font-size: 3rem;
-            color: rgba(108, 99, 255, 0.2);
-            position: absolute;
-            top: 5px;
-            left: 10px;
-        }
-
-        .confidence-score {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (min-width: 768px) {
-            .confidence-score {
-                flex-direction: row;
-                align-items: center;
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.01);
             }
         }
 
-        .confidence-bar {
-            height: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
         }
 
-        .confidence-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), #2a9d8f);
-            border-radius: 8px;
-            transition: width 1.5s ease;
-            box-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+        /* Hidden class */
+        .hidden {
+            display: none;
         }
 
-        .language-badge {
+        /* Success, Warning, Error states */
+        .success {
+            color: #34C759;
+        }
+
+        .warning {
+            color: #FF9500;
+        }
+
+        .error {
+            color: #FF3B30;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Loading Animation */
+        .loading {
             display: inline-block;
-            background: rgba(0, 180, 216, 0.2);
-            color: var(--secondary);
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 8px;
-            border: 1px solid rgba(0, 180, 216, 0.3);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--gray);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 40px;
-            background: rgba(10, 15, 28, 0.5);
-            backdrop-filter: blur(10px);
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .api-key-section {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .btn {
+                width: auto;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: var(--spacing-md);
+            }
+            
+            .settings-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
         }
 
-        .api-key-section h3 {
-            margin-bottom: 15px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        @media (max-width: 767px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .hero {
+                padding: var(--spacing-md) 0;
+            }
+            
+            .card {
+                padding: var(--spacing-sm);
+            }
+            
+            .preview-container {
+                max-width: 100%;
+            }
+            
+            .preview-controls {
+                flex-direction: column;
+            }
+            
+            .preview-nav {
+                justify-content: center;
+            }
         }
 
-        .api-key-input {
-            display: flex;
-            gap: 10px;
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .tab {
+                min-width: 100px;
+                padding: 10px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .file-upload-area {
+                padding: var(--spacing-md);
+            }
+            
+            .file-upload-area i {
+                font-size: 2rem;
+            }
+            
+            textarea {
+                min-height: 150px;
+                padding: var(--spacing-sm);
+            }
         }
 
-        .api-key-input input {
-            flex: 1;
-        }
-
-        .api-status {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .api-status.valid {
-            color: var(--success);
-        }
-
-        .api-status.invalid {
-            color: var(--accent);
-        }
-
-        .test-mode-notice {
-            background: rgba(249, 199, 79, 0.2);
-            border: 1px solid rgba(249, 199, 79, 0.3);
-            color: var(--warning);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Print-specific styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .preview-container, .preview-container * {
+                visibility: visible;
+            }
+            .preview-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+            .preview-header, .preview-controls {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
-    <div class="floating-particles" id="particles-container"></div>
-
-    <header>
-        <div class="container header-container">
-            <div class="logo-container">
-                <div class="logo">
-                    <i class="fas fa-robot"></i>
-                    Global Offer AI
-                </div>
-            </div>
-            <div class="credit-status" id="credit-status">
-                <i class="fas fa-coins"></i>
-                <span id="credit-text">Loading credits...</span>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <section class="hero">
-            <div class="ai-badge">
-                <i class="fas fa-brain"></i> POWERED BY GEMINI AI
-            </div>
-            <h1>Generate High-Converting Offers For Any Market</h1>
-            <p>Enter your product details, select a target country, and our AI will generate localized, high-performing offers in seconds.</p>
-        </section>
-
-        <section class="form-section">
-            <form id="offer-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="product-name"><i class="fas fa-box"></i> Product Name</label>
-                        <input type="text" id="product-name" placeholder="Enter product name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="product-description"><i class="fas fa-align-left"></i> Product Description</label>
-                        <textarea id="product-description" placeholder="Describe your product" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="price"><i class="fas fa-tag"></i> Price (<span id="price-currency">USD</span>)</label>
-                        <input type="number" id="price" placeholder="0.00" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="country"><i class="fas fa-flag"></i> Country</label>
-                        <select id="country" required>
-                            <option value="">Select a country</option>
-                            <option value="US">United States</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="DE">Germany</option>
-                            <option value="FR">France</option>
-                            <option value="ES">Spain</option>
-                            <option value="IT">Italy</option>
-                            <option value="JP">Japan</option>
-                            <option value="KR">South Korea</option>
-                            <option value="BR">Brazil</option>
-                            <option value="MX">Mexico</option>
-                            <option value="IN">India</option>
-                            <option value="AU">Australia</option>
-                            <option value="CA">Canada</option>
-                            <option value="BD">Bangladesh</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="language"><i class="fas fa-language"></i> Language</label>
-                        <input type="text" id="language" placeholder="Auto-detected" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="currency"><i class="fas fa-money-bill-wave"></i> Currency</label>
-                        <input type="text" id="currency" placeholder="Auto-detected" readonly>
+    <!-- Payment Popup -->
+    <div class="popup-overlay" id="payment-popup">
+        <div class="popup-content">
+            <button class="popup-close" id="close-popup">×</button>
+            <h2 class="popup-title">Upgrade to Premium</h2>
+            
+            <div class="payment-info">
+                <div class="payment-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Pay 1 USD for 1 month unlimited access</strong>
+                        <p>Crypto Account: <strong>453535</strong></p>
                     </div>
                 </div>
                 
-                <div class="api-key-section">
-                    <h3><i class="fas fa-key"></i> Gemini API Key</h3>
-                    <div class="api-key-input">
-                        <input type="password" id="api-key" placeholder="Enter your Gemini API key">
-                        <button type="button" class="btn" id="save-api-key" style="width: auto; padding: 16px 20px;">
-                            <i class="fas fa-save"></i> Save
+                <div class="payment-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Enter Transaction ID</strong>
+                        <input type="text" id="transaction-id" class="code-input" placeholder="Enter your transaction ID">
+                    </div>
+                </div>
+                
+                <div class="payment-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Get Unlock Code</strong>
+                        <input type="text" id="unlock-code-popup" class="code-input" placeholder="Enter unlock code">
+                        <button id="unlock-btn-popup" class="btn btn-full" style="margin-top: 10px;">Unlock Premium</button>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:" id="whatsapp-link" class="btn whatsapp-btn" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
+                </svg>
+                Contact Admin on WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">Slipzy</div>
+            <!-- Admin Panel button removed as requested -->
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app">
+            <section class="hero">
+                <div class="hero-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h6l-4 8 12-12h-6l4-8z"/>
+                    </svg>
+                    ULTRA PREMIUM PACKAGING SLIPS
+                </div>
+                <h1>Slipzy</h1>
+                <p>Transform multiple orders into beautiful, printable packaging slips with bulk PNG output</p>
+                
+                <div class="grid">
+                    <div class="card" style="animation: fadeInUp 0.6s var(--ease) 0.5s both">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Customer Data Input
+                        </h2>
+                        
+                        <div class="input-section">
+                            <div class="tabs">
+                                <div class="tab active" data-tab="upload">Upload Files</div>
+                                <div class="tab" data-tab="paste">Paste Text</div>
+                                <div class="tab" data-tab="bulk">Bulk Processing</div>
+                            </div>
+                            
+                            <div class="tab-content active" id="upload-tab">
+                                <div class="file-upload-area" id="file-upload-area">
+                                    <i>📁</i>
+                                    <p><strong>Drag & drop files or click to browse</strong></p>
+                                    <p style="color: var(--text-light); margin-top: 8px; font-size: 0.9rem;">Supports: TXT, CSV, XLSX, JSON</p>
+                                    <div class="file-types">
+                                        <span class="file-type-badge">.txt</span>
+                                        <span class="file-type-badge">.csv</span>
+                                        <span class="file-type-badge">.xlsx</span>
+                                        <span class="file-type-badge">.json</span>
+                                    </div>
+                                    <input type="file" id="file-input" class="file-input" accept=".txt,.csv,.xlsx,.json" multiple>
+                                </div>
+                                <div id="file-preview" class="hidden"></div>
+                                <div id="upload-status" class="hidden" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(52, 199, 89, 0.1); border-radius: var(--radius-sm); border: 1px solid rgba(52, 199, 89, 0.2);">
+                                    <span class="success">✅ File uploaded successfully!</span>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" id="paste-tab">
+                                <textarea id="text-input" placeholder="Paste customer data here. Each customer should be separated by a blank line.
+
+Example:
+John Doe • Apple Inc.
+(555) 123-4567 • john@apple.com
+123 Main Street, San Francisco, CA 94105
+iPhone 15 Pro Max • Space Black
+$1,199.00 • Priority Shipping
+Signature required • Gift wrapping"></textarea>
+                            </div>
+
+                            <div class="tab-content" id="bulk-tab">
+                                <div class="features-panel">
+                                    <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Advanced Bulk Processing</h3>
+                                    <div class="features-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">🔄</div>
+                                            <div>
+                                                <strong>Auto Address Correction</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Standardizes messy addresses</div>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">🏢</div>
+                                            <div>
+                                                <strong>Company Detection</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Auto-extracts company names</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <textarea id="bulk-input" placeholder="Paste messy customer data here - we'll automatically clean and format it...
+
+Example messy input:
+john doe 123 main st sf ca 1234
+555-123-4567
+iphone 15 $1199
+note: sig req"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="animation: fadeInUp 0.6s var(--ease) 0.6s both">
+                        <h2 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                            Settings & Output
+                        </h2>
+                        
+                        <div class="settings-grid">
+                            <div class="setting-group">
+                                <div class="setting-label">Output Format</div>
+                                <div class="toggle-group">
+                                    <div class="toggle-option active" data-format="png">PNG Images</div>
+                                    <div class="toggle-option" data-format="pdf">PDF Document</div>
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">QR Code Link</div>
+                                <div class="input-with-icon">
+                                    <div class="input-icon">🔗</div>
+                                    <input type="text" id="qr-link" placeholder="https://your-store.com/track/" value="https://your-store.com/track/">
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">Default Company</div>
+                                <div class="input-with-icon">
+                                    <div class="input-icon">🏢</div>
+                                    <input type="text" id="default-company" placeholder="Your Company Name" value="Slipzy">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="features-panel">
+                            <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Premium Features</h3>
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-icon">📱</div>
+                                    <div>
+                                        <strong>QR Codes</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Track orders easily</div>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">🏢</div>
+                                    <div>
+                                        <strong>Company Branding</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Add your logo & info</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="generate-btn" class="btn btn-large btn-full" style="margin-top: var(--spacing-md);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14,2 14,8 20,8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10,9 9,9 8,9"/>
+                            </svg>
+                            Generate Premium Slips
                         </button>
                     </div>
-                    <div class="api-status" id="api-status">
-                        <i class="fas fa-info-circle"></i> API key not configured
-                    </div>
-                    <div class="test-mode-notice">
-                        <i class="fas fa-vial"></i>
-                        <div>
-                            <strong>Test Mode:</strong> If no API key is provided, the system will use realistic mock data for demonstration purposes.
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section id="preview-section" class="preview-section hidden" style="animation: fadeInUp 0.6s var(--ease) 0.7s both">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21,15 16,10 5,21"/>
+                        </svg>
+                        Slip Preview
+                    </h2>
+                    
+                    <div class="preview-container">
+                        <div class="preview-header">
+                            <h3>Packaging Slip Preview</h3>
+                            <div class="preview-count">Slip <span id="current-slip">1</span> of <span id="total-slips">0</span></div>
+                        </div>
+                        <canvas id="slip-preview" class="slip-preview" width="1000" height="1400"></canvas>
+                        
+                        <div class="preview-controls">
+                            <div class="preview-nav">
+                                <button id="prev-slip" class="preview-btn" disabled>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="15,18 9,12 15,6"/>
+                                    </svg>
+                                    Previous
+                                </button>
+                                <button id="next-slip" class="preview-btn" disabled>
+                                    Next
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9,18 15,12 9,6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div style="display: flex; gap: var(--spacing-sm);">
+                                <button id="print-btn" class="btn print-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6,9 6,2 18,2 18,9"/>
+                                        <path d="M6,18H4a2,2,0,0,1-2-2V9a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v7a2,2,0,0,1-2,2H18"/>
+                                        <rect x="6" y="14" width="12" height="8"/>
+                                    </svg>
+                                    Print
+                                </button>
+                                <button id="download-all" class="btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2V15"/>
+                                        <polyline points="7,10 12,15 17,10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    Download All
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="generate-btn-container">
-                    <button type="submit" class="btn" id="generate-btn">
-                        <i class="fas fa-bolt"></i> Generate AI Offers
-                    </button>
-                </div>
-            </form>
-        </section>
+            </section>
 
-        <div class="loading-container" id="loading-container">
-            <div class="loading-spinner"></div>
-            <p>AI is generating high-converting offers for your target market...</p>
+            <section class="card usage-section" style="animation: fadeInUp 0.6s var(--ease) 0.8s both">
+                <h2 class="card-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    Usage & Licensing
+                </h2>
+                
+                <div id="usage-info" class="usage-info">
+                    <div class="loading"></div>
+                    <span>Checking usage limit...</span>
+                </div>
+                
+                <div id="upgrade-panel" class="upgrade-panel hidden">
+                    <h3>✨ Free Limit Reached</h3>
+                    <p>You've reached the free usage limit. Upgrade to premium for unlimited access.</p>
+                    <button id="upgrade-btn" class="btn">Upgrade to Premium</button>
+                </div>
+            </section>
         </div>
 
-        <section class="output-section" id="output-section">
-            <h2 class="section-title">Your AI-Generated Offers</h2>
-            <div class="offers-grid" id="offers-container">
-                <!-- Offer cards will be inserted here -->
-            </div>
-        </section>
-
-        <footer>
-            <p>© 2023 Global Offer AI. All rights reserved.</p>
+        <footer class="footer">
+            <p>Slipzy • Ultra Premium Packaging Slips • Bulk PNG Output • Modern Design • © 2024</p>
         </footer>
     </div>
 
     <script>
-        // Configuration
-        const MAX_FREE_GENERATIONS = 5;
-
-        // Country to language and currency mapping
-        const countryData = {
-            US: { language: "English", currency: "USD", symbol: "$" },
-            GB: { language: "English", currency: "GBP", symbol: "£" },
-            DE: { language: "German", currency: "EUR", symbol: "€" },
-            FR: { language: "French", currency: "EUR", symbol: "€" },
-            ES: { language: "Spanish", currency: "EUR", symbol: "€" },
-            IT: { language: "Italian", currency: "EUR", symbol: "€" },
-            JP: { language: "Japanese", currency: "JPY", symbol: "¥" },
-            KR: { language: "Korean", currency: "KRW", symbol: "₩" },
-            BR: { language: "Portuguese", currency: "BRL", symbol: "R$" },
-            MX: { language: "Spanish", currency: "MXN", symbol: "$" },
-            IN: { language: "Hindi", currency: "INR", symbol: "₹" },
-            AU: { language: "English", currency: "AUD", symbol: "A$" },
-            CA: { language: "English", currency: "CAD", symbol: "C$" },
-            BD: { language: "Bengali", currency: "BDT", symbol: "৳" }
-        };
-
-        // Multi-language content for labels
-        const multiLanguageContent = {
-            English: {
-                metricLabels: {
-                    ctr: "Click-Through Rate",
-                    conversion: "Conversion Rate",
-                    revenue: "Projected Revenue"
-                },
-                tierNames: {
-                    basic: "Basic",
-                    standard: "Standard",
-                    premium: "Premium"
-                },
-                confidenceLabel: "AI Confidence Score"
-            },
-            German: {
-                metricLabels: {
-                    ctr: "Klickrate",
-                    conversion: "Konversionsrate",
-                    revenue: "Projizierter Umsatz"
-                },
-                tierNames: {
-                    basic: "Basis",
-                    standard: "Standard",
-                    premium: "Premium"
-                },
-                confidenceLabel: "KI-Konfidenz-Score"
-            },
-            French: {
-                metricLabels: {
-                    ctr: "Taux de clics",
-                    conversion: "Taux de conversion",
-                    revenue: "Revenu projeté"
-                },
-                tierNames: {
-                    basic: "Basique",
-                    standard: "Standard",
-                    premium: "Premium"
-                },
-                confidenceLabel: "Score de confiance IA"
-            },
-            Spanish: {
-                metricLabels: {
-                    ctr: "Tasa de clics",
-                    conversion: "Tasa de conversión",
-                    revenue: "Ingresos proyectados"
-                },
-                tierNames: {
-                    basic: "Básico",
-                    standard: "Estándar",
-                    premium: "Premium"
-                },
-                confidenceLabel: "Puntuación de confianza de IA"
-            },
-            Japanese: {
-                metricLabels: {
-                    ctr: "クリック率",
-                    conversion: "コンバージョン率",
-                    revenue: "予想収益"
-                },
-                tierNames: {
-                    basic: "ベーシック",
-                    standard: "スタンダード",
-                    premium: "プレミアム"
-                },
-                confidenceLabel: "AI信頼度スコア"
-            },
-            Korean: {
-                metricLabels: {
-                    ctr: "클릭률",
-                    conversion: "전환율",
-                    revenue: "예상 수익"
-                },
-                tierNames: {
-                    basic: "베이직",
-                    standard: "스탠다드",
-                    premium: "프리미엄"
-                },
-                confidenceLabel: "AI 신뢰도 점수"
-            },
-            Portuguese: {
-                metricLabels: {
-                    ctr: "Taxa de Cliques",
-                    conversion: "Taxa de Conversão",
-                    revenue: "Receita Projetada"
-                },
-                tierNames: {
-                    basic: "Básico",
-                    standard: "Padrão",
-                    premium: "Premium"
-                },
-                confidenceLabel: "Pontuação de Confiança da IA"
-            },
-            Hindi: {
-                metricLabels: {
-                    ctr: "क्लिक-थ्रू दर",
-                    conversion: "रूपांतरण दर",
-                    revenue: "अनुमानित राजस्व"
-                },
-                tierNames: {
-                    basic: "बेसिक",
-                    standard: "स्टैंडर्ड",
-                    premium: "प्रीमियम"
-                },
-                confidenceLabel: "एआई आत्मविश्वास स्कोर"
-            },
-            Bengali: {
-                metricLabels: {
-                    ctr: "ক্লিক-থ্রু রেট",
-                    conversion: "কনভার্শন রেট",
-                    revenue: "অনুমানিক আয়"
-                },
-                tierNames: {
-                    basic: "বেসিক",
-                    standard: "স্ট্যান্ডার্ড",
-                    premium: "প্রিমিয়াম"
-                },
-                confidenceLabel: "এআই কনফিডেন্স স্কোর"
-            },
-            Italian: {
-                metricLabels: {
-                    ctr: "Tasso di Click",
-                    conversion: "Tasso di Conversione",
-                    revenue: "Fatturato Proiettato"
-                },
-                tierNames: {
-                    basic: "Base",
-                    standard: "Standard",
-                    premium: "Premium"
-                },
-                confidenceLabel: "Punteggio di Fiducia AI"
-            }
-        };
-
-        // DOM Elements
-        const offerForm = document.getElementById('offer-form');
-        const countrySelect = document.getElementById('country');
-        const languageInput = document.getElementById('language');
-        const currencyInput = document.getElementById('currency');
-        const priceCurrency = document.getElementById('price-currency');
-        const generateBtn = document.getElementById('generate-btn');
-        const loadingContainer = document.getElementById('loading-container');
-        const outputSection = document.getElementById('output-section');
-        const offersContainer = document.getElementById('offers-container');
-        const creditStatus = document.getElementById('credit-status');
-        const creditText = document.getElementById('credit-text');
-        const particlesContainer = document.getElementById('particles-container');
-        const apiKeyInput = document.getElementById('api-key');
-        const saveApiKeyBtn = document.getElementById('save-api-key');
-        const apiStatus = document.getElementById('api-status');
-
-        // State
-        let userIP = '';
+        // Global variables
+        let userIP = '127.0.0.1';
         let usageCount = 0;
-        let isPremium = false;
-        let currentCurrency = 'USD';
-        let currentCurrencySymbol = '$';
-        let currentLanguage = 'English';
-        let geminiApiKey = '';
-
-        // Initialize app
+        const MAX_FREE_SLIPS = 10;
+        let uploadedFiles = [];
+        let generatedSlips = [];
+        let currentSlipIndex = 0;
+        
+        // DOM elements
+        const fileUploadArea = document.getElementById('file-upload-area');
+        const fileInput = document.getElementById('file-input');
+        const textInput = document.getElementById('text-input');
+        const bulkInput = document.getElementById('bulk-input');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const toggleOptions = document.querySelectorAll('.toggle-option');
+        const generateBtn = document.getElementById('generate-btn');
+        const usageInfo = document.getElementById('usage-info');
+        const upgradePanel = document.getElementById('upgrade-panel');
+        const upgradeBtn = document.getElementById('upgrade-btn');
+        const qrLinkInput = document.getElementById('qr-link');
+        const defaultCompanyInput = document.getElementById('default-company');
+        const previewSection = document.getElementById('preview-section');
+        const slipPreview = document.getElementById('slip-preview');
+        const currentSlipDisplay = document.getElementById('current-slip');
+        const totalSlipsDisplay = document.getElementById('total-slips');
+        const prevSlipBtn = document.getElementById('prev-slip');
+        const nextSlipBtn = document.getElementById('next-slip');
+        const downloadAllBtn = document.getElementById('download-all');
+        const printBtn = document.getElementById('print-btn');
+        const uploadStatus = document.getElementById('upload-status');
+        const paymentPopup = document.getElementById('payment-popup');
+        const closePopup = document.getElementById('close-popup');
+        const unlockBtnPopup = document.getElementById('unlock-btn-popup');
+        const unlockCodePopup = document.getElementById('unlock-code-popup');
+        const transactionIdInput = document.getElementById('transaction-id');
+        const whatsappLink = document.getElementById('whatsapp-link');
+        
+        // Canvas context
+        const ctx = slipPreview.getContext('2d');
+        
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
+            // Set up event listeners
             setupEventListeners();
-            createParticles();
-        });
-
-        // Create floating particles
-        function createParticles() {
-            const particleCount = isMobile() ? 15 : 30;
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random properties
-                const size = Math.random() * 6 + 2;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const delay = Math.random() * 15;
-                const duration = Math.random() * 10 + 15;
-                const opacity = Math.random() * 0.4 + 0.1;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                particle.style.animationDelay = `${delay}s`;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.opacity = opacity;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Check if device is mobile
-        function isMobile() {
-            return window.innerWidth <= 768;
-        }
-
-        // Functions
-        async function initializeApp() {
-            // Get user IP
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                userIP = data.ip;
-            } catch (error) {
-                console.error('Failed to get IP:', error);
-                // Fallback to a mock IP for demo purposes
-                userIP = '192.168.1.1';
-            }
-
-            // Load usage data from localStorage
-            const storedUsage = localStorage.getItem(`usage_${userIP}`);
-            if (storedUsage) {
-                usageCount = parseInt(storedUsage);
-            }
-
-            // Load API key from localStorage
-            const storedApiKey = localStorage.getItem('gemini_api_key');
-            if (storedApiKey) {
-                geminiApiKey = storedApiKey;
-                apiKeyInput.value = '••••••••••••••••';
-                apiStatus.innerHTML = '<i class="fas fa-check-circle"></i> API key configured';
-                apiStatus.className = 'api-status valid';
-            }
-
-            // Check premium status
-            const premiumStatus = localStorage.getItem('premium_unlocked');
-            if (premiumStatus === 'true') {
-                isPremium = true;
-            }
-
-            updateCreditStatus();
-            updateGenerateButtonState();
-        }
-
+            // Initialize usage tracking
+            initializeUsageTracking();
+        });
+        
         function setupEventListeners() {
-            // Country change event
-            countrySelect.addEventListener('change', function() {
-                const countryCode = this.value;
-                if (countryCode && countryData[countryCode]) {
-                    languageInput.value = countryData[countryCode].language;
-                    currencyInput.value = countryData[countryCode].currency;
-                    currentCurrency = countryData[countryCode].currency;
-                    currentCurrencySymbol = countryData[countryCode].symbol;
-                    currentLanguage = countryData[countryCode].language;
-                    priceCurrency.textContent = countryData[countryCode].currency;
-                } else {
-                    languageInput.value = '';
-                    currencyInput.value = '';
-                    currentCurrency = 'USD';
-                    currentCurrencySymbol = '$';
-                    currentLanguage = 'English';
-                    priceCurrency.textContent = 'USD';
-                }
-            });
-
-            // Form submission
-            offerForm.addEventListener('submit', function(e) {
+            // File upload
+            fileUploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Enhanced drag and drop for file upload
+            fileUploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                generateOffers();
+                fileUploadArea.classList.add('drag-over');
             });
-
-            // Save API key button
-            saveApiKeyBtn.addEventListener('click', function() {
-                const apiKey = apiKeyInput.value.trim();
-                if (apiKey) {
-                    geminiApiKey = apiKey;
-                    localStorage.setItem('gemini_api_key', apiKey);
-                    apiKeyInput.value = '••••••••••••••••';
-                    apiStatus.innerHTML = '<i class="fas fa-check-circle"></i> API key configured';
-                    apiStatus.className = 'api-status valid';
-                    alert('API key saved successfully!');
-                } else {
-                    alert('Please enter a valid API key');
+            
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('drag-over');
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect();
                 }
             });
+            
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update tab contents
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Toggle options
+            toggleOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const group = option.parentElement;
+                    group.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                });
+            });
+            
+            // Generate button
+            generateBtn.addEventListener('click', generateSlips);
+            
+            // Upgrade button
+            upgradeBtn.addEventListener('click', () => {
+                paymentPopup.style.display = 'flex';
+            });
+            
+            // Close popup
+            closePopup.addEventListener('click', () => {
+                paymentPopup.style.display = 'none';
+            });
+            
+            // Unlock button in popup
+            unlockBtnPopup.addEventListener('click', verifyUnlockCode);
+            
+            // Update WhatsApp link with transaction ID
+            transactionIdInput.addEventListener('input', () => {
+                const transactionId = transactionIdInput.value.trim();
+                whatsappLink.href = `https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:%20${encodeURIComponent(transactionId)}`;
+            });
+            
+            // Preview navigation
+            prevSlipBtn.addEventListener('click', showPreviousSlip);
+            nextSlipBtn.addEventListener('click', showNextSlip);
+            
+            // Download all button
+            downloadAllBtn.addEventListener('click', downloadAllSlips);
+            
+            // Print button
+            printBtn.addEventListener('click', printSlips);
         }
-
-        function updateCreditStatus() {
-            const remaining = MAX_FREE_GENERATIONS - usageCount;
-            if (isPremium) {
-                creditText.textContent = 'Premium User (Unlimited)';
-                creditStatus.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
-                creditStatus.style.color = '#333';
+        
+        function handleFileSelect() {
+            if (fileInput.files.length === 0) return;
+            
+            uploadedFiles = Array.from(fileInput.files);
+            
+            // Show upload status
+            uploadStatus.classList.remove('hidden');
+            
+            // Process all files
+            let allContent = '';
+            let processedFiles = 0;
+            
+            uploadedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    allContent += e.target.result + '\n\n';
+                    processedFiles++;
+                    
+                    if (processedFiles === uploadedFiles.length) {
+                        // All files processed
+                        if (textInput) {
+                            textInput.value = allContent.trim();
+                        }
+                    }
+                };
+                
+                reader.readAsText(file);
+            });
+        }
+        
+        async function initializeUsageTracking() {
+            // Get user IP
+            await detectIP();
+            
+            // Get usage count from localStorage
+            const storedUsage = localStorage.getItem(`slipUsage_${userIP}`);
+            usageCount = storedUsage ? parseInt(storedUsage) : 0;
+            
+            // Check if user is unlocked
+            const isUnlocked = checkUnlockStatus();
+            
+            updateUsageDisplay(isUnlocked);
+        }
+        
+        async function detectIP() {
+            try {
+                // Try multiple IP detection services for better reliability
+                const ipServices = [
+                    'https://api.ipify.org?format=json',
+                    'https://api64.ipify.org?format=json',
+                    'https://ipinfo.io/json'
+                ];
+                
+                let ip = null;
+                
+                for (const service of ipServices) {
+                    try {
+                        const response = await fetch(service, { 
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            ip = data.ip || (service.includes('ipinfo') ? data.ip : null);
+                            if (ip) break;
+                        }
+                    } catch (e) {
+                        console.log(`IP service ${service} failed:`, e);
+                        continue;
+                    }
+                }
+                
+                // If all services fail, generate a random IP with enhanced fingerprinting
+                if (!ip) {
+                    ip = await generateFingerprintedIP();
+                }
+                
+                userIP = ip;
+            } catch (error) {
+                console.error('IP detection failed:', error);
+                userIP = await generateFingerprintedIP();
+            }
+        }
+        
+        async function generateFingerprintedIP() {
+            // Create a fingerprint based on browser properties
+            const fingerprint = [
+                navigator.userAgent,
+                navigator.language,
+                navigator.hardwareConcurrency || 'unknown',
+                screen.width,
+                screen.height,
+                screen.colorDepth,
+                new Date().getTimezoneOffset(),
+                !!navigator.cookieEnabled,
+                !!navigator.javaEnabled(),
+                navigator.platform
+            ].join('|');
+            
+            // Hash the fingerprint to create a consistent IP-like string
+            let hash = 0;
+            for (let i = 0; i < fingerprint.length; i++) {
+                const char = fingerprint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            
+            // Convert to IP format
+            const ipParts = [];
+            for (let i = 0; i < 4; i++) {
+                ipParts.push(Math.abs((hash >> (i * 8)) & 255));
+            }
+            
+            return ipParts.join('.');
+        }
+        
+        function checkUnlockStatus() {
+            const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
+            return unlockedUsers.includes(userIP);
+        }
+        
+        function updateUsageDisplay(isUnlocked) {
+            if (isUnlocked) {
+                usageInfo.innerHTML = '<span class="success">✨ Premium: Unlimited Slips Available</span>';
+                upgradePanel.classList.add('hidden');
             } else {
-                creditText.textContent = `${remaining} Free Generations Left`;
-                if (remaining <= 1) {
-                    creditStatus.style.background = 'linear-gradient(135deg, #FF6B6B, #EE5A24)';
+                const remaining = MAX_FREE_SLIPS - usageCount;
+                if (remaining > 0) {
+                    usageInfo.innerHTML = `<span>Free slips remaining: <strong>${remaining}/${MAX_FREE_SLIPS}</strong></span>`;
+                    upgradePanel.classList.add('hidden');
                 } else {
-                    creditStatus.style.background = 'linear-gradient(135deg, var(--primary), var(--primary-dark))';
+                    usageInfo.innerHTML = '<span class="warning">Free limit reached. Upgrade required.</span>';
+                    upgradePanel.classList.remove('hidden');
                 }
             }
         }
-
-        function updateGenerateButtonState() {
-            if (usageCount >= MAX_FREE_GENERATIONS && !isPremium) {
-                generateBtn.disabled = false; // Keep it enabled to show subscription popup
-                generateBtn.innerHTML = '<i class="fas fa-lock"></i> Upgrade to Generate';
-            } else {
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate AI Offers';
-            }
-        }
-
-        async function generateOffers() {
-            // Check if user has reached the limit
-            if (usageCount >= MAX_FREE_GENERATIONS && !isPremium) {
-                alert('You have reached your free generation limit. Please upgrade to premium for unlimited access.');
+        
+        function verifyUnlockCode() {
+            const code = unlockCodePopup.value.trim();
+            
+            if (!code) {
+                alert('Please enter an unlock code.');
                 return;
             }
-
-            // Show loading animation
-            loadingContainer.style.display = 'flex';
-            outputSection.style.display = 'none';
-
-            // Increment usage count
-            if (!isPremium) {
-                usageCount++;
-                localStorage.setItem(`usage_${userIP}`, usageCount.toString());
-                updateCreditStatus();
-                updateGenerateButtonState();
-            }
-
-            try {
-                // Call Gemini API to generate offers
-                await generateOffersWithGemini();
-                
-                loadingContainer.style.display = 'none';
-                outputSection.style.display = 'block';
-                
-                // Scroll to results
-                outputSection.scrollIntoView({ behavior: 'smooth' });
-            } catch (error) {
-                console.error('Error generating offers:', error);
-                loadingContainer.style.display = 'none';
-                alert('Failed to generate offers. Please try again.');
-            }
-        }
-
-        async function generateOffersWithGemini() {
-            const productName = document.getElementById('product-name').value;
-            const productDescription = document.getElementById('product-description').value;
-            const price = parseFloat(document.getElementById('price').value);
-            const country = countrySelect.options[countrySelect.selectedIndex].text;
             
-            // Get language-specific content for labels
-            const content = multiLanguageContent[currentLanguage] || multiLanguageContent.English;
+            // Check if code is valid
+            const validCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
+            const validCode = validCodes.find(c => c.code === code);
             
-            // Construct the prompt for Gemini
-            const prompt = `
-                You are an expert product offer creator and marketing specialist. 
-                Create 10 high-converting offers for the following product:
+            if (validCode) {
+                // Add user to unlocked users
+                const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
+                if (!unlockedUsers.includes(userIP)) {
+                    unlockedUsers.push(userIP);
+                    localStorage.setItem('unlockedUsers', JSON.stringify(unlockedUsers));
+                }
                 
-                Product Name: ${productName}
-                Product Description: ${productDescription}
-                Price: ${price} ${currentCurrency}
-                Target Country: ${country}
-                Language: ${currentLanguage}
+                updateUsageDisplay(true);
+                paymentPopup.style.display = 'none';
                 
-                For each offer, provide the following in ${currentLanguage}:
-                1. A compelling title/headline
-                2. 3 key analysis points explaining why this offer will convert well in ${country}
-                3. Estimated performance metrics (CTR, Conversion Rate, Projected Revenue)
-                4. Three price tiers (Basic, Standard, Premium) with appropriate pricing
-                5. A short persuasive ad copy
-                6. A confidence score (percentage) for how well this offer will perform
-                
-                Format the response as a JSON array with exactly 10 objects. Each object should have these properties:
-                - title
-                - analysisPoints (array of 3 strings)
-                - ctr (number between 1-15)
-                - conversion (number between 1-10)
-                - revenue (number between 1000-10000)
-                - basicPrice (number)
-                - standardPrice (number)
-                - premiumPrice (number)
-                - adCopy
-                - confidence (number between 70-95)
-                
-                Make sure all content is in ${currentLanguage} and culturally appropriate for ${country}.
-                Focus on creating offers that leverage local market trends, consumer behavior, and cultural nuances.
-                Ensure the offers create urgency, highlight value, and address specific pain points.
-            `;
-
-            // Call Gemini API or use mock data
-            let offers;
-            if (geminiApiKey) {
-                const response = await callGeminiAPI(prompt);
-                offers = parseGeminiResponse(response);
+                // Show success animation
+                usageInfo.innerHTML = '<span class="success">🎉 Successfully Unlocked! Enjoy unlimited premium features.</span>';
+                setTimeout(() => {
+                    updateUsageDisplay(true);
+                }, 3000);
             } else {
-                // Use mock data if no API key is provided
-                offers = generateMockOffers(productName, country, currentLanguage, price);
+                alert('Invalid unlock code. Please check and try again.');
+            }
+        }
+        
+        function parseCustomerData(text) {
+            // Split by blank lines (multiple newlines)
+            const entries = text.split(/\n\s*\n/);
+            const customers = [];
+            
+            entries.forEach(entry => {
+                if (entry.trim() === '') return;
+                
+                const lines = entry.split('\n').filter(line => line.trim() !== '');
+                const customer = {
+                    name: '',
+                    company: defaultCompanyInput.value || '',
+                    phone: '',
+                    email: '',
+                    address: '',
+                    product: '',
+                    price: '',
+                    note: '',
+                    orderId: generateOrderId()
+                };
+                
+                // Enhanced parsing with AI-like pattern detection
+                lines.forEach(line => {
+                    const cleanLine = line.trim();
+                    if (!cleanLine) return;
+                    
+                    // Email detection
+                    const emailMatch = cleanLine.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
+                    if (emailMatch && !customer.email) {
+                        customer.email = emailMatch[0];
+                    }
+                    
+                    // Company detection (look for Inc, LLC, Corp, etc.)
+                    const companyMatch = cleanLine.match(/(.+)\s+(Inc|LLC|Corp|Corporation|Ltd|Company|Co\.)/i);
+                    if (companyMatch && !customer.company) {
+                        customer.company = companyMatch[0];
+                    }
+                    
+                    // Phone detection
+                    const phoneMatch = cleanLine.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/);
+                    if (phoneMatch && !customer.phone) {
+                        customer.phone = phoneMatch[0];
+                    }
+                    
+                    // Price detection
+                    const priceMatch = cleanLine.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
+                    if (priceMatch && cleanLine.toLowerCase().includes('$') && !customer.price) {
+                        customer.price = priceMatch[0];
+                    }
+                    
+                    // Address-like patterns
+                    if ((cleanLine.includes('street') || cleanLine.includes('st') || cleanLine.includes('ave') || 
+                         cleanLine.includes('avenue') || cleanLine.includes('road') || cleanLine.includes('rd') ||
+                         cleanLine.includes('lane') || cleanLine.includes('ln') || cleanLine.includes('drive') || 
+                         cleanLine.includes('dr') || /\d{5}/.test(cleanLine)) && !customer.address) {
+                        customer.address = formatAddress(cleanLine);
+                    }
+                    
+                    // Product detection (if not price, email, phone, etc.)
+                    if (!customer.product && !emailMatch && !phoneMatch && !priceMatch && 
+                        !cleanLine.includes('@') && cleanLine.length > 3) {
+                        customer.product = cleanLine;
+                    }
+                    
+                    // Note detection (short lines, specific keywords)
+                    if ((cleanLine.toLowerCase().includes('note:') || 
+                         cleanLine.toLowerCase().includes('signature') ||
+                         cleanLine.toLowerCase().includes('gift') ||
+                         cleanLine.length < 30) && !customer.note) {
+                        customer.note = cleanLine;
+                    }
+                });
+                
+                // Fallback assignments
+                if (!customer.name && lines[0]) {
+                    customer.name = lines[0].split('•')[0].trim();
+                }
+                
+                if (!customer.product && lines.find(line => line.includes('$'))) {
+                    const priceLine = lines.find(line => line.includes('$'));
+                    customer.product = priceLine.split('$')[0].trim();
+                }
+                
+                // Validate that we have at least some customer data
+                if (customer.name || customer.address || customer.product) {
+                    customers.push(customer);
+                }
+            });
+            
+            return customers;
+        }
+        
+        function formatAddress(rawAddress) {
+            // Simple address formatting
+            let address = rawAddress
+                .replace(/\s+/g, ' ')
+                .replace(/(\d+)([A-Za-z])/g, '$1 $2')
+                .replace(/([A-Za-z])(\d+)/g, '$1 $2')
+                .replace(/\bSt\b/gi, 'Street')
+                .replace(/\bAve\b/gi, 'Avenue')
+                .replace(/\bRd\b/gi, 'Road')
+                .replace(/\bDr\b/gi, 'Drive')
+                .replace(/\bLn\b/gi, 'Lane')
+                .replace(/\bBlvd\b/gi, 'Boulevard');
+            
+            return address;
+        }
+        
+        function generateOrderId() {
+            return 'ORD' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 5).toUpperCase();
+        }
+        
+        function generateSlips() {
+            // Check if user has reached the limit
+            const isUnlocked = checkUnlockStatus();
+            if (!isUnlocked && usageCount >= MAX_FREE_SLIPS) {
+                alert('Free limit reached. Please upgrade to generate more slips.');
+                return;
             }
             
-            // Create offer cards
-            createOfferCards(offers, content);
-        }
-
-        async function callGeminiAPI(prompt) {
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API request failed with status ${response.status}`);
+            let inputText = '';
+            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+            
+            if (activeTab === 'upload' && uploadedFiles.length > 0) {
+                inputText = textInput.value;
+            } else if (activeTab === 'paste') {
+                inputText = textInput.value;
+            } else if (activeTab === 'bulk') {
+                inputText = bulkInput.value;
+            }
+            
+            if (!inputText.trim()) {
+                alert('Please enter customer data or upload files.');
+                return;
+            }
+            
+            const customers = parseCustomerData(inputText);
+            if (customers.length === 0) {
+                alert('No valid customer data found. Please check your input format.');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = generateBtn.innerHTML;
+            generateBtn.innerHTML = '<div class="loading"></div> Generating...';
+            generateBtn.disabled = true;
+            
+            // Update usage count if not unlocked
+            if (!isUnlocked) {
+                usageCount += customers.length;
+                localStorage.setItem(`slipUsage_${userIP}`, usageCount.toString());
+                updateUsageDisplay(false);
+            }
+            
+            // Generate slips after a short delay to show loading state
+            setTimeout(() => {
+                try {
+                    // Generate slip images
+                    generatedSlips = generateSlipImages(customers);
+                    
+                    // Show preview section
+                    previewSection.classList.remove('hidden');
+                    
+                    // Update preview display
+                    currentSlipIndex = 0;
+                    updatePreviewDisplay();
+                    
+                    // Reset button state
+                    generateBtn.innerHTML = originalText;
+                    generateBtn.disabled = false;
+                    
+                    // Show success message
+                    usageInfo.innerHTML = `<span class="success">✅ Generated ${customers.length} premium packaging slip(s)!</span>`;
+                    setTimeout(() => {
+                        updateUsageDisplay(isUnlocked);
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Slip Generation Error:', error);
+                    // Reset button state and show error
+                    generateBtn.innerHTML = originalText;
+                    generateBtn.disabled = false;
+                    usageInfo.innerHTML = `<span class="error">Error generating slips: ${error.message}</span>`;
+                    setTimeout(() => {
+                        updateUsageDisplay(isUnlocked);
+                    }, 3000);
                 }
-
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                console.error('Error calling Gemini API:', error);
-                // Fallback to mock data
-                const productName = document.getElementById('product-name').value;
-                const price = parseFloat(document.getElementById('price').value) || 100;
-                const country = countrySelect.options[countrySelect.selectedIndex].text;
-                return JSON.stringify(generateMockOffers(productName, country, currentLanguage, price));
+            }, 100);
+        }
+        
+        function generateSlipImages(customers) {
+            const slips = [];
+            
+            customers.forEach(customer => {
+                // Create a temporary canvas for each slip with high resolution
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = 1000; // High resolution for printing
+                tempCanvas.height = 1400;
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                // Draw the slip design
+                drawSlipDesign(tempCtx, customer, 1000, 1400);
+                
+                // Store the canvas data
+                slips.push({
+                    canvas: tempCanvas,
+                    customer: customer
+                });
+            });
+            
+            return slips;
+        }
+        
+        function drawSlipDesign(ctx, customer, width, height) {
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Header with gradient
+            const headerGradient = ctx.createLinearGradient(0, 0, width, 0);
+            headerGradient.addColorStop(0, '#6C63FF');
+            headerGradient.addColorStop(1, '#8B85FF');
+            ctx.fillStyle = headerGradient;
+            ctx.fillRect(0, 0, width, 240); // Larger header for high resolution
+            
+            // Add subtle pattern to header
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            for (let i = 0; i < width; i += 40) {
+                ctx.fillRect(i, 0, 2, height);
+            }
+            
+            // Header text
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 48px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('PACKAGING SLIP', width / 2, 100);
+            
+            ctx.font = '28px Inter';
+            ctx.fillText('Premium Shipping Document', width / 2, 160);
+            
+            // Body content
+            ctx.textAlign = 'left';
+            let yPos = 320;
+            
+            // Customer information
+            ctx.fillStyle = '#1D1D1F';
+            ctx.font = 'bold 32px Inter';
+            ctx.fillText('SHIP TO:', 80, yPos);
+            yPos += 50;
+            
+            ctx.font = '28px Inter';
+            if (customer.name) {
+                ctx.fillText(customer.name, 80, yPos);
+                yPos += 44;
+            }
+            
+            if (customer.company) {
+                ctx.fillText(customer.company, 80, yPos);
+                yPos += 44;
+            }
+            
+            if (customer.address) {
+                // Handle multi-line address
+                const addressLines = wrapText(ctx, customer.address, 80, yPos, width - 160, 36);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 36;
+                });
+            }
+            
+            if (customer.phone || customer.email) {
+                yPos += 20;
+                if (customer.phone) {
+                    ctx.fillText(`Phone: ${customer.phone}`, 80, yPos);
+                    yPos += 44;
+                }
+                if (customer.email) {
+                    ctx.fillText(`Email: ${customer.email}`, 80, yPos);
+                    yPos += 44;
+                }
+            }
+            
+            // Divider
+            yPos += 20;
+            ctx.strokeStyle = '#E5E5EA';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(80, yPos);
+            ctx.lineTo(width - 80, yPos);
+            ctx.stroke();
+            yPos += 40;
+            
+            // Order details
+            ctx.font = 'bold 32px Inter';
+            ctx.fillText('ORDER DETAILS:', 80, yPos);
+            yPos += 50;
+            
+            ctx.font = '28px Inter';
+            if (customer.product) {
+                ctx.fillText('Product:', 80, yPos);
+                ctx.fillText(customer.product, 240, yPos);
+                yPos += 44;
+            }
+            
+            if (customer.price) {
+                ctx.fillText('Price:', 80, yPos);
+                ctx.fillText(customer.price, 240, yPos);
+                yPos += 44;
+            }
+            
+            // QR Code area
+            yPos += 40;
+            ctx.fillStyle = '#F8FAFF';
+            ctx.fillRect(width - 320, yPos, 240, 240);
+            
+            // Generate and draw QR code
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                ctx.drawImage(qrCode, width - 320, yPos, 240, 240);
+            }
+            
+            ctx.fillStyle = '#6C63FF';
+            ctx.font = 'bold 24px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('SCAN TO TRACK', width - 200, yPos + 280);
+            
+            // Notes
+            if (customer.note) {
+                yPos += 320;
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#FF9500';
+                ctx.font = 'bold 28px Inter';
+                ctx.fillText('Special Instructions:', 80, yPos);
+                yPos += 44;
+                ctx.fillStyle = '#1D1D1F';
+                ctx.font = '28px Inter';
+                ctx.fillText(customer.note, 80, yPos);
             }
         }
-
-        function parseGeminiResponse(responseText) {
+        
+        function generateQRCode(text) {
             try {
-                // Try to extract JSON from the response
-                const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
+                const typeNumber = 4;
+                const errorCorrectionLevel = 'L';
+                const qr = qrcode(typeNumber, errorCorrectionLevel);
+                qr.addData(text);
+                qr.make();
+                
+                const cellSize = 8; // Larger cells for high resolution
+                const margin = 4;
+                const size = qr.getModuleCount() * cellSize + margin * 2;
+                
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Fill background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, size, size);
+                
+                // Draw QR code
+                ctx.fillStyle = '#000000';
+                for (let row = 0; row < qr.getModuleCount(); row++) {
+                    for (let col = 0; col < qr.getModuleCount(); col++) {
+                        if (qr.isDark(row, col)) {
+                            ctx.fillRect(
+                                col * cellSize + margin,
+                                row * cellSize + margin,
+                                cellSize,
+                                cellSize
+                            );
+                        }
+                    }
+                }
+                
+                return canvas;
+            } catch (e) {
+                console.error('QR Code generation failed:', e);
+                return null;
+            }
+        }
+        
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const width = ctx.measureText(currentLine + ' ' + word).width;
+                if (width < maxWidth) {
+                    currentLine += ' ' + word;
                 } else {
-                    throw new Error('No JSON found in response');
+                    lines.push({text: currentLine, x: x, y: y});
+                    y += lineHeight;
+                    currentLine = word;
                 }
-            } catch (error) {
-                console.error('Error parsing Gemini response:', error);
-                // Return mock data if parsing fails
-                const productName = document.getElementById('product-name').value;
-                const price = parseFloat(document.getElementById('price').value) || 100;
-                const country = countrySelect.options[countrySelect.selectedIndex].text;
-                return generateMockOffers(productName, country, currentLanguage, price);
+            }
+            lines.push({text: currentLine, x: x, y: y});
+            return lines;
+        }
+        
+        function updatePreviewDisplay() {
+            if (generatedSlips.length === 0) return;
+            
+            // Update slip count display
+            currentSlipDisplay.textContent = currentSlipIndex + 1;
+            totalSlipsDisplay.textContent = generatedSlips.length;
+            
+            // Update navigation buttons
+            prevSlipBtn.disabled = currentSlipIndex === 0;
+            nextSlipBtn.disabled = currentSlipIndex === generatedSlips.length - 1;
+            
+            // Draw the current slip on the preview canvas
+            const currentSlip = generatedSlips[currentSlipIndex];
+            ctx.clearRect(0, 0, slipPreview.width, slipPreview.height);
+            ctx.drawImage(currentSlip.canvas, 0, 0, slipPreview.width, slipPreview.height);
+        }
+        
+        function showPreviousSlip() {
+            if (currentSlipIndex > 0) {
+                currentSlipIndex--;
+                updatePreviewDisplay();
             }
         }
-
-        function generateMockOffers(productName, country, language, basePrice) {
-            // Generate mock offers as fallback
-            const mockOffers = [];
+        
+        function showNextSlip() {
+            if (currentSlipIndex < generatedSlips.length - 1) {
+                currentSlipIndex++;
+                updatePreviewDisplay();
+            }
+        }
+        
+        function downloadAllSlips() {
+            if (generatedSlips.length === 0) return;
             
-            // Language-specific content for mock offers
-            const languageOffers = {
-                English: {
-                    titles: [
-                        "Limited Time Exclusive Offer",
-                        "Premium Bundle Deal",
-                        "Early Bird Special",
-                        "Flash Sale Discount",
-                        "Members-Only Pricing",
-                        "Buy One Get One Free",
-                        "Seasonal Promotion",
-                        "New Customer Welcome Deal",
-                        "Limited Stock Clearance",
-                        "VIP Access Package"
-                    ],
-                    analysisPoints: [
-                        "Taps into scarcity mindset creating urgency",
-                        "Appeals to value-conscious consumers",
-                        "Builds brand loyalty through exclusive access",
-                        "Encourages immediate purchase decisions",
-                        "Targets specific customer pain points effectively",
-                        "Leverages social proof and FOMO (Fear Of Missing Out)",
-                        "Optimized for mobile conversion rates",
-                        "Aligns with current market trends and demand"
-                    ],
-                    adCopies: [
-                        "Don't miss this exclusive opportunity! Limited time offer for our premium product.",
-                        "Transform your experience with our special bundle. Act now before it's gone!",
-                        "Be the first to enjoy our revolutionary product at an unbeatable price.",
-                        "Flash sale! Get amazing discounts on our top-rated products for a limited time.",
-                        "Join our elite members club and unlock special pricing and benefits today."
-                    ]
-                },
-                German: {
-                    titles: [
-                        "Exklusivangebot für kurze Zeit",
-                        "Premium-Paketangebot",
-                        "Frühbucher-Angebot",
-                        "Flash-Sale-Rabatt",
-                        "Nur für Mitglieder",
-                        "Kauf eins, bekomm eins gratis",
-                        "Saisonale Aktion",
-                        "Willkommensangebot für Neukunden",
-                        "Limited Stock Clearance",
-                        "VIP-Zugangspaket"
-                    ],
-                    analysisPoints: [
-                        "Spricht die Knappheitsmentalität an und schafft Dringlichkeit",
-                        "Spricht preisbewusste Verbraucher an",
-                        "Baut Markenloyalität durch exklusiven Zugang auf",
-                        "Fördert sofortige Kaufentscheidungen",
-                        "Zielt effektiv auf spezifische Kundenprobleme ab",
-                        "Nutzt Social Proof und FOMO (Fear Of Missing Out)",
-                        "Optimiert für mobile Conversion-Rates",
-                        "Stimmt mit aktuellen Markttrends und -nachfrage überein"
-                    ],
-                    adCopies: [
-                        "Verpassen Sie nicht diese exklusive Gelegenheit! Zeitlich begrenztes Angebot für unser Premium-Produkt.",
-                        "Verwandeln Sie Ihr Erlebnis mit unserem Sonderpaket. Handeln Sie jetzt, bevor es weg ist!",
-                        "Seien Sie der Erste, der unser revolutionäres Produkt zu einem unschlagbaren Preis genießt.",
-                        "Flash-Sale! Erhalten Sie erstaunliche Rabatte auf unsere hoch bewerteten Produkte für kurze Zeit.",
-                        "Treten Sie unserem exklusiven Mitgliederclub bei und schalten Sie noch heute Sonderpreise und Vorteile frei."
-                    ]
-                },
-                French: {
-                    titles: [
-                        "Offre exclusive limitée dans le temps",
-                        "Offre groupée premium",
-                        "Offre early bird",
-                        "Remise flash sale",
-                        "Tarification réservée aux membres",
-                        "Achetez un produit, obtenez-en un gratuit",
-                        "Promotion saisonnière",
-                        "Offre de bienvenue nouveau client",
-                        "Liquidation stock limité",
-                        "Forfait accès VIP"
-                    ],
-                    analysisPoints: [
-                        "Touche à la mentalité de rareté créant de l'urgence",
-                        "Attire les consommateurs soucieux de la valeur",
-                        "Fidélise la marque grâce à un accès exclusif",
-                        "Encourage les décisions d'achat immédiates",
-                        "Cible efficacement les points douloureux spécifiques des clients",
-                        "Tire parti de la preuve sociale et de la FOMO (Fear Of Missing Out)",
-                        "Optimisé pour les taux de conversion mobiles",
-                        "S'aligne sur les tendances et la demande actuelles du marché"
-                    ],
-                    adCopies: [
-                        "Ne manquez pas cette opportunité exclusive ! Offre limitée dans le temps pour notre produit premium.",
-                        "Transformez votre expérience avec notre pack spécial. Agissez maintenant avant qu'il ne soit trop tard !",
-                        "Soyez le premier à profiter de notre produit révolutionnaire à un prix imbattable.",
-                        "Vente flash ! Obtenez des remises incroyables sur nos produits les mieux notés pour une durée limitée.",
-                        "Rejoignez notre club d'élite et débloquez des tarifs et avantages spéciaux dès aujourd'hui."
-                    ]
-                },
-                Spanish: {
-                    titles: [
-                        "Oferta exclusiva por tiempo limitado",
-                        "Oferta de paquete premium",
-                        "Oferta de early bird",
-                        "Descuento de venta flash",
-                        "Precios solo para miembros",
-                        "Compra uno y recibe otro gratis",
-                        "Promoción de temporada",
-                        "Oferta de bienvenida para nuevos clientes",
-                        "Liquidación de stock limitado",
-                        "Paquete de acceso VIP"
-                    ],
-                    analysisPoints: [
-                        "Aprovecha la mentalidad de escasez creando urgencia",
-                        "Atrae a consumidores conscientes del valor",
-                        "Construye lealtad a la marca a través del acceso exclusivo",
-                        "Fomenta decisiones de compra inmediatas",
-                        "Se enfoca efectivamente en puntos problemáticos específicos del cliente",
-                        "Aprovecha la prueba social y el FOMO (Fear Of Missing Out)",
-                        "Optimizado para tasas de conversión móviles",
-                        "Se alinea con las tendencias y demandas actuales del mercado"
-                    ],
-                    adCopies: [
-                        "¡No te pierdas esta oportunidad exclusiva! Oferta por tiempo limitado para nuestro producto premium.",
-                        "Transforma tu experiencia con nuestro paquete especial. ¡Actúa ahora antes de que se agote!",
-                        "Sé el primero en disfrutar de nuestro producto revolucionario a un precio imbatible.",
-                        "¡Venta flash! Obtén descuentos increíbles en nuestros productos mejor valorados por tiempo limitado.",
-                        "Únete a nuestro club de élite y desbloquea precios y beneficios especiales hoy mismo."
-                    ]
-                },
-                Japanese: {
-                    titles: [
-                        "期間限定特別オファー",
-                        "プレミアムバンドルセール",
-                        "早期割引特典",
-                        "フラッシュセール割引",
-                        "会員限定価格",
-                        "1つ購入で1つ無料",
-                        "季節限定プロモーション",
-                        "新規顧客歓迎特典",
-                        "在庫限りセール",
-                        "VIPアクセスポッケージ"
-                    ],
-                    analysisPoints: [
-                        "希少性マインドセットを活用して緊急性を創出",
-                        "価格意識の高い消費者にアピール",
-                        "限定アクセスによるブランドロイヤルティの構築",
-                        "即座の購入決定を促進",
-                        "特定の顧客の悩みに効果的に対応",
-                        "ソーシャルプルーフとFOMOを活用",
-                        "モバイル変換率向けに最適化",
-                        "現在の市場トレンドと需要に適合"
-                    ],
-                    adCopies: [
-                        "この限定機会をお見逃しなく！プレミアム製品の期間限定オファーです。",
-                        "特別バンドルで体験を変えましょう。なくなる前に今すぐ行動を！",
-                        "画期的な製品を破格の価格でお楽しみいただけます。",
-                        "フラッシュセール！高評価製品が期間限定で驚きの割引価格に。",
-                        "エリート会員クラブに参加して、特別価格と特典を今すぐ解放しましょう。"
-                    ]
-                },
-                Korean: {
-                    titles: [
-                        "한정 시간 특별 오퍼",
-                        "프리미엄 번들 딜",
-                        "얼리버드 특별 할인",
-                        "플래시 세일 할인",
-                        "회원 전용 가격",
-                        "1+1 행사",
-                        "시즌별 프로모션",
-                        "신규 고객 환영 혜택",
-                        "한정 수량 클리어런스",
-                        "VIP 액세스 패키지"
-                    ],
-                    analysisPoints: [
-                        "희소성 마인드셋을 활용하여 긴급성 창출",
-                        "가치 중심 소비자에게 어필",
-                        "독점 액세스를 통한 브랜드 충성도 구축",
-                        "즉각적인 구매 결정 장려",
-                        "특정 고객 페인 포인트에 효과적으로 대응",
-                        "소셜 증명과 FOMO 활용",
-                        "모바일 전환율에 최적화",
-                        "현재 시장 트렌드와 수요에 부합"
-                    ],
-                    adCopies: [
-                        "이 독점 기회를 놓치지 마세요! 프리미엄 제품에 대한 한정 시간 오퍼입니다.",
-                        "특별 번들로 경험을 변화시키세요. 품절 전에 지금行动하세요!",
-                        "우리의 혁신적인 제품을 무적의 가격으로 가장 먼저 즐기세요.",
-                        "플래시 세일! 최고 평점 제품에 대한 놀라운 할인을 한정 시간 동안 받으세요.",
-                        "엘리트 회원 클럽에 가입하고 특별 가격과 혜택을 오늘 바로 잠금 해제하세요."
-                    ]
-                },
-                Portuguese: {
-                    titles: [
-                        "Oferta Exclusiva por Tempo Limitado",
-                        "Pacote Premium",
-                        "Oferta Early Bird",
-                        "Desconto de Liquidação Relâmpago",
-                        "Preços Exclusivos para Membros",
-                        "Compre 1 e Leve 2",
-                        "Promoção Sazonal",
-                        "Oferta de Boas-Vindas para Novos Clientes",
-                        "Liquidação de Estoque Limitado",
-                        "Pacote de Acesso VIP"
-                    ],
-                    analysisPoints: [
-                        "Explora a mentalidade de escassez criando urgência",
-                        "Atrai consumidores conscientes do valor",
-                        "Constrói lealdade à marca através de acesso exclusivo",
-                        "Incentiva decisões de compra imediatas",
-                        "Segmenta efetivamente pontos problemáticos específicos do cliente",
-                        "Aproveita a prova social e o FOMO (Fear Of Missing Out)",
-                        "Otimizado para taxas de conversão móveis",
-                        "Alinha-se com as tendências e demandas atuais do mercado"
-                    ],
-                    adCopies: [
-                        "Não perca esta oportunidade exclusiva! Oferta por tempo limitado para nosso produto premium.",
-                        "Transforme sua experiência com nosso pacote especial. Aja agora antes que acabe!",
-                        "Seja o primeiro a desfrutar do nosso produto revolucionário por um preço imbatível.",
-                        "Liquidação relâmpago! Obtenha descontos incríveis em nossos produtos mais bem avaliados por tempo limitado.",
-                        "Junte-se ao nosso clube de elite e desbloqueie preços e benefícios especiais hoje mesmo."
-                    ]
-                },
-                Hindi: {
-                    titles: [
-                        "सीमित समय विशेष ऑफर",
-                        "प्रीमियम बंडल डील",
-                        "अर्ली बर्ड स्पेशल",
-                        "फ्लैश सेल छूट",
-                        "केवल सदस्यों के लिए मूल्य",
-                        "एक खरीदें एक मुफ्त पाएं",
-                        "मौसमी प्रचार",
-                        "नए ग्राहक स्वागत ऑफर",
-                        "सीमित स्टॉक क्लीयरेंस",
-                        "वीआईपी एक्सेस पैकेज"
-                    ],
-                    analysisPoints: [
-                        "तात्कालिकता पैदा करके कमी की मानसिकता का उपयोग करता है",
-                        "मूल्य-सचेत उपभोक्ताओं को आकर्षित करता है",
-                        "विशेष पहुंच के माध्यम से ब्रांड वफादारी बनाता है",
-                        "तत्काल खरीद निर्णयों को प्रोत्साहित करता है",
-                        "विशिष्ट ग्राहक दर्द बिंदुओं को प्रभावी ढंग से लक्षित करता है",
-                        "सोशल प्रूफ और FOMO (Fear Of Missing Out) का लाभ उठाता है",
-                        "मोबाइल रूपांतरण दरों के लिए अनुकूलित",
-                        "वर्तमान बाजार रुझानों और मांग के साथ संरेखित"
-                    ],
-                    adCopies: [
-                        "यह विशेष अवसर मत छोड़ें! हमारे प्रीमियम उत्पाद के लिए सीमित समय का ऑफर।",
-                        "हमारे विशेष बंडल के साथ अपने अनुभव को बदलें। खत्म होने से पहले अभी कार्रवाई करें!",
-                        "अनूठी कीमत पर हमारे क्रांतिकारी उत्पाद का आनंद लेने वाले पहले व्यक्ति बनें।",
-                        "फ्लैश सेल! सीमित समय के लिए हमारे शीर्ष-रेटेड उत्पादों पर अद्भुत छूट प्राप्त करें।",
-                        "हमारे अभिजात वर्ग के सदस्य क्लब में शामिल हों और आज ही विशेष मूल्य और लाभ अनलॉक करें।"
-                    ]
-                },
-                Bengali: {
-                    titles: [
-                        "সীমিত সময় এক্সক্লুসিভ অফার",
-                        "প্রিমিয়াম বান্ডিল ডিল",
-                        "আর্লি বার্ড স্পেশাল",
-                        "ফ্ল্যাশ সেল ডিসকাউন্ট",
-                        "শুধুমাত্র সদস্যদের জন্য মূল্য",
-                        "একটি কিনলে একটি বিনামূল্যে পান",
-                        "মৌসুমী প্রচার",
-                        "নতুন গ্রাহক স্বাগতম অফার",
-                        "সীমিত স্টক ক্লিয়ারেন্স",
-                        "ভিআইপি অ্যাক্সেস প্যাকেজ"
-                    ],
-                    analysisPoints: [
-                        "জরুরিতা তৈরি করে স্বল্পতার মানসিকতা কাজে লাগায়",
-                        "মূল্য-সচেতন ভোক্তাদের আকর্ষণ করে",
-                        "এক্সক্লুসিভ অ্যাক্সেসের মাধ্যমে ব্র্যান্ড লয়্যাল্টি গড়ে তোলে",
-                        "তাৎক্ষণিক ক্রয় সিদ্ধান্তকে উত্সাহিত করে",
-                        "নির্দিষ্ট গ্রাহকের ব্যথার পয়েন্টগুলিকে কার্যকরভাবে টার্গেট করে",
-                        "সামাজিক প্রমাণ এবং FOMO (Fear Of Missing Out) কাজে লাগায়",
-                        "মোবাইল কনভার্শন রেটের জন্য অপ্টিমাইজড",
-                        "বর্তমান বাজার ট্রেন্ড এবং চাহিদার সাথে সামঞ্জস্যপূর্ণ"
-                    ],
-                    adCopies: [
-                        "এই এক্সক্লুসিভ সুযোগ মিস করবেন না! হমার প্রিমিয়াম পণ্যের জন্য সীমিত সময়ের অফার।",
-                        "আমাদের বিশেষ বান্ডিল দিয়ে আপনার অভিজ্ঞতা রূপান্তর করুন। শেষ হওয়ার আগে এখনই কাজ করুন!",
-                        "একটি অপরাজেয় দামে আমাদের বিপ্লবী পণ্য উপভোগ করার প্রথম ব্যক্তি হন।",
-                        "ফ্ল্যাশ সেল! সীমিত সময়ের জন্য আমাদের শীর্ষ-রেটেড পণ্যগুলিতে আশ্চর্যজনক ছাড় পান।",
-                        "আমাদের এলিট মেম্বার ক্লাবে যোগ দিন এবং আজই বিশেষ মূল্য এবং সুবিধা আনলক করুন।"
-                    ]
-                },
-                Italian: {
-                    titles: [
-                        "Offerta Esclusiva a Tempo Limitato",
-                        "Pacchetto Premium",
-                        "Offerta Early Bird",
-                        "Sconto Flash Sale",
-                        "Prezzi Solo per Membri",
-                        "Acquista Uno e Ricevi Uno Gratis",
-                        "Promozione Stagionale",
-                        "Offerta di Benvenuto per Nuovi Clienti",
-                        "Liquidazione Stock Limitato",
-                        "Pacchetto Accesso VIP"
-                    ],
-                    analysisPoints: [
-                        "Sfrutta la mentalità di scarsità creando urgenza",
-                        "Attira consumatori attenti al valore",
-                        "Costruisce fedeltà al marchio attraverso l'accesso esclusivo",
-                        "Incoraggia decisioni di acquisto immediate",
-                        "Mira efficacemente a specifici punti deboli del cliente",
-                        "Sfrutta la prova sociale e il FOMO (Fear Of Missing Out)",
-                        "Ottimizzato per i tassi di conversione mobile",
-                        "Si allinea con le tendenze e le richieste attuali del mercato"
-                    ],
-                    adCopies: [
-                        "Non perdere questa opportunità esclusiva! Offerta a tempo limitato per il nostro prodotto premium.",
-                        "Trasforma la tua esperienza con il nostro pacchetto speciale. Agisci ora prima che sia finito!",
-                        "Sii il primo a goderti il nostro prodotto rivoluzionario a un prezzo imbattibile.",
-                        "Flash sale! Ottieni sconti incredibili sui nostri prodotti meglio valutati per un tempo limitato.",
-                        "Unisciti al nostro club d'élite e sblocca prezzi e vantaggi speciali oggi stesso."
-                    ]
-                }
-            };
+            // Show loading state on download button
+            const originalText = downloadAllBtn.innerHTML;
+            downloadAllBtn.innerHTML = '<div class="loading"></div> Preparing...';
+            downloadAllBtn.disabled = true;
             
-            const offersData = languageOffers[language] || languageOffers.English;
+            // Check output format
+            const isPDF = document.querySelector('[data-format="pdf"]').classList.contains('active');
             
-            for (let i = 0; i < 10; i++) {
-                mockOffers.push({
-                    title: offersData.titles[i] || `High-Converting Offer ${i+1}`,
-                    analysisPoints: [
-                        offersData.analysisPoints[i % offersData.analysisPoints.length],
-                        offersData.analysisPoints[(i + 2) % offersData.analysisPoints.length],
-                        offersData.analysisPoints[(i + 4) % offersData.analysisPoints.length]
-                    ],
-                    ctr: (Math.random() * 10 + 2).toFixed(1),
-                    conversion: (Math.random() * 5 + 1).toFixed(1),
-                    revenue: Math.floor(Math.random() * 5000 + 1000),
-                    basicPrice: (basePrice * 0.7).toFixed(2),
-                    standardPrice: basePrice.toFixed(2),
-                    premiumPrice: (basePrice * 1.5).toFixed(2),
-                    adCopy: offersData.adCopies[i % offersData.adCopies.length],
-                    confidence: Math.floor(Math.random() * 30 + 70)
+            if (isPDF) {
+                generatePDF();
+            } else {
+                // Download all PNGs
+                setTimeout(() => {
+                    let downloaded = 0;
+                    
+                    // Download each slip
+                    generatedSlips.forEach((slip, index) => {
+                        setTimeout(() => {
+                            const link = document.createElement('a');
+                            link.download = `slip-${index + 1}.png`;
+                            link.href = slip.canvas.toDataURL('image/png', 1.0); // High quality
+                            link.click();
+                            downloaded++;
+                            
+                            // If all downloaded, show success message
+                            if (downloaded === generatedSlips.length) {
+                                downloadAllBtn.innerHTML = originalText;
+                                downloadAllBtn.disabled = false;
+                                
+                                // Show success message
+                                usageInfo.innerHTML = `<span class="success">✅ Downloaded ${downloaded} slip(s)!</span>`;
+                                setTimeout(() => {
+                                    const isUnlocked = checkUnlockStatus();
+                                    updateUsageDisplay(isUnlocked);
+                                }, 3000);
+                            }
+                        }, index * 100); // Small delay to avoid browser blocking multiple downloads
+                    });
+                }, 500);
+            }
+        }
+        
+        function generatePDF() {
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
                 });
+                
+                // Generate PDF for each customer
+                generatedSlips.forEach((slip, index) => {
+                    if (index > 0) {
+                        doc.addPage();
+                    }
+                    
+                    // Add the slip image to PDF
+                    const imgData = slip.canvas.toDataURL('image/jpeg', 1.0);
+                    doc.addImage(imgData, 'JPEG', 10, 10, 190, 0);
+                });
+                
+                // Save the PDF
+                doc.save(`packaging-slips-${new Date().toISOString().slice(0, 10)}.pdf`);
+                
+                // Reset button state
+                downloadAllBtn.innerHTML = originalText;
+                downloadAllBtn.disabled = false;
+                
+                // Show success message
+                usageInfo.innerHTML = `<span class="success">✅ Downloaded PDF with ${generatedSlips.length} slip(s)!</span>`;
+                setTimeout(() => {
+                    const isUnlocked = checkUnlockStatus();
+                    updateUsageDisplay(isUnlocked);
+                }, 3000);
+                
+            } catch (error) {
+                console.error('PDF Generation Error:', error);
+                // Reset button state and show error
+                downloadAllBtn.innerHTML = originalText;
+                downloadAllBtn.disabled = false;
+                usageInfo.innerHTML = `<span class="error">Error generating PDF: ${error.message}</span>`;
             }
-            
-            return mockOffers;
         }
-
-        function createOfferCards(offers, content) {
-            // Clear previous offers
-            offersContainer.innerHTML = '';
-
-            // Create offer cards from the API response
-            offers.forEach((offer, i) => {
-                const offerCard = document.createElement('div');
-                offerCard.className = 'offer-card';
-                offerCard.style.animationDelay = `${i * 0.1}s`;
-
-                offerCard.innerHTML = `
-                    <h3 class="offer-title">
-                        <i class="fas fa-bullseye"></i> ${offer.title}
-                        <span class="language-badge">${currentLanguage}</span>
-                    </h3>
-                    <ul class="analysis-list">
-                        ${offer.analysisPoints.map(point => `<li>${point}</li>`).join('')}
-                    </ul>
-                    <div class="performance-metrics">
-                        <div class="metric">
-                            <div class="metric-value">${offer.ctr}%</div>
-                            <div class="metric-label">${content.metricLabels.ctr}</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">${offer.conversion}%</div>
-                            <div class="metric-label">${content.metricLabels.conversion}</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">${formatCurrency(offer.revenue, currentCurrency, currentCurrencySymbol)}</div>
-                            <div class="metric-label">${content.metricLabels.revenue}</div>
-                        </div>
-                    </div>
-                    <div class="price-tiers">
-                        <div class="tier">
-                            <div class="tier-name">${content.tierNames.basic}</div>
-                            <div class="tier-price">${formatCurrency(offer.basicPrice, currentCurrency, currentCurrencySymbol)}</div>
-                        </div>
-                        <div class="tier">
-                            <div class="tier-name">${content.tierNames.standard}</div>
-                            <div class="tier-price">${formatCurrency(offer.standardPrice, currentCurrency, currentCurrencySymbol)}</div>
-                        </div>
-                        <div class="tier">
-                            <div class="tier-name">${content.tierNames.premium}</div>
-                            <div class="tier-price">${formatCurrency(offer.premiumPrice, currentCurrency, currentCurrencySymbol)}</div>
-                        </div>
-                    </div>
-                    <div class="ad-copy">${offer.adCopy}</div>
-                    <div class="confidence-score">
-                        <span>${content.confidenceLabel}</span>
-                        <div class="confidence-bar">
-                            <div class="confidence-fill" style="width: ${offer.confidence}%"></div>
-                        </div>
-                        <span>${offer.confidence}%</span>
+        
+        function printSlips() {
+            if (generatedSlips.length === 0) return;
+            
+            // Create a print-friendly HTML page
+            const printWindow = window.open('', '_blank');
+            
+            // Create a clean print layout with only the slips
+            let printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print Slipzy Packaging Slips</title>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            margin: 0; 
+                            padding: 0;
+                        }
+                        .slip-container {
+                            page-break-after: always;
+                            margin: 0;
+                            padding: 0;
+                            width: 100%;
+                        }
+                        .slip-container:last-child {
+                            page-break-after: avoid;
+                        }
+                        .slip-image {
+                            width: 100%;
+                            height: auto;
+                        }
+                        @media print {
+                            body { margin: 0; padding: 0; }
+                            .slip-container { margin: 0; padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+            `;
+            
+            // Add each slip to the print page
+            generatedSlips.forEach((slip, index) => {
+                printContent += `
+                    <div class="slip-container">
+                        <img class="slip-image" src="${slip.canvas.toDataURL('image/png', 1.0)}" alt="Packaging Slip ${index + 1}">
                     </div>
                 `;
-
-                offersContainer.appendChild(offerCard);
             });
-        }
-
-        function formatCurrency(amount, currency, symbol) {
-            // Simple currency formatting for demo
-            const formatters = {
-                USD: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }),
-                GBP: new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }),
-                EUR: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
-                JPY: new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }),
-                KRW: new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }),
-                BRL: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }),
-                MXN: new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }),
-                INR: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }),
-                AUD: new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }),
-                CAD: new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }),
-                BDT: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT' })
+            
+            printContent += '</body></html>';
+            
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            
+            // Wait for images to load then print
+            printWindow.onload = function() {
+                setTimeout(() => {
+                    printWindow.print();
+                    // Close the print window after printing
+                    setTimeout(() => {
+                        printWindow.close();
+                    }, 500);
+                }, 500);
             };
-
-            if (formatters[currency]) {
-                return formatters[currency].format(amount);
-            }
-
-            // Fallback formatting
-            return `${symbol} ${parseFloat(amount).toFixed(2)}`;
         }
     </script>
 </body>
