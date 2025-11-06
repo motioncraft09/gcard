@@ -901,20 +901,6 @@
             transform: none !important;
             box-shadow: var(--shadow) !important;
         }
-        
-        /* Security badge */
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(52, 199, 89, 0.1);
-            color: #34C759;
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(52, 199, 89, 0.2);
-        }
     </style>
 </head>
 <body>
@@ -963,9 +949,9 @@
 
     <div class="container">
         <div class="header">
-            <div class="logo">Slipzy <span class="security-badge">🔒 Encrypted</span></div>
+            <div class="logo">Slipzy</div>
             <!-- Admin Panel link -->
-            <a href="admin.html" class="admin-link" target="_blank">contact</a>
+            <a href="admin.html" class="admin-link" target="_blank">Admin Panel</a>
         </div>
 
         <!-- Main App -->
@@ -975,7 +961,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M13 2L3 14h6l-4 8 12-12h-6l4-8z"/>
                     </svg>
-                    ULTRA SECURE PREMIUM PACKAGING SLIPS
+                    ULTRA PREMIUM PACKAGING SLIPS
                 </div>
                 <h1>Slipzy</h1>
                 <p>Transform multiple orders into beautiful, printable packaging slips with bulk PNG output</p>
@@ -1211,262 +1197,11 @@ note: sig req"></textarea>
         </div>
 
         <footer class="footer">
-            <p>Slipzy • Ultra Secure Premium Packaging Slips • Encrypted Usage Tracking • © 2024</p>
+            <p>Slipzy • Ultra Premium Packaging Slips • Bulk PNG Output • Modern Design • © 2024</p>
         </footer>
     </div>
 
     <script>
-        // Advanced Encryption System
-        class SecureEncryption {
-            constructor() {
-                this.key = null;
-                this.iv = null;
-                this.salt = this.generateSalt();
-                this.initializeEncryption();
-            }
-            
-            // Generate random salt for key derivation
-            generateSalt() {
-                const salt = new Uint8Array(16);
-                crypto.getRandomValues(salt);
-                return salt;
-            }
-            
-            // Initialize encryption system
-            async initializeEncryption() {
-                await this.deriveKey();
-                this.iv = crypto.getRandomValues(new Uint8Array(12));
-            }
-            
-            // Derive encryption key from master key and salt
-            async deriveKey() {
-                const masterKey = this.getMasterKey();
-                const encoder = new TextEncoder();
-                const keyMaterial = await crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(masterKey),
-                    'PBKDF2',
-                    false,
-                    ['deriveKey']
-                );
-                
-                this.key = await crypto.subtle.deriveKey(
-                    {
-                        name: 'PBKDF2',
-                        salt: this.salt,
-                        iterations: 100000,
-                        hash: 'SHA-256'
-                    },
-                    keyMaterial,
-                    { name: 'AES-GCM', length: 256 },
-                    false,
-                    ['encrypt', 'decrypt']
-                );
-            }
-            
-            // Get master key (obfuscated)
-            getMasterKey() {
-                // Obfuscated key components
-                const parts = [
-                    'c2xpcHp5X3NlY3VyZV9rZXlf',
-                    'MjAyNF9lbmNyeXB0aW9uX3N5',
-                    'c3RlbV92MV9wcmVtaXVtX3Ns',
-                    'aXBzX2FkbWluX2NvbnRyb2w='
-                ];
-                
-                // Decode and combine
-                let key = '';
-                parts.forEach(part => {
-                    key += atob(part);
-                });
-                
-                // Add dynamic component based on domain
-                key += window.location.hostname;
-                
-                return key;
-            }
-            
-            // Encrypt data
-            async encrypt(data) {
-                const encoder = new TextEncoder();
-                const encoded = encoder.encode(JSON.stringify(data));
-                
-                const encrypted = await crypto.subtle.encrypt(
-                    {
-                        name: 'AES-GCM',
-                        iv: this.iv
-                    },
-                    this.key,
-                    encoded
-                );
-                
-                return {
-                    data: Array.from(new Uint8Array(encrypted)),
-                    iv: Array.from(this.iv),
-                    salt: Array.from(this.salt)
-                };
-            }
-            
-            // Decrypt data
-            async decrypt(encryptedData) {
-                try {
-                    const decrypted = await crypto.subtle.decrypt(
-                        {
-                            name: 'AES-GCM',
-                            iv: new Uint8Array(encryptedData.iv)
-                        },
-                        this.key,
-                        new Uint8Array(encryptedData.data)
-                    );
-                    
-                    const decoder = new TextDecoder();
-                    return JSON.parse(decoder.decode(decrypted));
-                } catch (error) {
-                    console.error('Decryption failed:', error);
-                    return null;
-                }
-            }
-            
-            // Generate HMAC for data integrity
-            async generateHMAC(data) {
-                const encoder = new TextEncoder();
-                const encoded = encoder.encode(JSON.stringify(data));
-                
-                const key = await crypto.subtle.importKey(
-                    'raw',
-                    encoder.encode(this.getMasterKey()),
-                    { name: 'HMAC', hash: 'SHA-256' },
-                    false,
-                    ['sign']
-                );
-                
-                const signature = await crypto.subtle.sign(
-                    'HMAC',
-                    key,
-                    encoded
-                );
-                
-                return Array.from(new Uint8Array(signature));
-            }
-            
-            // Verify HMAC for data integrity
-            async verifyHMAC(data, hmac) {
-                const generatedHMAC = await this.generateHMAC(data);
-                
-                if (generatedHMAC.length !== hmac.length) return false;
-                
-                for (let i = 0; i < generatedHMAC.length; i++) {
-                    if (generatedHMAC[i] !== hmac[i]) return false;
-                }
-                
-                return true;
-            }
-        }
-        
-        // Secure Storage Manager
-        class SecureStorage {
-            constructor() {
-                this.encryption = new SecureEncryption();
-                this.storageKey = 'slipzy_secure_data';
-                this.integrityKey = 'slipzy_data_integrity';
-            }
-            
-            // Store data securely
-            async set(key, value) {
-                const data = {
-                    value: value,
-                    timestamp: Date.now(),
-                    userAgent: navigator.userAgent,
-                    domain: window.location.hostname
-                };
-                
-                const encrypted = await this.encryption.encrypt(data);
-                const hmac = await this.encryption.generateHMAC(data);
-                
-                const storageData = {
-                    encrypted: encrypted,
-                    hmac: hmac
-                };
-                
-                localStorage.setItem(`${this.storageKey}_${key}`, JSON.stringify(storageData));
-            }
-            
-            // Retrieve data securely
-            async get(key) {
-                try {
-                    const stored = localStorage.getItem(`${this.storageKey}_${key}`);
-                    if (!stored) return null;
-                    
-                    const storageData = JSON.parse(stored);
-                    const decrypted = await this.encryption.decrypt(storageData.encrypted);
-                    
-                    if (!decrypted) {
-                        this.detectTampering();
-                        return null;
-                    }
-                    
-                    // Verify data integrity
-                    const isValid = await this.encryption.verifyHMAC(decrypted, storageData.hmac);
-                    if (!isValid) {
-                        this.detectTampering();
-                        return null;
-                    }
-                    
-                    // Verify domain and user agent
-                    if (decrypted.domain !== window.location.hostname || 
-                        decrypted.userAgent !== navigator.userAgent) {
-                        this.detectTampering();
-                        return null;
-                    }
-                    
-                    return decrypted.value;
-                } catch (error) {
-                    console.error('Secure storage read failed:', error);
-                    this.detectTampering();
-                    return null;
-                }
-            }
-            
-            // Detect and handle tampering
-            detectTampering() {
-                console.warn('Data tampering detected!');
-                
-                // Clear all secure data
-                this.clearAll();
-                
-                // Reset usage count
-                usageCount = 0;
-                updateUsageDisplay(false);
-                
-                // Show security warning
-                usageInfo.innerHTML = '<span class="error">⚠️ Security violation detected. Usage data reset.</span>';
-                
-                // Log security event
-                this.logSecurityEvent('data_tampering_detected');
-            }
-            
-            // Clear all secure data
-            clearAll() {
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith(this.storageKey)) {
-                        localStorage.removeItem(key);
-                    }
-                });
-            }
-            
-            // Log security events
-            logSecurityEvent(event) {
-                const events = JSON.parse(localStorage.getItem('slipzy_security_events') || '[]');
-                events.push({
-                    event: event,
-                    timestamp: Date.now(),
-                    userAgent: navigator.userAgent,
-                    ip: userFingerprint
-                });
-                localStorage.setItem('slipzy_security_events', JSON.stringify(events));
-            }
-        }
-
         // Global variables
         let userFingerprint = '';
         let usageCount = 0;
@@ -1474,7 +1209,6 @@ note: sig req"></textarea>
         let uploadedFiles = [];
         let generatedSlips = [];
         let currentSlipIndex = 0;
-        let secureStorage = new SecureStorage();
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
@@ -1637,19 +1371,19 @@ note: sig req"></textarea>
             // Generate ultra-powerful fingerprint
             await generateUltraFingerprint();
             
-            // Get usage count from secure storage
-            const storedUsage = await secureStorage.get('usageCount');
+            // Get usage count from localStorage
+            const storedUsage = localStorage.getItem(`slipUsage_${userFingerprint}`);
             usageCount = storedUsage ? parseInt(storedUsage) : 0;
             
             // Check if user is unlocked
-            const isUnlocked = await checkUnlockStatus();
+            const isUnlocked = checkUnlockStatus();
             
             updateUsageDisplay(isUnlocked);
         }
         
         async function generateUltraFingerprint() {
             // Try to get existing fingerprint first
-            const existingFingerprint = await secureStorage.get('userFingerprint');
+            const existingFingerprint = localStorage.getItem('slipzyFingerprint');
             if (existingFingerprint) {
                 userFingerprint = existingFingerprint;
                 return;
@@ -1765,16 +1499,16 @@ note: sig req"></textarea>
             userFingerprint = 'SLIPZY_' + Math.abs(hash).toString(36).toUpperCase() + '_' + 
                             Date.now().toString(36).toUpperCase();
             
-            // Store fingerprint securely
-            await secureStorage.set('userFingerprint', userFingerprint);
+            // Store fingerprint for persistence
+            localStorage.setItem('slipzyFingerprint', userFingerprint);
         }
         
-        async function checkUnlockStatus() {
-            const unlockedUsers = await secureStorage.get('unlockedUsers') || [];
-            const validCodes = await secureStorage.get('unlockCodes') || [];
+        function checkUnlockStatus() {
+            const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
+            const validCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
             
             // Check if user has a valid unlock code
-            const userCode = await secureStorage.get(`userCode_${userFingerprint}`);
+            const userCode = localStorage.getItem(`userCode_${userFingerprint}`);
             if (userCode) {
                 const codeValid = validCodes.find(c => c.code === userCode && c.active);
                 if (codeValid) return true;
@@ -1820,7 +1554,7 @@ note: sig req"></textarea>
             alert('Transaction ID submitted! Please contact admin on WhatsApp to get your unlock code.');
         }
         
-        async function verifyUnlockCode() {
+        function verifyUnlockCode() {
             const code = unlockCodePopup.value.trim();
             
             if (!code) {
@@ -1829,19 +1563,19 @@ note: sig req"></textarea>
             }
             
             // Check if code is valid
-            const validCodes = await secureStorage.get('unlockCodes') || [];
+            const validCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
             const validCode = validCodes.find(c => c.code === code && c.active);
             
             if (validCode) {
                 // Add user to unlocked users
-                const unlockedUsers = await secureStorage.get('unlockedUsers') || [];
+                const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
                 if (!unlockedUsers.includes(userFingerprint)) {
                     unlockedUsers.push(userFingerprint);
-                    await secureStorage.set('unlockedUsers', unlockedUsers);
+                    localStorage.setItem('unlockedUsers', JSON.stringify(unlockedUsers));
                 }
                 
                 // Store user's code for verification
-                await secureStorage.set(`userCode_${userFingerprint}`, code);
+                localStorage.setItem(`userCode_${userFingerprint}`, code);
                 
                 updateUsageDisplay(true);
                 paymentPopup.style.display = 'none';
@@ -1968,9 +1702,9 @@ note: sig req"></textarea>
             return 'ORD' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 5).toUpperCase();
         }
         
-        async function generateSlips() {
+        function generateSlips() {
             // Check if user has reached the limit
-            const isUnlocked = await checkUnlockStatus();
+            const isUnlocked = checkUnlockStatus();
             if (!isUnlocked && usageCount >= MAX_FREE_SLIPS) {
                 alert('Free limit reached. Please upgrade to generate more slips.');
                 paymentPopup.style.display = 'flex';
@@ -2007,7 +1741,7 @@ note: sig req"></textarea>
             // Update usage count if not unlocked
             if (!isUnlocked) {
                 usageCount += customers.length;
-                await secureStorage.set('usageCount', usageCount.toString());
+                localStorage.setItem(`slipUsage_${userFingerprint}`, usageCount.toString());
                 updateUsageDisplay(false);
             }
             
@@ -2330,6 +2064,7 @@ note: sig req"></textarea>
                                 // Show success message
                                 usageInfo.innerHTML = `<span class="success">✅ Downloaded ${downloaded} slip(s)!</span>`;
                                 setTimeout(() => {
+                                    const isUnlocked = checkUnlockStatus();
                                     updateUsageDisplay(isUnlocked);
                                 }, 3000);
                             }
@@ -2369,6 +2104,7 @@ note: sig req"></textarea>
                 // Show success message
                 usageInfo.innerHTML = `<span class="success">✅ Downloaded PDF with ${generatedSlips.length} slip(s)!</span>`;
                 setTimeout(() => {
+                    const isUnlocked = checkUnlockStatus();
                     updateUsageDisplay(isUnlocked);
                 }, 3000);
                 
@@ -2446,39 +2182,6 @@ note: sig req"></textarea>
                 }, 500);
             };
         }
-        
-        // Anti-tampering protection
-        function setupAntiTampering() {
-            // Detect console opening
-            const originalConsole = console.log;
-            console.log = function() {
-                secureStorage.logSecurityEvent('console_opened');
-                originalConsole.apply(console, arguments);
-            };
-            
-            // Detect debugger
-            setInterval(function() {
-                const start = Date.now();
-                debugger;
-                if (Date.now() - start > 100) {
-                    secureStorage.logSecurityEvent('debugger_detected');
-                    window.location.reload();
-                }
-            }, 1000);
-            
-            // Detect localStorage tampering
-            const originalSetItem = localStorage.setItem;
-            localStorage.setItem = function(key, value) {
-                if (key.startsWith('slipzy_secure_data')) {
-                    secureStorage.logSecurityEvent('storage_tampering_attempt');
-                    return;
-                }
-                originalSetItem.apply(this, arguments);
-            };
-        }
-        
-        // Initialize anti-tampering
-        setupAntiTampering();
     </script>
 </body>
 </html>
