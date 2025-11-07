@@ -71,6 +71,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 var(--spacing-md);
+            width: 100%;
         }
 
         /* Header */
@@ -84,6 +85,7 @@
             position: relative;
             z-index: 100;
             background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
+            width: 100%;
         }
 
         .logo {
@@ -101,6 +103,7 @@
             padding: var(--spacing-lg) 0;
             position: relative;
             contain: layout style paint;
+            width: 100%;
         }
 
         .hero::before {
@@ -177,6 +180,7 @@
             transform: translateZ(0);
             will-change: transform;
             contain: layout style paint;
+            width: 100%;
         }
 
         .card:hover {
@@ -211,6 +215,7 @@
             margin-bottom: var(--spacing-md);
             gap: 4px;
             flex-wrap: wrap;
+            width: 100%;
         }
 
         .tab {
@@ -239,6 +244,7 @@
         .tab-content {
             display: none;
             animation: fadeIn 0.5s var(--ease);
+            width: 100%;
         }
 
         .tab-content.active {
@@ -258,6 +264,7 @@
             background: rgba(255, 255, 255, 0.5);
             will-change: transform;
             transform: translateZ(0);
+            width: 100%;
         }
 
         .file-upload-area:hover {
@@ -324,12 +331,14 @@
             grid-template-columns: 1fr;
             gap: var(--spacing-md);
             margin-bottom: var(--spacing-md);
+            width: 100%;
         }
 
         .setting-group {
             display: flex;
             flex-direction: column;
             gap: var(--spacing-sm);
+            width: 100%;
         }
 
         .setting-label {
@@ -344,6 +353,7 @@
             padding: 4px;
             border-radius: var(--radius-sm);
             gap: 4px;
+            width: 100%;
         }
 
         .toggle-option {
@@ -368,6 +378,7 @@
 
         .input-with-icon {
             position: relative;
+            width: 100%;
         }
 
         .input-with-icon input {
@@ -441,12 +452,14 @@
             border-radius: var(--radius);
             padding: var(--spacing-md);
             margin-top: var(--spacing-md);
+            width: 100%;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: var(--spacing-sm);
+            width: 100%;
         }
 
         .feature-item {
@@ -457,6 +470,7 @@
             background: rgba(255, 255, 255, 0.7);
             border-radius: var(--radius-sm);
             border: 1px solid rgba(108, 99, 255, 0.1);
+            width: 100%;
         }
 
         .feature-icon {
@@ -476,6 +490,7 @@
         /* Preview Section */
         .preview-section {
             margin-top: var(--spacing-lg);
+            width: 100%;
         }
 
         .preview-container {
@@ -486,6 +501,7 @@
             overflow: hidden;
             box-shadow: var(--shadow-lg);
             background: white;
+            width: 100%;
         }
 
         .preview-header {
@@ -495,6 +511,7 @@
             padding: var(--spacing-sm) var(--spacing-md);
             background: var(--primary-gradient);
             color: white;
+            width: 100%;
         }
 
         .preview-header h3 {
@@ -521,11 +538,14 @@
             justify-content: space-between;
             margin-top: var(--spacing-sm);
             gap: var(--spacing-sm);
+            width: 100%;
+            flex-wrap: wrap;
         }
 
         .preview-nav {
             display: flex;
             gap: var(--spacing-xs);
+            flex-wrap: wrap;
         }
 
         .preview-btn {
@@ -554,6 +574,7 @@
             display: flex;
             flex-direction: column;
             gap: var(--spacing-md);
+            width: 100%;
         }
 
         .usage-info {
@@ -566,6 +587,7 @@
             border-left: 4px solid var(--primary);
             transition: all 0.4s var(--ease);
             border: 1px solid rgba(108, 99, 255, 0.1);
+            width: 100%;
         }
 
         .upgrade-panel {
@@ -576,6 +598,7 @@
             animation: pulse 2s infinite;
             position: relative;
             overflow: hidden;
+            width: 100%;
         }
 
         .code-input {
@@ -607,9 +630,10 @@
             margin-top: var(--spacing-lg);
             background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(20px);
+            width: 100%;
         }
 
-        /* Popup Overlay */
+        /* Premium Popup Overlay */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -623,6 +647,7 @@
             z-index: 1000;
             padding: var(--spacing-md);
             animation: fadeIn 0.3s ease-out;
+            width: 100%;
         }
 
         .popup-content {
@@ -800,6 +825,7 @@
             grid-template-columns: 1fr;
             gap: var(--spacing-lg);
             margin-bottom: var(--spacing-lg);
+            width: 100%;
         }
 
         /* Loading Animation */
@@ -819,6 +845,212 @@
             }
         }
 
+        /* Premium Subscription Popup Styles */
+        .premium-popup {
+            max-width: 600px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 100%);
+            border-radius: 24px;
+            box-shadow: 0 32px 96px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .premium-header {
+            background: var(--primary-gradient);
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .premium-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .premium-content {
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+            flex-grow: 1;
+            max-height: calc(90vh - 200px);
+        }
+
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .premium-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.1;
+        }
+
+        .premium-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .premium-features {
+            /* Removed padding as it's now in premium-content */
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+
+        .premium-feature-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .pricing-section {
+            text-align: center;
+            padding: var(--spacing-md);
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 16px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .price-period {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .premium-cta {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 16px 24px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .premium-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: var(--primary-gradient-hover);
+        }
+
+        /* Custom scrollbar for the popup */
+        .premium-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .premium-content::-webkit-scrollbar-track {
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .premium-content::-webkit-scrollbar-thumb {
+            background: rgba(108, 99, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .premium-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(108, 99, 255, 0.4);
+        }
+
+        /* Security badge */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(52, 199, 89, 0.1);
+            color: #34C759;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
+
+        /* Admin link */
+        .admin-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s var(--ease);
+        }
+
+        .admin-link:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+        
+        /* Disabled state */
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn:disabled:hover {
+            transform: none !important;
+            box-shadow: var(--shadow) !important;
+        }
+
         /* Responsive Design */
         @media (min-width: 768px) {
             .grid {
@@ -836,6 +1068,14 @@
             
             .settings-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .preview-controls {
+                flex-wrap: nowrap;
             }
         }
 
@@ -862,6 +1102,32 @@
             
             .preview-nav {
                 justify-content: center;
+            }
+            
+            .popup-content {
+                padding: var(--spacing-md);
+            }
+            
+            .premium-popup {
+                max-height: 95vh;
+                margin: 10px;
+            }
+            
+            .premium-content {
+                max-height: calc(95vh - 200px);
+                padding: var(--spacing-md);
+            }
+            
+            .premium-title {
+                font-size: 1.5rem;
+            }
+            
+            .premium-subtitle {
+                font-size: 1rem;
+            }
+            
+            .price {
+                font-size: 2.5rem;
             }
         }
 
@@ -891,6 +1157,18 @@
             textarea {
                 min-height: 150px;
                 padding: var(--spacing-sm);
+            }
+            
+            .premium-header {
+                padding: var(--spacing-md);
+            }
+            
+            .premium-features {
+                padding: var(--spacing-md);
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -922,125 +1200,119 @@
             backface-visibility: hidden;
             perspective: 1000px;
         }
-
-        /* Admin link */
-        .admin-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s var(--ease);
-        }
-
-        .admin-link:hover {
-            background: rgba(108, 99, 255, 0.1);
-        }
-        
-        /* Disabled state */
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .btn:disabled:hover {
-            transform: none !important;
-            box-shadow: var(--shadow) !important;
-        }
-        
-        /* Security badge */
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(52, 199, 89, 0.1);
-            color: #34C759;
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(52, 199, 89, 0.2);
-        }
-        
-        /* Security protection overlay - REMOVED AGGRESSIVE BEHAVIOR */
-        .protection-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            font-size: 1.5rem;
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .protection-message {
-            max-width: 600px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
     </style>
 </head>
 <body>
-    <!-- Security Protection Overlay - Now only shows on explicit attempts to inspect -->
-    <div class="protection-overlay" id="protection-overlay">
-        <div class="protection-message">
-            <h2>⚠️ Security Notice</h2>
-            <p>This application is protected. Please respect the intellectual property.</p>
-            <button id="close-protection" style="margin-top: 20px; padding: 10px 20px; background: #6C63FF; color: white; border: none; border-radius: 10px; cursor: pointer;">Close</button>
-        </div>
-    </div>
-
-    <!-- Payment Popup -->
+    <!-- Premium Subscription Popup -->
     <div class="popup-overlay" id="payment-popup">
-        <div class="popup-content">
+        <div class="popup-content premium-popup">
             <button class="popup-close" id="close-popup">×</button>
-            <h2 class="popup-title">Upgrade to Premium</h2>
             
-            <div class="payment-info">
-                <div class="payment-step">
-                    <div class="step-number">1</div>
-                    <div>
-                        <strong>Pay 1 USD for 1 month unlimited access</strong>
-                        <p>Crypto Account: <strong>453535</strong></p>
-                    </div>
+            <div class="premium-header">
+                <div class="premium-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"/>
+                    </svg>
+                    PREMIUM ACCESS
                 </div>
-                
-                <div class="payment-step">
-                    <div class="step-number">2</div>
-                    <div>
-                        <strong>Enter Transaction ID</strong>
-                        <input type="text" id="transaction-id" class="code-input" placeholder="Enter your transaction ID">
-                        <button id="submit-transaction" class="btn submit-btn">Submit Transaction ID</button>
-                    </div>
-                </div>
-                
-                <div class="payment-step">
-                    <div class="step-number">3</div>
-                    <div>
-                        <strong>Get Unlock Code</strong>
-                        <input type="text" id="unlock-code-popup" class="code-input" placeholder="Enter unlock code">
-                        <button id="unlock-btn-popup" class="btn btn-full" style="margin-top: 10px;">Unlock Premium</button>
-                    </div>
-                </div>
+                <h2 class="premium-title">Unlock Premium Features</h2>
+                <p class="premium-subtitle">Get unlimited access to all premium features for just $1/month</p>
             </div>
             
-            <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:" id="whatsapp-link" class="btn whatsapp-btn hidden" target="_blank">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
-                </svg>
-                Contact Admin on WhatsApp
-            </a>
+            <div class="premium-content">
+                <div class="premium-features">
+                    <div class="feature-grid">
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">∞</div>
+                            <div>
+                                <strong>Unlimited Slips</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Generate as many slips as you need</div>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">🚀</div>
+                            <div>
+                                <strong>Priority Processing</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Faster generation times</div>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">🎨</div>
+                            <div>
+                                <strong>Premium Templates</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Exclusive ultra-premium designs</div>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">📊</div>
+                            <div>
+                                <strong>Advanced Analytics</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Track your slip generation</div>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">🔒</div>
+                            <div>
+                                <strong>Enhanced Security</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Bank-level encryption for your data</div>
+                            </div>
+                        </div>
+                        <div class="premium-feature">
+                            <div class="premium-feature-icon">📧</div>
+                            <div>
+                                <strong>Priority Support</strong>
+                                <div style="font-size: 0.75rem; color: var(--text-light);">Dedicated support team</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-section">
+                        <div class="price">$1</div>
+                        <div class="price-period">per month • Cancel anytime</div>
+                        <p style="color: var(--text-light); margin-bottom: var(--spacing-md);">One-time payment for unlimited access</p>
+                    </div>
+                    
+                    <div class="payment-info">
+                        <div class="payment-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <strong>Send $1 USD to Crypto Account</strong>
+                                <p style="margin-top: 4px; font-family: monospace; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 8px;">453535</p>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <strong>Enter Transaction ID</strong>
+                                <input type="text" id="transaction-id" class="code-input" placeholder="Paste your transaction ID here">
+                                <button id="submit-transaction" class="btn submit-btn">Verify Payment</button>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <strong>Enter Unlock Code</strong>
+                                <input type="text" id="unlock-code-popup" class="code-input" placeholder="Enter unlock code from admin">
+                                <button id="unlock-btn-popup" class="premium-cta">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12,17A2,2,0,0,0,14,15c0-1.1-1.34-2-3-2-2,0-3,1-3,2a2,2,0,0,0,2,2ZM21,19V17a5,5,0,0,0-5-5H8A5,5,0,0,0,3,17v2a1,1,0,0,0,1,1H20A1,1,0,0,0,21,19ZM7,9A5,5,0,1,0,2,4,5,5,0,0,0,7,9Z"/>
+                                    </svg>
+                                    Activate Premium
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:" id="whatsapp-link" class="btn whatsapp-btn hidden" target="_blank">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
+                        </svg>
+                        Contact Admin on WhatsApp
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1048,7 +1320,7 @@
         <div class="header">
             <div class="logo">Slipzy <span class="security-badge">🔒 Encrypted</span></div>
             <!-- Admin Panel link -->
-            <a href="admin.html" class="admin-link" target="_blank">contact</a>
+            <a href="admin.html" class="admin-link" target="_blank">Admin Panel</a>
         </div>
 
         <!-- Main App -->
@@ -1385,10 +1657,6 @@ note: sig req"></textarea>
         const submitTransactionBtn = document.getElementById('submit-transaction');
         const whatsappLink = document.getElementById('whatsapp-link');
         
-        // Security elements
-        const protectionOverlay = document.getElementById('protection-overlay');
-        const closeProtection = document.getElementById('close-protection');
-        
         // Canvas context
         const ctx = slipPreview.getContext('2d');
         
@@ -1485,11 +1753,6 @@ note: sig req"></textarea>
             
             // Print button
             printBtn.addEventListener('click', printSlips);
-            
-            // Security - Close protection overlay
-            closeProtection.addEventListener('click', () => {
-                protectionOverlay.style.display = 'none';
-            });
         }
         
         // Initialize smooth scrolling
@@ -1721,8 +1984,7 @@ note: sig req"></textarea>
                     address: '',
                     product: '',
                     price: '',
-                    note: '',
-                    orderId: generateOrderId()
+                    note: ''
                 };
                 
                 // Enhanced parsing with AI-like pattern detection
@@ -1810,10 +2072,6 @@ note: sig req"></textarea>
                 .replace(/\bBlvd\b/gi, 'Boulevard');
             
             return address;
-        }
-        
-        function generateOrderId() {
-            return 'ORD' + Date.now().toString().slice(-8) + Math.random().toString(36).substr(2, 5).toUpperCase();
         }
         
         function generateSlips() {
@@ -1906,7 +2164,7 @@ note: sig req"></textarea>
                 const tempCtx = tempCanvas.getContext('2d');
                 
                 // Draw the slip design
-                drawSlipDesign(tempCtx, customer, 1000, 1400);
+                drawUltraPremiumSlip(tempCtx, customer, 1000, 1400);
                 
                 // Store the canvas data
                 slips.push({
@@ -1918,184 +2176,193 @@ note: sig req"></textarea>
             return slips;
         }
         
-        function drawSlipDesign(ctx, customer, width, height) {
+        function drawUltraPremiumSlip(ctx, customer, width, height) {
             // Clear canvas
             ctx.clearRect(0, 0, width, height);
             
-            // Background with subtle gradient
+            // Premium background with subtle gradient
             const bgGradient = ctx.createLinearGradient(0, 0, width, height);
             bgGradient.addColorStop(0, '#FFFFFF');
-            bgGradient.addColorStop(1, '#F8FAFF');
+            bgGradient.addColorStop(0.5, '#F8FAFF');
+            bgGradient.addColorStop(1, '#FFFFFF');
             ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, width, height);
             
-            // Premium border
-            ctx.strokeStyle = '#E5E5EA';
-            ctx.lineWidth = 2;
+            // Premium border with gradient
+            const borderGradient = ctx.createLinearGradient(0, 0, width, 0);
+            borderGradient.addColorStop(0, 'rgba(108, 99, 255, 0.1)');
+            borderGradient.addColorStop(0.5, 'rgba(108, 99, 255, 0.3)');
+            borderGradient.addColorStop(1, 'rgba(108, 99, 255, 0.1)');
+            ctx.strokeStyle = borderGradient;
+            ctx.lineWidth = 4;
             ctx.strokeRect(20, 20, width - 40, height - 40);
             
-            // Ultra premium header with gradient
+            // Premium header with elegant gradient
             const headerGradient = ctx.createLinearGradient(0, 0, width, 0);
             headerGradient.addColorStop(0, '#6C63FF');
-            headerGradient.addColorStop(0.5, '#8B85FF');
+            headerGradient.addColorStop(0.3, '#8B85FF');
+            headerGradient.addColorStop(0.7, '#8B85FF');
             headerGradient.addColorStop(1, '#6C63FF');
-            ctx.fillStyle = headerGradient;
-            ctx.fillRect(40, 40, width - 80, 180);
             
-            // Add subtle pattern to header
+            // Header background
+            ctx.fillStyle = headerGradient;
+            ctx.fillRect(40, 40, width - 80, 200);
+            
+            // Header decorative elements
             ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            for (let i = 0; i < width; i += 60) {
-                ctx.fillRect(i, 40, 1, 180);
+            for (let i = 0; i < width; i += 40) {
+                ctx.fillRect(i, 40, 1, 200);
             }
             
-            // Main title - SLIP
-            ctx.fillStyle = '#FFFFFF';
-            ctx.font = 'bold 72px Inter';
+            // Premium logo/brand area
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.font = 'bold 48px Inter';
             ctx.textAlign = 'center';
-            ctx.fillText('SLIP', width / 2, 120);
+            ctx.fillText('SLIPZY', width / 2, 110);
             
-            // Company name
-            ctx.font = 'bold 36px Inter';
-            ctx.fillText(customer.company || defaultCompanyInput.value, width / 2, 170);
+            // Main title
+            ctx.font = 'bold 32px Inter';
+            ctx.fillText('PREMIUM PACKAGING SLIP', width / 2, 160);
             
-            // Body content
-            ctx.textAlign = 'left';
+            // Decorative line under header
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(width / 2 - 150, 180);
+            ctx.lineTo(width / 2 + 150, 180);
+            ctx.stroke();
+            
+            // Body content starts here
             let yPos = 280;
             
-            // Section headers with premium styling
+            // Customer Information Section
             ctx.fillStyle = '#6C63FF';
-            ctx.font = 'bold 32px Inter';
-            ctx.fillText('CLIENT INFORMATION', 80, yPos);
+            ctx.font = 'bold 28px Inter';
+            ctx.textAlign = 'left';
+            ctx.fillText('SHIPPING INFORMATION', 80, yPos);
             
-            // Divider line
+            // Section divider
             ctx.strokeStyle = '#E5E5EA';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(80, yPos + 20);
-            ctx.lineTo(width - 80, yPos + 20);
+            ctx.moveTo(80, yPos + 15);
+            ctx.lineTo(width - 80, yPos + 15);
             ctx.stroke();
             
-            yPos += 60;
+            yPos += 50;
             
-            // Client details with perfect alignment
+            // Customer details in elegant layout
             ctx.fillStyle = '#1D1D1F';
-            ctx.font = '28px Inter';
+            ctx.font = '20px Inter';
             
             if (customer.name) {
-                ctx.fillText('Name:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('CUSTOMER:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.name, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
             
             if (customer.company) {
-                ctx.fillText('Company:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('COMPANY:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.company, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
             
             if (customer.phone) {
-                ctx.fillText('Phone:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('PHONE:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.phone, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
             
             if (customer.email) {
-                ctx.fillText('Email:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('EMAIL:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.email, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
             
             if (customer.address) {
-                ctx.fillText('Address:', 80, yPos);
-                const addressLines = wrapText(ctx, customer.address, 220, yPos, width - 300, 36);
+                ctx.fillText('ADDRESS:', 80, yPos);
+                const addressLines = wrapText(ctx, customer.address, 220, yPos, width - 300, 30);
                 addressLines.forEach(line => {
-                    ctx.font = 'bold 28px Inter';
+                    ctx.font = 'bold 24px Inter';
                     ctx.fillText(line.text, line.x, line.y);
-                    yPos += 36;
+                    yPos += 35;
                 });
-                ctx.font = '28px Inter';
+                ctx.font = '20px Inter';
             }
             
-            yPos += 40;
+            yPos += 30;
             
-            // Order details section
+            // Order Details Section
             ctx.fillStyle = '#6C63FF';
-            ctx.font = 'bold 32px Inter';
+            ctx.font = 'bold 28px Inter';
             ctx.fillText('ORDER DETAILS', 80, yPos);
             
-            // Divider line
+            // Section divider
             ctx.strokeStyle = '#E5E5EA';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(80, yPos + 20);
-            ctx.lineTo(width - 80, yPos + 20);
+            ctx.moveTo(80, yPos + 15);
+            ctx.lineTo(width - 80, yPos + 15);
             ctx.stroke();
             
-            yPos += 60;
+            yPos += 50;
             
             ctx.fillStyle = '#1D1D1F';
-            ctx.font = '28px Inter';
+            ctx.font = '20px Inter';
             
             if (customer.product) {
-                ctx.fillText('Product:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('PRODUCT:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.product, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
             
             if (customer.price) {
-                ctx.fillText('Price:', 80, yPos);
-                ctx.font = 'bold 28px Inter';
+                ctx.fillText('PRICE:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
                 ctx.fillText(customer.price, 220, yPos);
-                ctx.font = '28px Inter';
-                yPos += 50;
+                ctx.font = '20px Inter';
+                yPos += 45;
             }
-            
-            // Order ID
-            ctx.fillText('Order ID:', 80, yPos);
-            ctx.font = 'bold 28px Inter';
-            ctx.fillText(customer.orderId, 220, yPos);
-            ctx.font = '28px Inter';
-            yPos += 50;
             
             // Notes section if available
             if (customer.note) {
                 yPos += 20;
                 ctx.fillStyle = '#FF9500';
-                ctx.font = 'bold 28px Inter';
-                ctx.fillText('Special Instructions:', 80, yPos);
-                yPos += 44;
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText('SPECIAL INSTRUCTIONS:', 80, yPos);
+                yPos += 35;
                 ctx.fillStyle = '#1D1D1F';
-                ctx.font = '28px Inter';
-                const noteLines = wrapText(ctx, customer.note, 80, yPos, width - 160, 36);
+                ctx.font = '20px Inter';
+                const noteLines = wrapText(ctx, customer.note, 80, yPos, width - 160, 30);
                 noteLines.forEach(line => {
                     ctx.fillText(line.text, line.x, line.y);
-                    yPos += 36;
+                    yPos += 35;
                 });
             }
             
-            // QR Code area - positioned perfectly
-            const qrSize = 200;
+            // QR Code Section - Ultra Premium Design
+            const qrSize = 180;
             const qrX = width - 100 - qrSize;
-            const qrY = height - 100 - qrSize;
+            const qrY = height - 120 - qrSize;
             
             // QR Code background with premium styling
             ctx.fillStyle = '#F8FAFF';
-            ctx.fillRect(qrX - 20, qrY - 20, qrSize + 40, qrSize + 60);
+            ctx.fillRect(qrX - 25, qrY - 25, qrSize + 50, qrSize + 80);
             
             // Border around QR code
             ctx.strokeStyle = '#E5E5EA';
             ctx.lineWidth = 2;
-            ctx.strokeRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
+            ctx.strokeRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 30);
             
             // Generate and draw QR code
             const qrLink = qrLinkInput.value;
@@ -2104,17 +2371,53 @@ note: sig req"></textarea>
                 ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
             }
             
-            // QR Code label
+            // QR Code label with premium styling
             ctx.fillStyle = '#6C63FF';
-            ctx.font = 'bold 24px Inter';
+            ctx.font = 'bold 20px Inter';
             ctx.textAlign = 'center';
-            ctx.fillText('SCAN TO TRACK', qrX + qrSize / 2, qrY + qrSize + 40);
+            ctx.fillText('SCAN TO TRACK YOUR ORDER', qrX + qrSize / 2, qrY + qrSize + 50);
             
-            // Footer with premium details
+            // Premium footer
             ctx.fillStyle = '#86868B';
-            ctx.font = '20px Inter';
+            ctx.font = '16px Inter';
             ctx.textAlign = 'center';
-            ctx.fillText('Generated by Slipzy • Premium Packaging Solutions', width / 2, height - 40);
+            ctx.fillText('Generated with Slipzy • Premium Packaging Solutions', width / 2, height - 50);
+            
+            // Decorative corner elements
+            ctx.strokeStyle = 'rgba(108, 99, 255, 0.1)';
+            ctx.lineWidth = 2;
+            
+            // Top-left corner
+            ctx.beginPath();
+            ctx.moveTo(40, 40);
+            ctx.lineTo(60, 40);
+            ctx.moveTo(40, 40);
+            ctx.lineTo(40, 60);
+            ctx.stroke();
+            
+            // Top-right corner
+            ctx.beginPath();
+            ctx.moveTo(width - 40, 40);
+            ctx.lineTo(width - 60, 40);
+            ctx.moveTo(width - 40, 40);
+            ctx.lineTo(width - 40, 60);
+            ctx.stroke();
+            
+            // Bottom-left corner
+            ctx.beginPath();
+            ctx.moveTo(40, height - 40);
+            ctx.lineTo(60, height - 40);
+            ctx.moveTo(40, height - 40);
+            ctx.lineTo(40, height - 60);
+            ctx.stroke();
+            
+            // Bottom-right corner
+            ctx.beginPath();
+            ctx.moveTo(width - 40, height - 40);
+            ctx.lineTo(width - 60, height - 40);
+            ctx.moveTo(width - 40, height - 40);
+            ctx.lineTo(width - 40, height - 60);
+            ctx.stroke();
         }
         
         function generateQRCode(text) {
@@ -2125,7 +2428,7 @@ note: sig req"></textarea>
                 qr.addData(text);
                 qr.make();
                 
-                const cellSize = 8; // Larger cells for high resolution
+                const cellSize = 6; // Larger cells for high resolution
                 const margin = 4;
                 const size = qr.getModuleCount() * cellSize + margin * 2;
                 
