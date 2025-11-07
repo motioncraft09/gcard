@@ -46,6 +46,9 @@
 
         html {
             scroll-behavior: smooth;
+            /* Prevent scroll jank */
+            overflow-x: hidden;
+            width: 100%;
         }
 
         body {
@@ -58,6 +61,14 @@
             font-synthesis: none;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            /* Ultra smooth scrolling */
+            -webkit-overflow-scrolling: touch;
+            /* Prevent layout shifts */
+            overflow-anchor: none;
+            /* Force GPU acceleration */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
         }
 
         .container {
@@ -74,6 +85,10 @@
             padding: var(--spacing-md) 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: var(--spacing-lg);
+            /* Prevent repaints on scroll */
+            position: relative;
+            z-index: 100;
+            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
         }
 
         .logo {
@@ -90,6 +105,8 @@
             text-align: center;
             padding: var(--spacing-lg) 0;
             position: relative;
+            /* Prevent layout shifts */
+            contain: layout style paint;
         }
 
         .hero::before {
@@ -103,7 +120,11 @@
             height: 1200px;
             background: radial-gradient(circle, rgba(108, 99, 255, 0.04) 0%, rgba(108, 99, 255, 0) 70%);
             z-index: -1;
-            animation: float 6s ease-in-out infinite;
+            /* Optimized animation for smoothness */
+            animation: float 8s ease-in-out infinite;
+            /* GPU acceleration */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .hero-badge {
@@ -120,6 +141,8 @@
             animation: fadeInUp 0.6s var(--ease) 0.2s both;
             border: 1px solid rgba(108, 99, 255, 0.1);
             backdrop-filter: blur(20px);
+            /* Prevent animation jank */
+            will-change: transform, opacity;
         }
 
         .hero h1 {
@@ -134,6 +157,8 @@
             line-height: 1.1;
             letter-spacing: -0.02em;
             padding: 0 var(--spacing-sm);
+            /* Prevent layout shifts */
+            will-change: transform, opacity;
         }
 
         .hero p {
@@ -145,6 +170,8 @@
             font-weight: 400;
             line-height: 1.5;
             padding: 0 var(--spacing-sm);
+            /* Prevent layout shifts */
+            will-change: transform, opacity;
         }
 
         /* Cards */
@@ -158,6 +185,11 @@
             backdrop-filter: blur(40px);
             position: relative;
             overflow: hidden;
+            /* GPU acceleration for smooth animations */
+            transform: translateZ(0);
+            will-change: transform;
+            /* Prevent repaints */
+            contain: layout style paint;
         }
 
         .card:hover {
@@ -207,6 +239,9 @@
             position: relative;
             overflow: hidden;
             font-size: 0.9rem;
+            /* GPU acceleration */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .tab.active {
@@ -235,6 +270,9 @@
             position: relative;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.5);
+            /* GPU acceleration */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .file-upload-area:hover {
@@ -333,6 +371,9 @@
             color: var(--text-light);
             text-align: center;
             font-size: 0.85rem;
+            /* GPU acceleration */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .toggle-option.active {
@@ -389,6 +430,9 @@
             overflow: hidden;
             letter-spacing: -0.01em;
             width: 100%;
+            /* GPU acceleration */
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .btn:hover {
@@ -595,6 +639,8 @@
             align-items: center;
             z-index: 1000;
             padding: var(--spacing-md);
+            /* Smooth popup animation */
+            animation: fadeIn 0.3s ease-out;
         }
 
         .popup-content {
@@ -607,6 +653,10 @@
             overflow-y: auto;
             box-shadow: var(--shadow-lg);
             position: relative;
+            /* Smooth scaling animation */
+            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* GPU acceleration */
+            transform: translateZ(0);
         }
 
         .popup-close {
@@ -618,6 +668,12 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text-light);
+            transition: all 0.3s var(--ease);
+        }
+
+        .popup-close:hover {
+            color: var(--text);
+            transform: scale(1.1);
         }
 
         .popup-title {
@@ -694,11 +750,11 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translate3d(0, 30px, 0);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translate3d(0, 0, 0);
             }
         }
 
@@ -708,6 +764,17 @@
             }
             to {
                 opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
             }
         }
 
@@ -722,10 +789,10 @@
 
         @keyframes float {
             0%, 100% {
-                transform: translateY(0);
+                transform: translate3d(-50%, 0, 0);
             }
             50% {
-                transform: translateY(-10px);
+                transform: translate3d(-50%, -10px, 0);
             }
         }
 
@@ -901,6 +968,20 @@
             transform: none !important;
             box-shadow: var(--shadow) !important;
         }
+        
+        /* Security badge */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(52, 199, 89, 0.1);
+            color: #34C759;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -949,7 +1030,7 @@
 
     <div class="container">
         <div class="header">
-            <div class="logo">Slipzy</div>
+            <div class="logo">Slipzy <span class="security-badge">🔒 Encrypted</span></div>
             <!-- Admin Panel link -->
             <a href="admin.html" class="admin-link" target="_blank">Admin Panel</a>
         </div>
@@ -961,7 +1042,7 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M13 2L3 14h6l-4 8 12-12h-6l4-8z"/>
                     </svg>
-                    ULTRA PREMIUM PACKAGING SLIPS
+                    ULTRA SECURE PREMIUM PACKAGING SLIPS
                 </div>
                 <h1>Slipzy</h1>
                 <p>Transform multiple orders into beautiful, printable packaging slips with bulk PNG output</p>
@@ -1197,11 +1278,57 @@ note: sig req"></textarea>
         </div>
 
         <footer class="footer">
-            <p>Slipzy • Ultra Premium Packaging Slips • Bulk PNG Output • Modern Design • © 2024</p>
+            <p>Slipzy • Ultra Secure Premium Packaging Slips • Encrypted Usage Tracking • © 2024</p>
         </footer>
     </div>
 
     <script>
+        // Simplified Secure Storage System
+        class SimpleSecureStorage {
+            constructor() {
+                this.storageKey = 'slipzy_data';
+            }
+            
+            // Store data
+            set(key, value) {
+                try {
+                    const data = {
+                        value: value,
+                        timestamp: Date.now()
+                    };
+                    
+                    localStorage.setItem(`${this.storageKey}_${key}`, JSON.stringify(data));
+                    return true;
+                } catch (error) {
+                    console.error('Storage set failed:', error);
+                    return false;
+                }
+            }
+            
+            // Retrieve data
+            get(key) {
+                try {
+                    const stored = localStorage.getItem(`${this.storageKey}_${key}`);
+                    if (!stored) return null;
+                    
+                    const data = JSON.parse(stored);
+                    return data.value;
+                } catch (error) {
+                    console.error('Storage get failed:', error);
+                    return null;
+                }
+            }
+            
+            // Clear all data
+            clearAll() {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith(this.storageKey)) {
+                        localStorage.removeItem(key);
+                    }
+                });
+            }
+        }
+
         // Global variables
         let userFingerprint = '';
         let usageCount = 0;
@@ -1209,6 +1336,7 @@ note: sig req"></textarea>
         let uploadedFiles = [];
         let generatedSlips = [];
         let currentSlipIndex = 0;
+        let secureStorage = new SimpleSecureStorage();
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
@@ -1251,6 +1379,9 @@ note: sig req"></textarea>
             
             // Initialize usage tracking
             initializeUsageTracking();
+            
+            // Initialize smooth scrolling
+            initializeSmoothScrolling();
         });
         
         function setupEventListeners() {
@@ -1336,6 +1467,28 @@ note: sig req"></textarea>
             printBtn.addEventListener('click', printSlips);
         }
         
+        // Initialize smooth scrolling
+        function initializeSmoothScrolling() {
+            // Use native smooth scrolling when available
+            if ('scrollBehavior' in document.documentElement.style) {
+                return; // Browser supports native smooth scrolling
+            }
+            
+            // Fallback for older browsers
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+        
         function handleFileSelect() {
             if (fileInput.files.length === 0) return;
             
@@ -1367,12 +1520,12 @@ note: sig req"></textarea>
             });
         }
         
-        async function initializeUsageTracking() {
-            // Generate ultra-powerful fingerprint
-            await generateUltraFingerprint();
+        function initializeUsageTracking() {
+            // Generate fingerprint
+            generateFingerprint();
             
-            // Get usage count from localStorage
-            const storedUsage = localStorage.getItem(`slipUsage_${userFingerprint}`);
+            // Get usage count from storage
+            const storedUsage = secureStorage.get('usageCount');
             usageCount = storedUsage ? parseInt(storedUsage) : 0;
             
             // Check if user is unlocked
@@ -1381,110 +1534,23 @@ note: sig req"></textarea>
             updateUsageDisplay(isUnlocked);
         }
         
-        async function generateUltraFingerprint() {
+        function generateFingerprint() {
             // Try to get existing fingerprint first
-            const existingFingerprint = localStorage.getItem('slipzyFingerprint');
+            const existingFingerprint = secureStorage.get('userFingerprint');
             if (existingFingerprint) {
                 userFingerprint = existingFingerprint;
                 return;
             }
             
-            // Create a multi-layered fingerprint that's extremely difficult to bypass
-            const components = [];
-            
-            // 1. Browser and OS information
-            components.push(navigator.userAgent);
-            components.push(navigator.language);
-            components.push(navigator.hardwareConcurrency || 'unknown');
-            components.push(navigator.deviceMemory || 'unknown');
-            
-            // 2. Screen properties
-            components.push(screen.width);
-            components.push(screen.height);
-            components.push(screen.colorDepth);
-            components.push(screen.pixelDepth);
-            
-            // 3. Timezone and locale
-            components.push(new Date().getTimezoneOffset());
-            components.push(Intl.DateTimeFormat().resolvedOptions().timeZone);
-            
-            // 4. Canvas fingerprinting (most reliable)
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 200;
-            canvas.height = 50;
-            ctx.textBaseline = 'top';
-            ctx.font = '14px Arial';
-            ctx.fillStyle = '#f60';
-            ctx.fillRect(125, 1, 62, 20);
-            ctx.fillStyle = '#069';
-            ctx.fillText('Slipzy Fingerprint', 2, 15);
-            ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-            ctx.fillText('Slipzy Fingerprint', 4, 17);
-            const canvasData = canvas.toDataURL();
-            components.push(canvasData);
-            
-            // 5. Audio fingerprinting
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const analyser = audioContext.createAnalyser();
-                oscillator.connect(analyser);
-                analyser.connect(audioContext.destination);
-                oscillator.start(0);
-                const audioData = new Uint8Array(analyser.frequencyBinCount);
-                analyser.getByteFrequencyData(audioData);
-                oscillator.stop();
-                components.push(Array.from(audioData).join(','));
-            } catch (e) {
-                components.push('audio_failed');
-            }
-            
-            // 6. WebGL fingerprinting
-            try {
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                    if (debugInfo) {
-                        components.push(gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL));
-                        components.push(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
-                    }
-                    components.push(gl.getParameter(gl.VERSION));
-                    components.push(gl.getParameter(gl.SHADING_LANGUAGE_VERSION));
-                }
-            } catch (e) {
-                components.push('webgl_failed');
-            }
-            
-            // 7. Fonts detection
-            const fontList = [
-                'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold',
-                'Comic Sans MS', 'Courier New', 'Georgia', 'Impact',
-                'Times New Roman', 'Trebuchet MS', 'Verdana', 'Webdings'
+            // Create a simple fingerprint
+            const components = [
+                navigator.userAgent,
+                navigator.language,
+                screen.width,
+                screen.height,
+                new Date().getTimezoneOffset(),
+                Intl.DateTimeFormat().resolvedOptions().timeZone
             ];
-            
-            const fontCheck = [];
-            for (const font of fontList) {
-                fontCheck.push(document.fonts.check(`12px "${font}"`));
-            }
-            components.push(fontCheck.join(','));
-            
-            // 8. Plugin detection
-            for (let i = 0; i < navigator.plugins.length; i++) {
-                components.push(navigator.plugins[i].name);
-                components.push(navigator.plugins[i].filename);
-            }
-            
-            // 9. Local storage and cookies
-            components.push(!!navigator.cookieEnabled);
-            components.push(!!window.localStorage);
-            components.push(!!window.sessionStorage);
-            
-            // 10. Additional browser properties
-            components.push(navigator.platform);
-            components.push(navigator.doNotTrack || 'unknown');
-            components.push(navigator.maxTouchPoints || 'unknown');
-            components.push(navigator.vendor || 'unknown');
             
             // Combine all components and create a hash
             const combined = components.join('|');
@@ -1492,29 +1558,39 @@ note: sig req"></textarea>
             for (let i = 0; i < combined.length; i++) {
                 const char = combined.charCodeAt(i);
                 hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32-bit integer
+                hash = hash & hash;
             }
             
             // Convert to a more readable format
             userFingerprint = 'SLIPZY_' + Math.abs(hash).toString(36).toUpperCase() + '_' + 
                             Date.now().toString(36).toUpperCase();
             
-            // Store fingerprint for persistence
-            localStorage.setItem('slipzyFingerprint', userFingerprint);
+            // Store fingerprint
+            secureStorage.set('userFingerprint', userFingerprint);
         }
         
         function checkUnlockStatus() {
-            const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
-            const validCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
+            // Get admin data from localStorage
+            const adminDataStr = localStorage.getItem('slipzy_admin_data');
+            if (!adminDataStr) return false;
             
-            // Check if user has a valid unlock code
-            const userCode = localStorage.getItem(`userCode_${userFingerprint}`);
-            if (userCode) {
-                const codeValid = validCodes.find(c => c.code === userCode && c.active);
-                if (codeValid) return true;
+            try {
+                const adminData = JSON.parse(adminDataStr);
+                const unlockedUsers = adminData.unlockedUsers || [];
+                
+                // Check if user has a valid unlock code
+                const userCode = secureStorage.get(`userCode_${userFingerprint}`);
+                if (userCode) {
+                    const validCodes = adminData.unlockCodes || [];
+                    const codeValid = validCodes.find(c => c.code === userCode && c.active);
+                    if (codeValid) return true;
+                }
+                
+                return unlockedUsers.includes(userFingerprint);
+            } catch (e) {
+                console.error('Error checking unlock status:', e);
+                return false;
             }
-            
-            return unlockedUsers.includes(userFingerprint);
         }
         
         function updateUsageDisplay(isUnlocked) {
@@ -1562,31 +1638,44 @@ note: sig req"></textarea>
                 return;
             }
             
-            // Check if code is valid
-            const validCodes = JSON.parse(localStorage.getItem('unlockCodes') || '[]');
-            const validCode = validCodes.find(c => c.code === code && c.active);
+            // Get admin data from localStorage
+            const adminDataStr = localStorage.getItem('slipzy_admin_data');
+            if (!adminDataStr) {
+                alert('Admin data not found. Please contact support.');
+                return;
+            }
             
-            if (validCode) {
-                // Add user to unlocked users
-                const unlockedUsers = JSON.parse(localStorage.getItem('unlockedUsers') || '[]');
-                if (!unlockedUsers.includes(userFingerprint)) {
-                    unlockedUsers.push(userFingerprint);
-                    localStorage.setItem('unlockedUsers', JSON.stringify(unlockedUsers));
-                }
+            try {
+                const adminData = JSON.parse(adminDataStr);
+                const validCodes = adminData.unlockCodes || [];
+                const validCode = validCodes.find(c => c.code === code && c.active);
                 
-                // Store user's code for verification
-                localStorage.setItem(`userCode_${userFingerprint}`, code);
-                
-                updateUsageDisplay(true);
-                paymentPopup.style.display = 'none';
-                
-                // Show success animation
-                usageInfo.innerHTML = '<span class="success">🎉 Successfully Unlocked! Enjoy unlimited premium features.</span>';
-                setTimeout(() => {
+                if (validCode) {
+                    // Add user to unlocked users in admin data
+                    const unlockedUsers = adminData.unlockedUsers || [];
+                    if (!unlockedUsers.includes(userFingerprint)) {
+                        unlockedUsers.push(userFingerprint);
+                        adminData.unlockedUsers = unlockedUsers;
+                        localStorage.setItem('slipzy_admin_data', JSON.stringify(adminData));
+                    }
+                    
+                    // Store user's code for verification
+                    secureStorage.set(`userCode_${userFingerprint}`, code);
+                    
                     updateUsageDisplay(true);
-                }, 3000);
-            } else {
-                alert('Invalid unlock code. Please check and try again.');
+                    paymentPopup.style.display = 'none';
+                    
+                    // Show success animation
+                    usageInfo.innerHTML = '<span class="success">🎉 Successfully Unlocked! Enjoy unlimited premium features.</span>';
+                    setTimeout(() => {
+                        updateUsageDisplay(true);
+                    }, 3000);
+                } else {
+                    alert('Invalid unlock code. Please check and try again.');
+                }
+            } catch (e) {
+                console.error('Error verifying unlock code:', e);
+                alert('Error verifying unlock code. Please try again.');
             }
         }
         
@@ -1741,7 +1830,7 @@ note: sig req"></textarea>
             // Update usage count if not unlocked
             if (!isUnlocked) {
                 usageCount += customers.length;
-                localStorage.setItem(`slipUsage_${userFingerprint}`, usageCount.toString());
+                secureStorage.set('usageCount', usageCount.toString());
                 updateUsageDisplay(false);
             }
             
@@ -2064,7 +2153,6 @@ note: sig req"></textarea>
                                 // Show success message
                                 usageInfo.innerHTML = `<span class="success">✅ Downloaded ${downloaded} slip(s)!</span>`;
                                 setTimeout(() => {
-                                    const isUnlocked = checkUnlockStatus();
                                     updateUsageDisplay(isUnlocked);
                                 }, 3000);
                             }
@@ -2104,7 +2192,6 @@ note: sig req"></textarea>
                 // Show success message
                 usageInfo.innerHTML = `<span class="success">✅ Downloaded PDF with ${generatedSlips.length} slip(s)!</span>`;
                 setTimeout(() => {
-                    const isUnlocked = checkUnlockStatus();
                     updateUsageDisplay(isUnlocked);
                 }, 3000);
                 
