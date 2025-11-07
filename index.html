@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* All the CSS styles remain the same as in your original code */
         :root {
             --primary: #6C63FF;
             --primary-light: #8B85FF;
@@ -633,7 +634,7 @@
             width: 100%;
         }
 
-        /* Premium Popup Overlay - Fixed with scrollable content */
+        /* Premium Popup Overlay */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -653,17 +654,15 @@
         .popup-content {
             background: white;
             border-radius: var(--radius);
-            padding: 0;
-            max-width: 600px;
+            padding: var(--spacing-lg);
+            max-width: 500px;
             width: 100%;
             max-height: 80vh;
-            overflow: hidden;
+            overflow-y: auto;
             box-shadow: var(--shadow-lg);
             position: relative;
             animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: translateZ(0);
-            display: flex;
-            flex-direction: column;
         }
 
         .popup-close {
@@ -676,7 +675,6 @@
             cursor: pointer;
             color: var(--text-light);
             transition: all 0.3s var(--ease);
-            z-index: 10;
         }
 
         .popup-close:hover {
@@ -1990,99 +1988,161 @@ note: sig req"></textarea>
                     note: ''
                 };
                 
-                // Enhanced parsing with better pattern detection
+                // NEW IMPROVED PARSING LOGIC
                 lines.forEach(line => {
                     const cleanLine = line.trim();
                     if (!cleanLine) return;
                     
-                    // Email detection
-                    const emailMatch = cleanLine.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
-                    if (emailMatch && !customer.email) {
-                        customer.email = emailMatch[0];
-                    }
-                    
-                    // Company detection (look for Inc, LLC, Corp, etc.)
-                    const companyMatch = cleanLine.match(/(.+)\s+(Inc|LLC|Corp|Corporation|Ltd|Company|Co\.)/i);
-                    if (companyMatch && !customer.company) {
-                        customer.company = companyMatch[0];
-                    }
-                    
-                    // Phone detection
-                    const phoneMatch = cleanLine.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/);
-                    if (phoneMatch && !customer.phone) {
-                        customer.phone = phoneMatch[0];
-                    }
-                    
-                    // Price detection
-                    const priceMatch = cleanLine.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
-                    if (priceMatch && cleanLine.toLowerCase().includes('$') && !customer.price) {
-                        customer.price = priceMatch[0];
-                    }
-                    
-                    // Address-like patterns - Improved detection
-                    if ((cleanLine.includes('street') || cleanLine.includes('st') || cleanLine.includes('ave') || 
-                         cleanLine.includes('avenue') || cleanLine.includes('road') || cleanLine.includes('rd') ||
-                         cleanLine.includes('lane') || cleanLine.includes('ln') || cleanLine.includes('drive') || 
-                         cleanLine.includes('dr') || cleanLine.includes('blvd') || cleanLine.includes('boulevard') ||
-                         /\d{5}/.test(cleanLine) || /[A-Z]{2}\s+\d{5}/.test(cleanLine)) && !customer.address) {
-                        customer.address = formatAddress(cleanLine);
-                    }
-                    
-                    // Product detection - Improved logic
-                    if (!customer.product && !emailMatch && !phoneMatch && !priceMatch && 
-                        !cleanLine.includes('@') && cleanLine.length > 3 &&
-                        !cleanLine.toLowerCase().includes('street') && !cleanLine.toLowerCase().includes('st') &&
-                        !cleanLine.toLowerCase().includes('ave') && !cleanLine.toLowerCase().includes('avenue') &&
-                        !cleanLine.toLowerCase().includes('road') && !cleanLine.toLowerCase().includes('rd') &&
-                        !cleanLine.toLowerCase().includes('lane') && !cleanLine.toLowerCase().includes('ln') &&
-                        !cleanLine.toLowerCase().includes('drive') && !cleanLine.toLowerCase().includes('dr') &&
-                        !cleanLine.toLowerCase().includes('blvd') && !cleanLine.toLowerCase().includes('boulevard')) {
-                        customer.product = cleanLine;
-                    }
-                    
-                    // Note detection (short lines, specific keywords)
-                    if ((cleanLine.toLowerCase().includes('note:') || 
-                         cleanLine.toLowerCase().includes('signature') ||
-                         cleanLine.toLowerCase().includes('gift') ||
-                         cleanLine.toLowerCase().includes('priority') ||
-                         cleanLine.toLowerCase().includes('shipping') ||
-                         cleanLine.length < 30) && !customer.note) {
-                        customer.note = cleanLine;
+                    // Try to detect patterns with delimiters first (• or | or ,)
+                    if (cleanLine.includes('•') || cleanLine.includes('|') || cleanLine.includes(',')) {
+                        const parts = cleanLine.split(/[•|,]/).map(part => part.trim()).filter(part => part);
+                        
+                        parts.forEach(part => {
+                            // Email detection
+                            const emailMatch = part.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
+                            if (emailMatch && !customer.email) {
+                                customer.email = emailMatch[0];
+                                return;
+                            }
+                            
+                            // Phone detection
+                            const phoneMatch = part.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/);
+                            if (phoneMatch && !customer.phone) {
+                                customer.phone = phoneMatch[0];
+                                return;
+                            }
+                            
+                            // Price detection
+                            const priceMatch = part.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
+                            if (priceMatch && (part.includes('$') || part.toLowerCase().includes('usd'))) {
+                                customer.price = priceMatch[0];
+                                // Try to extract product name from the same part
+                                const withoutPrice = part.replace(priceMatch[0], '').trim();
+                                if (withoutPrice && !customer.product) {
+                                    customer.product = withoutPrice.replace(/[•|,]/g, '').trim();
+                                }
+                                return;
+                            }
+                            
+                            // Company detection
+                            const companyKeywords = ['inc', 'llc', 'corp', 'corporation', 'ltd', 'company', 'co.'];
+                            const hasCompanyKeyword = companyKeywords.some(keyword => 
+                                part.toLowerCase().includes(keyword)
+                            );
+                            if (hasCompanyKeyword && !customer.company) {
+                                customer.company = part;
+                                return;
+                            }
+                            
+                            // If we haven't assigned this part yet, try to categorize it
+                            if (!customer.name && part.length > 2 && part.length < 50 && 
+                                !part.match(/\d/) && !emailMatch && !phoneMatch) {
+                                customer.name = part;
+                            } else if (!customer.product && part.length > 2 && part.length < 100) {
+                                customer.product = part;
+                            } else if (!customer.note && part.length > 0) {
+                                customer.note = (customer.note ? customer.note + ' • ' : '') + part;
+                            }
+                        });
+                    } else {
+                        // For lines without delimiters, use pattern matching
+                        // Email detection
+                        const emailMatch = cleanLine.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
+                        if (emailMatch && !customer.email) {
+                            customer.email = emailMatch[0];
+                        }
+                        
+                        // Phone detection
+                        const phoneMatch = cleanLine.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/);
+                        if (phoneMatch && !customer.phone) {
+                            customer.phone = phoneMatch[0];
+                        }
+                        
+                        // Price detection
+                        const priceMatch = cleanLine.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
+                        if (priceMatch && (cleanLine.includes('$') || cleanLine.toLowerCase().includes('usd')) && !customer.price) {
+                            customer.price = priceMatch[0];
+                            // Try to extract product name from the same line
+                            const withoutPrice = cleanLine.replace(priceMatch[0], '').trim();
+                            if (withoutPrice && !customer.product) {
+                                customer.product = withoutPrice;
+                            }
+                        }
+                        
+                        // Address detection - more comprehensive
+                        const addressIndicators = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 
+                                                 'lane', 'ln', 'boulevard', 'blvd', 'highway', 'hwy', 'route', 'rt',
+                                                 'apartment', 'apt', 'suite', 'ste', 'floor', 'fl', 'building', 'bldg'];
+                        const hasAddressIndicator = addressIndicators.some(indicator => 
+                            cleanLine.toLowerCase().includes(indicator)
+                        );
+                        const hasZipCode = /\d{5}(-\d{4})?/.test(cleanLine);
+                        const hasCityState = /[A-Za-z\s]+,\s*[A-Z]{2}/.test(cleanLine);
+                        
+                        if ((hasAddressIndicator || hasZipCode || hasCityState) && !customer.address) {
+                            customer.address = formatAddress(cleanLine);
+                        }
+                        
+                        // Product detection - look for product-like patterns
+                        if (!customer.product && cleanLine.length > 3 && cleanLine.length < 100 && 
+                            !emailMatch && !phoneMatch && !hasAddressIndicator && !hasZipCode) {
+                            // Check if it looks like a product name (not a name or note)
+                            const isLikelyProduct = 
+                                !cleanLine.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/) && // Not a full name
+                                !cleanLine.toLowerCase().includes('note:') &&
+                                !cleanLine.toLowerCase().includes('signature') &&
+                                !cleanLine.toLowerCase().includes('gift') &&
+                                !cleanLine.toLowerCase().includes('shipping');
+                            
+                            if (isLikelyProduct) {
+                                customer.product = cleanLine;
+                            }
+                        }
+                        
+                        // Name detection - if it looks like a person's name
+                        if (!customer.name && cleanLine.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/)) {
+                            customer.name = cleanLine;
+                        }
+                        
+                        // Note detection
+                        if (!customer.note && 
+                            (cleanLine.toLowerCase().includes('note:') || 
+                             cleanLine.toLowerCase().includes('signature') ||
+                             cleanLine.toLowerCase().includes('gift') ||
+                             cleanLine.toLowerCase().includes('shipping') ||
+                             cleanLine.length < 30)) {
+                            customer.note = cleanLine;
+                        }
                     }
                 });
                 
-                // Fallback assignments - Improved logic
+                // Fallback assignments for any missing fields
                 if (!customer.name && lines[0]) {
-                    const firstLine = lines[0];
-                    // If first line contains •, split and take first part as name
-                    if (firstLine.includes('•')) {
-                        customer.name = firstLine.split('•')[0].trim();
-                    } else {
-                        customer.name = firstLine.trim();
+                    // Use first line as name if it doesn't contain obvious non-name patterns
+                    const firstLine = lines[0].trim();
+                    if (!firstLine.match(/\d/) && !firstLine.includes('@') && 
+                        firstLine.length > 2 && firstLine.length < 50) {
+                        customer.name = firstLine;
                     }
                 }
                 
-                if (!customer.product && lines.find(line => line.includes('$'))) {
-                    const priceLine = lines.find(line => line.includes('$'));
-                    if (priceLine) {
-                        // Extract product name before price
-                        const parts = priceLine.split('$');
-                        if (parts[0].trim()) {
-                            customer.product = parts[0].trim();
-                        }
-                    }
-                }
-                
-                // Address fallback - if we haven't found an address, check for lines that look like addresses
-                if (!customer.address) {
+                // If we still don't have a product, try to find it in lines that don't match other patterns
+                if (!customer.product) {
                     for (let i = 0; i < lines.length; i++) {
-                        const line = lines[i];
-                        // Check if line contains common address patterns
-                        if ((line.match(/\d+\s+\w+\s+(street|st|avenue|ave|road|rd|lane|ln|drive|dr|boulevard|blvd)/i) ||
-                            line.match(/[A-Z]{2}\s+\d{5}/) || 
-                            line.match(/\d{5}/)) && 
-                            !line.includes('@') && !line.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/)) {
-                            customer.address = formatAddress(line);
+                        const line = lines[i].trim();
+                        if (line && 
+                            !line.includes('@') && 
+                            !line.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/) &&
+                            !line.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/) &&
+                            !line.match(/[A-Za-z\s]+,\s*[A-Z]{2}/) &&
+                            !line.toLowerCase().includes('street') &&
+                            !line.toLowerCase().includes('st') &&
+                            !line.toLowerCase().includes('avenue') &&
+                            !line.toLowerCase().includes('ave') &&
+                            !line.toLowerCase().includes('road') &&
+                            !line.toLowerCase().includes('rd') &&
+                            line.length > 3 && line.length < 100) {
+                            customer.product = line;
                             break;
                         }
                     }
@@ -2098,7 +2158,7 @@ note: sig req"></textarea>
         }
         
         function formatAddress(rawAddress) {
-            // Enhanced address formatting
+            // Simple address formatting
             let address = rawAddress
                 .replace(/\s+/g, ' ')
                 .replace(/(\d+)([A-Za-z])/g, '$1 $2')
@@ -2108,15 +2168,7 @@ note: sig req"></textarea>
                 .replace(/\bRd\b/gi, 'Road')
                 .replace(/\bDr\b/gi, 'Drive')
                 .replace(/\bLn\b/gi, 'Lane')
-                .replace(/\bBlvd\b/gi, 'Boulevard')
-                .replace(/\bN\b/gi, 'North')
-                .replace(/\bS\b/gi, 'South')
-                .replace(/\bE\b/gi, 'East')
-                .replace(/\bW\b/gi, 'West')
-                .replace(/\bNE\b/gi, 'Northeast')
-                .replace(/\bNW\b/gi, 'Northwest')
-                .replace(/\bSE\b/gi, 'Southeast')
-                .replace(/\bSW\b/gi, 'Southwest');
+                .replace(/\bBlvd\b/gi, 'Boulevard');
             
             return address;
         }
@@ -2298,48 +2350,57 @@ note: sig req"></textarea>
             
             yPos += 50;
             
-            // Customer details in elegant layout - Always show all fields
+            // Customer details in elegant layout
             ctx.fillStyle = '#1D1D1F';
             ctx.font = '20px Inter';
             
-            // Name - Always display
-            ctx.fillText('CUSTOMER:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.name || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
-            
-            // Company - Always display
-            ctx.fillText('COMPANY:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.company || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
-            
-            // Phone - Always display
-            ctx.fillText('PHONE:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.phone || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
-            
-            // Email - Always display
-            ctx.fillText('EMAIL:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.email || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
-            
-            // Address - Always display
-            ctx.fillText('ADDRESS:', 80, yPos);
-            const addressText = customer.address || 'Not Provided';
-            const addressLines = wrapText(ctx, addressText, 220, yPos, width - 300, 30);
-            addressLines.forEach(line => {
+            // Name
+            if (customer.name) {
+                ctx.fillText('CUSTOMER:', 80, yPos);
                 ctx.font = 'bold 24px Inter';
-                ctx.fillText(line.text, line.x, line.y);
-                yPos += 35;
-            });
-            ctx.font = '20px Inter';
+                ctx.fillText(customer.name, 220, yPos);
+                ctx.font = '20px Inter';
+                yPos += 45;
+            }
+            
+            // Company
+            if (customer.company) {
+                ctx.fillText('COMPANY:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText(customer.company, 220, yPos);
+                ctx.font = '20px Inter';
+                yPos += 45;
+            }
+            
+            // Phone
+            if (customer.phone) {
+                ctx.fillText('PHONE:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText(customer.phone, 220, yPos);
+                ctx.font = '20px Inter';
+                yPos += 45;
+            }
+            
+            // Email
+            if (customer.email) {
+                ctx.fillText('EMAIL:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText(customer.email, 220, yPos);
+                ctx.font = '20px Inter';
+                yPos += 45;
+            }
+            
+            // Address
+            if (customer.address) {
+                ctx.fillText('ADDRESS:', 80, yPos);
+                const addressLines = wrapText(ctx, customer.address, 220, yPos, width - 300, 30);
+                addressLines.forEach(line => {
+                    ctx.font = 'bold 24px Inter';
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 35;
+                });
+                ctx.font = '20px Inter';
+            }
             
             yPos += 30;
             
@@ -2361,19 +2422,26 @@ note: sig req"></textarea>
             ctx.fillStyle = '#1D1D1F';
             ctx.font = '20px Inter';
             
-            // Product - Always display
-            ctx.fillText('PRODUCT:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.product || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
+            // Product
+            if (customer.product) {
+                ctx.fillText('PRODUCT:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
+                const productLines = wrapText(ctx, customer.product, 220, yPos, width - 300, 30);
+                productLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 35;
+                });
+                ctx.font = '20px Inter';
+            }
             
-            // Price - Always display
-            ctx.fillText('PRICE:', 80, yPos);
-            ctx.font = 'bold 24px Inter';
-            ctx.fillText(customer.price || 'Not Provided', 220, yPos);
-            ctx.font = '20px Inter';
-            yPos += 45;
+            // Price
+            if (customer.price) {
+                ctx.fillText('PRICE:', 80, yPos);
+                ctx.font = 'bold 24px Inter';
+                ctx.fillText(customer.price, 220, yPos);
+                ctx.font = '20px Inter';
+                yPos += 45;
+            }
             
             // Notes section if available
             if (customer.note) {
