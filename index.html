@@ -2313,56 +2313,41 @@ note: sig req"></textarea>
             
             yPos += 50;
             
-            // Customer details in elegant layout
+            // Customer details in elegant layout - REMOVED FIELD LABELS
             ctx.fillStyle = '#1D1D1F';
-            ctx.font = '20px Inter';
+            ctx.font = 'bold 24px Inter';
             
-            // Name
+            // Name - Only show the name value, no "CUSTOMER:" label
             if (customer.name) {
-                ctx.fillText('CUSTOMER:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                ctx.fillText(customer.name, 220, yPos);
-                ctx.font = '20px Inter';
+                ctx.fillText(customer.name, 80, yPos);
                 yPos += 45;
             }
             
-            // Company
+            // Company - Only show the company value, no "COMPANY:" label
             if (customer.company) {
-                ctx.fillText('COMPANY:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                ctx.fillText(customer.company, 220, yPos);
-                ctx.font = '20px Inter';
+                ctx.fillText(customer.company, 80, yPos);
                 yPos += 45;
             }
             
-            // Phone
+            // Phone - Only show the phone value, no "PHONE:" label
             if (customer.phone) {
-                ctx.fillText('PHONE:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                ctx.fillText(customer.phone, 220, yPos);
-                ctx.font = '20px Inter';
+                ctx.fillText(customer.phone, 80, yPos);
                 yPos += 45;
             }
             
-            // Email
+            // Email - Only show the email value, no "EMAIL:" label
             if (customer.email) {
-                ctx.fillText('EMAIL:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                ctx.fillText(customer.email, 220, yPos);
-                ctx.font = '20px Inter';
+                ctx.fillText(customer.email, 80, yPos);
                 yPos += 45;
             }
             
-            // Address
+            // Address - Only show the address value, no "ADDRESS:" label
             if (customer.address) {
-                ctx.fillText('ADDRESS:', 80, yPos);
-                const addressLines = wrapText(ctx, customer.address, 220, yPos, width - 300, 30);
+                const addressLines = wrapText(ctx, customer.address, 80, yPos, width - 160, 30);
                 addressLines.forEach(line => {
-                    ctx.font = 'bold 24px Inter';
                     ctx.fillText(line.text, line.x, line.y);
                     yPos += 35;
                 });
-                ctx.font = '20px Inter';
             }
             
             yPos += 30;
@@ -2383,30 +2368,24 @@ note: sig req"></textarea>
             yPos += 50;
             
             ctx.fillStyle = '#1D1D1F';
-            ctx.font = '20px Inter';
+            ctx.font = 'bold 24px Inter';
             
-            // Product
+            // Product - Only show the product value, no "PRODUCT:" label
             if (customer.product) {
-                ctx.fillText('PRODUCT:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                const productLines = wrapText(ctx, customer.product, 220, yPos, width - 300, 30);
+                const productLines = wrapText(ctx, customer.product, 80, yPos, width - 160, 30);
                 productLines.forEach(line => {
                     ctx.fillText(line.text, line.x, line.y);
                     yPos += 35;
                 });
-                ctx.font = '20px Inter';
             }
             
-            // Price
+            // Price - Only show the price value, no "PRICE:" label
             if (customer.price) {
-                ctx.fillText('PRICE:', 80, yPos);
-                ctx.font = 'bold 24px Inter';
-                ctx.fillText(customer.price, 220, yPos);
-                ctx.font = '20px Inter';
+                ctx.fillText(customer.price, 80, yPos);
                 yPos += 45;
             }
             
-            // Notes section if available
+            // Notes section if available - Still show "SPECIAL INSTRUCTIONS:" label for clarity
             if (customer.note) {
                 yPos += 20;
                 ctx.fillStyle = '#FF9500';
