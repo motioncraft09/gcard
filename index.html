@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* All previous CSS remains the same */
         :root {
             --primary: #6C63FF;
             --primary-light: #8B85FF;
@@ -1172,23 +1173,38 @@
             }
         }
 
-        /* Print-specific styles */
+        /* Print-specific styles - FIXED */
         @media print {
             body * {
                 visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
             }
-            .preview-container, .preview-container * {
+            
+            /* Hide browser header/footer */
+            @page {
+                margin: 0;
+                size: auto;
+            }
+            
+            .print-page, .print-page * {
                 visibility: visible;
             }
-            .preview-container {
+            
+            .print-page {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                box-shadow: none;
-                border: none;
+                page-break-after: always;
             }
-            .preview-header, .preview-controls {
+            
+            .print-page:last-child {
+                page-break-after: auto;
+            }
+            
+            /* Hide all UI elements */
+            .header, .hero, .card, .footer, .preview-header, .preview-controls {
                 display: none !important;
             }
         }
@@ -1207,8 +1223,6 @@
     <div class="popup-overlay" id="payment-popup">
         <div class="popup-content premium-popup">
             <button class="popup-close" id="close-popup">×</button>
-            
-          
             
             <div class="premium-content">
                 <div class="premium-features">
@@ -1743,7 +1757,7 @@ note: sig req"></textarea>
             // Download all button
             downloadAllBtn.addEventListener('click', downloadAllSlips);
             
-            // Print button
+            // Print button - FIXED
             printBtn.addEventListener('click', printSlips);
         }
         
@@ -2627,6 +2641,7 @@ note: sig req"></textarea>
             }
         }
         
+        // FIXED PRINT FUNCTION
         function printSlips() {
             if (generatedSlips.length === 0) return;
             
@@ -2638,29 +2653,35 @@ note: sig req"></textarea>
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Print Slipzy Packaging Slips</title>
+                    <title>Slipzy Packaging Slips</title>
                     <style>
+                        @page {
+                            margin: 0;
+                            size: auto;
+                        }
                         body { 
-                            font-family: Arial, sans-serif; 
                             margin: 0; 
                             padding: 0;
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
                         }
-                        .slip-container {
+                        .print-page {
                             page-break-after: always;
                             margin: 0;
                             padding: 0;
-                            width: 100%;
+                            width: 100vw;
+                            height: 100vh;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
                         }
-                        .slip-container:last-child {
-                            page-break-after: avoid;
+                        .print-page:last-child {
+                            page-break-after: auto;
                         }
                         .slip-image {
                             width: 100%;
-                            height: auto;
-                        }
-                        @media print {
-                            body { margin: 0; padding: 0; }
-                            .slip-container { margin: 0; padding: 0; }
+                            height: 100%;
+                            object-fit: contain;
                         }
                     </style>
                 </head>
@@ -2670,7 +2691,7 @@ note: sig req"></textarea>
             // Add each slip to the print page
             generatedSlips.forEach((slip, index) => {
                 printContent += `
-                    <div class="slip-container">
+                    <div class="print-page">
                         <img class="slip-image" src="${slip.canvas.toDataURL('image/png', 1.0)}" alt="Packaging Slip ${index + 1}">
                     </div>
                 `;
