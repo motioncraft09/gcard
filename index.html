@@ -1563,51 +1563,35 @@ note: sig req"></textarea>
     </div>
 
     <script>
-        // Simplified Secure Storage System
-        class SimpleSecureStorage {
-            constructor() {
-                this.storageKey = 'slipzy_data';
-            }
-            
-            // Store data
-            set(key, value) {
-                try {
-                    const data = {
-                        value: value,
-                        timestamp: Date.now()
-                    };
-                    
-                    localStorage.setItem(`${this.storageKey}_${key}`, JSON.stringify(data));
-                    return true;
-                } catch (error) {
-                    console.error('Storage set failed:', error);
-                    return false;
-                }
-            }
-            
-            // Retrieve data
-            get(key) {
-                try {
-                    const stored = localStorage.getItem(`${this.storageKey}_${key}`);
-                    if (!stored) return null;
-                    
-                    const data = JSON.parse(stored);
-                    return data.value;
-                } catch (error) {
-                    console.error('Storage get failed:', error);
-                    return null;
-                }
-            }
-            
-            // Clear all data
-            clearAll() {
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith(this.storageKey)) {
-                        localStorage.removeItem(key);
-                    }
-                });
-            }
-        }
+       // Replace local check with server check
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxPmCJrrt9sa3CkclgzevAiGRP2NfMMMM9_fO685VguDb2Cc6cpfqspOf2Py5MxSQZb/exec'; // from deploy
+async function verifyUnlockCodeServer(code, ip){
+  try{
+    const res = await fetch(WEBAPP_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'check', code: code, ip: ip })
+    });
+    const j = await res.json();
+    return j; // {ok:true/false, active: 'TRUE'/'FALSE', row:...}
+  }catch(e){
+    return {ok:false, error:'network'};
+  }
+}
+
+// Usage:
+// on user enters code:
+const userCode = 'UNLOCK-203_0_113_45-ABC123';
+const ip = '203.0.113.45';
+verifyUnlockCodeServer(userCode, ip).then(resp=>{
+  if(resp.ok){
+    // allow unlimited usage
+    alert('Unlocked! Enjoy unlimited slips.');
+    // set a client-side flag if you want for UI show
+  }else{
+    alert('Invalid code or not active.');
+  }
+});
 
         // Global variables
         let userFingerprint = '';
