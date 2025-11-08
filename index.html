@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slipzy • Premium Packaging Slips</title>
+    <title>Premium Packaging Slips</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1324,7 +1324,7 @@ The amount is 130 BDT.</p>
 
     <div class="container">
         <div class="header">
-            <div class="logo">Slipzy <span class="security-badge">🔒 Encrypted</span></div>
+            <div class="logo">Premium Packaging Slips <span class="security-badge">🔒 Encrypted</span></div>
             <!-- Admin Panel link -->
             <a href="admin.html" class="admin-link" target="_blank">contact</a>
         </div>
@@ -1338,7 +1338,7 @@ The amount is 130 BDT.</p>
                     </svg>
                     ULTRA SECURE PREMIUM PACKAGING SLIPS
                 </div>
-                <h1>Slipzy</h1>
+                <h1>Packaging Slip Generator</h1>
                 <p>Transform multiple orders into beautiful, printable packaging slips with bulk PNG output</p>
                 
                 <div class="grid">
@@ -1454,7 +1454,7 @@ note: sig req"></textarea>
                                 <div class="setting-label">Default Company</div>
                                 <div class="input-with-icon">
                                     <div class="input-icon">🏢</div>
-                                    <input type="text" id="default-company" placeholder="Your Company Name" value="Slipzy">
+                                    <input type="text" id="default-company" placeholder="Your Company Name" value="">
                                 </div>
                             </div>
                         </div>
@@ -1572,7 +1572,7 @@ note: sig req"></textarea>
         </div>
 
         <footer class="footer">
-            <p>Slipzy • Ultra Secure Premium Packaging Slips • Encrypted Usage Tracking • © 2024</p>
+            <p>Premium Packaging Slips • Ultra Secure • Encrypted Usage Tracking • © 2024</p>
         </footer>
     </div>
 
@@ -2277,7 +2277,7 @@ note: sig req"></textarea>
             ctx.lineWidth = 1;
             ctx.strokeRect(40, 40, width - 80, 120);
             
-            // Use customer's company name instead of SLIPZY
+            // Use customer's company name - COMPLETELY REMOVED SLIPZY NAME
             const companyName = customer.company || 'YOUR COMPANY';
             
             // Dynamic font size for company name based on length
@@ -2285,13 +2285,13 @@ note: sig req"></textarea>
             if (companyName.length > 20) companyFontSize = 30;
             if (companyName.length > 30) companyFontSize = 24;
             if (companyName.length > 40) companyFontSize = 20;
-            
+
             // Premium company name - Apple-style typography
             ctx.fillStyle = '#1D1D1F';
             ctx.font = `600 ${companyFontSize}px Inter`;
             ctx.textAlign = 'center';
             ctx.fillText(companyName.toUpperCase(), width / 2, 90);
-            
+
             // Main title with lighter weight
             ctx.font = '400 20px Inter';
             ctx.fillStyle = '#86868B';
@@ -2430,8 +2430,6 @@ note: sig req"></textarea>
             ctx.font = '400 16px Inter';
             ctx.textAlign = 'center';
             ctx.fillText('SCAN TO TRACK', qrX + qrSize / 2, qrY + qrSize + 35);
-            
-            // Remove footer credit as requested
             
             // Premium corner accents
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
@@ -2662,7 +2660,7 @@ note: sig req"></textarea>
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Slipzy Packaging Slips</title>
+                    <title>Premium Packaging Slips</title>
                     <style>
                         @page {
                             margin: 0;
