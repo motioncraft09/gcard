@@ -1,90 +1,1107 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Slipzy Admin – Unlock Manager</title>
-  <style>
-    body{font-family:Inter,Arial;margin:24px;background:#fff;color:#111}
-    .card{padding:16px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);margin-bottom:12px}
-    input,select,textarea{padding:8px;border-radius:8px;border:1px solid #ddd;width:100%;box-sizing:border-box}
-    button{padding:10px 14px;border-radius:8px;border:0;background:#0b72ff;color:#fff;font-weight:700;cursor:pointer}
-    .row{display:flex;gap:10px}
-    .col{flex:1}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slipzy Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8B85FF;
+            --primary-dark: #554FD8;
+            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
+            --text: #1D1D1F;
+            --text-light: #86868B;
+            --text-lighter: #AEAEB2;
+            --bg: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --border: #F2F2F7;
+            --border-hover: #E5E5EA;
+            --radius: 16px;
+            --radius-sm: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
+            --spacing-xs: 0.75rem;
+            --spacing-sm: 1.25rem;
+            --spacing-md: 2rem;
+            --spacing-lg: 3rem;
+            --spacing-xl: 5rem;
+            --success: #34C759;
+            --warning: #FF9500;
+            --error: #FF3B30;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: var(--spacing-md);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            color: var(--primary);
+        }
+
+        .card-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-danger {
+            background: var(--error);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-sm);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background: rgba(108, 99, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(52, 199, 89, 0.2);
+        }
+
+        .badge-warning {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(255, 149, 0, 0.2);
+        }
+
+        .badge-error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .badge-info {
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(108, 99, 255, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: var(--spacing-sm);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-lighter);
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--border);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            margin-bottom: var(--spacing-md);
+            gap: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .tab.active {
+            background: var(--bg);
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--spacing-lg) 0;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: var(--spacing-lg);
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .copy-btn:hover {
+            text-decoration: underline;
+        }
+
+        .admin-password-section {
+            background: rgba(255, 149, 0, 0.05);
+            border: 1px solid rgba(255, 149, 0, 0.2);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: var(--spacing-lg);
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-hover);
+            text-align: center;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+    </style>
 </head>
 <body>
-  <h2>Slipzy Admin — Unlock Manager</h2>
-  <div class="card">
-    <label>Web App URL (Apps Script):</label>
-    <input id="weburl" value="https://script.google.com/macros/s/AKfycbxPmCJrrt9sa3CkclgzevAiGRP2NfMMMM9_fO685VguDb2Cc6cpfqspOf2Py5MxSQZb/exec">
-    <label>Admin Key:</label>
-    <input id="adminkey" value="hasib123">
-  </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Slipzy Admin</div>
+            <div id="admin-status" class="badge badge-info">Not Logged In</div>
+        </div>
 
-  <div class="card">
-    <h3>Create Unlock Code</h3>
-    <label>User identifier (email or phone):</label>
-    <input id="user">
-    <label>User IP (dot notation) — optional:</label>
-    <input id="ip" placeholder="e.g. 203.0.113.45">
-    <label>TX ID / Note (optional):</label>
-    <input id="note">
-    <div style="margin-top:8px"><button id="createBtn">Create Unlock Code</button></div>
-    <div id="createRes" style="margin-top:8px;color:green"></div>
-  </div>
+        <!-- Login Screen -->
+        <div id="login-screen">
+            <div class="login-container">
+                <h1 class="login-title">Slipzy Admin Panel</h1>
+                <p style="color: var(--text-light); margin-bottom: var(--spacing-md);">Enter admin password to continue</p>
+                
+                <div class="form-group">
+                    <input type="password" id="admin-password" placeholder="Enter admin password" style="margin-bottom: var(--spacing-sm);">
+                    <button id="login-btn" class="btn" style="width: 100%;">Login</button>
+                </div>
+                
+                <div style="margin-top: var(--spacing-sm); font-size: 0.8rem; color: var(--text-light);">
+                    Default password: <strong>admin123</strong>
+                </div>
+            </div>
+        </div>
 
-  <div class="card">
-    <h3>Revoke Code</h3>
-    <label>Code to revoke:</label>
-    <input id="revokeCode">
-    <div style="margin-top:8px"><button id="revokeBtn">Revoke</button></div>
-    <div id="revokeRes" style="margin-top:8px;color:red"></div>
-  </div>
+        <!-- Admin Content (Hidden until login) -->
+        <div id="admin-content" style="display: none;">
+            <h1 class="admin-title">Slipzy Administration Panel</h1>
 
-  <div class="card">
-    <h3>List Codes (admin)</h3>
-    <div style="margin-top:8px"><button id="listBtn">Refresh List</button></div>
-    <pre id="listArea" style="white-space:pre-wrap;max-height:300px;overflow:auto;background:#fafafa;padding:10px;border-radius:8px;border:1px solid #eee"></pre>
-  </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-users">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-users">0</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-slips">0</div>
+                    <div class="stat-label">Slips Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="free-limit-display">10</div>
+                    <div class="stat-label">Free Slip Limit</div>
+                </div>
+            </div>
 
-<script>
-async function callApi(action, data){
-  const web = document.getElementById('weburl').value.trim();
-  const adminkey = document.getElementById('adminkey').value.trim();
-  if(!web){alert('Set web app URL'); return;}
-  data = data || {};
-  data.action = action;
-  // ensure admin_key for create/revoke/list
-  if(action==='create' || action==='revoke' || action==='list'){
-    data.admin_key = adminkey;
-  }
-  const resp = await fetch(web, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  });
-  return resp.json();
-}
+            <div class="tabs">
+                <div class="tab active" data-tab="unlock-codes">Unlock Codes</div>
+                <div class="tab" data-tab="user-management">User Management</div>
+                <div class="tab" data-tab="usage-logs">Usage Logs</div>
+                <div class="tab" data-tab="settings">Settings</div>
+            </div>
 
-document.getElementById('createBtn').onclick = async ()=>{
-  const user = document.getElementById('user').value.trim();
-  const ip = document.getElementById('ip').value.trim();
-  const note = document.getElementById('note').value.trim();
-  const res = await callApi('create',{user_identifier:user, ip:ip, note:note, admin:'admin'});
-  document.getElementById('createRes').innerText = JSON.stringify(res);
-}
+            <!-- Unlock Codes Tab -->
+            <div class="tab-content active" id="unlock-codes-tab">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Generate Unlock Codes
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Code Note (Optional)</label>
+                        <input type="text" id="code-note" placeholder="e.g., Customer name or reference">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Number of Codes</label>
+                        <input type="number" id="code-count" value="1" min="1" max="10">
+                    </div>
+                    
+                    <button id="generate-codes-btn" class="btn">Generate Codes</button>
+                </div>
 
-document.getElementById('revokeBtn').onclick = async ()=>{
-  const code = document.getElementById('revokeCode').value.trim();
-  if(!code){alert('Enter code'); return;}
-  const res = await callApi('revoke',{code:code});
-  document.getElementById('revokeRes').innerText = JSON.stringify(res);
-}
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Active Unlock Codes
+                    </h2>
+                    
+                    <div id="codes-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Note</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="codes-table-body">
+                                <!-- Codes will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-document.getElementById('listBtn').onclick = async ()=>{
-  const res = await callApi('list', {});
-  document.getElementById('listArea').innerText = JSON.stringify(res, null, 2);
-}
-</script>
+            <!-- User Management Tab -->
+            <div class="tab-content" id="user-management-tab">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        User Management
+                    </h2>
+                    
+                    <div id="users-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Unlock Code</th>
+                                    <th>Slips Generated</th>
+                                    <th>Last Active</th>
+                                    <th>IP Address</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage Logs Tab -->
+            <div class="tab-content" id="usage-logs-tab">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        Usage Logs
+                    </h2>
+                    
+                    <div id="logs-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User ID</th>
+                                    <th>Slips Generated</th>
+                                    <th>IP Address</th>
+                                    <th>User Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-table-body">
+                                <!-- Logs will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-tab">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        System Settings
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Free Slip Limit</label>
+                        <input type="number" id="free-limit" min="1" max="1000" value="10">
+                        <button id="save-free-limit" class="btn">Save Limit</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Admin Password</label>
+                        <input type="password" id="new-admin-password" placeholder="Enter new admin password">
+                        <button id="change-password" class="btn">Change Password</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button id="export-data" class="btn">Export All Data</button>
+                        <button id="clear-data" class="btn btn-danger">Clear All Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Slipzy Admin Panel • Secure Management System • © 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        // Admin data structure
+        let adminData = {
+            adminPassword: "admin123", // Default password
+            freeLimit: 10,
+            unlockCodes: [],
+            unlockedUsers: [],
+            usageLogs: []
+        };
+
+        // DOM elements
+        const loginScreen = document.getElementById('login-screen');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const loginBtn = document.getElementById('login-btn');
+        const adminContent = document.getElementById('admin-content');
+        const adminStatus = document.getElementById('admin-status');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const generateCodesBtn = document.getElementById('generate-codes-btn');
+        const codeNoteInput = document.getElementById('code-note');
+        const codeCountInput = document.getElementById('code-count');
+        const codesTableBody = document.getElementById('codes-table-body');
+        const usersTableBody = document.getElementById('users-table-body');
+        const logsTableBody = document.getElementById('logs-table-body');
+        const freeLimitInput = document.getElementById('free-limit');
+        const saveFreeLimitBtn = document.getElementById('save-free-limit');
+        const freeLimitDisplay = document.getElementById('free-limit-display');
+        const totalUsersDisplay = document.getElementById('total-users');
+        const activeUsersDisplay = document.getElementById('active-users');
+        const totalSlipsDisplay = document.getElementById('total-slips');
+        const newAdminPasswordInput = document.getElementById('new-admin-password');
+        const changePasswordBtn = document.getElementById('change-password');
+        const exportDataBtn = document.getElementById('export-data');
+        const clearDataBtn = document.getElementById('clear-data');
+
+        // Initialize the admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdminData();
+            setupEventListeners();
+            
+            // Check if already logged in
+            checkLoginStatus();
+        });
+
+        function setupEventListeners() {
+            // Admin login
+            loginBtn.addEventListener('click', handleAdminLogin);
+            adminPasswordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleAdminLogin();
+            });
+
+            // Tab switching
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Update tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update tab contents
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Generate unlock codes
+            generateCodesBtn.addEventListener('click', generateUnlockCodes);
+
+            // Save free limit
+            saveFreeLimitBtn.addEventListener('click', saveFreeLimit);
+
+            // Change admin password
+            changePasswordBtn.addEventListener('click', changeAdminPassword);
+
+            // Export data
+            exportDataBtn.addEventListener('click', exportAllData);
+
+            // Clear data
+            clearDataBtn.addEventListener('click', clearAllData);
+        }
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('slipzy_admin_logged_in') === 'true';
+            if (isLoggedIn) {
+                showAdminContent();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        function showLoginScreen() {
+            loginScreen.style.display = 'block';
+            adminContent.style.display = 'none';
+            adminStatus.textContent = 'Not Logged In';
+            adminStatus.className = 'badge badge-error';
+        }
+
+        function showAdminContent() {
+            loginScreen.style.display = 'none';
+            adminContent.style.display = 'block';
+            adminStatus.textContent = 'Admin Mode: Active';
+            adminStatus.className = 'badge badge-success';
+            
+            // Load and display data
+            loadAdminData();
+        }
+
+        function loadAdminData() {
+            const storedData = localStorage.getItem('slipzy_admin_data');
+            if (storedData) {
+                try {
+                    adminData = JSON.parse(storedData);
+                    
+                    // Ensure all required fields exist
+                    if (!adminData.adminPassword) adminData.adminPassword = "admin123";
+                    if (!adminData.freeLimit) adminData.freeLimit = 10;
+                    if (!adminData.unlockCodes) adminData.unlockCodes = [];
+                    if (!adminData.unlockedUsers) adminData.unlockedUsers = [];
+                    if (!adminData.usageLogs) adminData.usageLogs = [];
+                    
+                    // Update UI
+                    freeLimitInput.value = adminData.freeLimit;
+                    freeLimitDisplay.textContent = adminData.freeLimit;
+                    updateStats();
+                    renderUnlockCodes();
+                    renderUsers();
+                    renderUsageLogs();
+                } catch (e) {
+                    console.error('Error loading admin data:', e);
+                    // Reset to default if corrupted
+                    resetAdminData();
+                }
+            } else {
+                // Initialize with default data
+                resetAdminData();
+            }
+        }
+
+        function resetAdminData() {
+            adminData = {
+                adminPassword: "admin123",
+                freeLimit: 10,
+                unlockCodes: [],
+                unlockedUsers: [],
+                usageLogs: []
+            };
+            saveAdminData();
+        }
+
+        function saveAdminData() {
+            localStorage.setItem('slipzy_admin_data', JSON.stringify(adminData));
+            updateStats();
+        }
+
+        function handleAdminLogin() {
+            const password = adminPasswordInput.value.trim();
+            
+            if (!password) {
+                alert('Please enter the admin password.');
+                return;
+            }
+            
+            if (password === adminData.adminPassword) {
+                // Login successful
+                localStorage.setItem('slipzy_admin_logged_in', 'true');
+                showAdminContent();
+                adminPasswordInput.value = '';
+            } else {
+                alert('Invalid admin password! Please try again.');
+                adminPasswordInput.value = '';
+                adminPasswordInput.focus();
+            }
+        }
+
+        function generateUnlockCodes() {
+            const note = codeNoteInput.value.trim() || 'No note';
+            const count = parseInt(codeCountInput.value) || 1;
+            
+            if (count < 1 || count > 10) {
+                alert('Please enter a number between 1 and 10.');
+                return;
+            }
+            
+            const newCodes = [];
+            for (let i = 0; i < count; i++) {
+                const code = generateRandomCode();
+                newCodes.push({
+                    code: code,
+                    note: note,
+                    active: true,
+                    createdAt: new Date().toISOString(),
+                    usedBy: null,
+                    usedAt: null
+                });
+            }
+            
+            // Add to admin data
+            adminData.unlockCodes = [...adminData.unlockCodes, ...newCodes];
+            
+            saveAdminData();
+            renderUnlockCodes();
+            codeNoteInput.value = '';
+            codeCountInput.value = 1;
+            
+            alert(`Generated ${count} unlock code(s)!`);
+        }
+
+        function generateRandomCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function renderUnlockCodes() {
+            codesTableBody.innerHTML = '';
+            
+            if (adminData.unlockCodes.length === 0) {
+                codesTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            <p>No unlock codes generated yet</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort codes by creation date (newest first)
+            const sortedCodes = [...adminData.unlockCodes].sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            
+            sortedCodes.forEach((code, index) => {
+                const originalIndex = adminData.unlockCodes.findIndex(c => c.code === code.code);
+                const row = document.createElement('tr');
+                
+                const statusBadge = code.active ? 
+                    `<span class="badge badge-success">Active</span>` : 
+                    `<span class="badge badge-error">Used</span>`;
+                
+                const actions = code.active ? 
+                    `<button class="btn btn-small btn-danger" onclick="deactivateCode(${originalIndex})">Deactivate</button>` : 
+                    `<button class="btn btn-small" onclick="reactivateCode(${originalIndex})">Reactivate</button>`;
+                
+                row.innerHTML = `
+                    <td>
+                        ${code.code}
+                        <button class="copy-btn" onclick="copyToClipboard('${code.code}')">Copy</button>
+                    </td>
+                    <td>${code.note}</td>
+                    <td>${statusBadge}</td>
+                    <td>${formatDate(code.createdAt)}</td>
+                    <td class="action-buttons">${actions}</td>
+                `;
+                
+                codesTableBody.appendChild(row);
+            });
+        }
+
+        function renderUsers() {
+            usersTableBody.innerHTML = '';
+            
+            // Get all unique users from usage logs
+            const userMap = new Map();
+            
+            adminData.usageLogs.forEach(log => {
+                if (!userMap.has(log.userId)) {
+                    userMap.set(log.userId, {
+                        userId: log.userId,
+                        unlockCode: log.unlockCode || 'Free',
+                        slipsGenerated: 0,
+                        lastActive: log.timestamp,
+                        ipAddress: log.ipAddress
+                    });
+                }
+                
+                const user = userMap.get(log.userId);
+                user.slipsGenerated += log.slipsGenerated;
+                
+                // Update last active if this log is more recent
+                if (new Date(log.timestamp) > new Date(user.lastActive)) {
+                    user.lastActive = log.timestamp;
+                    user.ipAddress = log.ipAddress;
+                }
+            });
+            
+            const users = Array.from(userMap.values());
+            
+            if (users.length === 0) {
+                usersTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <p>No user activity yet</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort users by last active (newest first)
+            users.sort((a, b) => new Date(b.lastActive) - new Date(a.lastActive));
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                // Check if user is premium (has an unlock code that's not "Free")
+                const isPremium = user.unlockCode !== 'Free';
+                
+                row.innerHTML = `
+                    <td title="${user.userId}">${truncateText(user.userId, 15)}</td>
+                    <td>
+                        ${user.unlockCode}
+                        ${isPremium ? '<span class="badge badge-info">Premium</span>' : '<span class="badge badge-warning">Free</span>'}
+                    </td>
+                    <td>${user.slipsGenerated}</td>
+                    <td>${formatDate(user.lastActive)}</td>
+                    <td>${user.ipAddress}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-small btn-danger" onclick="removeUser('${user.userId}')">Remove</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+
+        function renderUsageLogs() {
+            logsTableBody.innerHTML = '';
+            
+            if (adminData.usageLogs.length === 0) {
+                logsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                            <p>No usage logs yet</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort logs by timestamp (newest first)
+            const sortedLogs = [...adminData.usageLogs].sort((a, b) => 
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+            
+            sortedLogs.forEach(log => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${formatDate(log.timestamp)}</td>
+                    <td title="${log.userId}">${truncateText(log.userId, 15)}</td>
+                    <td>${log.slipsGenerated}</td>
+                    <td>${log.ipAddress}</td>
+                    <td title="${log.userAgent}">${truncateText(log.userAgent, 30)}</td>
+                `;
+                
+                logsTableBody.appendChild(row);
+            });
+        }
+
+        function updateStats() {
+            // Total users (unique user IDs from logs)
+            const uniqueUsers = new Set(adminData.usageLogs.map(log => log.userId)).size;
+            totalUsersDisplay.textContent = uniqueUsers;
+            
+            // Active users (users with unlock codes)
+            const activeUsers = adminData.unlockedUsers.length;
+            activeUsersDisplay.textContent = activeUsers;
+            
+            // Total slips generated
+            const totalSlips = adminData.usageLogs.reduce((sum, log) => sum + log.slipsGenerated, 0);
+            totalSlipsDisplay.textContent = totalSlips;
+            
+            // Free limit
+            freeLimitDisplay.textContent = adminData.freeLimit;
+        }
+
+        function saveFreeLimit() {
+            const newLimit = parseInt(freeLimitInput.value);
+            
+            if (isNaN(newLimit) || newLimit < 1) {
+                alert('Please enter a valid number for the free limit.');
+                return;
+            }
+            
+            adminData.freeLimit = newLimit;
+            saveAdminData();
+            
+            alert(`Free slip limit updated to ${newLimit}!`);
+        }
+
+        function changeAdminPassword() {
+            const newPassword = newAdminPasswordInput.value.trim();
+            
+            if (!newPassword) {
+                alert('Please enter a new password.');
+                return;
+            }
+            
+            if (newPassword.length < 4) {
+                alert('Password must be at least 4 characters long.');
+                return;
+            }
+            
+            adminData.adminPassword = newPassword;
+            saveAdminData();
+            newAdminPasswordInput.value = '';
+            
+            alert('Admin password changed successfully!');
+        }
+
+        function exportAllData() {
+            const dataStr = JSON.stringify(adminData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `slipzy-admin-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL admin data? This action cannot be undone.')) {
+                adminData.unlockCodes = [];
+                adminData.unlockedUsers = [];
+                adminData.usageLogs = [];
+                saveAdminData();
+                
+                renderUnlockCodes();
+                renderUsers();
+                renderUsageLogs();
+                
+                alert('All data has been cleared!');
+            }
+        }
+
+        function deactivateCode(index) {
+            adminData.unlockCodes[index].active = false;
+            saveAdminData();
+            renderUnlockCodes();
+        }
+
+        function reactivateCode(index) {
+            adminData.unlockCodes[index].active = true;
+            saveAdminData();
+            renderUnlockCodes();
+        }
+
+        function removeUser(userId) {
+            if (confirm(`Are you sure you want to remove user ${userId}? This will revoke their premium access.`)) {
+                // Remove from unlocked users
+                adminData.unlockedUsers = adminData.unlockedUsers.filter(id => id !== userId);
+                
+                // Mark their unlock code as available if they had one
+                adminData.unlockCodes.forEach(code => {
+                    if (code.usedBy === userId) {
+                        code.usedBy = null;
+                        code.usedAt = null;
+                        code.active = true;
+                    }
+                });
+                
+                saveAdminData();
+                renderUsers();
+                renderUnlockCodes();
+                
+                alert(`User ${userId} has been removed.`);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Code copied to clipboard!');
+            });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        // Make functions available globally for onclick handlers
+        window.deactivateCode = deactivateCode;
+        window.reactivateCode = reactivateCode;
+        window.removeUser = removeUser;
+        window.copyToClipboard = copyToClipboard;
+    </script>
 </body>
 </html>
