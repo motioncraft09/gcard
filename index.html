@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* All previous CSS remains the same */
+        /* All previous CSS remains exactly the same */
         :root {
             --primary: #6C63FF;
             --primary-light: #8B85FF;
@@ -2277,11 +2277,20 @@ note: sig req"></textarea>
             ctx.lineWidth = 1;
             ctx.strokeRect(40, 40, width - 80, 120);
             
-            // Premium logo/brand area - Apple-style typography
+            // Use customer's company name instead of SLIPZY
+            const companyName = customer.company || 'YOUR COMPANY';
+            
+            // Dynamic font size for company name based on length
+            let companyFontSize = 36;
+            if (companyName.length > 20) companyFontSize = 30;
+            if (companyName.length > 30) companyFontSize = 24;
+            if (companyName.length > 40) companyFontSize = 20;
+            
+            // Premium company name - Apple-style typography
             ctx.fillStyle = '#1D1D1F';
-            ctx.font = '600 36px Inter';
+            ctx.font = `600 ${companyFontSize}px Inter`;
             ctx.textAlign = 'center';
-            ctx.fillText('SLIPZY', width / 2, 90);
+            ctx.fillText(companyName.toUpperCase(), width / 2, 90);
             
             // Main title with lighter weight
             ctx.font = '400 20px Inter';
