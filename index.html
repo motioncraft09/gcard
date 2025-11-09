@@ -1216,6 +1216,78 @@
             backface-visibility: hidden;
             perspective: 1000px;
         }
+
+        /* NEW STYLES FOR AI CLEANING */
+        .ai-cleaning-panel {
+            background: linear-gradient(135deg, #E8F4FD 0%, #F0F9FF 100%);
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            width: 100%;
+        }
+
+        .ai-result {
+            background: white;
+            border-radius: var(--radius);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            border: 1px solid var(--border);
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .ai-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-gradient);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .ai-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .ai-stat {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+
+        .copy-btn {
+            background: #007AFF;
+            color: white;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            padding: 10px 16px;
+        }
+
+        .copy-btn:hover {
+            background: #0056CC;
+        }
     </style>
 </head>
 <body>
@@ -1359,6 +1431,7 @@ The amount is 130 BDT.</p>
                                 <div class="tab active" data-tab="upload">Upload Files</div>
                                 <div class="tab" data-tab="paste">Paste Text</div>
                                 <div class="tab" data-tab="bulk">Bulk Processing</div>
+                                <div class="tab" data-tab="ai">AI Data Cleaning</div>
                             </div>
                             
                             <div class="tab-content active" id="upload-tab">
@@ -1420,6 +1493,63 @@ john doe 123 main st sf ca 1234
 iphone 15 $1199
 note: sig req"></textarea>
                             </div>
+
+                            <!-- NEW AI DATA CLEANING TAB -->
+                            <div class="tab-content" id="ai-tab">
+                                <div class="ai-cleaning-panel">
+                                    <div class="ai-header">
+                                        <div class="ai-icon">🤖</div>
+                                        <div>
+                                            <h3 style="margin: 0; font-size: 1.1rem;">AI Data Cleaning Assistant</h3>
+                                            <p style="margin: 4px 0 0; color: var(--text-light); font-size: 0.9rem;">Transform messy text into structured order data</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <textarea id="ai-input" placeholder="Paste any messy text here - even conversation style, mixed languages, or unstructured data...
+
+Example:
+hey i need to order iphone 15 pro max in gold color for my brother
+his name is rahim chowdhury
+phone: 01712345678
+address: 123/5 mirpur road, dhaka 1216
+price is 150000 taka
+note: please gift wrap it
+
+or:
+সেলিম আহমেদ, 01811223344
+ধানমন্ডি, ঢাকা
+স্যামসাং গ্যালাক্সি এস২২ আল্ট্রা, কালার ব্ল্যাক
+দাম ৯৫০০০ টাকা
+দ্রুত ডেলিভারি দিবেন"></textarea>
+                                    
+                                    <button id="clean-data-btn" class="btn" style="margin-top: var(--spacing-md);">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14,2 14,8 20,8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                            <polyline points="10,9 9,9 8,9"/>
+                                        </svg>
+                                        Clean & Structure Data
+                                    </button>
+                                    
+                                    <div id="ai-result" class="ai-result hidden">
+                                        <!-- AI cleaning results will appear here -->
+                                    </div>
+                                    
+                                    <div id="ai-stats" class="ai-stats hidden">
+                                        <!-- Stats will appear here -->
+                                    </div>
+                                    
+                                    <button id="copy-result-btn" class="btn copy-btn hidden">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                        Copy to Clipboard
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1474,6 +1604,13 @@ note: sig req"></textarea>
                                     <div>
                                         <strong>Company Branding</strong>
                                         <div style="font-size: 0.75rem; color: var(--text-light);">Add your logo & info</div>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">🤖</div>
+                                    <div>
+                                        <strong>AI Data Cleaning</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Transform messy text</div>
                                     </div>
                                 </div>
                             </div>
@@ -1637,6 +1774,7 @@ note: sig req"></textarea>
         const fileInput = document.getElementById('file-input');
         const textInput = document.getElementById('text-input');
         const bulkInput = document.getElementById('bulk-input');
+        const aiInput = document.getElementById('ai-input');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -1662,6 +1800,10 @@ note: sig req"></textarea>
         const transactionIdInput = document.getElementById('transaction-id');
         const submitTransactionBtn = document.getElementById('submit-transaction');
         const whatsappLink = document.getElementById('whatsapp-link');
+        const cleanDataBtn = document.getElementById('clean-data-btn');
+        const aiResult = document.getElementById('ai-result');
+        const aiStats = document.getElementById('ai-stats');
+        const copyResultBtn = document.getElementById('copy-result-btn');
         
         // Canvas context
         const ctx = slipPreview.getContext('2d');
@@ -1759,6 +1901,12 @@ note: sig req"></textarea>
             
             // Print button - FIXED
             printBtn.addEventListener('click', printSlips);
+            
+            // AI Data Cleaning button
+            cleanDataBtn.addEventListener('click', cleanAndStructureData);
+            
+            // Copy result button
+            copyResultBtn.addEventListener('click', copyResultToClipboard);
         }
         
         // Initialize smooth scrolling
@@ -1973,6 +2121,280 @@ note: sig req"></textarea>
             }
         }
         
+        // NEW AI DATA CLEANING FUNCTION
+        function cleanAndStructureData() {
+            const inputText = aiInput.value.trim();
+            
+            if (!inputText) {
+                alert('Please enter some text to clean and structure.');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = cleanDataBtn.innerHTML;
+            cleanDataBtn.innerHTML = '<div class="loading"></div> Cleaning Data...';
+            cleanDataBtn.disabled = true;
+            
+            // Process after a short delay to show loading state
+            setTimeout(() => {
+                try {
+                    const result = processMessyText(inputText);
+                    
+                    // Display results
+                    aiResult.textContent = result.formattedText;
+                    aiResult.classList.remove('hidden');
+                    
+                    // Display stats
+                    aiStats.innerHTML = `
+                        <div class="ai-stat">Orders Found: ${result.stats.orders}</div>
+                        <div class="ai-stat">Fields Extracted: ${result.stats.fields}</div>
+                        <div class="ai-stat">Language: ${result.stats.language}</div>
+                    `;
+                    aiStats.classList.remove('hidden');
+                    
+                    // Show copy button
+                    copyResultBtn.classList.remove('hidden');
+                    
+                    // Reset button state
+                    cleanDataBtn.innerHTML = originalText;
+                    cleanDataBtn.disabled = false;
+                    
+                } catch (error) {
+                    console.error('AI Data Cleaning Error:', error);
+                    // Reset button state and show error
+                    cleanDataBtn.innerHTML = originalText;
+                    cleanDataBtn.disabled = false;
+                    aiResult.textContent = `Error processing data: ${error.message}`;
+                    aiResult.classList.remove('hidden');
+                }
+            }, 500);
+        }
+        
+        function processMessyText(text) {
+            // Split text into potential orders (separated by blank lines)
+            const orderBlocks = text.split(/\n\s*\n/).filter(block => block.trim() !== '');
+            
+            const formattedOrders = [];
+            let totalFields = 0;
+            let detectedLanguage = 'Unknown';
+            
+            // Process each order block
+            orderBlocks.forEach(block => {
+                const order = extractOrderData(block);
+                formattedOrders.push(formatOrder(order));
+                totalFields += Object.keys(order).filter(key => order[key]).length;
+            });
+            
+            // Detect language
+            detectedLanguage = detectLanguage(text);
+            
+            // Combine all formatted orders with separators
+            const formattedText = formattedOrders.join('\n---\n\n');
+            
+            return {
+                formattedText: formattedText,
+                stats: {
+                    orders: orderBlocks.length,
+                    fields: totalFields,
+                    language: detectedLanguage
+                }
+            };
+        }
+        
+        function extractOrderData(text) {
+            const order = {
+                name: '',
+                phone: '',
+                address: '',
+                productName: '',
+                quantity: '',
+                price: '',
+                note: ''
+            };
+            
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line !== '');
+            
+            // Remove emojis and normalize text
+            const cleanText = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+                                .replace(/\s+/g, ' ')
+                                .trim();
+            
+            // Extract phone numbers
+            const phoneRegex = /(\+?88)?01[3-9]\d{8}|(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g;
+            const phones = cleanText.match(phoneRegex) || [];
+            if (phones.length > 0) {
+                order.phone = phones[0];
+            }
+            
+            // Extract prices/amounts
+            const priceRegex = /(\$|৳|USD|Tk|tk|tk\.|taka|টাকা)\s*(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)|(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)\s*(\$|৳|USD|Tk|tk|tk\.|taka|টাকা)/gi;
+            const prices = cleanText.match(priceRegex) || [];
+            if (prices.length > 0) {
+                order.price = prices[0].replace(/\s+/g, ' ').trim();
+            }
+            
+            // Extract quantities
+            const quantityRegex = /(\d+)\s*(pcs|pieces|unit|units|pack|packs|set|sets|বক্স|পিস)/gi;
+            const quantities = cleanText.match(quantityRegex) || [];
+            if (quantities.length > 0) {
+                order.quantity = quantities[0];
+            }
+            
+            // Look for name patterns (typically at the beginning)
+            for (const line of lines) {
+                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+                                    .replace(/\s+/g, ' ')
+                                    .trim();
+                
+                // Skip if line contains phone, price, or common address indicators
+                if (phoneRegex.test(cleanLine) || priceRegex.test(cleanLine) || 
+                    /(road|street|st|avenue|ave|lane|ln|boulevard|blvd|house|building|apt|apartment|floor|fl|area|city|state|zip|postal)/gi.test(cleanLine) ||
+                    /(রোড|স্ট্রিট|লেন|এভিনিউ|বিল্ডিং|বাসা|এলাকা|শহর|জেলা)/gi.test(cleanLine)) {
+                    continue;
+                }
+                
+                // If line looks like a name (contains 2-3 words, mostly letters)
+                const words = cleanLine.split(/\s+/);
+                if (words.length >= 2 && words.length <= 4 && 
+                    words.every(word => /^[A-Za-z\u0980-\u09FF\s]+$/.test(word)) &&
+                    !/(order|please|need|want|send|deliver|delivery|address|phone|mobile|email)/gi.test(cleanLine)) {
+                    order.name = cleanLine;
+                    break;
+                }
+            }
+            
+            // Extract product information
+            const productKeywords = ['iphone', 'samsung', 'xiaomi', 'oneplus', 'oppo', 'vivo', 'realme', 'nokia',
+                                   'mobile', 'phone', 'smartphone', 'tablet', 'laptop', 'computer', 'watch',
+                                   'headphone', 'earphone', 'charger', 'cable', 'case', 'cover', 'screen protector',
+                                   'মোবাইল', 'ফোন', 'স্মার্টফোন', 'ট্যাবলেট', 'ল্যাপটপ', 'কম্পিউটার', 'ঘড়ি',
+                                   'হেডফোন', 'ইয়ারফোন', 'চার্জার', 'ক্যাবল', 'কেস', 'কভার', 'স্ক্রিন প্রটেক্টর'];
+            
+            for (const line of lines) {
+                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+                                    .replace(/\s+/g, ' ')
+                                    .trim();
+                
+                // Skip if line contains name, phone, or price
+                if (cleanLine === order.name || cleanLine === order.phone || cleanLine === order.price) {
+                    continue;
+                }
+                
+                // Check if line contains product keywords
+                const hasProductKeyword = productKeywords.some(keyword => 
+                    cleanLine.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (hasProductKeyword && !order.productName) {
+                    order.productName = cleanLine;
+                }
+            }
+            
+            // Extract address (look for lines with location indicators)
+            for (const line of lines) {
+                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+                                    .replace(/\s+/g, ' ')
+                                    .trim();
+                
+                // Skip if line contains name, phone, price, or product
+                if (cleanLine === order.name || cleanLine === order.phone || 
+                    cleanLine === order.price || cleanLine === order.productName) {
+                    continue;
+                }
+                
+                // Check for address indicators
+                const addressIndicators = [
+                    'road', 'street', 'st', 'avenue', 'ave', 'lane', 'ln', 'boulevard', 'blvd',
+                    'house', 'building', 'apt', 'apartment', 'floor', 'fl', 'area', 'city', 'state',
+                    'zip', 'postal', 'code', 'county', 'country',
+                    'রোড', 'স্ট্রিট', 'লেন', 'এভিনিউ', 'বিল্ডিং', 'বাসা', 'এলাকা', 'শহর', 'জেলা',
+                    'পোস্ট', 'কোড', 'ডাকঘর'
+                ];
+                
+                const hasAddressIndicator = addressIndicators.some(indicator => 
+                    cleanLine.toLowerCase().includes(indicator.toLowerCase())
+                );
+                
+                const hasNumbers = /\d/.test(cleanLine);
+                
+                if ((hasAddressIndicator || hasNumbers) && cleanLine.length > 10 && !order.address) {
+                    order.address = cleanLine;
+                }
+            }
+            
+            // Extract notes (remaining lines that don't fit other categories)
+            const usedLines = new Set([order.name, order.phone, order.address, order.productName, order.price, order.quantity]);
+            
+            for (const line of lines) {
+                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+                                    .replace(/\s+/g, ' ')
+                                    .trim();
+                
+                if (!usedLines.has(cleanLine) && cleanLine && 
+                    !phoneRegex.test(cleanLine) && !priceRegex.test(cleanLine)) {
+                    
+                    // Check for note indicators
+                    const noteIndicators = ['note:', 'notice:', 'special instruction', 'instruction:', 
+                                          'দ্রষ্টব্য:', 'নোট:', 'বিশেষ নির্দেশনা:', 'নির্দেশনা:'];
+                    const hasNoteIndicator = noteIndicators.some(indicator => 
+                        cleanLine.toLowerCase().includes(indicator.toLowerCase())
+                    );
+                    
+                    if (hasNoteIndicator || order.note === '') {
+                        if (order.note) {
+                            order.note += ' ' + cleanLine;
+                        } else {
+                            order.note = cleanLine;
+                        }
+                    }
+                }
+            }
+            
+            return order;
+        }
+        
+        function formatOrder(order) {
+            return `Name: ${order.name || ''}
+Phone: ${order.phone || ''}
+Address: ${order.address || ''}
+Product Name: ${order.productName || ''}
+Quantity: ${order.quantity || ''}
+Price: ${order.price || ''}
+Note: ${order.note || ''}`;
+        }
+        
+        function detectLanguage(text) {
+            // Simple language detection based on character ranges
+            const banglaChars = text.match(/[\u0980-\u09FF]/g);
+            const englishChars = text.match(/[a-zA-Z]/g);
+            
+            if (banglaChars && englishChars) {
+                return banglaChars.length > englishChars.length ? 'Bangla (Mixed)' : 'English (Mixed)';
+            } else if (banglaChars) {
+                return 'Bangla';
+            } else if (englishChars) {
+                return 'English';
+            } else {
+                return 'Unknown';
+            }
+        }
+        
+        function copyResultToClipboard() {
+            const resultText = aiResult.textContent;
+            
+            navigator.clipboard.writeText(resultText).then(() => {
+                // Show success feedback
+                const originalText = copyResultBtn.innerHTML;
+                copyResultBtn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    copyResultBtn.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy text to clipboard. Please try again.');
+            });
+        }
+        
         function parseCustomerData(text) {
             // Split by blank lines (multiple newlines)
             const entries = text.split(/\n\s*\n/);
@@ -2160,6 +2582,17 @@ note: sig req"></textarea>
                 inputText = textInput.value;
             } else if (activeTab === 'bulk') {
                 inputText = bulkInput.value;
+            } else if (activeTab === 'ai') {
+                // Use the cleaned data from AI tab
+                const cleanedData = aiResult.textContent;
+                if (cleanedData && !cleanedData.includes('Error processing data')) {
+                    inputText = cleanedData;
+                    // Also update the paste tab with cleaned data
+                    textInput.value = cleanedData;
+                } else {
+                    alert('Please clean the data first using the AI Data Cleaning tab.');
+                    return;
+                }
             }
             
             if (!inputText.trim()) {
