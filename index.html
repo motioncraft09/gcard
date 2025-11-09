@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* All previous CSS remains exactly the same */
         :root {
             --primary: #6C63FF;
             --primary-light: #8B85FF;
@@ -1217,76 +1216,147 @@
             perspective: 1000px;
         }
 
-        /* NEW STYLES FOR AI CLEANING */
-        .ai-cleaning-panel {
-            background: linear-gradient(135deg, #E8F4FD 0%, #F0F9FF 100%);
-            border: 1px solid rgba(0, 123, 255, 0.2);
-            border-radius: var(--radius);
-            padding: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            width: 100%;
-        }
-
-        .ai-result {
-            background: white;
-            border-radius: var(--radius);
-            padding: var(--spacing-md);
-            margin-top: var(--spacing-md);
-            border: 1px solid var(--border);
-            max-height: 300px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-
-        .ai-header {
-            display: flex;
-            align-items: center;
+        /* NEW STYLES FOR TEMPLATES AND HISTORY */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
         }
 
-        .ai-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
+        .template-card {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-sm);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .template-card.active {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 120px;
+            background: #f5f5f5;
             border-radius: 8px;
+            margin-bottom: var(--spacing-xs);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .ai-stats {
-            display: flex;
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-sm);
-            flex-wrap: wrap;
-        }
-
-        .ai-stat {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
             font-size: 0.8rem;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        .template-name {
             font-weight: 600;
-            border: 1px solid rgba(108, 99, 255, 0.1);
-        }
-
-        .copy-btn {
-            background: #007AFF;
-            color: white;
-            margin-top: 10px;
             font-size: 0.9rem;
-            padding: 10px 16px;
         }
 
-        .copy-btn:hover {
-            background: #0056CC;
+        .template-type {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .history-section {
+            margin-top: var(--spacing-lg);
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .history-item {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-customer {
+            font-weight: 600;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .history-btn {
+            padding: 6px 12px;
+            background: var(--border);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s var(--ease);
+        }
+
+        .history-btn:hover {
+            background: var(--border-hover);
+        }
+
+        .history-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .history-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .empty-history {
+            padding: var(--spacing-lg);
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        /* Thermal printer specific styles */
+        .thermal-template {
+            background: white !important;
+            color: black !important;
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .thermal-template * {
+            background: white !important;
+            color: black !important;
+        }
+
+        .thermal-template .preview-header {
+            background: white !important;
+            color: black !important;
+            border-bottom: 2px solid black !important;
         }
     </style>
 </head>
@@ -1431,7 +1501,7 @@ The amount is 130 BDT.</p>
                                 <div class="tab active" data-tab="upload">Upload Files</div>
                                 <div class="tab" data-tab="paste">Paste Text</div>
                                 <div class="tab" data-tab="bulk">Bulk Processing</div>
-                                <div class="tab" data-tab="ai">AI Data Cleaning</div>
+                                <div class="tab" data-tab="templates">Templates</div>
                             </div>
                             
                             <div class="tab-content active" id="upload-tab">
@@ -1494,60 +1564,60 @@ iphone 15 $1199
 note: sig req"></textarea>
                             </div>
 
-                            <!-- NEW AI DATA CLEANING TAB -->
-                            <div class="tab-content" id="ai-tab">
-                                <div class="ai-cleaning-panel">
-                                    <div class="ai-header">
-                                        <div class="ai-icon">🤖</div>
-                                        <div>
-                                            <h3 style="margin: 0; font-size: 1.1rem;">AI Data Cleaning Assistant</h3>
-                                            <p style="margin: 4px 0 0; color: var(--text-light); font-size: 0.9rem;">Transform messy text into structured order data</p>
+                            <!-- NEW TEMPLATES TAB -->
+                            <div class="tab-content" id="templates-tab">
+                                <div class="setting-group">
+                                    <div class="setting-label">Select Template</div>
+                                    <div class="template-grid">
+                                        <div class="template-card active" data-template="premium">
+                                            <div class="template-preview" style="background: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%); color: white;">
+                                                Premium
+                                            </div>
+                                            <div class="template-name">Premium Design</div>
+                                            <div class="template-type">Full Color • QR Code</div>
+                                        </div>
+                                        <div class="template-card" data-template="thermal">
+                                            <div class="template-preview" style="background: white; color: black; border: 1px solid #000;">
+                                                Thermal
+                                            </div>
+                                            <div class="template-name">Thermal Printer</div>
+                                            <div class="template-type">B&W • Compact</div>
+                                        </div>
+                                        <div class="template-card" data-template="minimal">
+                                            <div class="template-preview" style="background: #f8f9fa; color: #333; border: 1px dashed #ccc;">
+                                                Minimal
+                                            </div>
+                                            <div class="template-name">Minimalist</div>
+                                            <div class="template-type">Clean • Simple</div>
+                                        </div>
+                                        <div class="template-card" data-template="professional">
+                                            <div class="template-preview" style="background: #1a237e; color: white;">
+                                                Professional
+                                            </div>
+                                            <div class="template-name">Professional</div>
+                                            <div class="template-type">Corporate • Formal</div>
                                         </div>
                                     </div>
-                                    
-                                    <textarea id="ai-input" placeholder="Paste any messy text here - even conversation style, mixed languages, or unstructured data...
-
-Example:
-hey i need to order iphone 15 pro max in gold color for my brother
-his name is rahim chowdhury
-phone: 01712345678
-address: 123/5 mirpur road, dhaka 1216
-price is 150000 taka
-note: please gift wrap it
-
-or:
-সেলিম আহমেদ, 01811223344
-ধানমন্ডি, ঢাকা
-স্যামসাং গ্যালাক্সি এস২২ আল্ট্রা, কালার ব্ল্যাক
-দাম ৯৫০০০ টাকা
-দ্রুত ডেলিভারি দিবেন"></textarea>
-                                    
-                                    <button id="clean-data-btn" class="btn" style="margin-top: var(--spacing-md);">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                            <polyline points="14,2 14,8 20,8"/>
-                                            <line x1="16" y1="13" x2="8" y2="13"/>
-                                            <line x1="16" y1="17" x2="8" y2="17"/>
-                                            <polyline points="10,9 9,9 8,9"/>
-                                        </svg>
-                                        Clean & Structure Data
-                                    </button>
-                                    
-                                    <div id="ai-result" class="ai-result hidden">
-                                        <!-- AI cleaning results will appear here -->
+                                </div>
+                                
+                                <div class="features-panel">
+                                    <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Template Features</h3>
+                                    <div class="features-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">🖨️</div>
+                                            <div>
+                                                <strong>Thermal Compatible</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Works with any thermal printer</div>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">🎨</div>
+                                            <div>
+                                                <strong>Multiple Designs</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Choose from 4 professional templates</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <div id="ai-stats" class="ai-stats hidden">
-                                        <!-- Stats will appear here -->
-                                    </div>
-                                    
-                                    <button id="copy-result-btn" class="btn copy-btn hidden">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                                        </svg>
-                                        Copy to Clipboard
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1607,10 +1677,10 @@ or:
                                     </div>
                                 </div>
                                 <div class="feature-item">
-                                    <div class="feature-icon">🤖</div>
+                                    <div class="feature-icon">🖨️</div>
                                     <div>
-                                        <strong>AI Data Cleaning</strong>
-                                        <div style="font-size: 0.75rem; color: var(--text-light);">Transform messy text</div>
+                                        <strong>Universal Printing</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Works with any printer</div>
                                     </div>
                                 </div>
                             </div>
@@ -1683,6 +1753,26 @@ or:
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="history-section" class="history-section hidden" style="animation: fadeInUp 0.6s var(--ease) 0.8s both">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        Slip History
+                    </h2>
+                    
+                    <div class="history-list" id="history-list">
+                        <div class="empty-history" id="empty-history">
+                            No history yet. Generate your first slip to see it here.
+                        </div>
+                        <!-- History items will be added here dynamically -->
                     </div>
                 </div>
             </section>
@@ -1768,13 +1858,14 @@ or:
         let generatedSlips = [];
         let currentSlipIndex = 0;
         let secureStorage = new SimpleSecureStorage();
+        let selectedTemplate = 'premium';
+        let slipHistory = [];
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
         const fileInput = document.getElementById('file-input');
         const textInput = document.getElementById('text-input');
         const bulkInput = document.getElementById('bulk-input');
-        const aiInput = document.getElementById('ai-input');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -1800,10 +1891,10 @@ or:
         const transactionIdInput = document.getElementById('transaction-id');
         const submitTransactionBtn = document.getElementById('submit-transaction');
         const whatsappLink = document.getElementById('whatsapp-link');
-        const cleanDataBtn = document.getElementById('clean-data-btn');
-        const aiResult = document.getElementById('ai-result');
-        const aiStats = document.getElementById('ai-stats');
-        const copyResultBtn = document.getElementById('copy-result-btn');
+        const templateCards = document.querySelectorAll('.template-card');
+        const historySection = document.getElementById('history-section');
+        const historyList = document.getElementById('history-list');
+        const emptyHistory = document.getElementById('empty-history');
         
         // Canvas context
         const ctx = slipPreview.getContext('2d');
@@ -1815,6 +1906,9 @@ or:
             
             // Initialize usage tracking
             initializeUsageTracking();
+            
+            // Initialize history
+            loadHistory();
             
             // Initialize smooth scrolling
             initializeSmoothScrolling();
@@ -1873,6 +1967,15 @@ or:
                 });
             });
             
+            // Template selection
+            templateCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    templateCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    selectedTemplate = card.getAttribute('data-template');
+                });
+            });
+            
             // Generate button
             generateBtn.addEventListener('click', generateSlips);
             
@@ -1901,12 +2004,6 @@ or:
             
             // Print button - FIXED
             printBtn.addEventListener('click', printSlips);
-            
-            // AI Data Cleaning button
-            cleanDataBtn.addEventListener('click', cleanAndStructureData);
-            
-            // Copy result button
-            copyResultBtn.addEventListener('click', copyResultToClipboard);
         }
         
         // Initialize smooth scrolling
@@ -2121,280 +2218,6 @@ or:
             }
         }
         
-        // NEW AI DATA CLEANING FUNCTION
-        function cleanAndStructureData() {
-            const inputText = aiInput.value.trim();
-            
-            if (!inputText) {
-                alert('Please enter some text to clean and structure.');
-                return;
-            }
-            
-            // Show loading state
-            const originalText = cleanDataBtn.innerHTML;
-            cleanDataBtn.innerHTML = '<div class="loading"></div> Cleaning Data...';
-            cleanDataBtn.disabled = true;
-            
-            // Process after a short delay to show loading state
-            setTimeout(() => {
-                try {
-                    const result = processMessyText(inputText);
-                    
-                    // Display results
-                    aiResult.textContent = result.formattedText;
-                    aiResult.classList.remove('hidden');
-                    
-                    // Display stats
-                    aiStats.innerHTML = `
-                        <div class="ai-stat">Orders Found: ${result.stats.orders}</div>
-                        <div class="ai-stat">Fields Extracted: ${result.stats.fields}</div>
-                        <div class="ai-stat">Language: ${result.stats.language}</div>
-                    `;
-                    aiStats.classList.remove('hidden');
-                    
-                    // Show copy button
-                    copyResultBtn.classList.remove('hidden');
-                    
-                    // Reset button state
-                    cleanDataBtn.innerHTML = originalText;
-                    cleanDataBtn.disabled = false;
-                    
-                } catch (error) {
-                    console.error('AI Data Cleaning Error:', error);
-                    // Reset button state and show error
-                    cleanDataBtn.innerHTML = originalText;
-                    cleanDataBtn.disabled = false;
-                    aiResult.textContent = `Error processing data: ${error.message}`;
-                    aiResult.classList.remove('hidden');
-                }
-            }, 500);
-        }
-        
-        function processMessyText(text) {
-            // Split text into potential orders (separated by blank lines)
-            const orderBlocks = text.split(/\n\s*\n/).filter(block => block.trim() !== '');
-            
-            const formattedOrders = [];
-            let totalFields = 0;
-            let detectedLanguage = 'Unknown';
-            
-            // Process each order block
-            orderBlocks.forEach(block => {
-                const order = extractOrderData(block);
-                formattedOrders.push(formatOrder(order));
-                totalFields += Object.keys(order).filter(key => order[key]).length;
-            });
-            
-            // Detect language
-            detectedLanguage = detectLanguage(text);
-            
-            // Combine all formatted orders with separators
-            const formattedText = formattedOrders.join('\n---\n\n');
-            
-            return {
-                formattedText: formattedText,
-                stats: {
-                    orders: orderBlocks.length,
-                    fields: totalFields,
-                    language: detectedLanguage
-                }
-            };
-        }
-        
-        function extractOrderData(text) {
-            const order = {
-                name: '',
-                phone: '',
-                address: '',
-                productName: '',
-                quantity: '',
-                price: '',
-                note: ''
-            };
-            
-            const lines = text.split('\n').map(line => line.trim()).filter(line => line !== '');
-            
-            // Remove emojis and normalize text
-            const cleanText = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
-                                .replace(/\s+/g, ' ')
-                                .trim();
-            
-            // Extract phone numbers
-            const phoneRegex = /(\+?88)?01[3-9]\d{8}|(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g;
-            const phones = cleanText.match(phoneRegex) || [];
-            if (phones.length > 0) {
-                order.phone = phones[0];
-            }
-            
-            // Extract prices/amounts
-            const priceRegex = /(\$|৳|USD|Tk|tk|tk\.|taka|টাকা)\s*(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)|(\d{1,3}(,\d{3})*(\.\d{2})?|\d+(\.\d{2})?)\s*(\$|৳|USD|Tk|tk|tk\.|taka|টাকা)/gi;
-            const prices = cleanText.match(priceRegex) || [];
-            if (prices.length > 0) {
-                order.price = prices[0].replace(/\s+/g, ' ').trim();
-            }
-            
-            // Extract quantities
-            const quantityRegex = /(\d+)\s*(pcs|pieces|unit|units|pack|packs|set|sets|বক্স|পিস)/gi;
-            const quantities = cleanText.match(quantityRegex) || [];
-            if (quantities.length > 0) {
-                order.quantity = quantities[0];
-            }
-            
-            // Look for name patterns (typically at the beginning)
-            for (const line of lines) {
-                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
-                                    .replace(/\s+/g, ' ')
-                                    .trim();
-                
-                // Skip if line contains phone, price, or common address indicators
-                if (phoneRegex.test(cleanLine) || priceRegex.test(cleanLine) || 
-                    /(road|street|st|avenue|ave|lane|ln|boulevard|blvd|house|building|apt|apartment|floor|fl|area|city|state|zip|postal)/gi.test(cleanLine) ||
-                    /(রোড|স্ট্রিট|লেন|এভিনিউ|বিল্ডিং|বাসা|এলাকা|শহর|জেলা)/gi.test(cleanLine)) {
-                    continue;
-                }
-                
-                // If line looks like a name (contains 2-3 words, mostly letters)
-                const words = cleanLine.split(/\s+/);
-                if (words.length >= 2 && words.length <= 4 && 
-                    words.every(word => /^[A-Za-z\u0980-\u09FF\s]+$/.test(word)) &&
-                    !/(order|please|need|want|send|deliver|delivery|address|phone|mobile|email)/gi.test(cleanLine)) {
-                    order.name = cleanLine;
-                    break;
-                }
-            }
-            
-            // Extract product information
-            const productKeywords = ['iphone', 'samsung', 'xiaomi', 'oneplus', 'oppo', 'vivo', 'realme', 'nokia',
-                                   'mobile', 'phone', 'smartphone', 'tablet', 'laptop', 'computer', 'watch',
-                                   'headphone', 'earphone', 'charger', 'cable', 'case', 'cover', 'screen protector',
-                                   'মোবাইল', 'ফোন', 'স্মার্টফোন', 'ট্যাবলেট', 'ল্যাপটপ', 'কম্পিউটার', 'ঘড়ি',
-                                   'হেডফোন', 'ইয়ারফোন', 'চার্জার', 'ক্যাবল', 'কেস', 'কভার', 'স্ক্রিন প্রটেক্টর'];
-            
-            for (const line of lines) {
-                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
-                                    .replace(/\s+/g, ' ')
-                                    .trim();
-                
-                // Skip if line contains name, phone, or price
-                if (cleanLine === order.name || cleanLine === order.phone || cleanLine === order.price) {
-                    continue;
-                }
-                
-                // Check if line contains product keywords
-                const hasProductKeyword = productKeywords.some(keyword => 
-                    cleanLine.toLowerCase().includes(keyword.toLowerCase())
-                );
-                
-                if (hasProductKeyword && !order.productName) {
-                    order.productName = cleanLine;
-                }
-            }
-            
-            // Extract address (look for lines with location indicators)
-            for (const line of lines) {
-                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
-                                    .replace(/\s+/g, ' ')
-                                    .trim();
-                
-                // Skip if line contains name, phone, price, or product
-                if (cleanLine === order.name || cleanLine === order.phone || 
-                    cleanLine === order.price || cleanLine === order.productName) {
-                    continue;
-                }
-                
-                // Check for address indicators
-                const addressIndicators = [
-                    'road', 'street', 'st', 'avenue', 'ave', 'lane', 'ln', 'boulevard', 'blvd',
-                    'house', 'building', 'apt', 'apartment', 'floor', 'fl', 'area', 'city', 'state',
-                    'zip', 'postal', 'code', 'county', 'country',
-                    'রোড', 'স্ট্রিট', 'লেন', 'এভিনিউ', 'বিল্ডিং', 'বাসা', 'এলাকা', 'শহর', 'জেলা',
-                    'পোস্ট', 'কোড', 'ডাকঘর'
-                ];
-                
-                const hasAddressIndicator = addressIndicators.some(indicator => 
-                    cleanLine.toLowerCase().includes(indicator.toLowerCase())
-                );
-                
-                const hasNumbers = /\d/.test(cleanLine);
-                
-                if ((hasAddressIndicator || hasNumbers) && cleanLine.length > 10 && !order.address) {
-                    order.address = cleanLine;
-                }
-            }
-            
-            // Extract notes (remaining lines that don't fit other categories)
-            const usedLines = new Set([order.name, order.phone, order.address, order.productName, order.price, order.quantity]);
-            
-            for (const line of lines) {
-                const cleanLine = line.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
-                                    .replace(/\s+/g, ' ')
-                                    .trim();
-                
-                if (!usedLines.has(cleanLine) && cleanLine && 
-                    !phoneRegex.test(cleanLine) && !priceRegex.test(cleanLine)) {
-                    
-                    // Check for note indicators
-                    const noteIndicators = ['note:', 'notice:', 'special instruction', 'instruction:', 
-                                          'দ্রষ্টব্য:', 'নোট:', 'বিশেষ নির্দেশনা:', 'নির্দেশনা:'];
-                    const hasNoteIndicator = noteIndicators.some(indicator => 
-                        cleanLine.toLowerCase().includes(indicator.toLowerCase())
-                    );
-                    
-                    if (hasNoteIndicator || order.note === '') {
-                        if (order.note) {
-                            order.note += ' ' + cleanLine;
-                        } else {
-                            order.note = cleanLine;
-                        }
-                    }
-                }
-            }
-            
-            return order;
-        }
-        
-        function formatOrder(order) {
-            return `Name: ${order.name || ''}
-Phone: ${order.phone || ''}
-Address: ${order.address || ''}
-Product Name: ${order.productName || ''}
-Quantity: ${order.quantity || ''}
-Price: ${order.price || ''}
-Note: ${order.note || ''}`;
-        }
-        
-        function detectLanguage(text) {
-            // Simple language detection based on character ranges
-            const banglaChars = text.match(/[\u0980-\u09FF]/g);
-            const englishChars = text.match(/[a-zA-Z]/g);
-            
-            if (banglaChars && englishChars) {
-                return banglaChars.length > englishChars.length ? 'Bangla (Mixed)' : 'English (Mixed)';
-            } else if (banglaChars) {
-                return 'Bangla';
-            } else if (englishChars) {
-                return 'English';
-            } else {
-                return 'Unknown';
-            }
-        }
-        
-        function copyResultToClipboard() {
-            const resultText = aiResult.textContent;
-            
-            navigator.clipboard.writeText(resultText).then(() => {
-                // Show success feedback
-                const originalText = copyResultBtn.innerHTML;
-                copyResultBtn.innerHTML = '✅ Copied!';
-                setTimeout(() => {
-                    copyResultBtn.innerHTML = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                alert('Failed to copy text to clipboard. Please try again.');
-            });
-        }
-        
         function parseCustomerData(text) {
             // Split by blank lines (multiple newlines)
             const entries = text.split(/\n\s*\n/);
@@ -2582,17 +2405,6 @@ Note: ${order.note || ''}`;
                 inputText = textInput.value;
             } else if (activeTab === 'bulk') {
                 inputText = bulkInput.value;
-            } else if (activeTab === 'ai') {
-                // Use the cleaned data from AI tab
-                const cleanedData = aiResult.textContent;
-                if (cleanedData && !cleanedData.includes('Error processing data')) {
-                    inputText = cleanedData;
-                    // Also update the paste tab with cleaned data
-                    textInput.value = cleanedData;
-                } else {
-                    alert('Please clean the data first using the AI Data Cleaning tab.');
-                    return;
-                }
             }
             
             if (!inputText.trim()) {
@@ -2624,8 +2436,14 @@ Note: ${order.note || ''}`;
                     // Generate slip images
                     generatedSlips = generateSlipImages(customers);
                     
+                    // Save to history
+                    saveToHistory(customers);
+                    
                     // Show preview section
                     previewSection.classList.remove('hidden');
+                    
+                    // Show history section
+                    historySection.classList.remove('hidden');
                     
                     // Update preview display
                     currentSlipIndex = 0;
@@ -2660,24 +2478,51 @@ Note: ${order.note || ''}`;
             customers.forEach(customer => {
                 // Create a temporary canvas for each slip with high resolution
                 const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = 1000; // High resolution for printing
-                tempCanvas.height = 1400;
+                
+                // Set dimensions based on template
+                if (selectedTemplate === 'thermal') {
+                    // Thermal printers typically use 80mm width (approx 300px at 96 DPI)
+                    tempCanvas.width = 300;
+                    tempCanvas.height = 600; // Compact height for thermal
+                } else {
+                    tempCanvas.width = 1000; // High resolution for printing
+                    tempCanvas.height = 1400;
+                }
+                
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Draw the slip design
-                drawUltraPremiumSlip(tempCtx, customer, 1000, 1400);
+                // Draw the slip design based on selected template
+                switch(selectedTemplate) {
+                    case 'premium':
+                        drawPremiumTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
+                        break;
+                    case 'thermal':
+                        drawThermalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
+                        break;
+                    case 'minimal':
+                        drawMinimalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
+                        break;
+                    case 'professional':
+                        drawProfessionalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
+                        break;
+                    default:
+                        drawPremiumTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
+                }
                 
                 // Store the canvas data
                 slips.push({
                     canvas: tempCanvas,
-                    customer: customer
+                    customer: customer,
+                    template: selectedTemplate,
+                    timestamp: Date.now()
                 });
             });
             
             return slips;
         }
         
-        function drawUltraPremiumSlip(ctx, customer, width, height) {
+        // Premium Template (Original)
+        function drawPremiumTemplate(ctx, customer, width, height) {
             // Clear canvas with premium white background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, width, height);
@@ -2901,6 +2746,297 @@ Note: ${order.note || ''}`;
             ctx.stroke();
         }
         
+        // Thermal Printer Template
+        function drawThermalTemplate(ctx, customer, width, height) {
+            // Clear canvas with white background
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Use monospace font for thermal printer compatibility
+            ctx.font = '12px "Courier New", monospace';
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'left';
+            
+            let yPos = 30;
+            
+            // Company name (centered)
+            const companyName = customer.company || 'YOUR COMPANY';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 14px "Courier New", monospace';
+            ctx.fillText(companyName.toUpperCase(), width / 2, yPos);
+            yPos += 25;
+            
+            ctx.font = '10px "Courier New", monospace';
+            ctx.fillText('PACKAGING SLIP', width / 2, yPos);
+            yPos += 20;
+            
+            // Divider line
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(20, yPos);
+            ctx.lineTo(width - 20, yPos);
+            ctx.stroke();
+            yPos += 20;
+            
+            // Reset text alignment
+            ctx.textAlign = 'left';
+            ctx.font = '10px "Courier New", monospace';
+            
+            // Customer information
+            if (customer.name) {
+                ctx.fillText(`NAME: ${customer.name}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            if (customer.phone) {
+                ctx.fillText(`PHONE: ${customer.phone}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            if (customer.email) {
+                ctx.fillText(`EMAIL: ${customer.email}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            if (customer.address) {
+                ctx.fillText(`ADDRESS:`, 20, yPos);
+                yPos += 12;
+                const addressLines = wrapText(ctx, customer.address, 20, yPos, width - 40, 12);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 12;
+                });
+                yPos += 5;
+            }
+            
+            // Divider line
+            ctx.beginPath();
+            ctx.moveTo(20, yPos);
+            ctx.lineTo(width - 20, yPos);
+            ctx.stroke();
+            yPos += 15;
+            
+            // Order details
+            if (customer.product) {
+                ctx.fillText(`PRODUCT: ${customer.product}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            if (customer.price) {
+                ctx.fillText(`PRICE: ${customer.price}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            if (customer.note) {
+                ctx.fillText(`NOTE: ${customer.note}`, 20, yPos);
+                yPos += 15;
+            }
+            
+            // QR Code (smaller for thermal)
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                yPos += 10;
+                ctx.fillText('SCAN TO TRACK:', 20, yPos);
+                yPos += 15;
+                ctx.drawImage(qrCode, 20, yPos, 80, 80);
+            }
+            
+            // Footer
+            yPos = height - 30;
+            ctx.textAlign = 'center';
+            ctx.font = '8px "Courier New", monospace';
+            ctx.fillText('Thank you for your order!', width / 2, yPos);
+        }
+        
+        // Minimalist Template
+        function drawMinimalTemplate(ctx, customer, width, height) {
+            // Clear canvas with light background
+            ctx.fillStyle = '#F8F9FA';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Simple border
+            ctx.strokeStyle = '#E9ECEF';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, width - 20, height - 20);
+            
+            let yPos = 50;
+            
+            // Company name
+            const companyName = customer.company || 'YOUR COMPANY';
+            ctx.fillStyle = '#495057';
+            ctx.font = 'bold 24px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(companyName, width / 2, yPos);
+            yPos += 40;
+            
+            ctx.font = '14px Inter';
+            ctx.fillStyle = '#6C757D';
+            ctx.fillText('Packaging Slip', width / 2, yPos);
+            yPos += 50;
+            
+            // Customer information
+            ctx.textAlign = 'left';
+            ctx.font = '16px Inter';
+            ctx.fillStyle = '#212529';
+            
+            if (customer.name) {
+                ctx.fillText(customer.name, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.phone) {
+                ctx.fillText(customer.phone, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.email) {
+                ctx.fillText(customer.email, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.address) {
+                const addressLines = wrapText(ctx, customer.address, 40, yPos, width - 80, 20);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 25;
+                });
+            }
+            
+            yPos += 20;
+            
+            // Product information
+            if (customer.product) {
+                ctx.font = 'bold 18px Inter';
+                ctx.fillText('Order Details:', 40, yPos);
+                yPos += 30;
+                
+                ctx.font = '16px Inter';
+                ctx.fillText(customer.product, 40, yPos);
+                yPos += 25;
+            }
+            
+            if (customer.price) {
+                ctx.fillText(customer.price, 40, yPos);
+                yPos += 25;
+            }
+            
+            if (customer.note) {
+                ctx.font = 'italic 14px Inter';
+                ctx.fillText(`Note: ${customer.note}`, 40, yPos);
+            }
+            
+            // Simple QR code
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                ctx.drawImage(qrCode, width - 120, height - 120, 80, 80);
+            }
+        }
+        
+        // Professional Template
+        function drawProfessionalTemplate(ctx, customer, width, height) {
+            // Clear canvas with dark blue background
+            ctx.fillStyle = '#1A237E';
+            ctx.fillRect(0, 0, width, height);
+            
+            // White content area
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(20, 20, width - 40, height - 40);
+            
+            // Header with company name
+            ctx.fillStyle = '#1A237E';
+            ctx.font = 'bold 28px Inter';
+            ctx.textAlign = 'center';
+            
+            const companyName = customer.company || 'YOUR COMPANY';
+            ctx.fillText(companyName.toUpperCase(), width / 2, 60);
+            
+            ctx.font = '16px Inter';
+            ctx.fillText('OFFICIAL PACKAGING SLIP', width / 2, 90);
+            
+            let yPos = 140;
+            
+            // Customer information section
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#333333';
+            ctx.font = 'bold 18px Inter';
+            ctx.fillText('SHIPPING INFORMATION', 40, yPos);
+            
+            yPos += 40;
+            ctx.font = '16px Inter';
+            
+            if (customer.name) {
+                ctx.fillText(`Customer: ${customer.name}`, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.phone) {
+                ctx.fillText(`Phone: ${customer.phone}`, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.email) {
+                ctx.fillText(`Email: ${customer.email}`, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.address) {
+                ctx.fillText('Address:', 40, yPos);
+                yPos += 20;
+                const addressLines = wrapText(ctx, customer.address, 40, yPos, width - 80, 20);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 25;
+                });
+            }
+            
+            yPos += 20;
+            
+            // Order details section
+            ctx.font = 'bold 18px Inter';
+            ctx.fillText('ORDER DETAILS', 40, yPos);
+            
+            yPos += 40;
+            ctx.font = '16px Inter';
+            
+            if (customer.product) {
+                ctx.fillText(`Product: ${customer.product}`, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.price) {
+                ctx.fillText(`Amount: ${customer.price}`, 40, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.note) {
+                ctx.fillStyle = '#D32F2F';
+                ctx.fillText(`Special Instructions: ${customer.note}`, 40, yPos);
+            }
+            
+            // Professional QR code placement
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                ctx.fillStyle = '#1A237E';
+                ctx.fillRect(width - 150, height - 150, 130, 130);
+                ctx.drawImage(qrCode, width - 140, height - 140, 110, 110);
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '10px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCAN FOR TRACKING', width - 85, height - 15);
+            }
+            
+            // Footer with timestamp
+            ctx.fillStyle = '#757575';
+            ctx.font = '12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Generated on ${new Date().toLocaleDateString()}`, width / 2, height - 30);
+        }
+        
         function generateQRCode(text) {
             try {
                 const typeNumber = 4;
@@ -2963,6 +3099,136 @@ Note: ${order.note || ''}`;
             lines.push({text: currentLine, x: x, y: y});
             return lines;
         }
+        
+        // HISTORY SYSTEM FUNCTIONS
+        function loadHistory() {
+            const storedHistory = secureStorage.get('slipHistory');
+            if (storedHistory) {
+                slipHistory = storedHistory;
+                renderHistory();
+            }
+        }
+        
+        function saveToHistory(customers) {
+            const historyEntry = {
+                id: Date.now().toString(),
+                timestamp: Date.now(),
+                customers: customers,
+                template: selectedTemplate,
+                count: customers.length
+            };
+            
+            slipHistory.unshift(historyEntry);
+            
+            // Keep only last 50 entries to prevent storage bloat
+            if (slipHistory.length > 50) {
+                slipHistory = slipHistory.slice(0, 50);
+            }
+            
+            secureStorage.set('slipHistory', slipHistory);
+            renderHistory();
+        }
+        
+        function renderHistory() {
+            if (slipHistory.length === 0) {
+                emptyHistory.classList.remove('hidden');
+                return;
+            }
+            
+            emptyHistory.classList.add('hidden');
+            
+            // Clear existing history items
+            const existingItems = historyList.querySelectorAll('.history-item');
+            existingItems.forEach(item => item.remove());
+            
+            // Add history items
+            slipHistory.forEach(entry => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.setAttribute('data-id', entry.id);
+                
+                const firstCustomer = entry.customers[0];
+                const date = new Date(entry.timestamp).toLocaleDateString();
+                const time = new Date(entry.timestamp).toLocaleTimeString();
+                
+                historyItem.innerHTML = `
+                    <div class="history-info">
+                        <div class="history-customer">${firstCustomer.name || 'Unknown Customer'}</div>
+                        <div class="history-date">${date} at ${time} • ${entry.count} slip(s) • ${entry.template} template</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="history-btn" onclick="reprintHistory('${entry.id}')">Reprint</button>
+                        <button class="history-btn primary" onclick="viewHistory('${entry.id}')">View</button>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Global functions for history buttons
+        window.reprintHistory = function(historyId) {
+            const entry = slipHistory.find(item => item.id === historyId);
+            if (!entry) return;
+            
+            // Set the template
+            selectedTemplate = entry.template;
+            templateCards.forEach(card => {
+                card.classList.remove('active');
+                if (card.getAttribute('data-template') === selectedTemplate) {
+                    card.classList.add('active');
+                }
+            });
+            
+            // Generate slips from history
+            generatedSlips = generateSlipImages(entry.customers);
+            
+            // Show preview section
+            previewSection.classList.remove('hidden');
+            
+            // Update preview display
+            currentSlipIndex = 0;
+            updatePreviewDisplay();
+            
+            // Scroll to preview
+            previewSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Show success message
+            usageInfo.innerHTML = `<span class="success">✅ Reprinted ${entry.count} slip(s) from history!</span>`;
+            setTimeout(() => {
+                updateUsageDisplay(checkUnlockStatus());
+            }, 3000);
+        };
+        
+        window.viewHistory = function(historyId) {
+            const entry = slipHistory.find(item => item.id === historyId);
+            if (!entry) return;
+            
+            // Display customer data in text area
+            let textContent = '';
+            entry.customers.forEach(customer => {
+                textContent += `${customer.name || ''}\n`;
+                textContent += `${customer.company || ''}\n`;
+                textContent += `${customer.phone || ''}\n`;
+                textContent += `${customer.email || ''}\n`;
+                textContent += `${customer.address || ''}\n`;
+                textContent += `${customer.product || ''}\n`;
+                textContent += `${customer.price || ''}\n`;
+                textContent += `${customer.note || ''}\n\n`;
+            });
+            
+            textInput.value = textContent.trim();
+            
+            // Switch to paste tab
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector('[data-tab="paste"]').classList.add('active');
+            document.getElementById('paste-tab').classList.add('active');
+            
+            // Scroll to input section
+            document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
+        };
         
         function updatePreviewDisplay() {
             if (generatedSlips.length === 0) return;
@@ -3030,7 +3296,7 @@ Note: ${order.note || ''}`;
                                 // Show success message
                                 usageInfo.innerHTML = `<span class="success">✅ Downloaded ${downloaded} slip(s)!</span>`;
                                 setTimeout(() => {
-                                    updateUsageDisplay(isUnlocked);
+                                    updateUsageDisplay(checkUnlockStatus());
                                 }, 3000);
                             }
                         }, index * 100); // Small delay to avoid browser blocking multiple downloads
@@ -3069,7 +3335,7 @@ Note: ${order.note || ''}`;
                 // Show success message
                 usageInfo.innerHTML = `<span class="success">✅ Downloaded PDF with ${generatedSlips.length} slip(s)!</span>`;
                 setTimeout(() => {
-                    updateUsageDisplay(isUnlocked);
+                    updateUsageDisplay(checkUnlockStatus());
                 }, 3000);
                 
             } catch (error) {
