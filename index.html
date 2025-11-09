@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* All previous CSS remains exactly the same */
+        /* All existing CSS remains exactly the same */
         :root {
             --primary: #6C63FF;
             --primary-light: #8B85FF;
@@ -1052,6 +1052,135 @@
             box-shadow: var(--shadow) !important;
         }
 
+        /* NEW: History Section Styles */
+        .history-section {
+            margin-top: var(--spacing-lg);
+            width: 100%;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm);
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s var(--ease);
+        }
+
+        .history-item:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        .history-details {
+            flex: 1;
+        }
+
+        .history-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .history-product {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .history-date {
+            color: var(--text-lighter);
+            font-size: 0.8rem;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .history-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+        }
+
+        .history-btn:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        .history-btn.print-again {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .history-btn.print-again:hover {
+            background: var(--primary-dark);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--text-light);
+        }
+
+        /* NEW: Print-specific styles - ENHANCED */
+        @media print {
+            body * {
+                visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Hide browser header/footer */
+            @page {
+                margin: 0;
+                size: auto;
+            }
+            
+            .print-page, .print-page * {
+                visibility: visible;
+            }
+            
+            .print-page {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                page-break-after: always;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
+            
+            .print-page:last-child {
+                page-break-after: auto;
+            }
+            
+            /* Hide all UI elements */
+            .header, .hero, .card, .footer, .preview-header, .preview-controls,
+            .history-section {
+                display: none !important;
+            }
+        }
+
         /* Responsive Design */
         @media (min-width: 768px) {
             .grid {
@@ -1130,6 +1259,16 @@
             .price {
                 font-size: 2.5rem;
             }
+            
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .history-actions {
+                align-self: flex-end;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1170,42 +1309,6 @@
             
             .feature-grid {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        /* Print-specific styles - FIXED */
-        @media print {
-            body * {
-                visibility: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            /* Hide browser header/footer */
-            @page {
-                margin: 0;
-                size: auto;
-            }
-            
-            .print-page, .print-page * {
-                visibility: visible;
-            }
-            
-            .print-page {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                page-break-after: always;
-            }
-            
-            .print-page:last-child {
-                page-break-after: auto;
-            }
-            
-            /* Hide all UI elements */
-            .header, .hero, .card, .footer, .preview-header, .preview-controls {
-                display: none !important;
             }
         }
 
@@ -1550,6 +1653,25 @@ note: sig req"></textarea>
                 </div>
             </section>
 
+            <!-- NEW: History Section -->
+            <section id="history-section" class="history-section card hidden">
+                <h2 class="card-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Slip History
+                </h2>
+                
+                <div id="history-list" class="history-list">
+                    <!-- History items will be populated here -->
+                </div>
+                
+                <div id="history-empty" class="history-empty">
+                    <p>No slip history yet. Generate your first slip to see it here.</p>
+                </div>
+            </section>
+
             <section class="card usage-section" style="animation: fadeInUp 0.6s var(--ease) 0.8s both">
                 <h2 class="card-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1631,6 +1753,7 @@ note: sig req"></textarea>
         let generatedSlips = [];
         let currentSlipIndex = 0;
         let secureStorage = new SimpleSecureStorage();
+        let slipHistory = [];
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
@@ -1662,6 +1785,9 @@ note: sig req"></textarea>
         const transactionIdInput = document.getElementById('transaction-id');
         const submitTransactionBtn = document.getElementById('submit-transaction');
         const whatsappLink = document.getElementById('whatsapp-link');
+        const historySection = document.getElementById('history-section');
+        const historyList = document.getElementById('history-list');
+        const historyEmpty = document.getElementById('history-empty');
         
         // Canvas context
         const ctx = slipPreview.getContext('2d');
@@ -1676,6 +1802,9 @@ note: sig req"></textarea>
             
             // Initialize smooth scrolling
             initializeSmoothScrolling();
+            
+            // Load slip history
+            loadSlipHistory();
         });
         
         function setupEventListeners() {
@@ -1973,6 +2102,102 @@ note: sig req"></textarea>
             }
         }
         
+        // NEW: Load slip history from storage
+        function loadSlipHistory() {
+            const storedHistory = secureStorage.get('slipHistory');
+            slipHistory = storedHistory ? storedHistory : [];
+            updateHistoryDisplay();
+        }
+        
+        // NEW: Save slip to history
+        function saveToHistory(customer, settings) {
+            const historyEntry = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                name: customer.name || '',
+                address: customer.address || '',
+                phone: customer.phone || '',
+                product: customer.product || '',
+                dateTime: new Date().toISOString(),
+                slipVersion: 'v1.0',
+                customerData: customer,
+                settings: settings
+            };
+            
+            slipHistory.unshift(historyEntry);
+            
+            // Keep only the last 100 entries to prevent storage bloat
+            if (slipHistory.length > 100) {
+                slipHistory = slipHistory.slice(0, 100);
+            }
+            
+            secureStorage.set('slipHistory', slipHistory);
+            updateHistoryDisplay();
+        }
+        
+        // NEW: Update history display
+        function updateHistoryDisplay() {
+            if (slipHistory.length === 0) {
+                historyList.innerHTML = '';
+                historyEmpty.classList.remove('hidden');
+                historySection.classList.add('hidden');
+                return;
+            }
+            
+            historyEmpty.classList.add('hidden');
+            historySection.classList.remove('hidden');
+            
+            let historyHTML = '';
+            
+            slipHistory.forEach(entry => {
+                const date = new Date(entry.dateTime);
+                const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                historyHTML += `
+                    <div class="history-item">
+                        <div class="history-details">
+                            <div class="history-name">${entry.name || 'Unknown Customer'}</div>
+                            <div class="history-product">${entry.product || 'No product specified'}</div>
+                            <div class="history-date">${formattedDate} • ${entry.slipVersion}</div>
+                        </div>
+                        <div class="history-actions">
+                            <button class="history-btn print-again" data-id="${entry.id}">Print Again</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyList.innerHTML = historyHTML;
+            
+            // Add event listeners to print again buttons
+            document.querySelectorAll('.print-again').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    printHistorySlip(id);
+                });
+            });
+        }
+        
+        // NEW: Print slip from history
+        function printHistorySlip(id) {
+            const historyEntry = slipHistory.find(entry => entry.id === id);
+            if (!historyEntry) {
+                alert('Slip not found in history.');
+                return;
+            }
+            
+            // Generate slip using stored data
+            const slip = generateSlipImages([historyEntry.customerData], historyEntry.settings)[0];
+            
+            // Print the single slip
+            printSlips([slip]);
+            
+            // Show success message
+            usageInfo.innerHTML = `<span class="success">✅ Printed slip for ${historyEntry.name || 'customer'}!</span>`;
+            setTimeout(() => {
+                updateUsageDisplay(checkUnlockStatus());
+            }, 3000);
+        }
+        
         function parseCustomerData(text) {
             // Split by blank lines (multiple newlines)
             const entries = text.split(/\n\s*\n/);
@@ -2191,6 +2416,16 @@ note: sig req"></textarea>
                     // Generate slip images
                     generatedSlips = generateSlipImages(customers);
                     
+                    // Save each slip to history
+                    const currentSettings = {
+                        qrLink: qrLinkInput.value,
+                        defaultCompany: defaultCompanyInput.value
+                    };
+                    
+                    customers.forEach(customer => {
+                        saveToHistory(customer, currentSettings);
+                    });
+                    
                     // Show preview section
                     previewSection.classList.remove('hidden');
                     
@@ -2221,8 +2456,10 @@ note: sig req"></textarea>
             }, 100);
         }
         
-        function generateSlipImages(customers) {
+        function generateSlipImages(customers, settings = null) {
             const slips = [];
+            const qrLink = settings ? settings.qrLink : qrLinkInput.value;
+            const defaultCompany = settings ? settings.defaultCompany : defaultCompanyInput.value;
             
             customers.forEach(customer => {
                 // Create a temporary canvas for each slip with high resolution
@@ -2232,7 +2469,7 @@ note: sig req"></textarea>
                 const tempCtx = tempCanvas.getContext('2d');
                 
                 // Draw the slip design
-                drawUltraPremiumSlip(tempCtx, customer, 1000, 1400);
+                drawUltraPremiumSlip(tempCtx, customer, 1000, 1400, qrLink, defaultCompany);
                 
                 // Store the canvas data
                 slips.push({
@@ -2244,7 +2481,7 @@ note: sig req"></textarea>
             return slips;
         }
         
-        function drawUltraPremiumSlip(ctx, customer, width, height) {
+        function drawUltraPremiumSlip(ctx, customer, width, height, qrLink, defaultCompany) {
             // Clear canvas with premium white background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, width, height);
@@ -2278,7 +2515,7 @@ note: sig req"></textarea>
             ctx.strokeRect(40, 40, width - 80, 120);
             
             // Use customer's company name - COMPLETELY REMOVED SLIPZY NAME
-            const companyName = customer.company || 'YOUR COMPANY';
+            const companyName = customer.company || defaultCompany || 'YOUR COMPANY';
             
             // Dynamic font size for company name based on length
             let companyFontSize = 36;
@@ -2419,7 +2656,6 @@ note: sig req"></textarea>
             ctx.strokeRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
             
             // Generate and draw QR code
-            const qrLink = qrLinkInput.value;
             const qrCode = generateQRCode(qrLink);
             if (qrCode) {
                 ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
@@ -2648,9 +2884,10 @@ note: sig req"></textarea>
             }
         }
         
-        // FIXED PRINT FUNCTION
-        function printSlips() {
-            if (generatedSlips.length === 0) return;
+        // FIXED PRINT FUNCTION with enhanced printer optimization
+        function printSlips(slips = null) {
+            const slipsToPrint = slips || generatedSlips;
+            if (slipsToPrint.length === 0) return;
             
             // Create a print-friendly HTML page
             const printWindow = window.open('', '_blank');
@@ -2671,23 +2908,26 @@ note: sig req"></textarea>
                             padding: 0;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
+                            width: 100vw;
+                            height: 100vh;
                         }
                         .print-page {
                             page-break-after: always;
                             margin: 0;
                             padding: 0;
-                            width: 100vw;
-                            height: 100vh;
+                            width: 100%;
+                            height: 100%;
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            overflow: hidden;
                         }
                         .print-page:last-child {
                             page-break-after: auto;
                         }
                         .slip-image {
-                            width: 100%;
-                            height: 100%;
+                            max-width: 100%;
+                            max-height: 100%;
                             object-fit: contain;
                         }
                     </style>
@@ -2696,7 +2936,7 @@ note: sig req"></textarea>
             `;
             
             // Add each slip to the print page
-            generatedSlips.forEach((slip, index) => {
+            slipsToPrint.forEach((slip, index) => {
                 printContent += `
                     <div class="print-page">
                         <img class="slip-image" src="${slip.canvas.toDataURL('image/png', 1.0)}" alt="Packaging Slip ${index + 1}">
