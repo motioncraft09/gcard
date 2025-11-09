@@ -1139,6 +1139,79 @@
             color: var(--text-light);
         }
 
+        /* NEW: Text Cleaner Table Styles */
+        .cleaner-results {
+            margin-top: var(--spacing-md);
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .cleaner-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .cleaner-table th {
+            background: rgba(108, 99, 255, 0.05);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+
+        .cleaner-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .cleaner-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cleaner-table tr:hover {
+            background: rgba(108, 99, 255, 0.02);
+        }
+
+        .cleaner-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .cleaner-btn {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cleaner-btn:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        .cleaner-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .cleaner-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
         /* NEW: Print-specific styles - ENHANCED */
         @media print {
             body * {
@@ -1176,7 +1249,7 @@
             
             /* Hide all UI elements */
             .header, .hero, .card, .footer, .preview-header, .preview-controls,
-            .history-section {
+            .history-section, .cleaner-results {
                 display: none !important;
             }
         }
@@ -1205,6 +1278,10 @@
             }
             
             .preview-controls {
+                flex-wrap: nowrap;
+            }
+            
+            .cleaner-actions {
                 flex-wrap: nowrap;
             }
         }
@@ -1268,6 +1345,19 @@
             
             .history-actions {
                 align-self: flex-end;
+            }
+            
+            .cleaner-table {
+                font-size: 0.8rem;
+            }
+            
+            .cleaner-table th,
+            .cleaner-table td {
+                padding: 8px;
+            }
+            
+            .cleaner-actions {
+                flex-direction: column;
             }
         }
 
@@ -1462,6 +1552,7 @@ The amount is 130 BDT.</p>
                                 <div class="tab active" data-tab="upload">Upload Files</div>
                                 <div class="tab" data-tab="paste">Paste Text</div>
                                 <div class="tab" data-tab="bulk">Bulk Processing</div>
+                                <div class="tab" data-tab="cleaner">Text Cleaner</div>
                             </div>
                             
                             <div class="tab-content active" id="upload-tab">
@@ -1523,6 +1614,78 @@ john doe 123 main st sf ca 1234
 iphone 15 $1199
 note: sig req"></textarea>
                             </div>
+
+                            <!-- NEW: Text Cleaner Tab -->
+                            <div class="tab-content" id="cleaner-tab">
+                                <div class="features-panel">
+                                    <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Smart Text Cleaner</h3>
+                                    <div class="features-grid">
+                                        <div class="feature-item">
+                                            <div class="feature-icon">🧹</div>
+                                            <div>
+                                                <strong>Messy Text Cleaner</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Convert unformatted orders into clean structured data</div>
+                                            </div>
+                                        </div>
+                                        <div class="feature-item">
+                                            <div class="feature-icon">📊</div>
+                                            <div>
+                                                <strong>Smart Extraction</strong>
+                                                <div style="font-size: 0.75rem; color: var(--text-light);">Auto-detect names, phones, addresses, products</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <textarea id="cleaner-input" placeholder="Paste messy, unformatted order text here...
+
+Example messy input:
+john doe 📱 555-123-4567
+123 main street apt 4b
+san francisco ca 94105
+iPhone 15 pro max 1 $1199.99
+
+jane smith
+(555) 987-6543
+456 oak avenue
+los angeles, ca 90001
+Samsung Galaxy S24 2 $899.50"></textarea>
+                                
+                                <button id="clean-text-btn" class="btn" style="margin-top: var(--spacing-sm);">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <path d="M16,13 L8,13"/>
+                                        <path d="M16,17 L8,17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    Clean & Structure Text
+                                </button>
+                                
+                                <div id="cleaner-results" class="cleaner-results hidden">
+                                    <!-- Results table will be inserted here -->
+                                </div>
+                                
+                                <div id="cleaner-actions" class="cleaner-actions hidden">
+                                    <button id="copy-cleaned-data" class="cleaner-btn">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                        </svg>
+                                        Copy to Clipboard
+                                    </button>
+                                    <button id="use-cleaned-data" class="cleaner-btn primary">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14,2 14,8 20,8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                            <polyline points="10,9 9,9 8,9"/>
+                                        </svg>
+                                        Use for Slip Generation
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1577,6 +1740,13 @@ note: sig req"></textarea>
                                     <div>
                                         <strong>Company Branding</strong>
                                         <div style="font-size: 0.75rem; color: var(--text-light);">Add your logo & info</div>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">🧹</div>
+                                    <div>
+                                        <strong>Text Cleaner</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Convert messy orders to clean data</div>
                                     </div>
                                 </div>
                             </div>
@@ -1754,12 +1924,19 @@ note: sig req"></textarea>
         let currentSlipIndex = 0;
         let secureStorage = new SimpleSecureStorage();
         let slipHistory = [];
+        let cleanedData = [];
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
         const fileInput = document.getElementById('file-input');
         const textInput = document.getElementById('text-input');
         const bulkInput = document.getElementById('bulk-input');
+        const cleanerInput = document.getElementById('cleaner-input');
+        const cleanTextBtn = document.getElementById('clean-text-btn');
+        const cleanerResults = document.getElementById('cleaner-results');
+        const cleanerActions = document.getElementById('cleaner-actions');
+        const copyCleanedDataBtn = document.getElementById('copy-cleaned-data');
+        const useCleanedDataBtn = document.getElementById('use-cleaned-data');
         const tabs = document.querySelectorAll('.tab');
         const tabContents = document.querySelectorAll('.tab-content');
         const toggleOptions = document.querySelectorAll('.toggle-option');
@@ -1888,6 +2065,15 @@ note: sig req"></textarea>
             
             // Print button - FIXED
             printBtn.addEventListener('click', printSlips);
+            
+            // NEW: Text cleaner button
+            cleanTextBtn.addEventListener('click', cleanAndStructureText);
+            
+            // NEW: Copy cleaned data button
+            copyCleanedDataBtn.addEventListener('click', copyCleanedData);
+            
+            // NEW: Use cleaned data button
+            useCleanedDataBtn.addEventListener('click', useCleanedData);
         }
         
         // Initialize smooth scrolling
@@ -2193,6 +2379,299 @@ note: sig req"></textarea>
             
             // Show success message
             usageInfo.innerHTML = `<span class="success">✅ Printed slip for ${historyEntry.name || 'customer'}!</span>`;
+            setTimeout(() => {
+                updateUsageDisplay(checkUnlockStatus());
+            }, 3000);
+        }
+        
+        // NEW: Text cleaner function
+        function cleanAndStructureText() {
+            const inputText = cleanerInput.value.trim();
+            
+            if (!inputText) {
+                alert('Please enter some text to clean.');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = cleanTextBtn.innerHTML;
+            cleanTextBtn.innerHTML = '<div class="loading"></div> Cleaning...';
+            cleanTextBtn.disabled = true;
+            
+            // Process after a short delay to show loading state
+            setTimeout(() => {
+                try {
+                    // Process the text
+                    cleanedData = processMessyText(inputText);
+                    
+                    // Display results
+                    displayCleanedData(cleanedData);
+                    
+                    // Show success message
+                    usageInfo.innerHTML = `<span class="success">✅ Cleaned ${cleanedData.length} order(s)!</span>`;
+                    setTimeout(() => {
+                        updateUsageDisplay(checkUnlockStatus());
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Text cleaning error:', error);
+                    usageInfo.innerHTML = `<span class="error">Error cleaning text: ${error.message}</span>`;
+                    setTimeout(() => {
+                        updateUsageDisplay(checkUnlockStatus());
+                    }, 3000);
+                } finally {
+                    // Reset button state
+                    cleanTextBtn.innerHTML = originalText;
+                    cleanTextBtn.disabled = false;
+                }
+            }, 100);
+        }
+        
+        // NEW: Process messy text and extract structured data
+        function processMessyText(text) {
+            // Split text into potential orders (separated by multiple newlines)
+            const potentialOrders = text.split(/\n\s*\n/).filter(order => order.trim());
+            const orders = [];
+            
+            potentialOrders.forEach(orderText => {
+                const lines = orderText.split('\n').filter(line => line.trim());
+                
+                // Initialize order object with empty fields
+                const order = {
+                    customerName: '',
+                    phoneNumber: '',
+                    fullAddress: '',
+                    productName: '',
+                    quantity: '',
+                    price: ''
+                };
+                
+                // Process each line to extract information
+                const addressLines = [];
+                
+                lines.forEach(line => {
+                    // Clean the line
+                    let cleanLine = line
+                        .replace(/[^\w\s@.,$()-]/g, '') // Remove emojis and special characters
+                        .replace(/\s+/g, ' ') // Normalize spaces
+                        .trim();
+                    
+                    if (!cleanLine) return;
+                    
+                    // Check for phone number
+                    const phoneMatch = cleanLine.match(/(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?/);
+                    if (phoneMatch && !order.phoneNumber) {
+                        order.phoneNumber = phoneMatch[0];
+                        cleanLine = cleanLine.replace(phoneMatch[0], '').trim();
+                    }
+                    
+                    // Check for price
+                    const priceMatch = cleanLine.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
+                    if (priceMatch && (cleanLine.includes('$') || cleanLine.toLowerCase().includes('usd')) && !order.price) {
+                        order.price = priceMatch[0];
+                        cleanLine = cleanLine.replace(priceMatch[0], '').trim();
+                    }
+                    
+                    // Check for quantity
+                    const quantityMatch = cleanLine.match(/\b(\d+)\s*(?:x|pcs|pieces|units?)\b/i);
+                    if (quantityMatch && !order.quantity) {
+                        order.quantity = quantityMatch[1];
+                        cleanLine = cleanLine.replace(quantityMatch[0], '').trim();
+                    } else {
+                        // Try to find quantity at the beginning of product line
+                        const simpleQuantityMatch = cleanLine.match(/^(\d+)\s+/);
+                        if (simpleQuantityMatch && !order.quantity && !order.productName) {
+                            order.quantity = simpleQuantityMatch[1];
+                            cleanLine = cleanLine.replace(simpleQuantityMatch[0], '').trim();
+                        }
+                    }
+                    
+                    // Check if line looks like an address
+                    const addressIndicators = [
+                        'street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 
+                        'lane', 'ln', 'boulevard', 'blvd', 'highway', 'hwy', 'route', 'rt',
+                        'apartment', 'apt', 'suite', 'ste', 'floor', 'fl', 'building', 'bldg',
+                        'city', 'state', 'zip', 'postal', 'code'
+                    ];
+                    
+                    const hasAddressIndicator = addressIndicators.some(indicator => 
+                        cleanLine.toLowerCase().includes(indicator)
+                    );
+                    const hasZipCode = /\d{5}(-\d{4})?/.test(cleanLine);
+                    const hasCityState = /[A-Za-z\s]+,\s*[A-Z]{2}/.test(cleanLine);
+                    
+                    if (hasAddressIndicator || hasZipCode || hasCityState) {
+                        addressLines.push(cleanLine);
+                    } else if (!order.customerName && cleanLine.length > 0) {
+                        // If no customer name yet and line doesn't look like product/address, assume it's name
+                        // Check if it looks like a person's name (two words, first letters capitalized)
+                        if (cleanLine.match(/^[A-Z][a-z]+ [A-Z][a-z]+/)) {
+                            order.customerName = capitalizeName(cleanLine);
+                        } else if (cleanLine.length < 50 && !cleanLine.match(/\d/)) {
+                            // If it's short and has no digits, might be a name
+                            order.customerName = capitalizeName(cleanLine);
+                        } else if (!order.productName) {
+                            // Otherwise, assume it's a product
+                            order.productName = cleanLine;
+                        }
+                    } else if (!order.productName && cleanLine.length > 0) {
+                        // If we already have a name, assume remaining non-address lines are products
+                        order.productName = cleanLine;
+                    }
+                });
+                
+                // Combine address lines
+                if (addressLines.length > 0) {
+                    order.fullAddress = addressLines.join(', ');
+                    // Capitalize address properly
+                    order.fullAddress = capitalizeAddress(order.fullAddress);
+                }
+                
+                // Capitalize customer name if we have one
+                if (order.customerName) {
+                    order.customerName = capitalizeName(order.customerName);
+                }
+                
+                // Validate that we have at least some data
+                if (order.customerName || order.phoneNumber || order.fullAddress || order.productName) {
+                    orders.push(order);
+                }
+            });
+            
+            return orders;
+        }
+        
+        // NEW: Helper function to capitalize names
+        function capitalizeName(name) {
+            return name.replace(/\b\w/g, char => char.toUpperCase());
+        }
+        
+        // NEW: Helper function to capitalize addresses
+        function capitalizeAddress(address) {
+            return address
+                .split(',')
+                .map(part => part.trim())
+                .map(part => part.replace(/\b\w/g, char => char.toUpperCase()))
+                .join(', ');
+        }
+        
+        // NEW: Display cleaned data in a table
+        function displayCleanedData(data) {
+            if (data.length === 0) {
+                cleanerResults.innerHTML = '<p style="padding: var(--spacing-md); text-align: center; color: var(--text-light);">No structured data found in the text.</p>';
+                cleanerResults.classList.remove('hidden');
+                cleanerActions.classList.add('hidden');
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="cleaner-table">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Phone Number</th>
+                            <th>Full Address</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.forEach(order => {
+                tableHTML += `
+                    <tr>
+                        <td>${order.customerName || ''}</td>
+                        <td>${order.phoneNumber || ''}</td>
+                        <td>${order.fullAddress || ''}</td>
+                        <td>${order.productName || ''}</td>
+                        <td>${order.quantity || ''}</td>
+                        <td>${order.price || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            
+            cleanerResults.innerHTML = tableHTML;
+            cleanerResults.classList.remove('hidden');
+            cleanerActions.classList.remove('hidden');
+        }
+        
+        // NEW: Copy cleaned data to clipboard
+        function copyCleanedData() {
+            if (cleanedData.length === 0) {
+                alert('No data to copy.');
+                return;
+            }
+            
+            // Convert to CSV format
+            let csvContent = "Customer Name,Phone Number,Full Address,Product Name,Quantity,Price\n";
+            
+            cleanedData.forEach(order => {
+                csvContent += `"${order.customerName || ''}","${order.phoneNumber || ''}","${order.fullAddress || ''}","${order.productName || ''}","${order.quantity || ''}","${order.price || ''}"\n`;
+            });
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(csvContent)
+                .then(() => {
+                    usageInfo.innerHTML = '<span class="success">✅ Data copied to clipboard!</span>';
+                    setTimeout(() => {
+                        updateUsageDisplay(checkUnlockStatus());
+                    }, 3000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy data to clipboard.');
+                });
+        }
+        
+        // NEW: Use cleaned data for slip generation
+        function useCleanedData() {
+            if (cleanedData.length === 0) {
+                alert('No data to use.');
+                return;
+            }
+            
+            // Convert cleaned data to customer format for slip generation
+            const customers = cleanedData.map(order => ({
+                name: order.customerName,
+                company: defaultCompanyInput.value || '',
+                phone: order.phoneNumber,
+                email: '',
+                address: order.fullAddress,
+                product: order.productName,
+                price: order.price,
+                note: order.quantity ? `Quantity: ${order.quantity}` : ''
+            }));
+            
+            // Switch to paste tab and populate with formatted data
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('[data-tab="paste"]').classList.add('active');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            document.getElementById('paste-tab').classList.add('active');
+            
+            // Format data for text input
+            let formattedText = '';
+            customers.forEach(customer => {
+                if (customer.name) formattedText += customer.name + '\n';
+                if (customer.phone) formattedText += customer.phone + '\n';
+                if (customer.address) formattedText += customer.address + '\n';
+                if (customer.product) {
+                    let productLine = customer.product;
+                    if (customer.price) productLine += ' • ' + customer.price;
+                    formattedText += productLine + '\n';
+                }
+                if (customer.note) formattedText += customer.note + '\n';
+                formattedText += '\n';
+            });
+            
+            textInput.value = formattedText.trim();
+            
+            // Show success message
+            usageInfo.innerHTML = `<span class="success">✅ ${customers.length} order(s) ready for slip generation!</span>`;
             setTimeout(() => {
                 updateUsageDisplay(checkUnlockStatus());
             }, 3000);
