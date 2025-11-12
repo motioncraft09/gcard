@@ -3,1105 +3,888 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slipzy Admin Panel</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>PharmaScope - Edu-Tech for Medical Students</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-light: #8B85FF;
-            --primary-dark: #554FD8;
-            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
-            --text: #1D1D1F;
-            --text-light: #86868B;
-            --text-lighter: #AEAEB2;
-            --bg: #FFFFFF;
-            --card-bg: #FFFFFF;
-            --border: #F2F2F7;
-            --border-hover: #E5E5EA;
-            --radius: 16px;
-            --radius-sm: 12px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
-            --spacing-xs: 0.75rem;
-            --spacing-sm: 1.25rem;
-            --spacing-md: 2rem;
-            --spacing-lg: 3rem;
-            --spacing-xl: 5rem;
-            --success: #34C759;
-            --warning: #FF9500;
-            --error: #FF3B30;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
-            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--spacing-md);
-            width: 100%;
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: var(--primary-gradient);
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
-
-        .admin-title {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: var(--spacing-md);
-            background: linear-gradient(135deg, var(--text) 0%, var(--text-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
+        
+        .gradient-bg {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
         }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: var(--spacing-md);
+        
+        .course-card {
             transition: all 0.3s ease;
-            border: 1px solid var(--border);
-            margin-bottom: var(--spacing-md);
+            border-radius: 16px;
+            overflow: hidden;
         }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: var(--spacing-md);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            color: var(--primary);
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
-
-        .card-title svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-        }
-
-        .btn {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
+        
+        .chapter-item {
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
+            border-radius: 12px;
         }
-
-        .btn:hover {
+        
+        .chapter-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .class-item {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+        }
+        
+        .class-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
         }
-
-        .btn-danger {
-            background: var(--error);
-        }
-
-        .btn-success {
-            background: var(--success);
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 1rem;
+        
+        .btn-secondary {
+            background: linear-gradient(90deg, var(--secondary) 0%, #059669 100%);
             transition: all 0.3s ease;
-            background: var(--bg);
-            margin-bottom: var(--spacing-sm);
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: var(--spacing-sm);
-        }
-
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            font-weight: 600;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        tr:hover {
-            background: rgba(108, 99, 255, 0.02);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-success {
-            background: rgba(52, 199, 89, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(52, 199, 89, 0.2);
-        }
-
-        .badge-warning {
-            background: rgba(255, 149, 0, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(255, 149, 0, 0.2);
-        }
-
-        .badge-error {
-            background: rgba(255, 59, 48, 0.1);
-            color: var(--error);
-            border: 1px solid rgba(255, 59, 48, 0.2);
-        }
-
-        .badge-info {
-            background: rgba(108, 99, 255, 0.1);
-            color: var(--primary);
-            border: 1px solid rgba(108, 99, 255, 0.2);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: var(--spacing-sm);
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 4px;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-light);
-        }
-
-        .form-group {
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: var(--spacing-xs);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: var(--spacing-lg);
-            color: var(--text-light);
-        }
-
-        .empty-state svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: var(--spacing-sm);
-            color: var(--text-lighter);
-        }
-
-        .tabs {
-            display: flex;
-            background: var(--border);
-            border-radius: var(--radius-sm);
-            padding: 4px;
-            margin-bottom: var(--spacing-md);
-            gap: 4px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
+        
+        .nav-link {
+            position: relative;
             transition: all 0.3s ease;
-            text-align: center;
-            color: var(--text-light);
         }
-
-        .tab.active {
-            background: var(--bg);
-            color: var(--text);
-            box-shadow: var(--shadow);
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
         }
-
-        .tab-content {
-            display: none;
+        
+        .nav-link:hover::after {
+            width: 100%;
         }
-
-        .tab-content.active {
-            display: block;
+        
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
         }
-
-        .footer {
-            text-align: center;
-            padding: var(--spacing-lg) 0;
-            color: var(--text-light);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--border);
-            margin-top: var(--spacing-lg);
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .copy-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: 8px;
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
-
-        .copy-btn:hover {
-            text-decoration: underline;
+        
+        .stagger-item {
+            opacity: 0;
         }
-
-        .admin-password-section {
-            background: rgba(255, 149, 0, 0.05);
-            border: 1px solid rgba(255, 149, 0, 0.2);
-            border-radius: var(--radius);
-            padding: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: var(--spacing-lg);
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-hover);
-            text-align: center;
-        }
-
-        .login-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: var(--spacing-md);
-            color: var(--primary);
+        
+        .rotate-180 {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">Slipzy Admin</div>
-            <div id="admin-status" class="badge badge-info">Not Logged In</div>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-card fixed w-full z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 rounded-lg bg-indigo-500/20">
+                        <i class="fas fa-pills text-xl text-indigo-400"></i>
+                    </div>
+                    <span class="text-2xl font-bold">Pharma<span class="text-indigo-400">Scope</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-white/80 hover:text-white">Home</a>
+                    <a href="#courses" class="nav-link text-white/80 hover:text-white">Courses</a>
+                    <a href="#features" class="nav-link text-white/80 hover:text-white">Features</a>
+                    <a href="#testimonials" class="nav-link text-white/80 hover:text-white">Testimonials</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="accessCourseBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold">
+                        Access Course
+                    </button>
+                    <a href="admin-panel.html" class="text-white/70 hover:text-white transition">
+                        <i class="fas fa-cog text-xl"></i>
+                    </a>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <!-- Login Screen -->
-        <div id="login-screen">
-            <div class="login-container">
-                <h1 class="login-title">Slipzy Admin Panel</h1>
-                <p style="color: var(--text-light); margin-bottom: var(--spacing-md);">Enter admin password to continue</p>
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    Advance Your <span class="gradient-text">Medical Career</span>
+                </h1>
+                <p class="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+                    Comprehensive pharmacy and medical education platform with modern learning tools and expert-curated content.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="heroAccessBtn" class="btn-primary px-8 py-4 rounded-xl text-lg font-semibold">
+                        <i class="fas fa-lock-open mr-2"></i> Access Full Course
+                    </button>
+                    <button class="glass-card px-8 py-4 rounded-xl text-lg font-semibold border border-white/20 hover:border-white/40 transition">
+                        <i class="fas fa-play-circle mr-2"></i> Watch Demo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-4xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-indigo-400 mb-2">500+</div>
+                    <div class="text-white/70">Students Enrolled</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-emerald-400 mb-2">50+</div>
+                    <div class="text-white/70">Video Lessons</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-amber-400 mb-2">100%</div>
+                    <div class="text-white/70">Success Rate</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-cyan-400 mb-2">24/7</div>
+                    <div class="text-white/70">Support Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Why Choose <span class="gradient-text">PharmaScope</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Our platform offers the most comprehensive learning experience for medical and pharmacy students.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-video text-2xl text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Expert Video Lectures</h3>
+                    <p class="text-white/70">Learn from industry experts with high-quality video content designed for optimal understanding.</p>
+                </div>
                 
-                <div class="form-group">
-                    <input type="password" id="admin-password" placeholder="Enter admin password" style="margin-bottom: var(--spacing-sm);">
-                    <button id="login-btn" class="btn" style="width: 100%;">Login</button>
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-file-alt text-2xl text-emerald-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Interactive MCQ Tests</h3>
+                    <p class="text-white/70">Test your knowledge with comprehensive assessments that track your progress and identify areas for improvement.</p>
                 </div>
                 
-                <div style="margin-top: var(--spacing-sm); font-size: 0.8rem; color: var(--text-light);">
-                    Default password: <strong>admin123</strong>
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-amber-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-2xl text-amber-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Mobile Friendly</h3>
+                    <p class="text-white/70">Access your courses anytime, anywhere with our fully responsive platform that works on all devices.</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Admin Content (Hidden until login) -->
-        <div id="admin-content" style="display: none;">
-            <h1 class="admin-title">Slipzy Administration Panel</h1>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number" id="total-users">0</div>
-                    <div class="stat-label">Total Users</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="active-users">0</div>
-                    <div class="stat-label">Active Users</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="total-slips">0</div>
-                    <div class="stat-label">Slips Generated</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="free-limit-display">10</div>
-                    <div class="stat-label">Free Slip Limit</div>
-                </div>
+    <!-- Courses Section -->
+    <section id="courses" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Featured <span class="gradient-text">Courses</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Browse our comprehensive course catalog designed specifically for medical and pharmacy students.</p>
             </div>
-
-            <div class="tabs">
-                <div class="tab active" data-tab="unlock-codes">Unlock Codes</div>
-                <div class="tab" data-tab="user-management">User Management</div>
-                <div class="tab" data-tab="usage-logs">Usage Logs</div>
-                <div class="tab" data-tab="settings">Settings</div>
+            
+            <div id="coursesContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Courses will be loaded dynamically -->
             </div>
+        </div>
+    </section>
 
-            <!-- Unlock Codes Tab -->
-            <div class="tab-content active" id="unlock-codes-tab">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                        </svg>
-                        Generate Unlock Codes
-                    </h2>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Code Note (Optional)</label>
-                        <input type="text" id="code-note" placeholder="e.g., Customer name or reference">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Number of Codes</label>
-                        <input type="number" id="code-count" value="1" min="1" max="10">
-                    </div>
-                    
-                    <button id="generate-codes-btn" class="btn">Generate Codes</button>
-                </div>
-
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        Active Unlock Codes
-                    </h2>
-                    
-                    <div id="codes-list">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Code</th>
-                                    <th>Note</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="codes-table-body">
-                                <!-- Codes will be populated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Student <span class="gradient-text">Testimonials</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Hear from our successful students who have transformed their careers with PharmaScope.</p>
             </div>
-
-            <!-- User Management Tab -->
-            <div class="tab-content" id="user-management-tab">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                        User Management
-                    </h2>
-                    
-                    <div id="users-list">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Unlock Code</th>
-                                    <th>Slips Generated</th>
-                                    <th>Last Active</th>
-                                    <th>IP Address</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table-body">
-                                <!-- Users will be populated here -->
-                            </tbody>
-                        </table>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Dr. Sarah Johnson</div>
+                            <div class="text-white/70 text-sm">Medical Student</div>
+                        </div>
                     </div>
+                    <p class="text-white/80">"PharmaScope revolutionized how I study pharmacology. The video lectures are incredibly clear and the MCQ tests helped me identify my weak areas."</p>
                 </div>
-            </div>
-
-            <!-- Usage Logs Tab -->
-            <div class="tab-content" id="usage-logs-tab">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                        Usage Logs
-                    </h2>
-                    
-                    <div id="logs-list">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>User ID</th>
-                                    <th>Slips Generated</th>
-                                    <th>IP Address</th>
-                                    <th>User Agent</th>
-                                </tr>
-                            </thead>
-                            <tbody id="logs-table-body">
-                                <!-- Logs will be populated here -->
-                            </tbody>
-                        </table>
+                
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-emerald-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Michael Chen</div>
+                            <div class="text-white/70 text-sm">Pharmacy Student</div>
+                        </div>
                     </div>
+                    <p class="text-white/80">"The course content is perfectly structured for pharmacy students. I especially appreciate the clinical application sections that bridge theory with practice."</p>
                 </div>
-            </div>
-
-            <!-- Settings Tab -->
-            <div class="tab-content" id="settings-tab">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="3"/>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                        </svg>
-                        System Settings
-                    </h2>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Free Slip Limit</label>
-                        <input type="number" id="free-limit" min="1" max="1000" value="10">
-                        <button id="save-free-limit" class="btn">Save Limit</button>
+                
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-amber-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Emily Rodriguez</div>
+                            <div class="text-white/70 text-sm">Nursing Student</div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Admin Password</label>
-                        <input type="password" id="new-admin-password" placeholder="Enter new admin password">
-                        <button id="change-password" class="btn">Change Password</button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <button id="export-data" class="btn">Export All Data</button>
-                        <button id="clear-data" class="btn btn-danger">Clear All Data</button>
-                    </div>
+                    <p class="text-white/80">"As a nursing student, I found the drug classification and dosage calculation modules incredibly helpful. The platform is so intuitive and easy to use."</p>
                 </div>
             </div>
         </div>
+    </section>
 
-        <footer class="footer">
-            <p>Slipzy Admin Panel • Secure Management System • © 2024</p>
-        </footer>
+    <!-- Footer -->
+    <footer class="glass-card border-t border-white/10 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-pills text-xl text-indigo-400"></i>
+                        <span class="text-xl font-bold">PharmaScope</span>
+                    </div>
+                    <p class="text-white/70 mb-4">The premier edu-tech platform for medical and pharmacy students.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-white/70 hover:text-white transition">Home</a></li>
+                        <li><a href="#courses" class="text-white/70 hover:text-white transition">Courses</a></li>
+                        <li><a href="#features" class="text-white/70 hover:text-white transition">Features</a></li>
+                        <li><a href="#testimonials" class="text-white/70 hover:text-white transition">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Courses</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Pharmacology</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Medicinal Chemistry</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Clinical Pharmacy</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Pharmaceuticals</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-envelope mr-2 text-indigo-400"></i> info@pharmascope.com
+                        </li>
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-phone mr-2 text-indigo-400"></i> +1 (555) 123-4567
+                        </li>
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i> 123 Education St, Learning City
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 mt-8 pt-8 text-center text-white/70">
+                <p>&copy; 2023 PharmaScope. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 p-4">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Access Course</h3>
+                <button onclick="closePaymentModal()" class="text-white/70 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="bg-amber-500/20 border border-amber-500/50 rounded-lg p-4 mb-6">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-money-bill-wave text-amber-400 mr-2"></i>
+                    <span class="font-semibold">Payment Required</span>
+                </div>
+                <p class="text-white/80 text-sm">
+                    Pay <strong>500 BDT</strong> via bKash/Nagad/Rocket to:<br>
+                    <strong>01XXXXXXXXX</strong>
+                </p>
+            </div>
+
+            <form id="paymentForm" onsubmit="processPayment(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2">Transaction ID</label>
+                        <input type="text" name="transaction_id" required 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-indigo-400">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Unlock Code</label>
+                        <input type="text" name="unlock_code" required 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-indigo-400">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold mt-6">
+                    Submit & Access Course
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Course Content Modal -->
+    <div id="courseModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="glass-card max-w-6xl w-full p-6 rounded-2xl my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" id="courseModalTitle">Course Content</h3>
+                <button onclick="closeCourseModal()" class="text-white/70 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Video Player Section -->
+            <div class="glass-card rounded-2xl p-6 mb-8 hidden" id="videoSection">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold" id="videoTitle">Select a class to start watching</h3>
+                    <button onclick="closeVideo()" class="text-white/70 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="aspect-w-16 aspect-h-9 bg-black rounded-lg overflow-hidden">
+                    <iframe id="videoPlayer" class="w-full h-96" src="" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Courses List -->
+            <div id="coursesList" class="space-y-6">
+                <!-- Courses will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="toastMessage">Operation successful!</span>
+        </div>
     </div>
 
     <script>
-        // Admin data structure
-        let adminData = {
-            adminPassword: "admin123", // Default password
-            freeLimit: 10,
-            unlockCodes: [],
-            unlockedUsers: [],
-            usageLogs: []
-        };
+        // Initialize data in localStorage if not exists
+        function initializeData() {
+            if (!localStorage.getItem('pharmascope_courses')) {
+                const defaultCourses = [
+                    { 
+                        id: 1, 
+                        title: "Pharmacology Fundamentals", 
+                        description: "Master the basics of drug actions and therapeutic uses",
+                        thumbnail: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                    },
+                    { 
+                        id: 2, 
+                        title: "Medicinal Chemistry", 
+                        description: "Understand drug design and chemical properties",
+                        thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                    },
+                    { 
+                        id: 3, 
+                        title: "Clinical Pharmacy", 
+                        description: "Patient-focused pharmacy practice and care",
+                        thumbnail: "https://images.unsplash.com/photo-1585435557343-3b092031d5ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                    }
+                ];
+                localStorage.setItem('pharmascope_courses', JSON.stringify(defaultCourses));
+            }
 
-        // DOM elements
-        const loginScreen = document.getElementById('login-screen');
-        const adminPasswordInput = document.getElementById('admin-password');
-        const loginBtn = document.getElementById('login-btn');
-        const adminContent = document.getElementById('admin-content');
-        const adminStatus = document.getElementById('admin-status');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const generateCodesBtn = document.getElementById('generate-codes-btn');
-        const codeNoteInput = document.getElementById('code-note');
-        const codeCountInput = document.getElementById('code-count');
-        const codesTableBody = document.getElementById('codes-table-body');
-        const usersTableBody = document.getElementById('users-table-body');
-        const logsTableBody = document.getElementById('logs-table-body');
-        const freeLimitInput = document.getElementById('free-limit');
-        const saveFreeLimitBtn = document.getElementById('save-free-limit');
-        const freeLimitDisplay = document.getElementById('free-limit-display');
-        const totalUsersDisplay = document.getElementById('total-users');
-        const activeUsersDisplay = document.getElementById('active-users');
-        const totalSlipsDisplay = document.getElementById('total-slips');
-        const newAdminPasswordInput = document.getElementById('new-admin-password');
-        const changePasswordBtn = document.getElementById('change-password');
-        const exportDataBtn = document.getElementById('export-data');
-        const clearDataBtn = document.getElementById('clear-data');
+            if (!localStorage.getItem('pharmascope_chapters')) {
+                const defaultChapters = [
+                    { id: 1, course_id: 1, title: "Introduction to Pharmacology" },
+                    { id: 2, course_id: 1, title: "Drug Classification" },
+                    { id: 3, course_id: 1, title: "Pharmacokinetics" },
+                    { id: 4, course_id: 2, title: "Organic Chemistry Basics" },
+                    { id: 5, course_id: 2, title: "Drug Synthesis" },
+                    { id: 6, course_id: 3, title: "Patient Assessment" },
+                    { id: 7, course_id: 3, title: "Medication Management" }
+                ];
+                localStorage.setItem('pharmascope_chapters', JSON.stringify(defaultChapters));
+            }
 
-        // Initialize the admin panel
+            if (!localStorage.getItem('pharmascope_classes')) {
+                const defaultClasses = [
+                    { id: 1, chapter_id: 1, title: "What is Pharmacology?", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 2, chapter_id: 1, title: "Drug Development Process", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 3, chapter_id: 1, title: "Pharmacokinetics Basics", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 4, chapter_id: 2, title: "Drug Categories Overview", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 5, chapter_id: 2, title: "Analgesics and Anti-inflammatories", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 6, chapter_id: 3, title: "Absorption and Distribution", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 7, chapter_id: 3, title: "Metabolism and Excretion", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 8, chapter_id: 4, title: "Chemical Bonds", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 9, chapter_id: 4, title: "Molecular Structure", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 10, chapter_id: 5, title: "Synthetic Methods", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 11, chapter_id: 5, title: "Quality Control", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 12, chapter_id: 6, title: "Patient History", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 13, chapter_id: 6, title: "Physical Assessment", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 14, chapter_id: 7, title: "Drug Interactions", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 15, chapter_id: 7, title: "Therapeutic Monitoring", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ];
+                localStorage.setItem('pharmascope_classes', JSON.stringify(defaultClasses));
+            }
+
+            if (!localStorage.getItem('pharmascope_tests')) {
+                const defaultTests = [
+                    { id: 1, chapter_id: 1, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 2, chapter_id: 2, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 3, chapter_id: 3, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 4, chapter_id: 4, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 5, chapter_id: 5, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 6, chapter_id: 6, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 7, chapter_id: 7, google_form_url: "https://forms.google.com/your-test-link-here" }
+                ];
+                localStorage.setItem('pharmascope_tests', JSON.stringify(defaultTests));
+            }
+
+            if (!localStorage.getItem('pharmascope_codes')) {
+                const defaultCodes = [
+                    { 
+                        id: 1, 
+                        code: "PHARMA2024", 
+                        status: "active", 
+                        used: false, 
+                        created_at: new Date().toISOString(),
+                        ip_restriction: "single",
+                        used_by: null
+                    }
+                ];
+                localStorage.setItem('pharmascope_codes', JSON.stringify(defaultCodes));
+            }
+
+            if (!localStorage.getItem('pharmascope_blocked_ips')) {
+                localStorage.setItem('pharmascope_blocked_ips', JSON.stringify([]));
+            }
+
+            if (!localStorage.getItem('pharmascope_access_log')) {
+                localStorage.setItem('pharmascope_access_log', JSON.stringify([]));
+            }
+
+            if (!localStorage.getItem('pharmascope_user')) {
+                const defaultUser = {
+                    unlocked: false
+                };
+                localStorage.setItem('pharmascope_user', JSON.stringify(defaultUser));
+            }
+        }
+
+        // Get data from localStorage
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+
+        // Save data to localStorage
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // Get user's IP (demo version)
+        function getUserIP() {
+            const demoIPs = [
+                '192.168.1.101',
+                '192.168.1.102', 
+                '192.168.1.103',
+                '192.168.1.104',
+                '192.168.1.105'
+            ];
+            return demoIPs[Math.floor(Math.random() * demoIPs.length)];
+        }
+
+        // Load courses on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadAdminData();
-            setupEventListeners();
+            initializeData();
+            loadCourses();
+            animateOnScroll();
             
-            // Check if already logged in
-            checkLoginStatus();
+            // Add event listeners for access buttons
+            document.getElementById('accessCourseBtn').addEventListener('click', openPaymentModal);
+            document.getElementById('heroAccessBtn').addEventListener('click', openPaymentModal);
+            
+            // Check if user already has access
+            const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+            if (user.unlocked) {
+                document.getElementById('accessCourseBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+                document.getElementById('heroAccessBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+            }
         });
 
-        function setupEventListeners() {
-            // Admin login
-            loginBtn.addEventListener('click', handleAdminLogin);
-            adminPasswordInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') handleAdminLogin();
+        // Load and display courses
+        function loadCourses() {
+            const courses = getData('pharmascope_courses');
+            const container = document.getElementById('coursesContainer');
+            
+            container.innerHTML = courses.map(course => `
+                <div class="course-card glass-card overflow-hidden">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${course.thumbnail}" alt="${course.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">${course.title}</h3>
+                        <p class="text-white/70 mb-4">${course.description}</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-play-circle text-indigo-400 mr-2"></i>
+                                <span class="text-white/70">${getClassesCount(course.id)} lessons</span>
+                            </div>
+                            <button onclick="openPaymentModal()" class="btn-primary px-4 py-2 rounded-lg text-sm">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get count of classes for a course
+        function getClassesCount(courseId) {
+            const chapters = getData('pharmascope_chapters');
+            const classes = getData('pharmascope_classes');
+            
+            const courseChapters = chapters.filter(chapter => chapter.course_id === courseId);
+            let classCount = 0;
+            
+            courseChapters.forEach(chapter => {
+                const chapterClasses = classes.filter(cls => cls.chapter_id === chapter.id);
+                classCount += chapterClasses.length;
             });
-
-            // Tab switching
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    // Update tabs
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Update tab contents
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                        if (content.id === `${tabId}-tab`) {
-                            content.classList.add('active');
-                        }
-                    });
-                });
-            });
-
-            // Generate unlock codes
-            generateCodesBtn.addEventListener('click', generateUnlockCodes);
-
-            // Save free limit
-            saveFreeLimitBtn.addEventListener('click', saveFreeLimit);
-
-            // Change admin password
-            changePasswordBtn.addEventListener('click', changeAdminPassword);
-
-            // Export data
-            exportDataBtn.addEventListener('click', exportAllData);
-
-            // Clear data
-            clearDataBtn.addEventListener('click', clearAllData);
-        }
-
-        function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('slipzy_admin_logged_in') === 'true';
-            if (isLoggedIn) {
-                showAdminContent();
-            } else {
-                showLoginScreen();
-            }
-        }
-
-        function showLoginScreen() {
-            loginScreen.style.display = 'block';
-            adminContent.style.display = 'none';
-            adminStatus.textContent = 'Not Logged In';
-            adminStatus.className = 'badge badge-error';
-        }
-
-        function showAdminContent() {
-            loginScreen.style.display = 'none';
-            adminContent.style.display = 'block';
-            adminStatus.textContent = 'Admin Mode: Active';
-            adminStatus.className = 'badge badge-success';
             
-            // Load and display data
-            loadAdminData();
+            return classCount;
         }
 
-        function loadAdminData() {
-            const storedData = localStorage.getItem('slipzy_admin_data');
-            if (storedData) {
-                try {
-                    adminData = JSON.parse(storedData);
-                    
-                    // Ensure all required fields exist
-                    if (!adminData.adminPassword) adminData.adminPassword = "admin123";
-                    if (!adminData.freeLimit) adminData.freeLimit = 10;
-                    if (!adminData.unlockCodes) adminData.unlockCodes = [];
-                    if (!adminData.unlockedUsers) adminData.unlockedUsers = [];
-                    if (!adminData.usageLogs) adminData.usageLogs = [];
-                    
-                    // Update UI
-                    freeLimitInput.value = adminData.freeLimit;
-                    freeLimitDisplay.textContent = adminData.freeLimit;
-                    updateStats();
-                    renderUnlockCodes();
-                    renderUsers();
-                    renderUsageLogs();
-                } catch (e) {
-                    console.error('Error loading admin data:', e);
-                    // Reset to default if corrupted
-                    resetAdminData();
-                }
-            } else {
-                // Initialize with default data
-                resetAdminData();
-            }
-        }
-
-        function resetAdminData() {
-            adminData = {
-                adminPassword: "admin123",
-                freeLimit: 10,
-                unlockCodes: [],
-                unlockedUsers: [],
-                usageLogs: []
-            };
-            saveAdminData();
-        }
-
-        function saveAdminData() {
-            localStorage.setItem('slipzy_admin_data', JSON.stringify(adminData));
-            updateStats();
-        }
-
-        function handleAdminLogin() {
-            const password = adminPasswordInput.value.trim();
-            
-            if (!password) {
-                alert('Please enter the admin password.');
+        // Payment modal functions
+        function openPaymentModal() {
+            const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+            if (user.unlocked) {
+                openCourseModal();
                 return;
             }
             
-            if (password === adminData.adminPassword) {
-                // Login successful
-                localStorage.setItem('slipzy_admin_logged_in', 'true');
-                showAdminContent();
-                adminPasswordInput.value = '';
+            const modal = document.getElementById('paymentModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Course modal functions
+        function openCourseModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            loadAllCoursesContent();
+        }
+
+        function closeCourseModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            closeVideo();
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCourseModal();
+            }
+        });
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'error') {
+                toast.classList.remove('bg-green-500');
+                toast.classList.add('bg-red-500');
             } else {
-                alert('Invalid admin password! Please try again.');
-                adminPasswordInput.value = '';
-                adminPasswordInput.focus();
+                toast.classList.remove('bg-red-500');
+                toast.classList.add('bg-green-500');
             }
+            
+            toast.classList.remove('translate-x-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 3000);
         }
 
-        function generateUnlockCodes() {
-            const note = codeNoteInput.value.trim() || 'No note';
-            const count = parseInt(codeCountInput.value) || 1;
+        // PROCESS PAYMENT WITH IP RESTRICTION - UPDATED VERSION
+        function processPayment(event) {
+            event.preventDefault();
             
-            if (count < 1 || count > 10) {
-                alert('Please enter a number between 1 and 10.');
+            const formData = new FormData(event.target);
+            const unlockCode = formData.get('unlock_code');
+            const codes = getData('pharmascope_codes');
+            const blockedIPs = getData('pharmascope_blocked_ips');
+            
+            // Get user's IP
+            const userIP = getUserIP();
+            console.log('User IP:', userIP);
+            
+            // Check if user's IP is blocked
+            if (blockedIPs.includes(userIP)) {
+                showToast('Your IP address is blocked from accessing courses.', 'error');
                 return;
             }
             
-            const newCodes = [];
-            for (let i = 0; i < count; i++) {
-                const code = generateRandomCode();
-                newCodes.push({
-                    code: code,
-                    note: note,
-                    active: true,
-                    createdAt: new Date().toISOString(),
-                    usedBy: null,
-                    usedAt: null
-                });
-            }
-            
-            // Add to admin data
-            adminData.unlockCodes = [...adminData.unlockCodes, ...newCodes];
-            
-            saveAdminData();
-            renderUnlockCodes();
-            codeNoteInput.value = '';
-            codeCountInput.value = 1;
-            
-            alert(`Generated ${count} unlock code(s)!`);
-        }
-
-        function generateRandomCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        function renderUnlockCodes() {
-            codesTableBody.innerHTML = '';
-            
-            if (adminData.unlockCodes.length === 0) {
-                codesTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                            <p>No unlock codes generated yet</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            // Sort codes by creation date (newest first)
-            const sortedCodes = [...adminData.unlockCodes].sort((a, b) => 
-                new Date(b.createdAt) - new Date(a.createdAt)
+            // Check if code exists and is active
+            const codeIndex = codes.findIndex(code => 
+                code.code === unlockCode && 
+                code.status === 'active' && 
+                code.used === false
             );
             
-            sortedCodes.forEach((code, index) => {
-                const originalIndex = adminData.unlockCodes.findIndex(c => c.code === code.code);
-                const row = document.createElement('tr');
+            if (codeIndex !== -1) {
+                const code = codes[codeIndex];
                 
-                const statusBadge = code.active ? 
-                    `<span class="badge badge-success">Active</span>` : 
-                    `<span class="badge badge-error">Used</span>`;
-                
-                const actions = code.active ? 
-                    `<button class="btn btn-small btn-danger" onclick="deactivateCode(${originalIndex})">Deactivate</button>` : 
-                    `<button class="btn btn-small" onclick="reactivateCode(${originalIndex})">Reactivate</button>`;
-                
-                row.innerHTML = `
-                    <td>
-                        ${code.code}
-                        <button class="copy-btn" onclick="copyToClipboard('${code.code}')">Copy</button>
-                    </td>
-                    <td>${code.note}</td>
-                    <td>${statusBadge}</td>
-                    <td>${formatDate(code.createdAt)}</td>
-                    <td class="action-buttons">${actions}</td>
-                `;
-                
-                codesTableBody.appendChild(row);
-            });
-        }
-
-        function renderUsers() {
-            usersTableBody.innerHTML = '';
-            
-            // Get all unique users from usage logs
-            const userMap = new Map();
-            
-            adminData.usageLogs.forEach(log => {
-                if (!userMap.has(log.userId)) {
-                    userMap.set(log.userId, {
-                        userId: log.userId,
-                        unlockCode: log.unlockCode || 'Free',
-                        slipsGenerated: 0,
-                        lastActive: log.timestamp,
-                        ipAddress: log.ipAddress
-                    });
+                // Check IP restriction
+                if (code.ip_restriction === 'single') {
+                    if (code.used_by && code.used_by !== userIP) {
+                        showToast('This code has already been used from a different device/IP.', 'error');
+                        return;
+                    }
                 }
                 
-                const user = userMap.get(log.userId);
-                user.slipsGenerated += log.slipsGenerated;
+                // Mark code as used and record IP
+                codes[codeIndex].used = true;
+                codes[codeIndex].status = 'used';
+                codes[codeIndex].used_by = userIP;
+                codes[codeIndex].used_at = new Date().toISOString();
+                saveData('pharmascope_codes', codes);
                 
-                // Update last active if this log is more recent
-                if (new Date(log.timestamp) > new Date(user.lastActive)) {
-                    user.lastActive = log.timestamp;
-                    user.ipAddress = log.ipAddress;
-                }
-            });
+                // Add to access log
+                const accessLog = getData('pharmascope_access_log');
+                accessLog.push({
+                    code: unlockCode,
+                    ip: userIP,
+                    timestamp: new Date().toISOString(),
+                    action: 'course_access'
+                });
+                saveData('pharmascope_access_log', accessLog);
+                
+                // Update user access
+                const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+                user.unlocked = true;
+                user.access_ip = userIP;
+                user.access_code = unlockCode;
+                localStorage.setItem('pharmascope_user', JSON.stringify(user));
+                
+                // Update buttons
+                document.getElementById('accessCourseBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+                document.getElementById('heroAccessBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+                
+                showToast('Payment verified! Opening courses...', 'success');
+                setTimeout(() => {
+                    closePaymentModal();
+                    openCourseModal();
+                }, 2000);
+            } else {
+                showToast('Invalid, inactive, or already used unlock code', 'error');
+            }
+        }
+
+        // Load all courses content in modal
+        function loadAllCoursesContent() {
+            const courses = getData('pharmascope_courses');
+            const chapters = getData('pharmascope_chapters');
+            const classes = getData('pharmascope_classes');
+            const tests = getData('pharmascope_tests');
             
-            const users = Array.from(userMap.values());
+            const container = document.getElementById('coursesList');
+            const courseTitle = document.getElementById('courseModalTitle');
             
-            if (users.length === 0) {
-                usersTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="6" class="empty-state">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            </svg>
-                            <p>No user activity yet</p>
-                        </td>
-                    </tr>
+            courseTitle.textContent = "All Courses";
+            
+            container.innerHTML = courses.map(course => {
+                const courseChapters = chapters.filter(chapter => chapter.course_id === course.id);
+                
+                return `
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <img src="${course.thumbnail}" alt="${course.title}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                                <div>
+                                    <h3 class="text-xl font-bold">${course.title}</h3>
+                                    <p class="text-white/70">${course.description}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                ${courseChapters.map(chapter => {
+                                    const chapterClasses = classes.filter(cls => cls.chapter_id === chapter.id);
+                                    const chapterTest = tests.find(test => test.chapter_id === chapter.id);
+                                    
+                                    return `
+                                        <div class="bg-white/5 rounded-lg p-4">
+                                            <h4 class="font-bold text-lg mb-3">${chapter.title}</h4>
+                                            <div class="space-y-2 mb-4">
+                                                ${chapterClasses.map(cls => `
+                                                    <div class="class-item p-3 flex items-center justify-between bg-white/5 rounded cursor-pointer"
+                                                         onclick="playVideo('${cls.youtube_embed_url}', '${cls.title}')">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-play-circle text-indigo-400 mr-3"></i>
+                                                            <span class="text-white">${cls.title}</span>
+                                                        </div>
+                                                        <i class="fas fa-external-link-alt text-white/50"></i>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            ${chapterTest ? `
+                                                <button onclick="takeTest('${chapterTest.google_form_url}')" 
+                                                        class="btn-secondary w-full py-2 rounded-lg font-semibold transition flex items-center justify-center">
+                                                    <i class="fas fa-file-alt mr-2"></i>Take MCQ Test
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
                 `;
-                return;
-            }
-            
-            // Sort users by last active (newest first)
-            users.sort((a, b) => new Date(b.lastActive) - new Date(a.lastActive));
-            
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                
-                // Check if user is premium (has an unlock code that's not "Free")
-                const isPremium = user.unlockCode !== 'Free';
-                
-                row.innerHTML = `
-                    <td title="${user.userId}">${truncateText(user.userId, 15)}</td>
-                    <td>
-                        ${user.unlockCode}
-                        ${isPremium ? '<span class="badge badge-info">Premium</span>' : '<span class="badge badge-warning">Free</span>'}
-                    </td>
-                    <td>${user.slipsGenerated}</td>
-                    <td>${formatDate(user.lastActive)}</td>
-                    <td>${user.ipAddress}</td>
-                    <td class="action-buttons">
-                        <button class="btn btn-small btn-danger" onclick="removeUser('${user.userId}')">Remove</button>
-                    </td>
-                `;
-                
-                usersTableBody.appendChild(row);
-            });
+            }).join('');
         }
 
-        function renderUsageLogs() {
-            logsTableBody.innerHTML = '';
+        function playVideo(videoUrl, title) {
+            const videoSection = document.getElementById('videoSection');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
             
-            if (adminData.usageLogs.length === 0) {
-                logsTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                            </svg>
-                            <p>No usage logs yet</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+            videoPlayer.src = videoUrl;
+            videoTitle.textContent = title;
+            videoSection.classList.remove('hidden');
             
-            // Sort logs by timestamp (newest first)
-            const sortedLogs = [...adminData.usageLogs].sort((a, b) => 
-                new Date(b.timestamp) - new Date(a.timestamp)
-            );
-            
-            sortedLogs.forEach(log => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${formatDate(log.timestamp)}</td>
-                    <td title="${log.userId}">${truncateText(log.userId, 15)}</td>
-                    <td>${log.slipsGenerated}</td>
-                    <td>${log.ipAddress}</td>
-                    <td title="${log.userAgent}">${truncateText(log.userAgent, 30)}</td>
-                `;
-                
-                logsTableBody.appendChild(row);
-            });
+            // Scroll to video section
+            videoSection.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function updateStats() {
-            // Total users (unique user IDs from logs)
-            const uniqueUsers = new Set(adminData.usageLogs.map(log => log.userId)).size;
-            totalUsersDisplay.textContent = uniqueUsers;
+        function closeVideo() {
+            const videoSection = document.getElementById('videoSection');
+            const videoPlayer = document.getElementById('videoPlayer');
             
-            // Active users (users with unlock codes)
-            const activeUsers = adminData.unlockedUsers.length;
-            activeUsersDisplay.textContent = activeUsers;
-            
-            // Total slips generated
-            const totalSlips = adminData.usageLogs.reduce((sum, log) => sum + log.slipsGenerated, 0);
-            totalSlipsDisplay.textContent = totalSlips;
-            
-            // Free limit
-            freeLimitDisplay.textContent = adminData.freeLimit;
+            videoSection.classList.add('hidden');
+            videoPlayer.src = ''; // Stop video
         }
 
-        function saveFreeLimit() {
-            const newLimit = parseInt(freeLimitInput.value);
-            
-            if (isNaN(newLimit) || newLimit < 1) {
-                alert('Please enter a valid number for the free limit.');
-                return;
-            }
-            
-            adminData.freeLimit = newLimit;
-            saveAdminData();
-            
-            alert(`Free slip limit updated to ${newLimit}!`);
+        function takeTest(formUrl) {
+            window.open(formUrl, '_blank');
         }
 
-        function changeAdminPassword() {
-            const newPassword = newAdminPasswordInput.value.trim();
+        // Animation on scroll
+        function animateOnScroll() {
+            const staggerItems = document.querySelectorAll('.stagger-item');
             
-            if (!newPassword) {
-                alert('Please enter a new password.');
-                return;
-            }
-            
-            if (newPassword.length < 4) {
-                alert('Password must be at least 4 characters long.');
-                return;
-            }
-            
-            adminData.adminPassword = newPassword;
-            saveAdminData();
-            newAdminPasswordInput.value = '';
-            
-            alert('Admin password changed successfully!');
-        }
-
-        function exportAllData() {
-            const dataStr = JSON.stringify(adminData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `slipzy-admin-data-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear ALL admin data? This action cannot be undone.')) {
-                adminData.unlockCodes = [];
-                adminData.unlockedUsers = [];
-                adminData.usageLogs = [];
-                saveAdminData();
-                
-                renderUnlockCodes();
-                renderUsers();
-                renderUsageLogs();
-                
-                alert('All data has been cleared!');
-            }
-        }
-
-        function deactivateCode(index) {
-            adminData.unlockCodes[index].active = false;
-            saveAdminData();
-            renderUnlockCodes();
-        }
-
-        function reactivateCode(index) {
-            adminData.unlockCodes[index].active = true;
-            saveAdminData();
-            renderUnlockCodes();
-        }
-
-        function removeUser(userId) {
-            if (confirm(`Are you sure you want to remove user ${userId}? This will revoke their premium access.`)) {
-                // Remove from unlocked users
-                adminData.unlockedUsers = adminData.unlockedUsers.filter(id => id !== userId);
-                
-                // Mark their unlock code as available if they had one
-                adminData.unlockCodes.forEach(code => {
-                    if (code.usedBy === userId) {
-                        code.usedBy = null;
-                        code.usedAt = null;
-                        code.active = true;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
                     }
                 });
-                
-                saveAdminData();
-                renderUsers();
-                renderUnlockCodes();
-                
-                alert(`User ${userId} has been removed.`);
-            }
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Code copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('Code copied to clipboard!');
+            }, { threshold: 0.1 });
+            
+            staggerItems.forEach(item => {
+                item.style.transform = 'translateY(20px)';
+                observer.observe(item);
             });
         }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-
-        function truncateText(text, maxLength) {
-            if (text.length <= maxLength) return text;
-            return text.substring(0, maxLength) + '...';
-        }
-
-        // Make functions available globally for onclick handlers
-        window.deactivateCode = deactivateCode;
-        window.reactivateCode = reactivateCode;
-        window.removeUser = removeUser;
-        window.copyToClipboard = copyToClipboard;
     </script>
 </body>
 </html>
