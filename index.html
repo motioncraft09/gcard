@@ -3,3421 +3,887 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Packaging Slips</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>PharmaScope - Edu-Tech for Medical Students</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-light: #8B85FF;
-            --primary-dark: #554FD8;
-            --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);
-            --primary-gradient-hover: linear-gradient(135deg, #554FD8 0%, #6C63FF 100%);
-            --text: #1D1D1F;
-            --text-light: #86868B;
-            --text-lighter: #AEAEB2;
-            --bg: #FFFFFF;
-            --card-bg: #FFFFFF;
-            --card-bg-hover: #FBFBFD;
-            --border: #F2F2F7;
-            --border-hover: #E5E5EA;
-            --radius: 20px;
-            --radius-sm: 12px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-            --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.12);
-            --shadow-lg: 0 32px 96px rgba(0, 0, 0, 0.16);
-            --spacing-xs: 0.75rem;
-            --spacing-sm: 1.25rem;
-            --spacing-md: 2rem;
-            --spacing-lg: 3rem;
-            --spacing-xl: 5rem;
-            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #0f172a;
+            --light: #f8fafc;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-            width: 100%;
-        }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
-            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            font-synthesis: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-overflow-scrolling: touch;
-            overflow-anchor: none;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--spacing-md);
-            width: 100%;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-md) 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: var(--spacing-lg);
-            position: relative;
-            z-index: 100;
-            background: linear-gradient(135deg, #F5F7FA 0%, #FBFBFD 100%);
-            width: 100%;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: var(--spacing-lg) 0;
-            position: relative;
-            contain: layout style paint;
-            width: 100%;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 1200px;
-            height: 1200px;
-            background: radial-gradient(circle, rgba(108, 99, 255, 0.04) 0%, rgba(108, 99, 255, 0) 70%);
-            z-index: -1;
-            animation: float 8s ease-in-out infinite;
-            will-change: transform;
-            transform: translateZ(0);
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            background: rgba(108, 99, 255, 0.08);
-            color: var(--primary);
-            padding: 10px 18px;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: var(--spacing-md);
-            animation: fadeInUp 0.6s var(--ease) 0.2s both;
-            border: 1px solid rgba(108, 99, 255, 0.1);
-            backdrop-filter: blur(20px);
-            will-change: transform, opacity;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.25rem, 6vw, 4rem);
-            font-weight: 900;
-            margin-bottom: var(--spacing-sm);
-            background: linear-gradient(135deg, var(--text) 0%, var(--text-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInUp 0.6s var(--ease) 0.3s both;
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            padding: 0 var(--spacing-sm);
-            will-change: transform, opacity;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 3vw, 1.25rem);
-            color: var(--text-light);
-            max-width: 600px;
-            margin: 0 auto var(--spacing-lg);
-            animation: fadeInUp 0.6s var(--ease) 0.4s both;
-            font-weight: 400;
-            line-height: 1.5;
-            padding: 0 var(--spacing-sm);
-            will-change: transform, opacity;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: var(--spacing-md);
-            transition: all 0.5s var(--ease);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(40px);
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(0);
-            will-change: transform;
-            contain: layout style paint;
-            width: 100%;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-hover);
-            border-color: var(--border-hover);
-            background: var(--card-bg-hover);
-            transform: translateY(-8px);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            margin-bottom: var(--spacing-md);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            letter-spacing: -0.01em;
-        }
-
-        /* Input Section */
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-md);
-        }
-
-        .tabs {
-            display: flex;
-            background: var(--border);
-            border-radius: var(--radius-sm);
-            padding: 4px;
-            margin-bottom: var(--spacing-md);
-            gap: 4px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
-
-        .tab {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 16px;
-            cursor: pointer;
-            font-weight: 700;
-            border-radius: var(--radius-sm);
-            transition: all 0.4s var(--ease);
-            text-align: center;
-            color: var(--text-light);
-            position: relative;
-            overflow: hidden;
-            font-size: 0.9rem;
-            will-change: transform;
-            transform: translateZ(0);
-        }
-
-        .tab.active {
-            background: var(--bg);
-            color: var(--text);
-            box-shadow: var(--shadow);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s var(--ease);
-            width: 100%;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* File Upload */
-        .file-upload-area {
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            padding: var(--spacing-lg);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.4s var(--ease);
-            position: relative;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.5);
-            will-change: transform;
-            transform: translateZ(0);
-            width: 100%;
-        }
-
-        .file-upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(108, 99, 255, 0.02);
-            transform: translateY(-2px);
-        }
-
-        .file-upload-area i {
-            font-size: 2.5rem;
-            color: var(--text-lighter);
-            margin-bottom: var(--spacing-sm);
-            transition: all 0.4s var(--ease);
-            display: block;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .file-types {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-            margin-top: var(--spacing-sm);
-        }
-
-        .file-type-badge {
-            background: rgba(108, 99, 255, 0.08);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            border: 1px solid rgba(108, 99, 255, 0.1);
-        }
-
-        /* Text Areas */
-        textarea {
-            width: 100%;
-            min-height: 180px;
-            padding: var(--spacing-md);
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            resize: vertical;
-            transition: all 0.4s var(--ease);
-            background: var(--bg);
-            line-height: 1.6;
-            color: var(--text);
         }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
-        }
-
-        /* Settings */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            width: 100%;
-        }
-
-        .setting-group {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-sm);
-            width: 100%;
-        }
-
-        .setting-label {
-            font-weight: 700;
-            color: var(--text);
-            font-size: 0.95rem;
-        }
-
-        .toggle-group {
-            display: flex;
-            background: var(--border);
-            padding: 4px;
-            border-radius: var(--radius-sm);
-            gap: 4px;
-            width: 100%;
-        }
-
-        .toggle-option {
-            flex: 1;
-            padding: 10px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s var(--ease);
-            font-weight: 600;
-            color: var(--text-light);
-            text-align: center;
-            font-size: 0.85rem;
-            will-change: transform;
-            transform: translateZ(0);
-        }
-
-        .toggle-option.active {
-            background: var(--bg);
-            color: var(--text);
-            box-shadow: var(--shadow);
-        }
-
-        .input-with-icon {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-with-icon input {
-            width: 100%;
-            padding: 12px 12px 12px 44px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s var(--ease);
-            background: var(--bg);
-        }
-
-        .input-with-icon input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
-        /* Buttons */
-        .btn {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            padding: 14px 24px;
-            font-size: 1.125rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s var(--ease);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: -0.01em;
-            width: 100%;
-            will-change: transform;
-            transform: translateZ(0);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            background: var(--primary-gradient-hover);
-        }
-
-        .btn-large {
-            padding: 16px 24px;
-            font-size: 1.25rem;
-            border-radius: var(--radius);
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        /* Features Panel */
-        .features-panel {
-            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
-            border: 1px solid rgba(108, 99, 255, 0.1);
-            border-radius: var(--radius);
-            padding: var(--spacing-md);
-            margin-top: var(--spacing-md);
-            width: 100%;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-sm);
-            width: 100%;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-sm);
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: var(--radius-sm);
-            border: 1px solid rgba(108, 99, 255, 0.1);
-            width: 100%;
-        }
-
-        .feature-icon {
-            width: 28px;
-            height: 28px;
-            background: var(--primary-gradient);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        /* Preview Section */
-        .preview-section {
-            margin-top: var(--spacing-lg);
-            width: 100%;
-        }
-
-        .preview-container {
-            position: relative;
-            max-width: 500px;
-            margin: 0 auto;
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            background: white;
-            width: 100%;
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: var(--primary-gradient);
-            color: white;
-            width: 100%;
-        }
-
-        .preview-header h3 {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .preview-count {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .slip-preview {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .preview-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: var(--spacing-sm);
-            gap: var(--spacing-sm);
-            width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .preview-nav {
-            display: flex;
-            gap: var(--spacing-xs);
-            flex-wrap: wrap;
-        }
-
-        .preview-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: all 0.3s var(--ease);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .preview-btn:hover {
-            background: var(--card-bg-hover);
-            border-color: var(--border-hover);
-        }
-
-        .preview-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Usage Section */
-        .usage-section {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-md);
-            width: 100%;
-        }
-
-        .usage-info {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-md);
-            background: rgba(108, 99, 255, 0.04);
-            border-radius: var(--radius);
-            border-left: 4px solid var(--primary);
-            transition: all 0.4s var(--ease);
-            border: 1px solid rgba(108, 99, 255, 0.1);
-            width: 100%;
-        }
-
-        .upgrade-panel {
-            padding: var(--spacing-md);
-            background: linear-gradient(135deg, #FFF3E0 0%, #FFECB3 100%);
-            border-radius: var(--radius);
-            border: 1px solid #FFD54F;
-            animation: pulse 2s infinite;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .code-input {
-            padding: var(--spacing-md);
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            font-family: inherit;
-            font-size: 1rem;
-            width: 100%;
-            margin-bottom: var(--spacing-sm);
-            transition: all 0.3s var(--ease);
-            background: var(--bg);
-            position: relative;
-        }
-
-        .code-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: var(--spacing-lg) 0;
-            color: var(--text-light);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--border);
-            margin-top: var(--spacing-lg);
-            background: rgba(255, 255, 255, 0.5);
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
         }
-
-        /* Premium Popup Overlay */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: var(--spacing-md);
-            animation: fadeIn 0.3s ease-out;
-            width: 100%;
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .popup-content {
-            background: white;
-            border-radius: var(--radius);
-            padding: var(--spacing-lg);
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translateZ(0);
+        
+        .gradient-bg {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
         }
-
-        .popup-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.3s var(--ease);
-        }
-
-        .popup-close:hover {
-            color: var(--text);
-            transform: scale(1.1);
-        }
-
-        .popup-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: var(--spacing-md);
-            color: var(--text);
-        }
-
-        .payment-info {
-            background: rgba(108, 99, 255, 0.05);
-            padding: var(--spacing-md);
-            border-radius: var(--radius);
-            margin-bottom: var(--spacing-md);
-            border: 1px solid rgba(108, 99, 255, 0.1);
-        }
-
-        .payment-step {
-            display: flex;
-            align-items: flex-start;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .step-number {
-            background: var(--primary);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            margin-top: var(--spacing-sm);
-        }
-
-        .whatsapp-btn:hover {
-            background: #128C7E;
-        }
-
-        .submit-btn {
-            background: #007AFF;
-            color: white;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            background: #0056CC;
-        }
-
-        /* Print Button */
-        .print-btn {
-            background: #34C759;
-            color: white;
-        }
-
-        .print-btn:hover {
-            background: #2CA24D;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translate3d(0, 30px, 0);
-            }
-            to {
-                opacity: 1;
-                transform: translate3d(0, 0, 0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.01);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate3d(-50%, 0, 0);
-            }
-            50% {
-                transform: translate3d(-50%, -10px, 0);
-            }
-        }
-
-        /* Hidden class */
-        .hidden {
-            display: none;
-        }
-
-        /* Success, Warning, Error states */
-        .success {
-            color: #34C759;
-        }
-
-        .warning {
-            color: #FF9500;
-        }
-
-        .error {
-            color: #FF3B30;
-        }
-
-        /* Grid Layout */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-lg);
-            width: 100%;
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Premium Subscription Popup Styles */
-        .premium-popup {
-            max-width: 600px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFF 100%);
-            border-radius: 24px;
-            box-shadow: 0 32px 96px rgba(0, 0, 0, 0.2);
+        
+        .course-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
             overflow: hidden;
-            position: relative;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
         }
-
-        .premium-header {
-            background: var(--primary-gradient);
-            padding: var(--spacing-lg);
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
-
-        .premium-header::before {
+        
+        .chapter-item {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .chapter-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .class-item {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+        }
+        
+        .class-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(90deg, var(--secondary) 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: -5px;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
-            background-size: cover;
-        }
-
-        .premium-content {
-            padding: var(--spacing-lg);
-            overflow-y: auto;
-            flex-grow: 1;
-            max-height: calc(90vh - 200px);
-        }
-
-        .premium-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .premium-title {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: var(--spacing-sm);
-            line-height: 1.1;
-        }
-
-        .premium-subtitle {
-            font-size: 1.125rem;
-            opacity: 0.9;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .premium-features {
-            /* Removed padding as it's now in premium-content */
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .premium-feature {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            padding: var(--spacing-sm);
-            background: rgba(108, 99, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(108, 99, 255, 0.1);
-        }
-
-        .premium-feature-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .pricing-section {
-            text-align: center;
-            padding: var(--spacing-md);
-            background: rgba(108, 99, 255, 0.05);
-            border-radius: 16px;
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--primary);
-            line-height: 1;
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .price-period {
-            color: var(--text-light);
-            font-size: 1rem;
-            margin-bottom: var(--spacing-sm);
-        }
-
-        .premium-cta {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            padding: 16px 24px;
-            font-size: 1.125rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s var(--ease);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-xs);
-            width: 100%;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .premium-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            background: var(--primary-gradient-hover);
-        }
-
-        /* Custom scrollbar for the popup */
-        .premium-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .premium-content::-webkit-scrollbar-track {
-            background: rgba(108, 99, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .premium-content::-webkit-scrollbar-thumb {
-            background: rgba(108, 99, 255, 0.2);
-            border-radius: 10px;
-        }
-
-        .premium-content::-webkit-scrollbar-thumb:hover {
-            background: rgba(108, 99, 255, 0.4);
-        }
-
-        /* Security badge */
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(52, 199, 89, 0.1);
-            color: #34C759;
-            padding: 6px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(52, 199, 89, 0.2);
-        }
-
-        /* Admin link */
-        .admin-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s var(--ease);
-        }
-
-        .admin-link:hover {
-            background: rgba(108, 99, 255, 0.1);
-        }
-        
-        /* Disabled state */
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        
-        .btn:disabled:hover {
-            transform: none !important;
-            box-shadow: var(--shadow) !important;
-        }
-
-        /* Responsive Design */
-        @media (min-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .btn {
-                width: auto;
-            }
-            
-            .features-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: var(--spacing-md);
-            }
-            
-            .settings-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .preview-controls {
-                flex-wrap: nowrap;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .container {
-                padding: 0 var(--spacing-sm);
-            }
-            
-            .hero {
-                padding: var(--spacing-md) 0;
-            }
-            
-            .card {
-                padding: var(--spacing-sm);
-            }
-            
-            .preview-container {
-                max-width: 100%;
-            }
-            
-            .preview-controls {
-                flex-direction: column;
-            }
-            
-            .preview-nav {
-                justify-content: center;
-            }
-            
-            .popup-content {
-                padding: var(--spacing-md);
-            }
-            
-            .premium-popup {
-                max-height: 95vh;
-                margin: 10px;
-            }
-            
-            .premium-content {
-                max-height: calc(95vh - 200px);
-                padding: var(--spacing-md);
-            }
-            
-            .premium-title {
-                font-size: 1.5rem;
-            }
-            
-            .premium-subtitle {
-                font-size: 1rem;
-            }
-            
-            .price {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .tab {
-                min-width: 100px;
-                padding: 10px 12px;
-                font-size: 0.8rem;
-            }
-            
-            .file-upload-area {
-                padding: var(--spacing-md);
-            }
-            
-            .file-upload-area i {
-                font-size: 2rem;
-            }
-            
-            textarea {
-                min-height: 150px;
-                padding: var(--spacing-sm);
-            }
-            
-            .premium-header {
-                padding: var(--spacing-md);
-            }
-            
-            .premium-features {
-                padding: var(--spacing-md);
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Print-specific styles - FIXED */
-        @media print {
-            body * {
-                visibility: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            /* Hide browser header/footer */
-            @page {
-                margin: 0;
-                size: auto;
-            }
-            
-            .print-page, .print-page * {
-                visibility: visible;
-            }
-            
-            .print-page {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                page-break-after: always;
-            }
-            
-            .print-page:last-child {
-                page-break-after: auto;
-            }
-            
-            /* Hide all UI elements */
-            .header, .hero, .card, .footer, .preview-header, .preview-controls {
-                display: none !important;
-            }
-        }
-
-        /* Performance optimizations */
-        .card, .btn, .tab, .toggle-option, .file-upload-area {
-            will-change: transform;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            perspective: 1000px;
-        }
-
-        /* NEW STYLES FOR TEMPLATES AND HISTORY */
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .template-card {
-            background: white;
-            border-radius: var(--radius-sm);
-            padding: var(--spacing-sm);
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s var(--ease);
-            text-align: center;
-        }
-
-        .template-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .template-card.active {
-            border-color: var(--primary);
-            background: rgba(108, 99, 255, 0.05);
-        }
-
-        .template-preview {
-            width: 100%;
-            height: 120px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            margin-bottom: var(--spacing-xs);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: var(--text-light);
-            overflow: hidden;
-        }
-
-        .template-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .template-type {
-            font-size: 0.75rem;
-            color: var(--text-light);
-            margin-top: 4px;
-        }
-
-        .history-section {
-            margin-top: var(--spacing-lg);
-        }
-
-        .history-list {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-        }
-
-        .history-item {
-            padding: var(--spacing-sm);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-item:last-child {
-            border-bottom: none;
-        }
-
-        .history-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .history-customer {
-            font-weight: 600;
-        }
-
-        .history-date {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        .history-actions {
-            display: flex;
-            gap: var(--spacing-xs);
-        }
-
-        .history-btn {
-            padding: 6px 12px;
-            background: var(--border);
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s var(--ease);
-        }
-
-        .history-btn:hover {
-            background: var(--border-hover);
-        }
-
-        .history-btn.primary {
+            width: 0;
+            height: 2px;
             background: var(--primary);
-            color: white;
+            transition: width 0.3s ease;
         }
-
-        .history-btn.primary:hover {
-            background: var(--primary-dark);
+        
+        .nav-link:hover::after {
+            width: 100%;
         }
-
-        .empty-history {
-            padding: var(--spacing-lg);
-            text-align: center;
-            color: var(--text-light);
+        
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
         }
-
-        /* Thermal printer specific styles */
-        .thermal-template {
-            background: white !important;
-            color: black !important;
-            font-family: 'Courier New', monospace !important;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .thermal-template * {
-            background: white !important;
-            color: black !important;
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
-
-        .thermal-template .preview-header {
-            background: white !important;
-            color: black !important;
-            border-bottom: 2px solid black !important;
+        
+        .stagger-item {
+            opacity: 0;
+        }
+        
+        .rotate-180 {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body>
-    <!-- Premium Subscription Popup -->
-    <div class="popup-overlay" id="payment-popup">
-        <div class="popup-content premium-popup">
-            <button class="popup-close" id="close-popup">×</button>
-            
-            <div class="premium-content">
-                <div class="premium-features">
-                    <div class="feature-grid">
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">∞</div>
-                            <div>
-                                <strong>Unlimited Slips</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Generate as many slips as you need</div>
-                            </div>
-                        </div>
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">🚀</div>
-                            <div>
-                                <strong>Priority Processing</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Faster generation times</div>
-                            </div>
-                        </div>
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">🎨</div>
-                            <div>
-                                <strong>Premium Templates</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Exclusive ultra-premium designs</div>
-                            </div>
-                        </div>
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">📊</div>
-                            <div>
-                                <strong>Advanced Analytics</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Track your slip generation</div>
-                            </div>
-                        </div>
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">🔒</div>
-                            <div>
-                                <strong>Enhanced Security</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Bank-level encryption for your data</div>
-                            </div>
-                        </div>
-                        <div class="premium-feature">
-                            <div class="premium-feature-icon">📧</div>
-                            <div>
-                                <strong>Priority Support</strong>
-                                <div style="font-size: 0.75rem; color: var(--text-light);">Dedicated support team</div>
-                            </div>
-                        </div>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-card fixed w-full z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 rounded-lg bg-indigo-500/20">
+                        <i class="fas fa-pills text-xl text-indigo-400"></i>
                     </div>
-                    
-                    <div class="pricing-section">
-                        <div class="price">$1</div>
-                        <div class="price-period">Pay through Binance to this ID: 955823930</div>
-                        <p style="color: var(--text-light); margin-bottom: var(--spacing-md);">If you are paying from Bangladesh, you can send via bKash / Nagad / Rocket to: 01322149482
-The amount is 130 BDT.</p>
-                    </div>
-                    
-                    <div class="payment-info">
-                        <div class="payment-step">
-                            <div class="step-number">1</div>
-                            <div>
-                                <strong>Send to this number</strong>
-                                <p style="margin-top: 4px; font-family: monospace; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 8px;">955823930 / 01322149482</p>
-                            </div>
-                        </div>
-                        
-                        <div class="payment-step">
-                            <div class="step-number">2</div>
-                            <div>
-                                <strong>Enter Transaction ID</strong>
-                                <input type="text" id="transaction-id" class="code-input" placeholder="Paste your transaction ID here">
-                                <button id="submit-transaction" class="btn submit-btn">Verify Payment</button>
-                            </div>
-                        </div>
-                        
-                        <div class="payment-step">
-                            <div class="step-number">3</div>
-                            <div>
-                                <strong>Enter Unlock Code</strong>
-                                <input type="text" id="unlock-code-popup" class="code-input" placeholder="Enter unlock code from admin">
-                                <button id="unlock-btn-popup" class="premium-cta">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12,17A2,2,0,0,0,14,15c0-1.1-1.34-2-3-2-2,0-3,1-3,2a2,2,0,0,0,2,2ZM21,19V17a5,5,0,0,0-5-5H8A5,5,0,0,0,3,17v2a1,1,0,0,0,1,1H20A1,1,0,0,0,21,19ZM7,9A5,5,0,1,0,2,4,5,5,0,0,0,7,9Z"/>
-                                    </svg>
-                                    Activate Premium
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:" id="whatsapp-link" class="btn whatsapp-btn hidden" target="_blank">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
-                        </svg>
-                        Contact Admin on WhatsApp
+                    <span class="text-2xl font-bold">Pharma<span class="text-indigo-400">Scope</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-white/80 hover:text-white">Home</a>
+                    <a href="#courses" class="nav-link text-white/80 hover:text-white">Courses</a>
+                    <a href="#features" class="nav-link text-white/80 hover:text-white">Features</a>
+                    <a href="#testimonials" class="nav-link text-white/80 hover:text-white">Testimonials</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="accessCourseBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold">
+                        Access Course
+                    </button>
+                    <a href="admin-panel.html" class="text-white/70 hover:text-white transition">
+                        <i class="fas fa-cog text-xl"></i>
                     </a>
                 </div>
             </div>
         </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-32 pb-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    Advance Your <span class="gradient-text">Medical Career</span>
+                </h1>
+                <p class="text-xl text-white/70 mb-10 max-w-2xl mx-auto">
+                    Comprehensive pharmacy and medical education platform with modern learning tools and expert-curated content.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button id="heroAccessBtn" class="btn-primary px-8 py-4 rounded-xl text-lg font-semibold">
+                        <i class="fas fa-lock-open mr-2"></i> Access Full Course
+                    </button>
+                    <button class="glass-card px-8 py-4 rounded-xl text-lg font-semibold border border-white/20 hover:border-white/40 transition">
+                        <i class="fas fa-play-circle mr-2"></i> Watch Demo
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-4xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-indigo-400 mb-2">500+</div>
+                    <div class="text-white/70">Students Enrolled</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-emerald-400 mb-2">50+</div>
+                    <div class="text-white/70">Video Lessons</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-amber-400 mb-2">100%</div>
+                    <div class="text-white/70">Success Rate</div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl text-center stagger-item">
+                    <div class="text-3xl font-bold text-cyan-400 mb-2">24/7</div>
+                    <div class="text-white/70">Support Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Why Choose <span class="gradient-text">PharmaScope</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Our platform offers the most comprehensive learning experience for medical and pharmacy students.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-video text-2xl text-indigo-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Expert Video Lectures</h3>
+                    <p class="text-white/70">Learn from industry experts with high-quality video content designed for optimal understanding.</p>
+                </div>
+                
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-file-alt text-2xl text-emerald-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Interactive MCQ Tests</h3>
+                    <p class="text-white/70">Test your knowledge with comprehensive assessments that track your progress and identify areas for improvement.</p>
+                </div>
+                
+                <div class="glass-card p-8 rounded-2xl stagger-item">
+                    <div class="w-14 h-14 rounded-xl bg-amber-500/20 flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-2xl text-amber-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Mobile Friendly</h3>
+                    <p class="text-white/70">Access your courses anytime, anywhere with our fully responsive platform that works on all devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Featured <span class="gradient-text">Courses</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Browse our comprehensive course catalog designed specifically for medical and pharmacy students.</p>
+            </div>
+            
+            <div id="coursesContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Courses will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-4xl font-bold mb-4">Student <span class="gradient-text">Testimonials</span></h2>
+                <p class="text-white/70 max-w-2xl mx-auto">Hear from our successful students who have transformed their careers with PharmaScope.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Dr. Sarah Johnson</div>
+                            <div class="text-white/70 text-sm">Medical Student</div>
+                        </div>
+                    </div>
+                    <p class="text-white/80">"PharmaScope revolutionized how I study pharmacology. The video lectures are incredibly clear and the MCQ tests helped me identify my weak areas."</p>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-emerald-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Michael Chen</div>
+                            <div class="text-white/70 text-sm">Pharmacy Student</div>
+                        </div>
+                    </div>
+                    <p class="text-white/80">"The course content is perfectly structured for pharmacy students. I especially appreciate the clinical application sections that bridge theory with practice."</p>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl stagger-item">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-amber-400"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">Emily Rodriguez</div>
+                            <div class="text-white/70 text-sm">Nursing Student</div>
+                        </div>
+                    </div>
+                    <p class="text-white/80">"As a nursing student, I found the drug classification and dosage calculation modules incredibly helpful. The platform is so intuitive and easy to use."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-card border-t border-white/10 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-pills text-xl text-indigo-400"></i>
+                        <span class="text-xl font-bold">PharmaScope</span>
+                    </div>
+                    <p class="text-white/70 mb-4">The premier edu-tech platform for medical and pharmacy students.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white/70 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-white/70 hover:text-white transition">Home</a></li>
+                        <li><a href="#courses" class="text-white/70 hover:text-white transition">Courses</a></li>
+                        <li><a href="#features" class="text-white/70 hover:text-white transition">Features</a></li>
+                        <li><a href="#testimonials" class="text-white/70 hover:text-white transition">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Courses</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Pharmacology</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Medicinal Chemistry</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Clinical Pharmacy</a></li>
+                        <li><a href="#" class="text-white/70 hover:text-white transition">Pharmaceuticals</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-envelope mr-2 text-indigo-400"></i> info@pharmascope.com
+                        </li>
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-phone mr-2 text-indigo-400"></i> +1 (555) 123-4567
+                        </li>
+                        <li class="flex items-center text-white/70">
+                            <i class="fas fa-map-marker-alt mr-2 text-indigo-400"></i> 123 Education St, Learning City
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 mt-8 pt-8 text-center text-white/70">
+                <p>&copy; 2023 PharmaScope. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 p-4">
+        <div class="glass-card max-w-md w-full p-6 rounded-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">Access Course</h3>
+                <button onclick="closePaymentModal()" class="text-white/70 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="bg-amber-500/20 border border-amber-500/50 rounded-lg p-4 mb-6">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-money-bill-wave text-amber-400 mr-2"></i>
+                    <span class="font-semibold">Payment Required</span>
+                </div>
+                <p class="text-white/80 text-sm">
+                    Pay <strong>500 BDT</strong> via bKash/Nagad/Rocket to:<br>
+                    <strong>01XXXXXXXXX</strong>
+                </p>
+            </div>
+
+            <form id="paymentForm" onsubmit="processPayment(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-2">Transaction ID</label>
+                        <input type="text" name="transaction_id" required 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-indigo-400">
+                    </div>
+                    <div>
+                        <label class="block mb-2">Unlock Code</label>
+                        <input type="text" name="unlock_code" required 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-indigo-400">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold mt-6">
+                    Submit & Access Course
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="header">
-            <div class="logo">Premium Packaging Slips <span class="security-badge">🔒 Encrypted</span></div>
-            <!-- Admin Panel link -->
-            <a href="admin.html" class="admin-link" target="_blank">contact</a>
+    <!-- Course Content Modal -->
+    <div id="courseModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="glass-card max-w-6xl w-full p-6 rounded-2xl my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" id="courseModalTitle">Course Content</h3>
+                <button onclick="closeCourseModal()" class="text-white/70 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Video Player Section -->
+            <div class="glass-card rounded-2xl p-6 mb-8 hidden" id="videoSection">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold" id="videoTitle">Select a class to start watching</h3>
+                    <button onclick="closeVideo()" class="text-white/70 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="aspect-w-16 aspect-h-9 bg-black rounded-lg overflow-hidden">
+                    <iframe id="videoPlayer" class="w-full h-96" src="" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Courses List -->
+            <div id="coursesList" class="space-y-6">
+                <!-- Courses will be loaded here dynamically -->
+            </div>
         </div>
+    </div>
 
-        <!-- Main App -->
-        <div id="main-app">
-            <section class="hero">
-                <div class="hero-badge">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 2L3 14h6l-4 8 12-12h-6l4-8z"/>
-                    </svg>
-                    ULTRA SECURE PREMIUM PACKAGING SLIPS
-                </div>
-                <h1>Packaging Slip Generator</h1>
-                <p>Transform multiple orders into beautiful, printable packaging slips with bulk PNG output</p>
-                
-                <div class="grid">
-                    <div class="card" style="animation: fadeInUp 0.6s var(--ease) 0.5s both">
-                        <h2 class="card-title">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                            Customer Data Input
-                        </h2>
-                        
-                        <div class="input-section">
-                            <div class="tabs">
-                                <div class="tab active" data-tab="upload">Upload Files</div>
-                                <div class="tab" data-tab="paste">Paste Text</div>
-                                <div class="tab" data-tab="bulk">Bulk Processing</div>
-                                <div class="tab" data-tab="templates">Templates</div>
-                            </div>
-                            
-                            <div class="tab-content active" id="upload-tab">
-                                <div class="file-upload-area" id="file-upload-area">
-                                    <i>📁</i>
-                                    <p><strong>Drag & drop files or click to browse</strong></p>
-                                    <p style="color: var(--text-light); margin-top: 8px; font-size: 0.9rem;">Supports: TXT, CSV, XLSX, JSON</p>
-                                    <div class="file-types">
-                                        <span class="file-type-badge">.txt</span>
-                                        <span class="file-type-badge">.csv</span>
-                                        <span class="file-type-badge">.xlsx</span>
-                                        <span class="file-type-badge">.json</span>
-                                    </div>
-                                    <input type="file" id="file-input" class="file-input" accept=".txt,.csv,.xlsx,.json" multiple>
-                                </div>
-                                <div id="file-preview" class="hidden"></div>
-                                <div id="upload-status" class="hidden" style="margin-top: var(--spacing-sm); padding: var(--spacing-sm); background: rgba(52, 199, 89, 0.1); border-radius: var(--radius-sm); border: 1px solid rgba(52, 199, 89, 0.2);">
-                                    <span class="success">✅ File uploaded successfully!</span>
-                                </div>
-                            </div>
-                            
-                            <div class="tab-content" id="paste-tab">
-                                <textarea id="text-input" placeholder="Paste customer data here. Each customer should be separated by a blank line.
-
-Example:
-John Doe • Apple Inc.
-(555) 123-4567 • john@apple.com
-123 Main Street, San Francisco, CA 94105
-iPhone 15 Pro Max • Space Black
-$1,199.00 • Priority Shipping
-Signature required • Gift wrapping"></textarea>
-                            </div>
-
-                            <div class="tab-content" id="bulk-tab">
-                                <div class="features-panel">
-                                    <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Advanced Bulk Processing</h3>
-                                    <div class="features-grid">
-                                        <div class="feature-item">
-                                            <div class="feature-icon">🔄</div>
-                                            <div>
-                                                <strong>Auto Address Correction</strong>
-                                                <div style="font-size: 0.75rem; color: var(--text-light);">Standardizes messy addresses</div>
-                                            </div>
-                                        </div>
-                                        <div class="feature-item">
-                                            <div class="feature-icon">🏢</div>
-                                            <div>
-                                                <strong>Company Detection</strong>
-                                                <div style="font-size: 0.75rem; color: var(--text-light);">Auto-extracts company names</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <textarea id="bulk-input" placeholder="Paste messy customer data here - we'll automatically clean and format it...
-
-Example messy input:
-john doe 123 main st sf ca 1234
-555-123-4567
-iphone 15 $1199
-note: sig req"></textarea>
-                            </div>
-
-                            <!-- NEW TEMPLATES TAB -->
-                            <div class="tab-content" id="templates-tab">
-                                <div class="setting-group">
-                                    <div class="setting-label">Select Template</div>
-                                    <div class="template-grid">
-                                        <div class="template-card active" data-template="premium">
-                                            <div class="template-preview" style="background: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%); color: white;">
-                                                Premium
-                                            </div>
-                                            <div class="template-name">Premium Design</div>
-                                            <div class="template-type">Full Color • QR Code</div>
-                                        </div>
-                                        <div class="template-card" data-template="thermal">
-                                            <div class="template-preview" style="background: white; color: black; border: 1px solid #000;">
-                                                Thermal
-                                            </div>
-                                            <div class="template-name">Thermal Printer</div>
-                                            <div class="template-type">B&W • Compact</div>
-                                        </div>
-                                        <div class="template-card" data-template="minimal">
-                                            <div class="template-preview" style="background: #f8f9fa; color: #333; border: 1px dashed #ccc;">
-                                                Minimal
-                                            </div>
-                                            <div class="template-name">Minimalist</div>
-                                            <div class="template-type">Clean • Simple</div>
-                                        </div>
-                                        <div class="template-card" data-template="professional">
-                                            <div class="template-preview" style="background: #1a237e; color: white;">
-                                                Professional
-                                            </div>
-                                            <div class="template-name">Professional</div>
-                                            <div class="template-type">Corporate • Formal</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="features-panel">
-                                    <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Template Features</h3>
-                                    <div class="features-grid">
-                                        <div class="feature-item">
-                                            <div class="feature-icon">🖨️</div>
-                                            <div>
-                                                <strong>Thermal Compatible</strong>
-                                                <div style="font-size: 0.75rem; color: var(--text-light);">Works with any thermal printer</div>
-                                            </div>
-                                        </div>
-                                        <div class="feature-item">
-                                            <div class="feature-icon">🎨</div>
-                                            <div>
-                                                <strong>Multiple Designs</strong>
-                                                <div style="font-size: 0.75rem; color: var(--text-light);">Choose from 4 professional templates</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card" style="animation: fadeInUp 0.6s var(--ease) 0.6s both">
-                        <h2 class="card-title">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="3" y1="9" x2="21" y2="9"/>
-                                <line x1="9" y1="21" x2="9" y2="9"/>
-                            </svg>
-                            Settings & Output
-                        </h2>
-                        
-                        <div class="settings-grid">
-                            <div class="setting-group">
-                                <div class="setting-label">Output Format</div>
-                                <div class="toggle-group">
-                                    <div class="toggle-option active" data-format="png">PNG Images</div>
-                                    <div class="toggle-option" data-format="pdf">PDF Document</div>
-                                </div>
-                            </div>
-
-                            <div class="setting-group">
-                                <div class="setting-label">QR Code Link</div>
-                                <div class="input-with-icon">
-                                    <div class="input-icon">🔗</div>
-                                    <input type="text" id="qr-link" placeholder="https://your-store.com/track/" value="https://your-store.com/track/">
-                                </div>
-                            </div>
-
-                            <div class="setting-group">
-                                <div class="setting-label">Default Company</div>
-                                <div class="input-with-icon">
-                                    <div class="input-icon">🏢</div>
-                                    <input type="text" id="default-company" placeholder="Your Company Name" value="">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="features-panel">
-                            <h3 style="margin-bottom: var(--spacing-sm); font-size: 1.1rem;">Premium Features</h3>
-                            <div class="features-grid">
-                                <div class="feature-item">
-                                    <div class="feature-icon">📱</div>
-                                    <div>
-                                        <strong>QR Codes</strong>
-                                        <div style="font-size: 0.75rem; color: var(--text-light);">Track orders easily</div>
-                                    </div>
-                                </div>
-                                <div class="feature-item">
-                                    <div class="feature-icon">🏢</div>
-                                    <div>
-                                        <strong>Company Branding</strong>
-                                        <div style="font-size: 0.75rem; color: var(--text-light);">Add your logo & info</div>
-                                    </div>
-                                </div>
-                                <div class="feature-item">
-                                    <div class="feature-icon">🖨️</div>
-                                    <div>
-                                        <strong>Universal Printing</strong>
-                                        <div style="font-size: 0.75rem; color: var(--text-light);">Works with any printer</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button id="generate-btn" class="btn btn-large btn-full" style="margin-top: var(--spacing-md);">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14,2 14,8 20,8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10,9 9,9 8,9"/>
-                            </svg>
-                            Generate Premium Slips
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Preview Section -->
-            <section id="preview-section" class="preview-section hidden" style="animation: fadeInUp 0.6s var(--ease) 0.7s both">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <polyline points="21,15 16,10 5,21"/>
-                        </svg>
-                        Slip Preview
-                    </h2>
-                    
-                    <div class="preview-container">
-                        <div class="preview-header">
-                            <h3>Packaging Slip Preview</h3>
-                            <div class="preview-count">Slip <span id="current-slip">1</span> of <span id="total-slips">0</span></div>
-                        </div>
-                        <canvas id="slip-preview" class="slip-preview" width="1000" height="1400"></canvas>
-                        
-                        <div class="preview-controls">
-                            <div class="preview-nav">
-                                <button id="prev-slip" class="preview-btn" disabled>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="15,18 9,12 15,6"/>
-                                    </svg>
-                                    Previous
-                                </button>
-                                <button id="next-slip" class="preview-btn" disabled>
-                                    Next
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="9,18 15,12 9,6"/>
-                                    </svg>
-                                </button>
-                            </div>
-                            <div style="display: flex; gap: var(--spacing-sm);">
-                                <button id="print-btn" class="btn print-btn">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="6,9 6,2 18,2 18,9"/>
-                                        <path d="M6,18H4a2,2,0,0,1-2-2V9a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v7a2,2,0,0,1-2,2H18"/>
-                                        <rect x="6" y="14" width="12" height="8"/>
-                                    </svg>
-                                    Print
-                                </button>
-                                <button id="download-all" class="btn">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2V15"/>
-                                        <polyline points="7,10 12,15 17,10"/>
-                                        <line x1="12" y1="15" x2="12" y2="3"/>
-                                    </svg>
-                                    Download All
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- History Section -->
-            <section id="history-section" class="history-section hidden" style="animation: fadeInUp 0.6s var(--ease) 0.8s both">
-                <div class="card">
-                    <h2 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <polyline points="12,6 12,12 16,14"/>
-                        </svg>
-                        Slip History
-                    </h2>
-                    
-                    <div class="history-list" id="history-list">
-                        <div class="empty-history" id="empty-history">
-                            No history yet. Generate your first slip to see it here.
-                        </div>
-                        <!-- History items will be added here dynamically -->
-                    </div>
-                </div>
-            </section>
-
-            <section class="card usage-section" style="animation: fadeInUp 0.6s var(--ease) 0.8s both">
-                <h2 class="card-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                    Usage & Licensing
-                </h2>
-                
-                <div id="usage-info" class="usage-info">
-                    <div class="loading"></div>
-                    <span>Checking usage limit...</span>
-                </div>
-                
-                <div id="upgrade-panel" class="upgrade-panel hidden">
-                    <h3>✨ Free Limit Reached</h3>
-                    <p>You've reached the free usage limit. Upgrade to premium for unlimited access.</p>
-                    <button id="upgrade-btn" class="btn">Upgrade to Premium</button>
-                </div>
-            </section>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="toastMessage">Operation successful!</span>
         </div>
-
-        <footer class="footer">
-            <p>Premium Packaging Slips • Ultra Secure • Encrypted Usage Tracking • © 2024</p>
-        </footer>
     </div>
 
     <script>
-        // Simplified Secure Storage System
-        class SimpleSecureStorage {
-            constructor() {
-                this.storageKey = 'slipzy_data';
-            }
-            
-            // Store data
-            set(key, value) {
-                try {
-                    const data = {
-                        value: value,
-                        timestamp: Date.now()
-                    };
-                    
-                    localStorage.setItem(`${this.storageKey}_${key}`, JSON.stringify(data));
-                    return true;
-                } catch (error) {
-                    console.error('Storage set failed:', error);
-                    return false;
-                }
-            }
-            
-            // Retrieve data
-            get(key) {
-                try {
-                    const stored = localStorage.getItem(`${this.storageKey}_${key}`);
-                    if (!stored) return null;
-                    
-                    const data = JSON.parse(stored);
-                    return data.value;
-                } catch (error) {
-                    console.error('Storage get failed:', error);
-                    return null;
-                }
-            }
-            
-            // Clear all data
-            clearAll() {
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith(this.storageKey)) {
-                        localStorage.removeItem(key);
+        // Initialize data in localStorage if not exists
+        function initializeData() {
+            if (!localStorage.getItem('pharmascope_courses')) {
+                const defaultCourses = [
+                    { 
+                        id: 1, 
+                        title: "Pharmacology Fundamentals", 
+                        description: "Master the basics of drug actions and therapeutic uses",
+                        thumbnail: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                    },
+                    { 
+                        id: 2, 
+                        title: "Medicinal Chemistry", 
+                        description: "Understand drug design and chemical properties",
+                        thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                    },
+                    { 
+                        id: 3, 
+                        title: "Clinical Pharmacy", 
+                        description: "Patient-focused pharmacy practice and care",
+                        thumbnail: "https://images.unsplash.com/photo-1585435557343-3b092031d5ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
                     }
-                });
+                ];
+                localStorage.setItem('pharmascope_courses', JSON.stringify(defaultCourses));
+            }
+
+            if (!localStorage.getItem('pharmascope_chapters')) {
+                const defaultChapters = [
+                    { id: 1, course_id: 1, title: "Introduction to Pharmacology" },
+                    { id: 2, course_id: 1, title: "Drug Classification" },
+                    { id: 3, course_id: 1, title: "Pharmacokinetics" },
+                    { id: 4, course_id: 2, title: "Organic Chemistry Basics" },
+                    { id: 5, course_id: 2, title: "Drug Synthesis" },
+                    { id: 6, course_id: 3, title: "Patient Assessment" },
+                    { id: 7, course_id: 3, title: "Medication Management" }
+                ];
+                localStorage.setItem('pharmascope_chapters', JSON.stringify(defaultChapters));
+            }
+
+            if (!localStorage.getItem('pharmascope_classes')) {
+                const defaultClasses = [
+                    { id: 1, chapter_id: 1, title: "What is Pharmacology?", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 2, chapter_id: 1, title: "Drug Development Process", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 3, chapter_id: 1, title: "Pharmacokinetics Basics", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 4, chapter_id: 2, title: "Drug Categories Overview", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 5, chapter_id: 2, title: "Analgesics and Anti-inflammatories", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 6, chapter_id: 3, title: "Absorption and Distribution", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 7, chapter_id: 3, title: "Metabolism and Excretion", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 8, chapter_id: 4, title: "Chemical Bonds", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 9, chapter_id: 4, title: "Molecular Structure", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 10, chapter_id: 5, title: "Synthetic Methods", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 11, chapter_id: 5, title: "Quality Control", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 12, chapter_id: 6, title: "Patient History", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 13, chapter_id: 6, title: "Physical Assessment", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 14, chapter_id: 7, title: "Drug Interactions", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+                    { id: 15, chapter_id: 7, title: "Therapeutic Monitoring", youtube_embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ];
+                localStorage.setItem('pharmascope_classes', JSON.stringify(defaultClasses));
+            }
+
+            if (!localStorage.getItem('pharmascope_tests')) {
+                const defaultTests = [
+                    { id: 1, chapter_id: 1, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 2, chapter_id: 2, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 3, chapter_id: 3, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 4, chapter_id: 4, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 5, chapter_id: 5, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 6, chapter_id: 6, google_form_url: "https://forms.google.com/your-test-link-here" },
+                    { id: 7, chapter_id: 7, google_form_url: "https://forms.google.com/your-test-link-here" }
+                ];
+                localStorage.setItem('pharmascope_tests', JSON.stringify(defaultTests));
+            }
+
+            if (!localStorage.getItem('pharmascope_codes')) {
+                const defaultCodes = [
+                    { 
+                        id: 1, 
+                        code: "PHARMA2024", 
+                        status: "active", 
+                        used: false, 
+                        created_at: new Date().toISOString(),
+                        ip_restriction: "single",
+                        used_by: null
+                    }
+                ];
+                localStorage.setItem('pharmascope_codes', JSON.stringify(defaultCodes));
+            }
+
+            if (!localStorage.getItem('pharmascope_blocked_ips')) {
+                localStorage.setItem('pharmascope_blocked_ips', JSON.stringify([]));
+            }
+
+            if (!localStorage.getItem('pharmascope_access_log')) {
+                localStorage.setItem('pharmascope_access_log', JSON.stringify([]));
+            }
+
+            if (!localStorage.getItem('pharmascope_user')) {
+                const defaultUser = {
+                    unlocked: false
+                };
+                localStorage.setItem('pharmascope_user', JSON.stringify(defaultUser));
             }
         }
 
-        // Global variables
-        let userFingerprint = '';
-        let usageCount = 0;
-        const MAX_FREE_SLIPS = 10;
-        let uploadedFiles = [];
-        let generatedSlips = [];
-        let currentSlipIndex = 0;
-        let secureStorage = new SimpleSecureStorage();
-        let selectedTemplate = 'premium';
-        let slipHistory = [];
-        
-        // DOM elements
-        const fileUploadArea = document.getElementById('file-upload-area');
-        const fileInput = document.getElementById('file-input');
-        const textInput = document.getElementById('text-input');
-        const bulkInput = document.getElementById('bulk-input');
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const toggleOptions = document.querySelectorAll('.toggle-option');
-        const generateBtn = document.getElementById('generate-btn');
-        const usageInfo = document.getElementById('usage-info');
-        const upgradePanel = document.getElementById('upgrade-panel');
-        const upgradeBtn = document.getElementById('upgrade-btn');
-        const qrLinkInput = document.getElementById('qr-link');
-        const defaultCompanyInput = document.getElementById('default-company');
-        const previewSection = document.getElementById('preview-section');
-        const slipPreview = document.getElementById('slip-preview');
-        const currentSlipDisplay = document.getElementById('current-slip');
-        const totalSlipsDisplay = document.getElementById('total-slips');
-        const prevSlipBtn = document.getElementById('prev-slip');
-        const nextSlipBtn = document.getElementById('next-slip');
-        const downloadAllBtn = document.getElementById('download-all');
-        const printBtn = document.getElementById('print-btn');
-        const uploadStatus = document.getElementById('upload-status');
-        const paymentPopup = document.getElementById('payment-popup');
-        const closePopup = document.getElementById('close-popup');
-        const unlockBtnPopup = document.getElementById('unlock-btn-popup');
-        const unlockCodePopup = document.getElementById('unlock-code-popup');
-        const transactionIdInput = document.getElementById('transaction-id');
-        const submitTransactionBtn = document.getElementById('submit-transaction');
-        const whatsappLink = document.getElementById('whatsapp-link');
-        const templateCards = document.querySelectorAll('.template-card');
-        const historySection = document.getElementById('history-section');
-        const historyList = document.getElementById('history-list');
-        const emptyHistory = document.getElementById('empty-history');
-        
-        // Canvas context
-        const ctx = slipPreview.getContext('2d');
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Initialize usage tracking
-            initializeUsageTracking();
-            
-            // Initialize history
-            loadHistory();
-            
-            // Initialize smooth scrolling
-            initializeSmoothScrolling();
-        });
-        
-        function setupEventListeners() {
-            // File upload
-            fileUploadArea.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', handleFileSelect);
-            
-            // Enhanced drag and drop for file upload
-            fileUploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                fileUploadArea.classList.add('drag-over');
-            });
-            
-            fileUploadArea.addEventListener('dragleave', () => {
-                fileUploadArea.classList.remove('drag-over');
-            });
-            
-            fileUploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                fileUploadArea.classList.remove('drag-over');
-                
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect();
-                }
-            });
-            
-            // Tab switching
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    
-                    // Update tabs
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    // Update tab contents
-                    tabContents.forEach(content => {
-                        content.classList.remove('active');
-                        if (content.id === `${tabId}-tab`) {
-                            content.classList.add('active');
-                        }
-                    });
-                });
-            });
-            
-            // Toggle options
-            toggleOptions.forEach(option => {
-                option.addEventListener('click', () => {
-                    const group = option.parentElement;
-                    group.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
-                    option.classList.add('active');
-                });
-            });
-            
-            // Template selection
-            templateCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    templateCards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    selectedTemplate = card.getAttribute('data-template');
-                });
-            });
-            
-            // Generate button
-            generateBtn.addEventListener('click', generateSlips);
-            
-            // Upgrade button
-            upgradeBtn.addEventListener('click', () => {
-                paymentPopup.style.display = 'flex';
-            });
-            
-            // Close popup
-            closePopup.addEventListener('click', () => {
-                paymentPopup.style.display = 'none';
-            });
-            
-            // Submit transaction ID button
-            submitTransactionBtn.addEventListener('click', submitTransactionId);
-            
-            // Unlock button in popup
-            unlockBtnPopup.addEventListener('click', verifyUnlockCode);
-            
-            // Preview navigation
-            prevSlipBtn.addEventListener('click', showPreviousSlip);
-            nextSlipBtn.addEventListener('click', showNextSlip);
-            
-            // Download all button
-            downloadAllBtn.addEventListener('click', downloadAllSlips);
-            
-            // Print button - FIXED
-            printBtn.addEventListener('click', printSlips);
+        // Get data from localStorage
+        function getData(key) {
+            return JSON.parse(localStorage.getItem(key) || '[]');
         }
-        
-        // Initialize smooth scrolling
-        function initializeSmoothScrolling() {
-            // Use native smooth scrolling when available
-            if ('scrollBehavior' in document.documentElement.style) {
-                return; // Browser supports native smooth scrolling
-            }
-            
-            // Fallback for older browsers
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
+
+        // Save data to localStorage
+        function saveData(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
         }
-        
-        function handleFileSelect() {
-            if (fileInput.files.length === 0) return;
-            
-            uploadedFiles = Array.from(fileInput.files);
-            
-            // Show upload status
-            uploadStatus.classList.remove('hidden');
-            
-            // Process all files
-            let allContent = '';
-            let processedFiles = 0;
-            
-            uploadedFiles.forEach((file, index) => {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    allContent += e.target.result + '\n\n';
-                    processedFiles++;
-                    
-                    if (processedFiles === uploadedFiles.length) {
-                        // All files processed
-                        if (textInput) {
-                            textInput.value = allContent.trim();
-                        }
-                    }
-                };
-                
-                reader.readAsText(file);
-            });
-        }
-        
-        function initializeUsageTracking() {
-            // Generate fingerprint
-            generateFingerprint();
-            
-            // Get usage count from storage
-            const storedUsage = secureStorage.get('usageCount');
-            usageCount = storedUsage ? parseInt(storedUsage) : 0;
-            
-            // Check if user is unlocked
-            const isUnlocked = checkUnlockStatus();
-            
-            updateUsageDisplay(isUnlocked);
-        }
-        
-        function generateFingerprint() {
-            // Try to get existing fingerprint first
-            const existingFingerprint = secureStorage.get('userFingerprint');
-            if (existingFingerprint) {
-                userFingerprint = existingFingerprint;
-                return;
-            }
-            
-            // Create a simple fingerprint
-            const components = [
-                navigator.userAgent,
-                navigator.language,
-                screen.width,
-                screen.height,
-                new Date().getTimezoneOffset(),
-                Intl.DateTimeFormat().resolvedOptions().timeZone
+
+        // Get user's IP (demo version)
+        function getUserIP() {
+            const demoIPs = [
+                '192.168.1.101',
+                '192.168.1.102', 
+                '192.168.1.103',
+                '192.168.1.104',
+                '192.168.1.105'
             ];
+            return demoIPs[Math.floor(Math.random() * demoIPs.length)];
+        }
+
+        // Load courses on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
+            loadCourses();
+            animateOnScroll();
             
-            // Combine all components and create a hash
-            const combined = components.join('|');
-            let hash = 0;
-            for (let i = 0; i < combined.length; i++) {
-                const char = combined.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
+            // Add event listeners for access buttons
+            document.getElementById('accessCourseBtn').addEventListener('click', openPaymentModal);
+            document.getElementById('heroAccessBtn').addEventListener('click', openPaymentModal);
+            
+            // Check if user already has access
+            const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+            if (user.unlocked) {
+                document.getElementById('accessCourseBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+                document.getElementById('heroAccessBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+            }
+        });
+
+        // Load and display courses
+        function loadCourses() {
+            const courses = getData('pharmascope_courses');
+            const container = document.getElementById('coursesContainer');
+            
+            container.innerHTML = courses.map(course => `
+                <div class="course-card glass-card overflow-hidden">
+                    <div class="h-48 overflow-hidden">
+                        <img src="${course.thumbnail}" alt="${course.title}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">${course.title}</h3>
+                        <p class="text-white/70 mb-4">${course.description}</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-play-circle text-indigo-400 mr-2"></i>
+                                <span class="text-white/70">${getClassesCount(course.id)} lessons</span>
+                            </div>
+                            <button onclick="openPaymentModal()" class="btn-primary px-4 py-2 rounded-lg text-sm">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get count of classes for a course
+        function getClassesCount(courseId) {
+            const chapters = getData('pharmascope_chapters');
+            const classes = getData('pharmascope_classes');
+            
+            const courseChapters = chapters.filter(chapter => chapter.course_id === courseId);
+            let classCount = 0;
+            
+            courseChapters.forEach(chapter => {
+                const chapterClasses = classes.filter(cls => cls.chapter_id === chapter.id);
+                classCount += chapterClasses.length;
+            });
+            
+            return classCount;
+        }
+
+        // Payment modal functions
+        function openPaymentModal() {
+            const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+            if (user.unlocked) {
+                openCourseModal();
+                return;
             }
             
-            // Convert to a more readable format
-            userFingerprint = 'SLIPZY_' + Math.abs(hash).toString(36).toUpperCase() + '_' + 
-                            Date.now().toString(36).toUpperCase();
-            
-            // Store fingerprint
-            secureStorage.set('userFingerprint', userFingerprint);
+            const modal = document.getElementById('paymentModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
-        
-        function checkUnlockStatus() {
-            // Get admin data from localStorage
-            const adminDataStr = localStorage.getItem('slipzy_admin_data');
-            if (!adminDataStr) return false;
-            
-            try {
-                const adminData = JSON.parse(adminDataStr);
-                const unlockedUsers = adminData.unlockedUsers || [];
-                
-                // Check if user has a valid unlock code
-                const userCode = secureStorage.get(`userCode_${userFingerprint}`);
-                if (userCode) {
-                    const validCodes = adminData.unlockCodes || [];
-                    const codeValid = validCodes.find(c => c.code === userCode && c.active);
-                    if (codeValid) return true;
-                }
-                
-                return unlockedUsers.includes(userFingerprint);
-            } catch (e) {
-                console.error('Error checking unlock status:', e);
-                return false;
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Course modal functions
+        function openCourseModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            loadAllCoursesContent();
+        }
+
+        function closeCourseModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            closeVideo();
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
             }
-        }
-        
-        function updateUsageDisplay(isUnlocked) {
-            if (isUnlocked) {
-                usageInfo.innerHTML = '<span class="success">✨ Premium: Unlimited Slips Available</span>';
-                upgradePanel.classList.add('hidden');
-                generateBtn.disabled = false;
+        });
+
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCourseModal();
+            }
+        });
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'error') {
+                toast.classList.remove('bg-green-500');
+                toast.classList.add('bg-red-500');
             } else {
-                const remaining = MAX_FREE_SLIPS - usageCount;
-                if (remaining > 0) {
-                    usageInfo.innerHTML = `<span>Free slips remaining: <strong>${remaining}/${MAX_FREE_SLIPS}</strong></span>`;
-                    upgradePanel.classList.add('hidden');
-                    generateBtn.disabled = false;
-                } else {
-                    usageInfo.innerHTML = '<span class="warning">Free limit reached. Upgrade required.</span>';
-                    upgradePanel.classList.remove('hidden');
-                    generateBtn.disabled = true;
-                }
-            }
-        }
-        
-        function submitTransactionId() {
-            const transactionId = transactionIdInput.value.trim();
-            
-            if (!transactionId) {
-                alert('Please enter a transaction ID.');
-                return;
+                toast.classList.remove('bg-red-500');
+                toast.classList.add('bg-green-500');
             }
             
-            // Update WhatsApp link with transaction ID
-            whatsappLink.href = `https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:%20${encodeURIComponent(transactionId)}`;
+            toast.classList.remove('translate-x-full');
             
-            // Show WhatsApp button
-            whatsappLink.classList.remove('hidden');
-            
-            // Show success message
-            alert('Transaction ID submitted! Please contact admin on WhatsApp to get your unlock code.');
-        }
-        
-        function verifyUnlockCode() {
-            const code = unlockCodePopup.value.trim();
-            
-            if (!code) {
-                alert('Please enter an unlock code.');
-                return;
-            }
-            
-            // Get admin data from localStorage
-            const adminDataStr = localStorage.getItem('slipzy_admin_data');
-            if (!adminDataStr) {
-                alert('Admin data not found. Please contact support.');
-                return;
-            }
-            
-            try {
-                const adminData = JSON.parse(adminDataStr);
-                const validCodes = adminData.unlockCodes || [];
-                const validCode = validCodes.find(c => c.code === code && c.active);
-                
-                if (validCode) {
-                    // Add user to unlocked users in admin data
-                    const unlockedUsers = adminData.unlockedUsers || [];
-                    if (!unlockedUsers.includes(userFingerprint)) {
-                        unlockedUsers.push(userFingerprint);
-                        adminData.unlockedUsers = unlockedUsers;
-                        localStorage.setItem('slipzy_admin_data', JSON.stringify(adminData));
-                    }
-                    
-                    // Store user's code for verification
-                    secureStorage.set(`userCode_${userFingerprint}`, code);
-                    
-                    updateUsageDisplay(true);
-                    paymentPopup.style.display = 'none';
-                    
-                    // Show success animation
-                    usageInfo.innerHTML = '<span class="success">🎉 Successfully Unlocked! Enjoy unlimited premium features.</span>';
-                    setTimeout(() => {
-                        updateUsageDisplay(true);
-                    }, 3000);
-                } else {
-                    alert('Invalid unlock code. Please check and try again.');
-                }
-            } catch (e) {
-                console.error('Error verifying unlock code:', e);
-                alert('Error verifying unlock code. Please try again.');
-            }
-        }
-        
-        function parseCustomerData(text) {
-            // Split by blank lines (multiple newlines)
-            const entries = text.split(/\n\s*\n/);
-            const customers = [];
-            
-            entries.forEach(entry => {
-                if (entry.trim() === '') return;
-                
-                const lines = entry.split('\n').filter(line => line.trim() !== '');
-                const customer = {
-                    name: '',
-                    company: defaultCompanyInput.value || '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    product: '',
-                    price: '',
-                    note: ''
-                };
-                
-                // NEW IMPROVED PARSING LOGIC
-                // Process each line and assign to appropriate field
-                lines.forEach(line => {
-                    const cleanLine = line.trim();
-                    if (!cleanLine) return;
-                    
-                    // Email detection
-                    const emailMatch = cleanLine.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
-                    if (emailMatch && !customer.email) {
-                        customer.email = emailMatch[0];
-                        return;
-                    }
-                    
-                    // Phone detection
-                    const phoneMatch = cleanLine.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/);
-                    if (phoneMatch && !customer.phone) {
-                        customer.phone = phoneMatch[0];
-                        return;
-                    }
-                    
-                    // Price detection
-                    const priceMatch = cleanLine.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/);
-                    if (priceMatch && (cleanLine.includes('$') || cleanLine.toLowerCase().includes('usd')) && !customer.price) {
-                        customer.price = priceMatch[0];
-                        // Try to extract product name from the same line
-                        const withoutPrice = cleanLine.replace(priceMatch[0], '').trim();
-                        if (withoutPrice && !customer.product) {
-                            customer.product = withoutPrice.replace(/[•|,]/g, '').trim();
-                        }
-                        return;
-                    }
-                    
-                    // Address detection - more comprehensive
-                    const addressIndicators = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 
-                                             'lane', 'ln', 'boulevard', 'blvd', 'highway', 'hwy', 'route', 'rt',
-                                             'apartment', 'apt', 'suite', 'ste', 'floor', 'fl', 'building', 'bldg'];
-                    const hasAddressIndicator = addressIndicators.some(indicator => 
-                        cleanLine.toLowerCase().includes(indicator)
-                    );
-                    const hasZipCode = /\d{5}(-\d{4})?/.test(cleanLine);
-                    const hasCityState = /[A-Za-z\s]+,\s*[A-Z]{2}/.test(cleanLine);
-                    
-                    if ((hasAddressIndicator || hasZipCode || hasCityState) && !customer.address) {
-                        customer.address = formatAddress(cleanLine);
-                        return;
-                    }
-                    
-                    // Company detection
-                    const companyKeywords = ['inc', 'llc', 'corp', 'corporation', 'ltd', 'company', 'co.'];
-                    const hasCompanyKeyword = companyKeywords.some(keyword => 
-                        cleanLine.toLowerCase().includes(keyword)
-                    );
-                    if (hasCompanyKeyword && !customer.company) {
-                        customer.company = cleanLine;
-                        return;
-                    }
-                    
-                    // Name detection - if it looks like a person's name (two words, first letters capitalized)
-                    if (!customer.name && cleanLine.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/)) {
-                        customer.name = cleanLine;
-                        return;
-                    }
-                    
-                    // Product detection - look for product-like patterns
-                    if (!customer.product && cleanLine.length > 3 && cleanLine.length < 100 && 
-                        !emailMatch && !phoneMatch && !hasAddressIndicator && !hasZipCode && !hasCompanyKeyword) {
-                        // Check if it looks like a product name (not a name or note)
-                        const isLikelyProduct = 
-                            !cleanLine.match(/^[A-Z][a-z]+ [A-Z][a-z]+$/) && // Not a full name
-                            !cleanLine.toLowerCase().includes('note:') &&
-                            !cleanLine.toLowerCase().includes('signature') &&
-                            !cleanLine.toLowerCase().includes('gift') &&
-                            !cleanLine.toLowerCase().includes('shipping');
-                        
-                        if (isLikelyProduct) {
-                            customer.product = cleanLine;
-                            return;
-                        }
-                    }
-                    
-                    // Note detection
-                    if (!customer.note && 
-                        (cleanLine.toLowerCase().includes('note:') || 
-                         cleanLine.toLowerCase().includes('signature') ||
-                         cleanLine.toLowerCase().includes('gift') ||
-                         cleanLine.toLowerCase().includes('shipping') ||
-                         cleanLine.length < 30)) {
-                        customer.note = cleanLine;
-                        return;
-                    }
-                });
-                
-                // Fallback assignments for any missing fields
-                if (!customer.name && lines[0]) {
-                    // Use first line as name if it doesn't contain obvious non-name patterns
-                    const firstLine = lines[0].trim();
-                    if (!firstLine.match(/\d/) && !firstLine.includes('@') && 
-                        firstLine.length > 2 && firstLine.length < 50) {
-                        customer.name = firstLine;
-                    }
-                }
-                
-                // If we still don't have a product, try to find it in lines that don't match other patterns
-                if (!customer.product) {
-                    for (let i = 0; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (line && 
-                            !line.includes('@') && 
-                            !line.match(/(\+\d{1,3}[-.]?)?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})/) &&
-                            !line.match(/\$?(\d{1,3}(,\d{3})*|\d+)(\.\d{2})?/) &&
-                            !line.match(/[A-Za-z\s]+,\s*[A-Z]{2}/) &&
-                            !line.toLowerCase().includes('street') &&
-                            !line.toLowerCase().includes('st') &&
-                            !line.toLowerCase().includes('avenue') &&
-                            !line.toLowerCase().includes('ave') &&
-                            !line.toLowerCase().includes('road') &&
-                            !line.toLowerCase().includes('rd') &&
-                            line.length > 3 && line.length < 100) {
-                            customer.product = line;
-                            break;
-                        }
-                    }
-                }
-                
-                // Validate that we have at least some customer data
-                if (customer.name || customer.address || customer.product) {
-                    customers.push(customer);
-                }
-            });
-            
-            return customers;
-        }
-        
-        function formatAddress(rawAddress) {
-            // Simple address formatting
-            let address = rawAddress
-                .replace(/\s+/g, ' ')
-                .replace(/(\d+)([A-Za-z])/g, '$1 $2')
-                .replace(/([A-Za-z])(\d+)/g, '$1 $2')
-                .replace(/\bSt\b/gi, 'Street')
-                .replace(/\bAve\b/gi, 'Avenue')
-                .replace(/\bRd\b/gi, 'Road')
-                .replace(/\bDr\b/gi, 'Drive')
-                .replace(/\bLn\b/gi, 'Lane')
-                .replace(/\bBlvd\b/gi, 'Boulevard');
-            
-            return address;
-        }
-        
-        function generateSlips() {
-            // Check if user has reached the limit
-            const isUnlocked = checkUnlockStatus();
-            if (!isUnlocked && usageCount >= MAX_FREE_SLIPS) {
-                alert('Free limit reached. Please upgrade to generate more slips.');
-                paymentPopup.style.display = 'flex';
-                return;
-            }
-            
-            let inputText = '';
-            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
-            
-            if (activeTab === 'upload' && uploadedFiles.length > 0) {
-                inputText = textInput.value;
-            } else if (activeTab === 'paste') {
-                inputText = textInput.value;
-            } else if (activeTab === 'bulk') {
-                inputText = bulkInput.value;
-            }
-            
-            if (!inputText.trim()) {
-                alert('Please enter customer data or upload files.');
-                return;
-            }
-            
-            const customers = parseCustomerData(inputText);
-            if (customers.length === 0) {
-                alert('No valid customer data found. Please check your input format.');
-                return;
-            }
-            
-            // Show loading state
-            const originalText = generateBtn.innerHTML;
-            generateBtn.innerHTML = '<div class="loading"></div> Generating...';
-            generateBtn.disabled = true;
-            
-            // Update usage count if not unlocked
-            if (!isUnlocked) {
-                usageCount += customers.length;
-                secureStorage.set('usageCount', usageCount.toString());
-                updateUsageDisplay(false);
-            }
-            
-            // Generate slips after a short delay to show loading state
             setTimeout(() => {
-                try {
-                    // Generate slip images
-                    generatedSlips = generateSlipImages(customers);
-                    
-                    // Save to history
-                    saveToHistory(customers);
-                    
-                    // Show preview section
-                    previewSection.classList.remove('hidden');
-                    
-                    // Show history section
-                    historySection.classList.remove('hidden');
-                    
-                    // Update preview display
-                    currentSlipIndex = 0;
-                    updatePreviewDisplay();
-                    
-                    // Reset button state
-                    generateBtn.innerHTML = originalText;
-                    generateBtn.disabled = false;
-                    
-                    // Show success message
-                    usageInfo.innerHTML = `<span class="success">✅ Generated ${customers.length} premium packaging slip(s)!</span>`;
-                    setTimeout(() => {
-                        updateUsageDisplay(isUnlocked);
-                    }, 3000);
-                    
-                } catch (error) {
-                    console.error('Slip Generation Error:', error);
-                    // Reset button state and show error
-                    generateBtn.innerHTML = originalText;
-                    generateBtn.disabled = false;
-                    usageInfo.innerHTML = `<span class="error">Error generating slips: ${error.message}</span>`;
-                    setTimeout(() => {
-                        updateUsageDisplay(isUnlocked);
-                    }, 3000);
-                }
-            }, 100);
-        }
-        
-        function generateSlipImages(customers) {
-            const slips = [];
-            
-            customers.forEach(customer => {
-                // Create a temporary canvas for each slip with high resolution
-                const tempCanvas = document.createElement('canvas');
-                
-                // Set dimensions based on template
-                if (selectedTemplate === 'thermal') {
-                    // Thermal printers typically use 80mm width (approx 300px at 96 DPI)
-                    tempCanvas.width = 300;
-                    tempCanvas.height = 600; // Compact height for thermal
-                } else {
-                    tempCanvas.width = 1000; // High resolution for printing
-                    tempCanvas.height = 1400;
-                }
-                
-                const tempCtx = tempCanvas.getContext('2d');
-                
-                // Draw the slip design based on selected template
-                switch(selectedTemplate) {
-                    case 'premium':
-                        drawPremiumTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
-                        break;
-                    case 'thermal':
-                        drawThermalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
-                        break;
-                    case 'minimal':
-                        drawMinimalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
-                        break;
-                    case 'professional':
-                        drawProfessionalTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
-                        break;
-                    default:
-                        drawPremiumTemplate(tempCtx, customer, tempCanvas.width, tempCanvas.height);
-                }
-                
-                // Store the canvas data
-                slips.push({
-                    canvas: tempCanvas,
-                    customer: customer,
-                    template: selectedTemplate,
-                    timestamp: Date.now()
-                });
-            });
-            
-            return slips;
-        }
-        
-        // Premium Template (Original)
-        function drawPremiumTemplate(ctx, customer, width, height) {
-            // Clear canvas with premium white background
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(0, 0, width, height);
-            
-            // Premium subtle gradient background
-            const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-            bgGradient.addColorStop(0, '#FBFBFD');
-            bgGradient.addColorStop(0.5, '#FFFFFF');
-            bgGradient.addColorStop(1, '#FBFBFD');
-            ctx.fillStyle = bgGradient;
-            ctx.fillRect(0, 0, width, height);
-            
-            // Ultra thin border
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(20, 20, width - 40, height - 40);
-            
-            // Premium header with subtle gradient
-            const headerGradient = ctx.createLinearGradient(0, 0, width, 0);
-            headerGradient.addColorStop(0, 'rgba(248, 248, 248, 0.9)');
-            headerGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
-            headerGradient.addColorStop(1, 'rgba(248, 248, 248, 0.9)');
-            
-            // Header background with subtle shadow
-            ctx.fillStyle = headerGradient;
-            ctx.fillRect(40, 40, width - 80, 120);
-            
-            // Ultra thin header border
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(40, 40, width - 80, 120);
-            
-            // Use customer's company name - COMPLETELY REMOVED SLIPZY NAME
-            const companyName = customer.company || 'YOUR COMPANY';
-            
-            // Dynamic font size for company name based on length
-            let companyFontSize = 36;
-            if (companyName.length > 20) companyFontSize = 30;
-            if (companyName.length > 30) companyFontSize = 24;
-            if (companyName.length > 40) companyFontSize = 20;
-
-            // Premium company name - Apple-style typography
-            ctx.fillStyle = '#1D1D1F';
-            ctx.font = `600 ${companyFontSize}px Inter`;
-            ctx.textAlign = 'center';
-            ctx.fillText(companyName.toUpperCase(), width / 2, 90);
-
-            // Main title with lighter weight
-            ctx.font = '400 20px Inter';
-            ctx.fillStyle = '#86868B';
-            ctx.fillText('PACKAGING SLIP', width / 2, 120);
-            
-            // Body content starts here
-            let yPos = 200;
-            
-            // Customer Information Section - Apple-style section header
-            ctx.fillStyle = '#1D1D1F';
-            ctx.font = '600 24px Inter';
-            ctx.textAlign = 'left';
-            ctx.fillText('SHIPPING INFORMATION', 60, yPos);
-            
-            // Section divider - ultra thin line
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(60, yPos + 15);
-            ctx.lineTo(width - 60, yPos + 15);
-            ctx.stroke();
-            
-            yPos += 50;
-            
-            // Customer details in elegant Apple-style layout
-            ctx.fillStyle = '#1D1D1F';
-            ctx.font = '500 20px Inter';
-            
-            // Name
-            if (customer.name) {
-                ctx.fillText(customer.name, 60, yPos);
-                yPos += 40;
-            }
-            
-            // Company
-            if (customer.company) {
-                ctx.fillText(customer.company, 60, yPos);
-                yPos += 40;
-            }
-            
-            // Phone
-            if (customer.phone) {
-                ctx.fillText(customer.phone, 60, yPos);
-                yPos += 40;
-            }
-            
-            // Email
-            if (customer.email) {
-                ctx.fillText(customer.email, 60, yPos);
-                yPos += 40;
-            }
-            
-            // Address
-            if (customer.address) {
-                const addressLines = wrapText(ctx, customer.address, 60, yPos, width - 120, 28);
-                addressLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 32;
-                });
-            }
-            
-            yPos += 30;
-            
-            // Order Details Section
-            ctx.fillStyle = '#1D1D1F';
-            ctx.font = '600 24px Inter';
-            ctx.fillText('ORDER DETAILS', 60, yPos);
-            
-            // Section divider
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(60, yPos + 15);
-            ctx.lineTo(width - 60, yPos + 15);
-            ctx.stroke();
-            
-            yPos += 50;
-            
-            ctx.fillStyle = '#1D1D1F';
-            ctx.font = '500 20px Inter';
-            
-            // Product
-            if (customer.product) {
-                const productLines = wrapText(ctx, customer.product, 60, yPos, width - 120, 28);
-                productLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 32;
-                });
-            }
-            
-            // Price
-            if (customer.price) {
-                ctx.fillText(customer.price, 60, yPos);
-                yPos += 40;
-            }
-            
-            // Notes section if available
-            if (customer.note) {
-                yPos += 20;
-                ctx.fillStyle = '#FF9500';
-                ctx.font = '600 20px Inter';
-                ctx.fillText('SPECIAL INSTRUCTIONS', 60, yPos);
-                yPos += 35;
-                ctx.fillStyle = '#1D1D1F';
-                ctx.font = '400 18px Inter';
-                const noteLines = wrapText(ctx, customer.note, 60, yPos, width - 120, 26);
-                noteLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 30;
-                });
-            }
-            
-            // QR Code Section - Apple-style minimal design
-            const qrSize = 140;
-            const qrX = width - 80 - qrSize;
-            const qrY = height - 100 - qrSize;
-            
-            // QR Code background with subtle styling
-            ctx.fillStyle = '#FBFBFD';
-            ctx.fillRect(qrX - 15, qrY - 15, qrSize + 30, qrSize + 50);
-            
-            // Ultra thin border around QR code
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20);
-            
-            // Generate and draw QR code
-            const qrLink = qrLinkInput.value;
-            const qrCode = generateQRCode(qrLink);
-            if (qrCode) {
-                ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
-            }
-            
-            // QR Code label with premium styling
-            ctx.fillStyle = '#86868B';
-            ctx.font = '400 16px Inter';
-            ctx.textAlign = 'center';
-            ctx.fillText('SCAN TO TRACK', qrX + qrSize / 2, qrY + qrSize + 35);
-            
-            // Premium corner accents
-            ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
-            ctx.lineWidth = 1;
-            
-            // Top-left corner
-            ctx.beginPath();
-            ctx.moveTo(40, 40);
-            ctx.lineTo(50, 40);
-            ctx.moveTo(40, 40);
-            ctx.lineTo(40, 50);
-            ctx.stroke();
-            
-            // Top-right corner
-            ctx.beginPath();
-            ctx.moveTo(width - 40, 40);
-            ctx.lineTo(width - 50, 40);
-            ctx.moveTo(width - 40, 40);
-            ctx.lineTo(width - 40, 50);
-            ctx.stroke();
-            
-            // Bottom-left corner
-            ctx.beginPath();
-            ctx.moveTo(40, height - 40);
-            ctx.lineTo(50, height - 40);
-            ctx.moveTo(40, height - 40);
-            ctx.lineTo(40, height - 50);
-            ctx.stroke();
-            
-            // Bottom-right corner
-            ctx.beginPath();
-            ctx.moveTo(width - 40, height - 40);
-            ctx.lineTo(width - 50, height - 40);
-            ctx.moveTo(width - 40, height - 40);
-            ctx.lineTo(width - 40, height - 50);
-            ctx.stroke();
-        }
-        
-        // Thermal Printer Template
-        function drawThermalTemplate(ctx, customer, width, height) {
-            // Clear canvas with white background
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(0, 0, width, height);
-            
-            // Use monospace font for thermal printer compatibility
-            ctx.font = '12px "Courier New", monospace';
-            ctx.fillStyle = '#000000';
-            ctx.textAlign = 'left';
-            
-            let yPos = 30;
-            
-            // Company name (centered)
-            const companyName = customer.company || 'YOUR COMPANY';
-            ctx.textAlign = 'center';
-            ctx.font = 'bold 14px "Courier New", monospace';
-            ctx.fillText(companyName.toUpperCase(), width / 2, yPos);
-            yPos += 25;
-            
-            ctx.font = '10px "Courier New", monospace';
-            ctx.fillText('PACKAGING SLIP', width / 2, yPos);
-            yPos += 20;
-            
-            // Divider line
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(20, yPos);
-            ctx.lineTo(width - 20, yPos);
-            ctx.stroke();
-            yPos += 20;
-            
-            // Reset text alignment
-            ctx.textAlign = 'left';
-            ctx.font = '10px "Courier New", monospace';
-            
-            // Customer information
-            if (customer.name) {
-                ctx.fillText(`NAME: ${customer.name}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            if (customer.phone) {
-                ctx.fillText(`PHONE: ${customer.phone}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            if (customer.email) {
-                ctx.fillText(`EMAIL: ${customer.email}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            if (customer.address) {
-                ctx.fillText(`ADDRESS:`, 20, yPos);
-                yPos += 12;
-                const addressLines = wrapText(ctx, customer.address, 20, yPos, width - 40, 12);
-                addressLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 12;
-                });
-                yPos += 5;
-            }
-            
-            // Divider line
-            ctx.beginPath();
-            ctx.moveTo(20, yPos);
-            ctx.lineTo(width - 20, yPos);
-            ctx.stroke();
-            yPos += 15;
-            
-            // Order details
-            if (customer.product) {
-                ctx.fillText(`PRODUCT: ${customer.product}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            if (customer.price) {
-                ctx.fillText(`PRICE: ${customer.price}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            if (customer.note) {
-                ctx.fillText(`NOTE: ${customer.note}`, 20, yPos);
-                yPos += 15;
-            }
-            
-            // QR Code (smaller for thermal)
-            const qrLink = qrLinkInput.value;
-            const qrCode = generateQRCode(qrLink);
-            if (qrCode) {
-                yPos += 10;
-                ctx.fillText('SCAN TO TRACK:', 20, yPos);
-                yPos += 15;
-                ctx.drawImage(qrCode, 20, yPos, 80, 80);
-            }
-            
-            // Footer
-            yPos = height - 30;
-            ctx.textAlign = 'center';
-            ctx.font = '8px "Courier New", monospace';
-            ctx.fillText('Thank you for your order!', width / 2, yPos);
-        }
-        
-        // Minimalist Template
-        function drawMinimalTemplate(ctx, customer, width, height) {
-            // Clear canvas with light background
-            ctx.fillStyle = '#F8F9FA';
-            ctx.fillRect(0, 0, width, height);
-            
-            // Simple border
-            ctx.strokeStyle = '#E9ECEF';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(10, 10, width - 20, height - 20);
-            
-            let yPos = 50;
-            
-            // Company name
-            const companyName = customer.company || 'YOUR COMPANY';
-            ctx.fillStyle = '#495057';
-            ctx.font = 'bold 24px Inter';
-            ctx.textAlign = 'center';
-            ctx.fillText(companyName, width / 2, yPos);
-            yPos += 40;
-            
-            ctx.font = '14px Inter';
-            ctx.fillStyle = '#6C757D';
-            ctx.fillText('Packaging Slip', width / 2, yPos);
-            yPos += 50;
-            
-            // Customer information
-            ctx.textAlign = 'left';
-            ctx.font = '16px Inter';
-            ctx.fillStyle = '#212529';
-            
-            if (customer.name) {
-                ctx.fillText(customer.name, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.phone) {
-                ctx.fillText(customer.phone, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.email) {
-                ctx.fillText(customer.email, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.address) {
-                const addressLines = wrapText(ctx, customer.address, 40, yPos, width - 80, 20);
-                addressLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 25;
-                });
-            }
-            
-            yPos += 20;
-            
-            // Product information
-            if (customer.product) {
-                ctx.font = 'bold 18px Inter';
-                ctx.fillText('Order Details:', 40, yPos);
-                yPos += 30;
-                
-                ctx.font = '16px Inter';
-                ctx.fillText(customer.product, 40, yPos);
-                yPos += 25;
-            }
-            
-            if (customer.price) {
-                ctx.fillText(customer.price, 40, yPos);
-                yPos += 25;
-            }
-            
-            if (customer.note) {
-                ctx.font = 'italic 14px Inter';
-                ctx.fillText(`Note: ${customer.note}`, 40, yPos);
-            }
-            
-            // Simple QR code
-            const qrLink = qrLinkInput.value;
-            const qrCode = generateQRCode(qrLink);
-            if (qrCode) {
-                ctx.drawImage(qrCode, width - 120, height - 120, 80, 80);
-            }
-        }
-        
-        // Professional Template
-        function drawProfessionalTemplate(ctx, customer, width, height) {
-            // Clear canvas with dark blue background
-            ctx.fillStyle = '#1A237E';
-            ctx.fillRect(0, 0, width, height);
-            
-            // White content area
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillRect(20, 20, width - 40, height - 40);
-            
-            // Header with company name
-            ctx.fillStyle = '#1A237E';
-            ctx.font = 'bold 28px Inter';
-            ctx.textAlign = 'center';
-            
-            const companyName = customer.company || 'YOUR COMPANY';
-            ctx.fillText(companyName.toUpperCase(), width / 2, 60);
-            
-            ctx.font = '16px Inter';
-            ctx.fillText('OFFICIAL PACKAGING SLIP', width / 2, 90);
-            
-            let yPos = 140;
-            
-            // Customer information section
-            ctx.textAlign = 'left';
-            ctx.fillStyle = '#333333';
-            ctx.font = 'bold 18px Inter';
-            ctx.fillText('SHIPPING INFORMATION', 40, yPos);
-            
-            yPos += 40;
-            ctx.font = '16px Inter';
-            
-            if (customer.name) {
-                ctx.fillText(`Customer: ${customer.name}`, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.phone) {
-                ctx.fillText(`Phone: ${customer.phone}`, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.email) {
-                ctx.fillText(`Email: ${customer.email}`, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.address) {
-                ctx.fillText('Address:', 40, yPos);
-                yPos += 20;
-                const addressLines = wrapText(ctx, customer.address, 40, yPos, width - 80, 20);
-                addressLines.forEach(line => {
-                    ctx.fillText(line.text, line.x, line.y);
-                    yPos += 25;
-                });
-            }
-            
-            yPos += 20;
-            
-            // Order details section
-            ctx.font = 'bold 18px Inter';
-            ctx.fillText('ORDER DETAILS', 40, yPos);
-            
-            yPos += 40;
-            ctx.font = '16px Inter';
-            
-            if (customer.product) {
-                ctx.fillText(`Product: ${customer.product}`, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.price) {
-                ctx.fillText(`Amount: ${customer.price}`, 40, yPos);
-                yPos += 30;
-            }
-            
-            if (customer.note) {
-                ctx.fillStyle = '#D32F2F';
-                ctx.fillText(`Special Instructions: ${customer.note}`, 40, yPos);
-            }
-            
-            // Professional QR code placement
-            const qrLink = qrLinkInput.value;
-            const qrCode = generateQRCode(qrLink);
-            if (qrCode) {
-                ctx.fillStyle = '#1A237E';
-                ctx.fillRect(width - 150, height - 150, 130, 130);
-                ctx.drawImage(qrCode, width - 140, height - 140, 110, 110);
-                
-                ctx.fillStyle = '#FFFFFF';
-                ctx.font = '10px Inter';
-                ctx.textAlign = 'center';
-                ctx.fillText('SCAN FOR TRACKING', width - 85, height - 15);
-            }
-            
-            // Footer with timestamp
-            ctx.fillStyle = '#757575';
-            ctx.font = '12px Inter';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Generated on ${new Date().toLocaleDateString()}`, width / 2, height - 30);
-        }
-        
-        function generateQRCode(text) {
-            try {
-                const typeNumber = 4;
-                const errorCorrectionLevel = 'L';
-                const qr = qrcode(typeNumber, errorCorrectionLevel);
-                qr.addData(text);
-                qr.make();
-                
-                const cellSize = 6; // Larger cells for high resolution
-                const margin = 4;
-                const size = qr.getModuleCount() * cellSize + margin * 2;
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = size;
-                canvas.height = size;
-                const ctx = canvas.getContext('2d');
-                
-                // Fill background
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, size, size);
-                
-                // Draw QR code
-                ctx.fillStyle = '#000000';
-                for (let row = 0; row < qr.getModuleCount(); row++) {
-                    for (let col = 0; col < qr.getModuleCount(); col++) {
-                        if (qr.isDark(row, col)) {
-                            ctx.fillRect(
-                                col * cellSize + margin,
-                                row * cellSize + margin,
-                                cellSize,
-                                cellSize
-                            );
-                        }
-                    }
-                }
-                
-                return canvas;
-            } catch (e) {
-                console.error('QR Code generation failed:', e);
-                return null;
-            }
-        }
-        
-        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            const lines = [];
-            let currentLine = words[0];
-            
-            for (let i = 1; i < words.length; i++) {
-                const word = words[i];
-                const width = ctx.measureText(currentLine + ' ' + word).width;
-                if (width < maxWidth) {
-                    currentLine += ' ' + word;
-                } else {
-                    lines.push({text: currentLine, x: x, y: y});
-                    y += lineHeight;
-                    currentLine = word;
-                }
-            }
-            lines.push({text: currentLine, x: x, y: y});
-            return lines;
-        }
-        
-        // HISTORY SYSTEM FUNCTIONS
-        function loadHistory() {
-            const storedHistory = secureStorage.get('slipHistory');
-            if (storedHistory) {
-                slipHistory = storedHistory;
-                renderHistory();
-            }
-        }
-        
-        function saveToHistory(customers) {
-            const historyEntry = {
-                id: Date.now().toString(),
-                timestamp: Date.now(),
-                customers: customers,
-                template: selectedTemplate,
-                count: customers.length
-            };
-            
-            slipHistory.unshift(historyEntry);
-            
-            // Keep only last 50 entries to prevent storage bloat
-            if (slipHistory.length > 50) {
-                slipHistory = slipHistory.slice(0, 50);
-            }
-            
-            secureStorage.set('slipHistory', slipHistory);
-            renderHistory();
-        }
-        
-        function renderHistory() {
-            if (slipHistory.length === 0) {
-                emptyHistory.classList.remove('hidden');
-                return;
-            }
-            
-            emptyHistory.classList.add('hidden');
-            
-            // Clear existing history items
-            const existingItems = historyList.querySelectorAll('.history-item');
-            existingItems.forEach(item => item.remove());
-            
-            // Add history items
-            slipHistory.forEach(entry => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                historyItem.setAttribute('data-id', entry.id);
-                
-                const firstCustomer = entry.customers[0];
-                const date = new Date(entry.timestamp).toLocaleDateString();
-                const time = new Date(entry.timestamp).toLocaleTimeString();
-                
-                historyItem.innerHTML = `
-                    <div class="history-info">
-                        <div class="history-customer">${firstCustomer.name || 'Unknown Customer'}</div>
-                        <div class="history-date">${date} at ${time} • ${entry.count} slip(s) • ${entry.template} template</div>
-                    </div>
-                    <div class="history-actions">
-                        <button class="history-btn" onclick="reprintHistory('${entry.id}')">Reprint</button>
-                        <button class="history-btn primary" onclick="viewHistory('${entry.id}')">View</button>
-                    </div>
-                `;
-                
-                historyList.appendChild(historyItem);
-            });
-        }
-        
-        // Global functions for history buttons
-        window.reprintHistory = function(historyId) {
-            const entry = slipHistory.find(item => item.id === historyId);
-            if (!entry) return;
-            
-            // Set the template
-            selectedTemplate = entry.template;
-            templateCards.forEach(card => {
-                card.classList.remove('active');
-                if (card.getAttribute('data-template') === selectedTemplate) {
-                    card.classList.add('active');
-                }
-            });
-            
-            // Generate slips from history
-            generatedSlips = generateSlipImages(entry.customers);
-            
-            // Show preview section
-            previewSection.classList.remove('hidden');
-            
-            // Update preview display
-            currentSlipIndex = 0;
-            updatePreviewDisplay();
-            
-            // Scroll to preview
-            previewSection.scrollIntoView({ behavior: 'smooth' });
-            
-            // Show success message
-            usageInfo.innerHTML = `<span class="success">✅ Reprinted ${entry.count} slip(s) from history!</span>`;
-            setTimeout(() => {
-                updateUsageDisplay(checkUnlockStatus());
+                toast.classList.add('translate-x-full');
             }, 3000);
-        };
-        
-        window.viewHistory = function(historyId) {
-            const entry = slipHistory.find(item => item.id === historyId);
-            if (!entry) return;
-            
-            // Display customer data in text area
-            let textContent = '';
-            entry.customers.forEach(customer => {
-                textContent += `${customer.name || ''}\n`;
-                textContent += `${customer.company || ''}\n`;
-                textContent += `${customer.phone || ''}\n`;
-                textContent += `${customer.email || ''}\n`;
-                textContent += `${customer.address || ''}\n`;
-                textContent += `${customer.product || ''}\n`;
-                textContent += `${customer.price || ''}\n`;
-                textContent += `${customer.note || ''}\n\n`;
-            });
-            
-            textInput.value = textContent.trim();
-            
-            // Switch to paste tab
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-            
-            document.querySelector('[data-tab="paste"]').classList.add('active');
-            document.getElementById('paste-tab').classList.add('active');
-            
-            // Scroll to input section
-            document.querySelector('.input-section').scrollIntoView({ behavior: 'smooth' });
-        };
-        
-        function updatePreviewDisplay() {
-            if (generatedSlips.length === 0) return;
-            
-            // Update slip count display
-            currentSlipDisplay.textContent = currentSlipIndex + 1;
-            totalSlipsDisplay.textContent = generatedSlips.length;
-            
-            // Update navigation buttons
-            prevSlipBtn.disabled = currentSlipIndex === 0;
-            nextSlipBtn.disabled = currentSlipIndex === generatedSlips.length - 1;
-            
-            // Draw the current slip on the preview canvas
-            const currentSlip = generatedSlips[currentSlipIndex];
-            ctx.clearRect(0, 0, slipPreview.width, slipPreview.height);
-            ctx.drawImage(currentSlip.canvas, 0, 0, slipPreview.width, slipPreview.height);
         }
-        
-        function showPreviousSlip() {
-            if (currentSlipIndex > 0) {
-                currentSlipIndex--;
-                updatePreviewDisplay();
+
+        // PROCESS PAYMENT WITH IP RESTRICTION - UPDATED VERSION
+        function processPayment(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const unlockCode = formData.get('unlock_code');
+            const codes = getData('pharmascope_codes');
+            const blockedIPs = getData('pharmascope_blocked_ips');
+            
+            // Get user's IP
+            const userIP = getUserIP();
+            console.log('User IP:', userIP);
+            
+            // Check if user's IP is blocked
+            if (blockedIPs.includes(userIP)) {
+                showToast('Your IP address is blocked from accessing courses.', 'error');
+                return;
             }
-        }
-        
-        function showNextSlip() {
-            if (currentSlipIndex < generatedSlips.length - 1) {
-                currentSlipIndex++;
-                updatePreviewDisplay();
-            }
-        }
-        
-        function downloadAllSlips() {
-            if (generatedSlips.length === 0) return;
             
-            // Show loading state on download button
-            const originalText = downloadAllBtn.innerHTML;
-            downloadAllBtn.innerHTML = '<div class="loading"></div> Preparing...';
-            downloadAllBtn.disabled = true;
+            // Check if code exists and is active
+            const codeIndex = codes.findIndex(code => 
+                code.code === unlockCode && 
+                code.status === 'active' && 
+                code.used === false
+            );
             
-            // Check output format
-            const isPDF = document.querySelector('[data-format="pdf"]').classList.contains('active');
-            
-            if (isPDF) {
-                generatePDF();
-            } else {
-                // Download all PNGs
-                setTimeout(() => {
-                    let downloaded = 0;
-                    
-                    // Download each slip
-                    generatedSlips.forEach((slip, index) => {
-                        setTimeout(() => {
-                            const link = document.createElement('a');
-                            link.download = `slip-${index + 1}.png`;
-                            link.href = slip.canvas.toDataURL('image/png', 1.0); // High quality
-                            link.click();
-                            downloaded++;
-                            
-                            // If all downloaded, show success message
-                            if (downloaded === generatedSlips.length) {
-                                downloadAllBtn.innerHTML = originalText;
-                                downloadAllBtn.disabled = false;
-                                
-                                // Show success message
-                                usageInfo.innerHTML = `<span class="success">✅ Downloaded ${downloaded} slip(s)!</span>`;
-                                setTimeout(() => {
-                                    updateUsageDisplay(checkUnlockStatus());
-                                }, 3000);
-                            }
-                        }, index * 100); // Small delay to avoid browser blocking multiple downloads
-                    });
-                }, 500);
-            }
-        }
-        
-        function generatePDF() {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
+            if (codeIndex !== -1) {
+                const code = codes[codeIndex];
                 
-                // Generate PDF for each customer
-                generatedSlips.forEach((slip, index) => {
-                    if (index > 0) {
-                        doc.addPage();
+                // Check IP restriction
+                if (code.ip_restriction === 'single') {
+                    if (code.used_by && code.used_by !== userIP) {
+                        showToast('This code has already been used from a different device/IP.', 'error');
+                        return;
                     }
-                    
-                    // Add the slip image to PDF
-                    const imgData = slip.canvas.toDataURL('image/jpeg', 1.0);
-                    doc.addImage(imgData, 'JPEG', 10, 10, 190, 0);
+                }
+                
+                // Mark code as used and record IP
+                codes[codeIndex].used = true;
+                codes[codeIndex].status = 'used';
+                codes[codeIndex].used_by = userIP;
+                codes[codeIndex].used_at = new Date().toISOString();
+                saveData('pharmascope_codes', codes);
+                
+                // Add to access log
+                const accessLog = getData('pharmascope_access_log');
+                accessLog.push({
+                    code: unlockCode,
+                    ip: userIP,
+                    timestamp: new Date().toISOString(),
+                    action: 'course_access'
                 });
+                saveData('pharmascope_access_log', accessLog);
                 
-                // Save the PDF
-                doc.save(`packaging-slips-${new Date().toISOString().slice(0, 10)}.pdf`);
+                // Update user access
+                const user = JSON.parse(localStorage.getItem('pharmascope_user'));
+                user.unlocked = true;
+                user.access_ip = userIP;
+                user.access_code = unlockCode;
+                localStorage.setItem('pharmascope_user', JSON.stringify(user));
                 
-                // Reset button state
-                downloadAllBtn.innerHTML = originalText;
-                downloadAllBtn.disabled = false;
+                // Update buttons
+                document.getElementById('accessCourseBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
+                document.getElementById('heroAccessBtn').innerHTML = '<i class="fas fa-play mr-2"></i> View Courses';
                 
-                // Show success message
-                usageInfo.innerHTML = `<span class="success">✅ Downloaded PDF with ${generatedSlips.length} slip(s)!</span>`;
+                showToast('Payment verified! Opening courses...', 'success');
                 setTimeout(() => {
-                    updateUsageDisplay(checkUnlockStatus());
-                }, 3000);
-                
-            } catch (error) {
-                console.error('PDF Generation Error:', error);
-                // Reset button state and show error
-                downloadAllBtn.innerHTML = originalText;
-                downloadAllBtn.disabled = false;
-                usageInfo.innerHTML = `<span class="error">Error generating PDF: ${error.message}</span>`;
+                    closePaymentModal();
+                    openCourseModal();
+                }, 2000);
+            } else {
+                showToast('Invalid, inactive, or already used unlock code', 'error');
             }
         }
-        
-        // FIXED PRINT FUNCTION
-        function printSlips() {
-            if (generatedSlips.length === 0) return;
+
+        // Load all courses content in modal
+        function loadAllCoursesContent() {
+            const courses = getData('pharmascope_courses');
+            const chapters = getData('pharmascope_chapters');
+            const classes = getData('pharmascope_classes');
+            const tests = getData('pharmascope_tests');
             
-            // Create a print-friendly HTML page
-            const printWindow = window.open('', '_blank');
+            const container = document.getElementById('coursesList');
+            const courseTitle = document.getElementById('courseModalTitle');
             
-            // Create a clean print layout with only the slips
-            let printContent = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Premium Packaging Slips</title>
-                    <style>
-                        @page {
-                            margin: 0;
-                            size: auto;
-                        }
-                        body { 
-                            margin: 0; 
-                            padding: 0;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                        .print-page {
-                            page-break-after: always;
-                            margin: 0;
-                            padding: 0;
-                            width: 100vw;
-                            height: 100vh;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                        }
-                        .print-page:last-child {
-                            page-break-after: auto;
-                        }
-                        .slip-image {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: contain;
-                        }
-                    </style>
-                </head>
-                <body>
-            `;
+            courseTitle.textContent = "All Courses";
             
-            // Add each slip to the print page
-            generatedSlips.forEach((slip, index) => {
-                printContent += `
-                    <div class="print-page">
-                        <img class="slip-image" src="${slip.canvas.toDataURL('image/png', 1.0)}" alt="Packaging Slip ${index + 1}">
+            container.innerHTML = courses.map(course => {
+                const courseChapters = chapters.filter(chapter => chapter.course_id === course.id);
+                
+                return `
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <img src="${course.thumbnail}" alt="${course.title}" class="w-16 h-16 object-cover rounded-lg mr-4">
+                                <div>
+                                    <h3 class="text-xl font-bold">${course.title}</h3>
+                                    <p class="text-white/70">${course.description}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                ${courseChapters.map(chapter => {
+                                    const chapterClasses = classes.filter(cls => cls.chapter_id === chapter.id);
+                                    const chapterTest = tests.find(test => test.chapter_id === chapter.id);
+                                    
+                                    return `
+                                        <div class="bg-white/5 rounded-lg p-4">
+                                            <h4 class="font-bold text-lg mb-3">${chapter.title}</h4>
+                                            <div class="space-y-2 mb-4">
+                                                ${chapterClasses.map(cls => `
+                                                    <div class="class-item p-3 flex items-center justify-between bg-white/5 rounded cursor-pointer"
+                                                         onclick="playVideo('${cls.youtube_embed_url}', '${cls.title}')">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-play-circle text-indigo-400 mr-3"></i>
+                                                            <span class="text-white">${cls.title}</span>
+                                                        </div>
+                                                        <i class="fas fa-external-link-alt text-white/50"></i>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            ${chapterTest ? `
+                                                <button onclick="takeTest('${chapterTest.google_form_url}')" 
+                                                        class="btn-secondary w-full py-2 rounded-lg font-semibold transition flex items-center justify-center">
+                                                    <i class="fas fa-file-alt mr-2"></i>Take MCQ Test
+                                                </button>
+                                            ` : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
                     </div>
                 `;
+            }).join('');
+        }
+
+        function playVideo(videoUrl, title) {
+            const videoSection = document.getElementById('videoSection');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoTitle = document.getElementById('videoTitle');
+            
+            videoPlayer.src = videoUrl;
+            videoTitle.textContent = title;
+            videoSection.classList.remove('hidden');
+            
+            // Scroll to video section
+            videoSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeVideo() {
+            const videoSection = document.getElementById('videoSection');
+            const videoPlayer = document.getElementById('videoPlayer');
+            
+            videoSection.classList.add('hidden');
+            videoPlayer.src = ''; // Stop video
+        }
+
+        function takeTest(formUrl) {
+            window.open(formUrl, '_blank');
+        }
+
+        // Animation on scroll
+        function animateOnScroll() {
+            const staggerItems = document.querySelectorAll('.stagger-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            staggerItems.forEach(item => {
+                item.style.transform = 'translateY(20px)';
+                observer.observe(item);
             });
-            
-            printContent += '</body></html>';
-            
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            
-            // Wait for images to load then print
-            printWindow.onload = function() {
-                setTimeout(() => {
-                    printWindow.print();
-                    // Close the print window after printing
-                    setTimeout(() => {
-                        printWindow.close();
-                    }, 500);
-                }, 500);
-            };
         }
     </script>
 </body>
