@@ -1052,6 +1052,164 @@
             box-shadow: var(--shadow) !important;
         }
 
+        /* NEW: Theme selector styles */
+        .theme-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .theme-option {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            background: var(--bg);
+        }
+
+        .theme-option:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .theme-option.active {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.1);
+        }
+
+        .theme-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+
+        /* NEW: History section styles */
+        .history-section {
+            margin-top: var(--spacing-lg);
+        }
+
+        .history-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-sm);
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: var(--spacing-sm);
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm);
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s var(--ease);
+        }
+
+        .history-item:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        .history-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .history-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .history-action-btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-size: 0.8rem;
+        }
+
+        .history-action-btn:hover {
+            background: var(--card-bg-hover);
+            border-color: var(--border-hover);
+        }
+
+        /* NEW: Thermal printer specific styles */
+        @media print {
+            body * {
+                visibility: hidden;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Hide browser header/footer */
+            @page {
+                margin: 0;
+                size: auto;
+            }
+            
+            .print-page, .print-page * {
+                visibility: visible;
+            }
+            
+            .print-page {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                page-break-after: always;
+            }
+            
+            .print-page:last-child {
+                page-break-after: auto;
+            }
+            
+            /* Hide all UI elements */
+            .header, .hero, .card, .footer, .preview-header, .preview-controls {
+                display: none !important;
+            }
+            
+            /* Thermal-specific styles */
+            .thermal-print {
+                width: 80mm !important;
+                max-width: 80mm !important;
+                font-size: 12px !important;
+                line-height: 1.2 !important;
+                color: black !important;
+                background: white !important;
+                margin: 0 !important;
+                padding: 5mm !important;
+            }
+            
+            .thermal-print * {
+                color: black !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            
+            .thermal-print .qr-code {
+                width: 50px !important;
+                height: 50px !important;
+            }
+        }
+
         /* Responsive Design */
         @media (min-width: 768px) {
             .grid {
@@ -1077,6 +1235,14 @@
             
             .preview-controls {
                 flex-wrap: nowrap;
+            }
+            
+            .theme-selector {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            
+            .history-list {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -1130,6 +1296,10 @@
             .price {
                 font-size: 2.5rem;
             }
+            
+            .theme-selector {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
         }
 
         @media (max-width: 480px) {
@@ -1171,41 +1341,9 @@
             .feature-grid {
                 grid-template-columns: 1fr;
             }
-        }
-
-        /* Print-specific styles - FIXED */
-        @media print {
-            body * {
-                visibility: hidden;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
             
-            /* Hide browser header/footer */
-            @page {
-                margin: 0;
-                size: auto;
-            }
-            
-            .print-page, .print-page * {
-                visibility: visible;
-            }
-            
-            .print-page {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                page-break-after: always;
-            }
-            
-            .print-page:last-child {
-                page-break-after: auto;
-            }
-            
-            /* Hide all UI elements */
-            .header, .hero, .card, .footer, .preview-header, .preview-controls {
-                display: none !important;
+            .theme-selector {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -1313,7 +1451,7 @@ The amount is 130 BDT.</p>
                     
                     <a href="https://wa.me/1234567890?text=Hello%20Slipzy%20Admin,%20I%20have%20made%20the%20payment%20with%20Transaction%20ID:" id="whatsapp-link" class="btn whatsapp-btn hidden" target="_blank">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.87 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893-.001-3.189-1.262-6.187-3.55-8.418"/>
                         </svg>
                         Contact Admin on WhatsApp
                     </a>
@@ -1457,6 +1595,38 @@ note: sig req"></textarea>
                                     <input type="text" id="default-company" placeholder="Your Company Name" value="">
                                 </div>
                             </div>
+
+                            <!-- NEW: Theme Selector -->
+                            <div class="setting-group">
+                                <div class="setting-label">Slip Theme</div>
+                                <div class="theme-selector">
+                                    <div class="theme-option active" data-theme="premium">
+                                        <div class="theme-preview" style="background: linear-gradient(135deg, #6C63FF 0%, #8B85FF 100%);"></div>
+                                        <div>Premium</div>
+                                    </div>
+                                    <div class="theme-option" data-theme="minimal">
+                                        <div class="theme-preview" style="background: linear-gradient(135deg, #1D1D1F 0%, #86868B 100%);"></div>
+                                        <div>Minimal</div>
+                                    </div>
+                                    <div class="theme-option" data-theme="thermal">
+                                        <div class="theme-preview" style="background: linear-gradient(135deg, #FFFFFF 0%, #F2F2F7 100%); border: 1px solid #E5E5EA;"></div>
+                                        <div>Thermal</div>
+                                    </div>
+                                    <div class="theme-option" data-theme="elegant">
+                                        <div class="theme-preview" style="background: linear-gradient(135deg, #1A1A1A 0%, #333333 100%);"></div>
+                                        <div>Elegant</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NEW: Printer Type -->
+                            <div class="setting-group">
+                                <div class="setting-label">Printer Type</div>
+                                <div class="toggle-group">
+                                    <div class="toggle-option active" data-printer="standard">Standard Printer</div>
+                                    <div class="toggle-option" data-printer="thermal">Thermal Printer</div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="features-panel">
@@ -1474,6 +1644,20 @@ note: sig req"></textarea>
                                     <div>
                                         <strong>Company Branding</strong>
                                         <div style="font-size: 0.75rem; color: var(--text-light);">Add your logo & info</div>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">🎨</div>
+                                    <div>
+                                        <strong>Multiple Themes</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Choose from various designs</div>
+                                    </div>
+                                </div>
+                                <div class="feature-item">
+                                    <div class="feature-icon">🖨️</div>
+                                    <div>
+                                        <strong>Thermal Print Ready</strong>
+                                        <div style="font-size: 0.75rem; color: var(--text-light);">Optimized for thermal printers</div>
                                     </div>
                                 </div>
                             </div>
@@ -1546,6 +1730,32 @@ note: sig req"></textarea>
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEW: Slip History Section -->
+            <section id="history-section" class="history-section hidden">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        Slip History
+                    </h2>
+                    
+                    <div class="history-list" id="history-list">
+                        <!-- History items will be populated here -->
+                    </div>
+                    
+                    <div class="preview-controls" style="margin-top: var(--spacing-md);">
+                        <button id="clear-history" class="preview-btn" style="background: rgba(255, 59, 48, 0.1); color: #FF3B30;">
+                            Clear History
+                        </button>
+                        <button id="export-history" class="btn">
+                            Export History
+                        </button>
                     </div>
                 </div>
             </section>
@@ -1631,6 +1841,9 @@ note: sig req"></textarea>
         let generatedSlips = [];
         let currentSlipIndex = 0;
         let secureStorage = new SimpleSecureStorage();
+        let selectedTheme = 'premium';
+        let selectedPrinter = 'standard';
+        let slipHistory = [];
         
         // DOM elements
         const fileUploadArea = document.getElementById('file-upload-area');
@@ -1662,6 +1875,12 @@ note: sig req"></textarea>
         const transactionIdInput = document.getElementById('transaction-id');
         const submitTransactionBtn = document.getElementById('submit-transaction');
         const whatsappLink = document.getElementById('whatsapp-link');
+        const themeOptions = document.querySelectorAll('.theme-option');
+        const printerOptions = document.querySelectorAll('[data-printer]');
+        const historySection = document.getElementById('history-section');
+        const historyList = document.getElementById('history-list');
+        const clearHistoryBtn = document.getElementById('clear-history');
+        const exportHistoryBtn = document.getElementById('export-history');
         
         // Canvas context
         const ctx = slipPreview.getContext('2d');
@@ -1676,6 +1895,9 @@ note: sig req"></textarea>
             
             // Initialize smooth scrolling
             initializeSmoothScrolling();
+            
+            // Load slip history
+            loadSlipHistory();
         });
         
         function setupEventListeners() {
@@ -1731,6 +1953,24 @@ note: sig req"></textarea>
                 });
             });
             
+            // Theme selection
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    selectedTheme = option.getAttribute('data-theme');
+                });
+            });
+            
+            // Printer selection
+            printerOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    printerOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    selectedPrinter = option.getAttribute('data-printer');
+                });
+            });
+            
             // Generate button
             generateBtn.addEventListener('click', generateSlips);
             
@@ -1757,8 +1997,12 @@ note: sig req"></textarea>
             // Download all button
             downloadAllBtn.addEventListener('click', downloadAllSlips);
             
-            // Print button - FIXED
+            // Print button
             printBtn.addEventListener('click', printSlips);
+            
+            // History buttons
+            clearHistoryBtn.addEventListener('click', clearHistory);
+            exportHistoryBtn.addEventListener('click', exportHistory);
         }
         
         // Initialize smooth scrolling
@@ -2191,8 +2435,12 @@ note: sig req"></textarea>
                     // Generate slip images
                     generatedSlips = generateSlipImages(customers);
                     
+                    // Save to history
+                    saveToHistory(customers);
+                    
                     // Show preview section
                     previewSection.classList.remove('hidden');
+                    historySection.classList.remove('hidden');
                     
                     // Update preview display
                     currentSlipIndex = 0;
@@ -2231,8 +2479,8 @@ note: sig req"></textarea>
                 tempCanvas.height = 1400;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Draw the slip design
-                drawUltraPremiumSlip(tempCtx, customer, 1000, 1400);
+                // Draw the slip design based on selected theme
+                drawSlipByTheme(tempCtx, customer, 1000, 1400);
                 
                 // Store the canvas data
                 slips.push({
@@ -2242,6 +2490,25 @@ note: sig req"></textarea>
             });
             
             return slips;
+        }
+        
+        function drawSlipByTheme(ctx, customer, width, height) {
+            // Call the appropriate drawing function based on selected theme
+            switch(selectedTheme) {
+                case 'minimal':
+                    drawMinimalSlip(ctx, customer, width, height);
+                    break;
+                case 'thermal':
+                    drawThermalSlip(ctx, customer, width, height);
+                    break;
+                case 'elegant':
+                    drawElegantSlip(ctx, customer, width, height);
+                    break;
+                case 'premium':
+                default:
+                    drawUltraPremiumSlip(ctx, customer, width, height);
+                    break;
+            }
         }
         
         function drawUltraPremiumSlip(ctx, customer, width, height) {
@@ -2468,6 +2735,362 @@ note: sig req"></textarea>
             ctx.stroke();
         }
         
+        function drawMinimalSlip(ctx, customer, width, height) {
+            // Clean minimal design with lots of white space
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Simple header
+            ctx.fillStyle = '#1D1D1F';
+            ctx.font = '700 32px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('SHIPPING SLIP', width / 2, 80);
+            
+            // Thin divider line
+            ctx.strokeStyle = '#E5E5EA';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(60, 120);
+            ctx.lineTo(width - 60, 120);
+            ctx.stroke();
+            
+            let yPos = 180;
+            
+            // Customer information
+            ctx.textAlign = 'left';
+            ctx.font = '600 20px Inter';
+            
+            if (customer.name) {
+                ctx.fillText(customer.name, 60, yPos);
+                yPos += 35;
+            }
+            
+            ctx.font = '400 18px Inter';
+            
+            if (customer.company) {
+                ctx.fillText(customer.company, 60, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.phone) {
+                ctx.fillText(customer.phone, 60, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.email) {
+                ctx.fillText(customer.email, 60, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.address) {
+                const addressLines = wrapText(ctx, customer.address, 60, yPos, width - 120, 24);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 28;
+                });
+            }
+            
+            yPos += 30;
+            
+            // Order details
+            ctx.font = '600 20px Inter';
+            ctx.fillText('ORDER', 60, yPos);
+            yPos += 40;
+            
+            ctx.font = '400 18px Inter';
+            
+            if (customer.product) {
+                const productLines = wrapText(ctx, customer.product, 60, yPos, width - 120, 24);
+                productLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 28;
+                });
+            }
+            
+            if (customer.price) {
+                ctx.fillText(customer.price, 60, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.note) {
+                yPos += 20;
+                ctx.font = '500 16px Inter';
+                ctx.fillStyle = '#8E8E93';
+                const noteLines = wrapText(ctx, customer.note, 60, yPos, width - 120, 22);
+                noteLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 26;
+                });
+            }
+            
+            // Simple QR code
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                const qrSize = 100;
+                const qrX = width - 80 - qrSize;
+                const qrY = height - 80 - qrSize;
+                ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
+                
+                ctx.fillStyle = '#8E8E93';
+                ctx.font = '400 14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCAN TO TRACK', qrX + qrSize / 2, qrY + qrSize + 25);
+            }
+        }
+        
+        function drawThermalSlip(ctx, customer, width, height) {
+            // Thermal printer optimized design - black and white, compact
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Set all text to black for thermal printing
+            ctx.fillStyle = '#000000';
+            ctx.strokeStyle = '#000000';
+            
+            // Simple header
+            ctx.font = 'bold 24px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('SHIPPING SLIP', width / 2, 50);
+            
+            // Company name if available
+            if (customer.company) {
+                ctx.font = 'bold 18px Inter';
+                ctx.fillText(customer.company.toUpperCase(), width / 2, 80);
+            }
+            
+            // Divider line
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(40, 100);
+            ctx.lineTo(width - 40, 100);
+            ctx.stroke();
+            
+            let yPos = 130;
+            
+            // Customer information - compact layout
+            ctx.textAlign = 'left';
+            ctx.font = 'bold 16px Inter';
+            
+            if (customer.name) {
+                ctx.fillText('TO:', 40, yPos);
+                ctx.font = '16px Inter';
+                ctx.fillText(customer.name, 80, yPos);
+                yPos += 25;
+            }
+            
+            if (customer.address) {
+                const addressLines = wrapText(ctx, customer.address, 80, yPos, width - 120, 20);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 22;
+                });
+            }
+            
+            if (customer.phone) {
+                ctx.fillText('PHONE:', 40, yPos);
+                ctx.fillText(customer.phone, 100, yPos);
+                yPos += 25;
+            }
+            
+            if (customer.email) {
+                ctx.fillText('EMAIL:', 40, yPos);
+                ctx.fillText(customer.email, 100, yPos);
+                yPos += 25;
+            }
+            
+            yPos += 10;
+            
+            // Order details
+            ctx.font = 'bold 16px Inter';
+            ctx.fillText('ORDER DETAILS:', 40, yPos);
+            yPos += 25;
+            
+            if (customer.product) {
+                ctx.font = '16px Inter';
+                const productLines = wrapText(ctx, customer.product, 40, yPos, width - 80, 20);
+                productLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 22;
+                });
+            }
+            
+            if (customer.price) {
+                ctx.fillText('TOTAL:', 40, yPos);
+                ctx.font = 'bold 16px Inter';
+                ctx.fillText(customer.price, 100, yPos);
+                yPos += 25;
+            }
+            
+            if (customer.note) {
+                yPos += 10;
+                ctx.font = 'italic 14px Inter';
+                const noteLines = wrapText(ctx, customer.note, 40, yPos, width - 80, 18);
+                noteLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 20;
+                });
+            }
+            
+            yPos += 20;
+            
+            // Simple QR code for thermal printing
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                const qrSize = 80;
+                const qrX = (width - qrSize) / 2;
+                const qrY = yPos;
+                ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
+                
+                ctx.font = '12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCAN TO TRACK', width / 2, qrY + qrSize + 20);
+            }
+            
+            // Footer with date
+            ctx.font = '10px Inter';
+            ctx.fillText(`Generated: ${new Date().toLocaleDateString()}`, width / 2, height - 30);
+        }
+        
+        function drawElegantSlip(ctx, customer, width, height) {
+            // Elegant dark theme design
+            ctx.fillStyle = '#1C1C1E';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Elegant header with gradient
+            const headerGradient = ctx.createLinearGradient(0, 0, width, 0);
+            headerGradient.addColorStop(0, '#2C2C2E');
+            headerGradient.addColorStop(0.5, '#3A3A3C');
+            headerGradient.addColorStop(1, '#2C2C2E');
+            
+            ctx.fillStyle = headerGradient;
+            ctx.fillRect(0, 0, width, 120);
+            
+            // Company name in elegant typography
+            const companyName = customer.company || 'YOUR COMPANY';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '600 28px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText(companyName.toUpperCase(), width / 2, 60);
+            
+            ctx.font = '300 18px Inter';
+            ctx.fillStyle = '#8E8E93';
+            ctx.fillText('PACKAGING SLIP', width / 2, 90);
+            
+            let yPos = 160;
+            
+            // Customer information with elegant dividers
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '600 20px Inter';
+            ctx.fillText('SHIPPING INFORMATION', 50, yPos);
+            
+            ctx.strokeStyle = '#3A3A3C';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(50, yPos + 10);
+            ctx.lineTo(width - 50, yPos + 10);
+            ctx.stroke();
+            
+            yPos += 40;
+            
+            ctx.font = '500 18px Inter';
+            
+            if (customer.name) {
+                ctx.fillText(customer.name, 50, yPos);
+                yPos += 35;
+            }
+            
+            ctx.font = '400 16px Inter';
+            ctx.fillStyle = '#8E8E93';
+            
+            if (customer.company && customer.company !== companyName) {
+                ctx.fillText(customer.company, 50, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.phone) {
+                ctx.fillText(customer.phone, 50, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.email) {
+                ctx.fillText(customer.email, 50, yPos);
+                yPos += 30;
+            }
+            
+            if (customer.address) {
+                const addressLines = wrapText(ctx, customer.address, 50, yPos, width - 100, 24);
+                addressLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 28;
+                });
+            }
+            
+            yPos += 30;
+            
+            // Order details
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '600 20px Inter';
+            ctx.fillText('ORDER DETAILS', 50, yPos);
+            
+            ctx.strokeStyle = '#3A3A3C';
+            ctx.beginPath();
+            ctx.moveTo(50, yPos + 10);
+            ctx.lineTo(width - 50, yPos + 10);
+            ctx.stroke();
+            
+            yPos += 40;
+            
+            ctx.font = '500 18px Inter';
+            
+            if (customer.product) {
+                ctx.fillStyle = '#FFFFFF';
+                const productLines = wrapText(ctx, customer.product, 50, yPos, width - 100, 24);
+                productLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 28;
+                });
+            }
+            
+            if (customer.price) {
+                ctx.fillText(customer.price, 50, yPos);
+                yPos += 35;
+            }
+            
+            if (customer.note) {
+                yPos += 20;
+                ctx.fillStyle = '#FF9F0A';
+                ctx.font = '500 16px Inter';
+                const noteLines = wrapText(ctx, customer.note, 50, yPos, width - 100, 22);
+                noteLines.forEach(line => {
+                    ctx.fillText(line.text, line.x, line.y);
+                    yPos += 26;
+                });
+            }
+            
+            // Elegant QR code with dark background
+            const qrLink = qrLinkInput.value;
+            const qrCode = generateQRCode(qrLink);
+            if (qrCode) {
+                const qrSize = 120;
+                const qrX = width - 80 - qrSize;
+                const qrY = height - 100 - qrSize;
+                
+                // QR code background
+                ctx.fillStyle = '#2C2C2E';
+                ctx.fillRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 40);
+                
+                ctx.drawImage(qrCode, qrX, qrY, qrSize, qrSize);
+                
+                ctx.fillStyle = '#8E8E93';
+                ctx.font = '400 14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCAN TO TRACK', qrX + qrSize / 2, qrY + qrSize + 30);
+            }
+        }
+        
         function generateQRCode(text) {
             try {
                 const typeNumber = 4;
@@ -2648,12 +3271,15 @@ note: sig req"></textarea>
             }
         }
         
-        // FIXED PRINT FUNCTION
+        // FIXED PRINT FUNCTION with thermal printer support
         function printSlips() {
             if (generatedSlips.length === 0) return;
             
             // Create a print-friendly HTML page
             const printWindow = window.open('', '_blank');
+            
+            // Add thermal-specific class if thermal printer is selected
+            const thermalClass = selectedPrinter === 'thermal' ? 'thermal-print' : '';
             
             // Create a clean print layout with only the slips
             let printContent = `
@@ -2690,9 +3316,30 @@ note: sig req"></textarea>
                             height: 100%;
                             object-fit: contain;
                         }
+                        /* Thermal-specific styles */
+                        .thermal-print {
+                            width: 80mm !important;
+                            max-width: 80mm !important;
+                            font-size: 12px !important;
+                            line-height: 1.2 !important;
+                            color: black !important;
+                            background: white !important;
+                            margin: 0 !important;
+                            padding: 5mm !important;
+                        }
+                        .thermal-print * {
+                            color: black !important;
+                            background: transparent !important;
+                            border: none !important;
+                            box-shadow: none !important;
+                        }
+                        .thermal-print .qr-code {
+                            width: 50px !important;
+                            height: 50px !important;
+                        }
                     </style>
                 </head>
-                <body>
+                <body class="${thermalClass}">
             `;
             
             // Add each slip to the print page
@@ -2719,6 +3366,159 @@ note: sig req"></textarea>
                     }, 500);
                 }, 500);
             };
+        }
+        
+        // NEW: Slip History Functions
+        function saveToHistory(customers) {
+            const historyItem = {
+                id: Date.now().toString(),
+                date: new Date().toLocaleString(),
+                customers: customers,
+                theme: selectedTheme,
+                count: customers.length
+            };
+            
+            // Load existing history
+            let history = secureStorage.get('slipHistory') || [];
+            
+            // Add new item to beginning of array
+            history.unshift(historyItem);
+            
+            // Keep only last 50 items to prevent storage overflow
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+            
+            // Save updated history
+            secureStorage.set('slipHistory', history);
+            
+            // Update UI
+            loadSlipHistory();
+        }
+        
+        function loadSlipHistory() {
+            slipHistory = secureStorage.get('slipHistory') || [];
+            
+            // Update UI
+            renderHistoryList();
+        }
+        
+        function renderHistoryList() {
+            if (slipHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: var(--spacing-md);">No slip history yet</p>';
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            
+            slipHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-info">
+                        <strong>${item.count} slip(s)</strong>
+                        <div class="history-date">${item.date} • ${item.theme} theme</div>
+                    </div>
+                    <div class="history-actions">
+                        <button class="history-action-btn" data-action="view" data-id="${item.id}">View</button>
+                        <button class="history-action-btn" data-action="reprint" data-id="${item.id}">Reprint</button>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('[data-action="view"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    viewHistoryItem(id);
+                });
+            });
+            
+            document.querySelectorAll('[data-action="reprint"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    reprintHistoryItem(id);
+                });
+            });
+        }
+        
+        function viewHistoryItem(id) {
+            const item = slipHistory.find(i => i.id === id);
+            if (!item) return;
+            
+            // Generate slips from history
+            generatedSlips = generateSlipImages(item.customers);
+            
+            // Show preview section
+            previewSection.classList.remove('hidden');
+            
+            // Update preview display
+            currentSlipIndex = 0;
+            updatePreviewDisplay();
+            
+            // Scroll to preview section
+            previewSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function reprintHistoryItem(id) {
+            const item = slipHistory.find(i => i.id === id);
+            if (!item) return;
+            
+            // Generate slips from history
+            generatedSlips = generateSlipImages(item.customers);
+            
+            // Print directly
+            printSlips();
+        }
+        
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all slip history? This action cannot be undone.')) {
+                secureStorage.set('slipHistory', []);
+                loadSlipHistory();
+            }
+        }
+        
+        function exportHistory() {
+            if (slipHistory.length === 0) {
+                alert('No history to export.');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = "Date,Theme,Customer Count,Customer Name,Company,Phone,Email,Address,Product,Price,Notes\n";
+            
+            slipHistory.forEach(item => {
+                item.customers.forEach(customer => {
+                    const row = [
+                        `"${item.date}"`,
+                        `"${item.theme}"`,
+                        `"${item.count}"`,
+                        `"${customer.name || ''}"`,
+                        `"${customer.company || ''}"`,
+                        `"${customer.phone || ''}"`,
+                        `"${customer.email || ''}"`,
+                        `"${customer.address || ''}"`,
+                        `"${customer.product || ''}"`,
+                        `"${customer.price || ''}"`,
+                        `"${customer.note || ''}"`
+                    ].join(',');
+                    
+                    csvContent += row + '\n';
+                });
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `slip-history-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
